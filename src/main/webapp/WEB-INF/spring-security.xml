@@ -48,7 +48,7 @@
 		<intercept-url pattern="/update_user/**" access="ROLE_USER" />
 		<intercept-url pattern="/change_password/**" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN, ROLE_USER" />
 		<intercept-url pattern="/remove_user/*" access="ROLE_ADMIN" />
-		<intercept-url pattern="/add_patient" access="ROLE_ADMIN"/>
+		<intercept-url pattern="/add_patient" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN"/>
 		<intercept-url pattern="/edit_patient/**" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN" />
 		<intercept-url pattern="/remove_patient/*" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN" />
 		<intercept-url pattern="/patient/*" access="ROLE_USER" />

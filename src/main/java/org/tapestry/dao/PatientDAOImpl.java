@@ -67,9 +67,9 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 		String sql = "SELECT p.*, v1.firstname AS v1_firstname, v1.lastname AS v1_lastname, "
 				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, v1.organization FROM patients "
 				+ "AS p INNER JOIN volunteers AS v1 ON p.volunteer=v1.volunteer_ID INNER JOIN "
-				+ "volunteers AS v2 ON p.volunteer2=v2.volunteer_ID WHERE v1.organization =? ";
+				+ "volunteers AS v2 ON p.volunteer2=v2.volunteer_ID WHERE v1.organization =? OR v2.organization =?";
 		
-		return getJdbcTemplate().query(sql, new Object[]{organizationId}, new PatientMapper());
+		return getJdbcTemplate().query(sql, new Object[]{organizationId, organizationId}, new PatientMapper());
 	}
 
 	@Override
@@ -178,7 +178,7 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 			patient.setClinicName(TapestryHelper.getClinicName(clinicCode));			
 			patient.setVolunteer(rs.getInt("volunteer"));
 			patient.setNotes(rs.getString("notes"));
-			patient.setAlerts(rs.getString("alerts"));	
+			patient.setAlerts(rs.getString("alerts"));			
 			patient.setMrp(rs.getInt("mrp"));
 			patient.setMrpFirstName(rs.getString("mrp_firstname"));
 			patient.setMrpLastName(rs.getString("mrp_lastname"));

@@ -196,12 +196,18 @@ public class VolunteerController {
 		model.addAttribute("upcomingVisits", appointments);
 		
 		//get all activities
-		List<Activity> activities = volunteerManager.getActivitiesForVolunteer(id);		
-		model.addAttribute("activityLogs", activities);
+		List<Activity> activities = volunteerManager.getActivitiesForVolunteer(id);	
+		if (activities != null && activities.size() > 0)
+			model.addAttribute("showActivityLogs", true);
+		else
+			model.addAttribute("activityLogs", activities);
 		
 		//get all messages		
 		List<Message> messages = messageManager.getAllMessagesForRecipient(TapestryHelper.getLoggedInUser(request).getUserID());
-		model.addAttribute("messages", messages);		
+		if (messages != null && messages.size() > 0)
+			model.addAttribute("showMessage", true);
+		else
+			model.addAttribute("messages", messages);		
 		
 		HttpSession  session = request.getSession();
 		if (session.getAttribute("unread_messages") != null)
@@ -499,7 +505,7 @@ public class VolunteerController {
 				break;
 			}
 		}
-		System.out.println("get vol list, and size if  "+ vl.size());
+		
 		return vl;
 	//	return volunteerManager.getAllVolunteersByOrganization(volunteer.getOrganizationId());
 	}
@@ -974,6 +980,7 @@ public class VolunteerController {
 			String username = loggedInUser.getUsername();	
 			
 			int userId = loggedInUser.getUserID();
+			
 			//get volunteer Id from login user
 			int volunteerId = volunteerManager.getVolunteerIdByUsername(username);		
 		

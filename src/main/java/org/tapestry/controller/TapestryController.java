@@ -126,6 +126,7 @@ public class TapestryController{
 	public String loginSuccess(SecurityContextHolderAwareRequestWrapper request)
 	{				
 		User u = TapestryHelper.getLoggedInUser(request, userManager);
+		
 		StringBuffer sb = new StringBuffer();
 		sb.append(u.getName());
 		sb.append(" logged in");		
@@ -149,8 +150,9 @@ public class TapestryController{
 		sb.append(u.getName());
 		sb.append(" logged out");
 		userManager.addUserLog(sb.toString(), u);
-
-		return "confirm-logout";
+		
+		return "redirect:/j_spring_security_logout";
+//		return "confirm-logout";
 	}
 	
 	@RequestMapping(value="/client", method=RequestMethod.GET)
@@ -723,7 +725,7 @@ public class TapestryController{
    	@RequestMapping(value="/add_patient", method=RequestMethod.POST)
 	public String addPatient(SecurityContextHolderAwareRequestWrapper request, ModelMap model) 
 			throws JAXBException, DatatypeConfigurationException, Exception
-	{   //Add a new patient
+	{   //Add a new patient   		
 		Patient p = new Patient();		
 		int vId1 = Integer.parseInt(request.getParameter("volunteer1"));
 		int vId2 = Integer.parseInt(request.getParameter("volunteer2"));
@@ -734,7 +736,6 @@ public class TapestryController{
 			
 			return "admin/manage_patients";
 		}
-			
 		
 		Volunteer v1 = volunteerManager.getVolunteerById(vId1);
 		Volunteer v2 = volunteerManager.getVolunteerById(vId2);

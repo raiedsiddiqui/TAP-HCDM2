@@ -41,7 +41,7 @@
 			<label >&nbsp Address :</label>&nbsp${patient.address}
 		</td>
 		<td>
-			<label>&nbsp MRP:</label>&nbsp${patient.mrp}
+			<label>&nbsp MRP:</label>&nbsp${patient.mrpFirstName} &nbsp${patient.mrpLastName}
 		</td>
 	</tr>
 	<tr>

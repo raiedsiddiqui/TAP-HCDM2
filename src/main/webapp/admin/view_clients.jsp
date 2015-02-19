@@ -65,7 +65,7 @@
 						<td>${p.age}</td>
 						<td>${p.gender}</td>
 						<td>${p.clinicName}</td>
-						<td>${p.mrp}</td>
+						<td>${p.mrpFirstName} ${p.mrpLastName}</td>
 						<td>${p.city}</td>
 						<td>${p.homePhone}</td>
 						

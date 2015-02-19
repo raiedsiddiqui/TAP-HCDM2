@@ -67,7 +67,8 @@
 					<li <c:if test="${pageContext.request.requestURI.contains('inbox')}">class="active"</c:if>><a href="<c:url value="/inbox"/>">Messages <span class="glyphicon glyphicon-envelope"></span> <c:if test="${unread > 0}"> <span class="badge badge-info">${unread}</span> </c:if></a> </li>
 					<li <c:if test="${pageContext.request.requestURI.contains('user_logs')}">class="active"</c:if>><a href="<c:url value="/user_logs/1"/>">User Logs <span class="glyphicon glyphicon-stats"></a><li>
 							
-					<li><a href="<c:url value="/logout"/>">Log Out <span class="glyphicon glyphicon-log-out"></a></li>
+					<li><a href="<c:url value="/logout"/>">Log Out <span class="glyphicon glyphicon-log-out"></a></li> 
+	
           </ul>
         </div><!--/.nav-collapse -->
 </nav>

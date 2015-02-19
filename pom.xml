@@ -12,7 +12,7 @@
 
 	<properties>
 		<spring.version>3.0.5.RELEASE</spring.version>
-		<jackson.version>1.9.10</jackson.version>
+		<jackson.version>1.9.10</jackson.version>		
 	</properties>
 	
 	<repositories>
@@ -264,13 +264,13 @@
   			<groupId>com.itextpdf</groupId>
             <artifactId>itextpdf</artifactId>
             <version>5.4.1</version>
-        </dependency> -->
+        </dependency>  -->
         
         <dependency>
 			<groupId>com.itextpdf</groupId>
 			<artifactId>itextpdf</artifactId>
 			<version>5.5.2</version>
-		</dependency>       
+		</dependency>      
         	
         <dependency>
 			<groupId>com.lowagie</groupId>
@@ -311,6 +311,19 @@
 			<groupId>ca.uhn.hapi</groupId>
 			<artifactId>hapi-osgi-base</artifactId>
 			<version>1.0.1</version>
+		</dependency>
+		
+		<!-- 	security   -->
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-ext-jdk15on</artifactId>
+			<version>1.46</version>
+		</dependency>
+				
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcpg-jdk15on</artifactId>
+			<version>1.46</version>
 		</dependency>
 		    
 	</dependencies>		

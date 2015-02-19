@@ -159,7 +159,9 @@ public class TapestryHelper {
 		if ("ROLE_ADMIN".equalsIgnoreCase(user.getRole()))
 			patients = patientManager.getAllPatients();	//For central Admin		
 		else		
+		{System.out.println("organization == " + user.getOrganization());
 			patients = patientManager.getPatientsByGroup(user.getOrganization());		
+		}
 		
 		if (session.getAttribute("allPatientWithFullInfos") != null)
 			patients = (List<Patient>)session.getAttribute("allPatientWithFullInfos");
@@ -1071,6 +1073,7 @@ public class TapestryHelper {
 	 * @param report
 	 * @param response
 	 */
+	
 	public static void buildPDF(Report report, HttpServletResponse response){			
 		String patientName = report.getPatient().getFirstName() + " " + report.getPatient().getLastName();
 		String orignalFileName= patientName +"_report.pdf";
