@@ -34,30 +34,22 @@
 		</c:if>		
 		<div class="row-fluid">
 			<h2>Volunteers </h2>
-			<div class="row-fluid">
-				<table>
-					<tr>
-						<td>
-							<form action="<c:url value="/view_volunteers"/>" method="POST">
-								<fieldset>
-									<label>Name:</label>
-									<input type="text" name="searchName" value="${searchName}" required />
-									<input class="btn btn-primary" type="submit" value="Search" />
-								</fieldset>
-							</form>
-						</td>
-						<td>
-						<div class="col-md-3">
-							<a href="<c:url value="/new_volunteer"/>" class="btn btn-primary" data-toggle="modal">New Volunteer</a>			
-						</div>
-						</td>
-					</tr>
-				</table>
-				
+			<div class="row">
+				<div class="col-md-10">
+					<form action="<c:url value="/view_volunteers"/>" method="POST">
+						<fieldset>
+							<input type="text" name="searchName" value="${searchName}" placeholder="name" required />
+							<input class="btn btn-primary" type="submit" value="Search" />
+						</fieldset>
+					</form>
+				</div>
+				<div class="col-md-2">
+					<a href="<c:url value="/new_volunteer"/>" class="btn btn-primary" data-toggle="modal">New Volunteer</a>			
+				</div>
 			</div>
 			
 			
-			<table class="table">
+			<table class="table table-striped">
 				<tr>
 					<th>Name</th>
 					<th>Username</th>

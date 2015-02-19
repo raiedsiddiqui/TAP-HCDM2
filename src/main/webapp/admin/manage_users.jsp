@@ -46,6 +46,8 @@
 						<label>Name:</label>
 						<input type="text" name="searchName" value="${searchName}" required />
 						<input class="btn btn-primary" type="submit" value="Search" />
+						<a href="#addUser" class="btn btn-primary" data-toggle="modal">Add new</a>
+
 					</fieldset>
 				</form>
 			</div>
@@ -92,7 +94,6 @@
 				</tr>
 				</c:forEach>
 			</table>
-			<a href="#addUser" class="btn btn-primary" data-toggle="modal">Add new</a>
 		</div>
 
 		<div class="row-fluid" id="addUserDiv" style="display:none";>

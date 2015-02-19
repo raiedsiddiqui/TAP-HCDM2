@@ -62,7 +62,7 @@
 	
 </table>
 
-		<table width="1020">
+		<table width="1020" class="table table-striped">
 			<tr>
 				<td width="600">
 					<table>
@@ -176,7 +176,7 @@
 	</table>
  -->
 	<h2>Upcoming Visits</h2>
-	<table  class="table table-stripe" width="970" border="1">
+	<table  class="table table-striped" width="970" border="1">
 		<tr>
 			
 			<th width="500">Visit Date</th>
@@ -194,7 +194,7 @@
 		</c:forEach>
 	</table>
 	<h2>Completed Visits</h2>
-	<table  width="970" border="1">
+	<table  class="table table-striped" width="970" border="1">
 		<tr>
 			<th width="300">Visit #</th>
 			<th width="300"> Visit Date</th>		
@@ -218,7 +218,7 @@
 	</table>
 	
 	<h2>Surveys <a href="<c:url value="/go_assign_survey/${patient.patientID}"/>">Assign Survey</a> </h2>
-	<table  width="970" border="1">
+	<table  class="table table-striped" width="970" border="1">
 		<tr>
 			<th width="200">Assigned Surveys</th>
 			<th width="250"> Date Started</th>		

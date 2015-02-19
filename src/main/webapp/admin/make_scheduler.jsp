@@ -86,8 +86,11 @@
 		</tr>
 	</table>
 </form>
-
-<table width="1200">
+<div class="input-group"> <span class="input-group-addon">Filter</span>
+	<input id="filter" type="text" class="form-control" placeholder="Type here...">
+</div>
+<table class="table table-striped">
+	<thead>
 	<tr>
 		<th width="150">Volunteer One</th>
 		<th width="100">Phone #</th>
@@ -99,24 +102,46 @@
 		<th>Action</th>
 		
 	</tr>
+	<thead>
 	
-	
+	<tbody class="searchable">
 	<c:forEach items="${matchedAvailability}" var="ml">
 		
-					<tr>
-						<td>${v1.displayName}</td>						
-						<td>${v1.homePhone}</td>
-						<td>${v1.email}</td>
-						<td>${v2.displayName}</td>						
-						<td>${v2.homePhone}</td>
-						<td>${v2.email}</td>
-						<td>${ml}</td>						
-						<td><a href="<c:url value="/book_appointment/${v1.volunteerId}?vId=${v2.volunteerId}&pId=${selectedPatient}&time=${ml}"/>">Book Appointment</a></td>
-						
-					</tr>
-				</c:forEach>
+			<tr>
+				<td>${v1.displayName}</td>						
+				<td>${v1.homePhone}</td>
+				<td>${v1.email}</td>
+				<td>${v2.displayName}</td>						
+				<td>${v2.homePhone}</td>
+				<td>${v2.email}</td>
+				<td>${ml}</td>						
+				<td><a href="<c:url value="/book_appointment/${v1.volunteerId}?vId=${v2.volunteerId}&pId=${selectedPatient}&time=${ml}"/>">Book Appointment</a></td>
+				
+			</tr>
+		</c:forEach>
+	</tbody>
 		
 </table>
 </div>
+	<script type="text/javascript">
+$(document).ready(function () {
+
+    (function ($) {
+
+        $('#filter').keyup(function () {
+
+            var rex = new RegExp($(this).val(), 'i');
+            $('.searchable tr').hide();
+            $('.searchable tr').filter(function () {
+                return rex.test($(this).text());
+            }).show();
+
+        })
+
+    }(jQuery));
+
+});
+
+	</script>
 </body>
 </html>

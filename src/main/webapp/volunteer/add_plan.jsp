@@ -7,69 +7,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Tapestry Volunteer Add Plans for Appointment</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" href="${pageContext.request.contextPath}/resources/images/favicon.ico" type="image/x-icon" />
-		<link rel="shortcut icon" href="${pageContext.request.contextPath}/resources/images/favicon.ico" type="image/x-icon" />
-
-		<link href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet" />
-		<link href="${pageContext.request.contextPath}/resources/css/bootstrap-responsive.min.css" rel="stylesheet" />  		
-		<link href="${pageContext.request.contextPath}/resources/css/font-awesome.css" rel="stylesheet">
-		<link href="${pageContext.request.contextPath}/resources/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
-
-		<script src="${pageContext.request.contextPath}/resources/js/jquery-2.0.3.min.js"></script>
-		<script src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
-		<script src="${pageContext.request.contextPath}/resources/js/bootstrap-datetimepicker.min.js"></script>
-		<script src="${pageContext.request.contextPath}/resources/js/bootstrap-lightbox.js"></script>
-		
-		<!-- CUSTOM CSS -->
-	<link href="${pageContext.request.contextPath}/resources/css/breadcrumb.css" rel="stylesheet" /> 
-	<link href="${pageContext.request.contextPath}/resources/css/custom.css" rel="stylesheet" /> 
-     
-
-	  <link href='http://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
-	<!-- 	CUSTOM CSS END -->
-		
-		<style type="text/css">
-		html,body{
-			height:100%;
-		}
-		.content{
-/*			overflow-x:auto;
-		overflow-y:auto;*/	
-			border-radius:5px;
-			-moz-border-radius:5px;
-			-webkit-border-radius:5px;
-			-o-border-radius:5px;
-			-ms-border-radius:5px;
-
-		}
-		.content a{
-			color:#ffffff;
-		}
-		textarea{
-			width:90%;
-			margin-right:10px;
-		}
-		.modal-backdrop{
-			z-index:0;
-		}
-		
-		.lightbox{
-			z-index:1;
-		}
-		.thumbnail{
-			width:320px;
-		}
-		
-	</style>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=no"></meta>
+<%@include file="volunteer_head.jsp" %>
 		
 </head>
 <body>
-<div id="headerholder">	
 <%@include file="subNavi.jsp" %>
-</div>
+
 <!-- 	breadcrumb START-->	
-	<div id="crumbs"> 
+<!-- 	<div id="crumbs"> 
 		<ul>
 			<li> <a href="<c:url value="/"/>">Appointments</a> </li>
 			<li><a href="<c:url value="/?patientId=${patient.patientID}"/>">
@@ -86,6 +32,24 @@
 			<li><a href="">${appointment.date}</a></li>
 			<li><a href=""><b>Plan</b></a></li>
 		</ul>
+	</div> -->
+<div class="row">
+	<div class="col-md-6">
+		<c:if test="${not empty patient}">
+			<c:choose>
+				<c:when test="${not empty patient.preferredName}">
+					<p class="patientname">${patient.preferredName}</p>
+				</c:when>
+				<c:otherwise>
+					<p class="patientname">${patient.displayName}</p>
+				</c:otherwise>
+			</c:choose>
+		</c:if>
+		<span class="surveycomp">${appointment.date}</span>
+	</div>
+</div>
+<h3 class="pagetitle">Add Plan</h3>
+
 <!-- Message display 
 	<div id="visitandbook" class="span12 btn-group">
 			<c:if test="${not empty patient.notes}">
@@ -97,45 +61,87 @@
 			<a href="" role="button" class="btn btn-primary pull-right lgbtn" >Submit</a>
 	</div>	
 	-->
+
+	
+<form id="plansfrm" action="<c:url value="/savePlans"/>" method="post">
+<div class="row">
+	<div class="col-md-1">
+		<label>1</label>
 	</div>
-	
-	<form id="plansfrm" action="<c:url value="/savePlans"/>" method="post">
-<h2>    <button type="submit" align="right">Submit</button><input type="button" value="Cancel" class="btn btn-primary" onclick="javascript:history.go(-1)"></h2>
+	<div class="col-md-11">
+		<select class="form-control" name="plan1" form="plansfrm">
+			<c:forEach items="${plans}" var="p">							
+				<option value="${p}" >${p}</option>
+			</c:forEach>
+		</select>
+	</div>
+</div>
 <br/>
-<label>1 &nbsp &nbsp  </label>
-	<select class="form-control" name="plan1" form="plansfrm">
-		<c:forEach items="${plans}" var="p">							
-			<option value="${p}" >${p}</option>
-		</c:forEach>
-	</select><br/>
-<label>2 &nbsp &nbsp  </label>
-	<select class="form-control" name="plan2" form="plansfrm">
-		<c:forEach items="${plans}" var="p">							
-			<option value="${p}" >${p}</option>
-		</c:forEach>
-	</select><br/>
-<label>3  &nbsp &nbsp </label>
-	<select class="form-control" name="plan3" form="plansfrm">
-		<c:forEach items="${plans}" var="p">							
-			<option value="${p}" >${p}</option>
-		</c:forEach>
-	</select><br/>
-<label>4  &nbsp &nbsp </label>
-	<select class="form-control" name="plan4" form="plansfrm">
-		<c:forEach items="${plans}" var="p">							
-			<option value="${p}" >${p}</option>
-		</c:forEach>
-	</select><br/>
-<label>5  &nbsp &nbsp </label>
-	<select class="form-control" name="plan5" form="plansfrm">
-		<c:forEach items="${plans}" var="p">							
-			<option value="${p}" >${p}</option>
-		</c:forEach>
-	</select><br/>
-&nbsp &nbsp &nbsp	<label>Specify :   </label><br/>
-<label>6 &nbsp &nbsp  </label>
-<input type="textarea" class="form-control" rows="8" cols="50" name="planSpecify"/><br/>
-	
+<div class="row">
+	<div class="col-md-1">
+		<label>2</label>
+	</div>
+	<div class="col-md-11">
+		<select class="form-control" name="plan2" form="plansfrm">
+			<c:forEach items="${plans}" var="p">							
+				<option value="${p}" >${p}</option>
+			</c:forEach>
+		</select>
+	</div>
+</div>
+<br/>
+<div class="row">
+	<div class="col-md-1">
+		<label>3</label>
+	</div>
+	<div class="col-md-11">
+		<select class="form-control" name="plan3" form="plansfrm">
+			<c:forEach items="${plans}" var="p">							
+				<option value="${p}" >${p}</option>
+			</c:forEach>
+		</select>
+	</div>
+</div>
+<br/>
+<div class="row">
+	<div class="col-md-1">
+		<label>4</label>
+	</div>
+	<div class="col-md-11">
+		<select class="form-control" name="plan4" form="plansfrm">
+			<c:forEach items="${plans}" var="p">							
+				<option value="${p}" >${p}</option>
+			</c:forEach>
+		</select>
+	</div>
+</div>
+<br/>
+<div class="row">
+	<div class="col-md-1">
+		<label>5</label>
+	</div>
+	<div class="col-md-11">
+		<select class="form-control" name="plan5" form="plansfrm">
+			<c:forEach items="${plans}" var="p">							
+				<option value="${p}" >${p}</option>
+			</c:forEach>
+		</select>
+	</div>
+</div>
+<br/>
+<div class="row">
+	<div class="col-md-1">
+	<label>6 Specify </label>
+		</div>
+	<div class="col-md-11">
+		<input type="textarea" class="form-control" rows="8" cols="50" name="planSpecify"/><br/>
+	</div>
+</div>
+<br/>
+<div class="row">
+	<input type="button" value="Cancel" class="btn btn-primary" onclick="javascript:history.go(-1)">
+	<button type="submit" align="right" class="lgbtn">Submit</button>
+</div>
 </form>
 </body>
 </html>

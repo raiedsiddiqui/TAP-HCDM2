@@ -5,8 +5,9 @@ img {
 
 }
 #logo {
-	width: 220px !important;
+	width: 250px !important;
 	float: left;
+	margin-top: -8px
 }
 
 #logofam {
@@ -503,6 +504,10 @@ div.bootstrap-datetimepicker-widget.dropdown-menu.pull-right {
 
 .logoheight {
 	height:63px;
+}
+
+.logoheightlogin {
+	height:83px;
 }
 
 #linav {

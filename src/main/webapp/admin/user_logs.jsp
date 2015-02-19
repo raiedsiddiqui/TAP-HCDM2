@@ -38,12 +38,21 @@
 					</fieldset>
 				</form>
 			</div>
+
+			<div class="input-group"> <span class="input-group-addon">Filter</span>
+
+			    <input id="filter" type="text" class="form-control" placeholder="Type here...">
+			</div>
+
 			<table class="table">
-				<tr>
-					<th>User Name</th>
-					<th>Activity</th>
-					<th>Date</th>
-				</tr>
+				<thead>
+					<tr>
+						<th>User Name</th>
+						<th>Activity</th>
+						<th>Date</th>
+					</tr>
+				<thead>
+				<tbody class="searchable">
 				<c:forEach items="${logs}" var="l">
 					<tr>
 						<td>${l.userName}</td>
@@ -51,6 +60,7 @@
 						<td>${l.date}</td>
 					</tr>
 				</c:forEach>
+				<tbody>
 			</table>
 			<div class="pagination text-center">
 				<ul class="pagination">
@@ -61,5 +71,26 @@
 			</div>
 		</div>
 	</div>
+
+	<script type="text/javascript">
+$(document).ready(function () {
+
+    (function ($) {
+
+        $('#filter').keyup(function () {
+
+            var rex = new RegExp($(this).val(), 'i');
+            $('.searchable tr').hide();
+            $('.searchable tr').filter(function () {
+                return rex.test($(this).text());
+            }).show();
+
+        })
+
+    }(jQuery));
+
+});
+
+	</script>
 </body>
 </html>

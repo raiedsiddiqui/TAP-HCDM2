@@ -23,45 +23,41 @@
 </head>
 <body>
 <div class="content">
-<%@include file="navbar.jsp" %>
+	<%@include file="navbar.jsp" %>
 
-<div class="row-fluid">
+	<div class="row-fluid">
 
-<div><h4><a href="<c:url value="/view_volunteers"/>" >Volunteers</a> ${volunteer.displayName}</h4></div>
-<div>
-<table>
-	<tr>
-		<td width="400">
-			<h2>${volunteer.displayName}<a href="<c:url value="/modify_volunteer/${volunteer.volunteerId}"/>">Edit</a></h2>
-		</td>
-		<td>
+<div><h4><a href="<c:url value="/view_volunteers"/>"> Volunteers ></a> ${volunteer.displayName}</h4></div>
+<div class="row">
+	<div class="col-md-10">
+			<h2>${volunteer.displayName}<a href="<c:url value="/modify_volunteer/${volunteer.volunteerId}"/>"><span style="font-size:15px;">Edit</span></a></h2>
+	</div>
+	<div class="col-md-1">
 			<a  href="#displayActivityLog" class="btn btn-primary" data-toggle="modal">Activity Log</a>
-		</td>
-		<td>
+	</div>
+	<div class="col-md-1">
 			<a href="#displayMessage" class="btn btn-primary" data-toggle="modal">Message</a>
-		</td>
-	</tr>
-</table>
+	</div>
 </div>
 
  
 
 	<div class="row form-group">
 		<div class="col-md-2">
-	    	<label class="control-label">Username</label>
+	    	<label class="control-label">Username:</label>
 	    </div>
 	    <div class="col-md-2">
 	      	<p class="form-control-static">${volunteer.userName}</p>
 	  	</div>
 	
 		<div class="col-md-2">
-			<label class="control-label">Address</label>
+			<label class="control-label">Address:</label>
 		</div>
 		<div class="col-md-2">
 	  		<p class="form-control-static">${volunteer.address}</p>
 		</div>
 		<div class="col-md-2">
-	    	<label class="control-label">Experience :</label>
+	    	<label class="control-label">Experience:</label>
 	    </div>
 	    <div class="col-md-2">
 	      	<p class="form-control-static"><c:if test="${volunteer.experienceLevel eq 'E'}">Experienced</c:if>
@@ -78,13 +74,13 @@
 	  	</div>
 	
 		<div class="col-md-2">
-			<label class="control-label">Postal Code :</label>
+			<label class="control-label">Postal Code:</label>
 		</div>
 		<div class="col-md-2">
 	  		<p class="form-control-static">${volunteer.postalCode}</p>
 		</div>
 		<div class="col-md-2">
-	    	<label class="control-label">Home Phone # :</label>
+	    	<label class="control-label">Home Phone #:</label>
 	    </div>
 	    <div class="col-md-2">
 	      	<p class="form-control-static">${volunteer.homePhone}</p>
@@ -94,21 +90,21 @@
 
 	<div class="row form-group">
 		<div class="col-md-2">
-	    	<label class="control-label">Cell Phone #</label>
+	    	<label class="control-label">Cell Phone #:</label>
 	    </div>
 	    <div class="col-md-2">
 	      	<p class="form-control-static">${volunteer.cellPhone}</p>
 	  	</div>
 	
 		<div class="col-md-2">
-			<label class="control-label">Email : </label>
+			<label class="control-label">Email: </label>
 		</div>
 		<div class="col-md-2">
 	  		<p class="form-control-static">${volunteer.email}</p>
 		</div>
 		
 		<div class="col-md-2">
-			<label class="control-label">Organization : </label>
+			<label class="control-label">Organization: </label>
 		</div>
 		<div class="col-md-2">
 	  		<p class="form-control-static">${volunteer.organization}</p>
@@ -118,29 +114,29 @@
 
 	<div class="row form-group">
 		<div class="col-md-2">
-	    	<label class="control-label">Emergency Contact :</label>
+	    	<label class="control-label">Emergency Contact:</label>
 	    </div>
 	    <div class="col-md-2">
 	      	<p class="form-control-static">${volunteer.emergencyContact}</p>
 	  	</div>
 	
 		<div class="col-md-2">
-			<label class="control-label">Emergency # : </label>
+			<label class="control-label">Emergency #: </label>
 		</div>
 		<div class="col-md-2">
 	  		<p class="form-control-static">${volunteer.emergencyPhone}</p>
 		</div>
   </div>
 
-<h2>Notes/Comments</h2>
+<h2 class="pagetitleadmin">Notes/Comments</h2>
 <div class="row">
 	<div class="col-md-6">
   		<p class="form-control-static">${volunteer.notes}</p>
 	</div>
 </div>
-<h2>Availability</h2>
+<h2 class="pagetitleadmin">Availability</h2>
 <div>
-	<table width="100%" border="1">
+	<table width="100%" border="1" class="table table-striped">
 		<tr>
 			<td width ="200" valign="top">
 				<table>
@@ -223,8 +219,8 @@
 		
 	</table>
 </div>
-	<h2>Upcoming Visits</h2>
-	<table  class="table table-stripe" width="970" border="1">
+	<h2 class="pagetitleadmin">Upcoming Visits</h2>
+	<table  class="table table-striped" width="970" border="1">
 		<tr>
 			
 			<th width="500">Visit Date</th>
@@ -239,8 +235,8 @@
 		</tr>
 		</c:forEach>
 	</table>
-	<h2>Completed Visits</h2>
-	<table  width="970" border="1">
+	<h2 class="pagetitleadmin">Completed Visits</h2>
+	<table  class="table table-striped" width="970" border="1">
 		<tr>
 			<th width="300">Visit #</th>
 			<th width="300"> Visit Date</th>		

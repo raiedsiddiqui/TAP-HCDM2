@@ -70,7 +70,7 @@
  	<body>
   <div id="headerholder"> 
     <div class="row">
-      <div class="col-md-12 tpurple logoheight">
+      <div class="col-md-12 tpurple logoheightlogin">
         <img id="logo" src="<c:url value="/resources/images/logow.png"/>" />
       </div>
 

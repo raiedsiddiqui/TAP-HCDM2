@@ -1,14 +1,13 @@
 
-	<table>
-		<tr>
-			<td class="col-md-2"><h4>Monday <input type="checkbox" name="mondayNull" value = "non"> N/A</h4></td>
-			<td class="col-md-2"><h4>Tuesday <input type="checkbox" name="tuesdayNull"  value = "non"> N/A </h4></td>
-			<td class="col-md-2"><h4>Wednesday <input type="checkbox" name="wednesdayNull" value = "non"> N/A</h4></td>
-			<td class="col-md-2"><h4>Thursday <input type="checkbox" name="thursdayNull" value = "non"> N/A</h4>	</td>
-			<td class="col-md-2"><h4>Friday <input type="checkbox" name="fridayNull"  value = "non"> N/A</h4></td>
-		</tr>
-		<tr>
-			<td class="col-md-2"><select name="monFrom1">
+	<div class="row">
+			<div class="col-md-2"><h4>Monday <input type="checkbox" name="mondayNull" value = "non"> N/A</h4></div>
+			<div class="col-md-2"><h4>Tuesday <input type="checkbox" name="tuesdayNull"  value = "non"> N/A </h4></div>
+			<div class="col-md-2"><h4>Wednesday <input type="checkbox" name="wednesdayNull" value = "non"> N/A</h4></div>
+			<div class="col-md-2"><h4>Thursday <input type="checkbox" name="thursdayNull" value = "non"> N/A</h4>	</div>
+			<div class="col-md-2"><h4>Friday <input type="checkbox" name="fridayNull"  value = "non"> N/A</h4></div>
+	</div>
+	<div id="row">
+			<div class="col-md-2"><select name="monFrom1">
 				<option value="0">...</option>
 				<option value="11">08:00 AM</option>
 				<option value="12">08:30 AM</option>
@@ -102,8 +101,8 @@
 				<option value="120">17:30 PM</option>
 				<option value="121">18:00 PM</option>
 				</select>
-			</td>
-			<td>
+			</div>
+			<div class="col-md-2">
 				<select name="tueFrom1" >
 				<option value="0">...</option>
 				<option value="21">08:00 AM</option>
@@ -198,8 +197,8 @@
 				<option value="220">17:30 PM</option>
 				<option value="221">18:00 PM</option>
 				</select>
-			</td>
-			<td>
+			</div>
+			<div class="col-md-2">
 				<select name="wedFrom1" >
 				<option value="0">...</option>
 				<option value="31">08:00 AM</option>
@@ -294,8 +293,8 @@
 				<option value="320">17:30 PM</option>
 				<option value="321">18:00 PM</option>
 				</select>
-			</td>
-			<td>
+			</div>
+			<div class="col-md-2">
 				<select name="thuFrom1" >
 				<option value="0">...</option>
 				<option value="41">08:00 AM</option>
@@ -390,8 +389,8 @@
 				<option value="420">17:30 PM</option>
 				<option value="421">18:00 PM</option>
 				</select>
-			</td>
-			<td>
+			</div>
+			<div class="col-md-2">
 				<select name="friFrom1" >
 				<option value="0">...</option>
 				<option value="51">08:00 AM</option>
@@ -462,32 +461,32 @@
 				<option value="519">17:00 PM</option>
 				<option value="520">17:30 PM</option>
 				<option value="521">18:00 PM</option>
-				</select> TO <select name="friTo2" >
-				<option value="0">...</option>
-				<option value="401">08:00 AM</option>
-				<option value="51">08:00 AM</option>
-				<option value="52">08:30 AM</option>
-				<option value="53">09:00 AM</option>
-				<option value="54">09:30 AM</option>
-				<option value="55">10:00 AM</option>
-				<option value="56">10:30 AM</option>
-				<option value="57">11:00 AM</option>
-				<option value="58">11:30 AM</option>
-				<option value="59">12:00 PM</option>
-				<option value="510">12:30 PM</option>
-				<option value="511">13:00 PM</option>
-				<option value="512">13:30 PM</option>
-				<option value="513">14:00 PM</option>
-				<option value="514">14:30 PM</option>
-				<option value="515">15:00 PM</option>
-				<option value="516">15:30 PM</option>
-				<option value="517">16:00 PM</option>
-				<option value="518">16:30 PM</option>
-				<option value="519">17:00 PM</option>
-				<option value="520">17:30 PM</option>
-				<option value="521">18:00 PM</option>
+				</select> TO 
+				<select name="friTo2" >
+					<option value="0">...</option>
+					<option value="401">08:00 AM</option>
+					<option value="51">08:00 AM</option>
+					<option value="52">08:30 AM</option>
+					<option value="53">09:00 AM</option>
+					<option value="54">09:30 AM</option>
+					<option value="55">10:00 AM</option>
+					<option value="56">10:30 AM</option>
+					<option value="57">11:00 AM</option>
+					<option value="58">11:30 AM</option>
+					<option value="59">12:00 PM</option>
+					<option value="510">12:30 PM</option>
+					<option value="511">13:00 PM</option>
+					<option value="512">13:30 PM</option>
+					<option value="513">14:00 PM</option>
+					<option value="514">14:30 PM</option>
+					<option value="515">15:00 PM</option>
+					<option value="516">15:30 PM</option>
+					<option value="517">16:00 PM</option>
+					<option value="518">16:30 PM</option>
+					<option value="519">17:00 PM</option>
+					<option value="520">17:30 PM</option>
+					<option value="521">18:00 PM</option>
 				</select>
-			</td>
-		</tr>
-	</table>
+			</div>
+		</div>
 

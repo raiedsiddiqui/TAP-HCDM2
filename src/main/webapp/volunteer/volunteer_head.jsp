@@ -19,7 +19,7 @@
 
 
 <!-- FONTS -->
-<link href='http://fonts.googleapis.com/css?family=Krona+One' rel='stylesheet' type='text/css'>
+<link href='//fonts.googleapis.com/css?family=Krona+One' rel='stylesheet' type='text/css'>
 <!-- FONTS -->
-<link href='http://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,400,600' rel='stylesheet' type='text/css'>
+<link href='//fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
+<link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,400,600' rel='stylesheet' type='text/css'>

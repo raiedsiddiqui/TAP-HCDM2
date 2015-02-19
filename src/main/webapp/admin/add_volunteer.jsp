@@ -53,7 +53,7 @@
 	<div class="content">
 		<%@include file="navbar.jsp" %>
 		<div class="row-fluid">
-			<h2>Volunteers </h2>
+			<h2 class="pagetitleadmin">New Volunteer</h2>
 			<div class="row-fluid">
 			<c:if test="${not empty userNameExist}">			
 				<div class="alert alert-error"><spring:message code="message_username_exist"/></div>
@@ -65,15 +65,15 @@
 					<fieldset>						
 							<div class="row form-group">
 								<div class="col-md-4">
-									<label>First Name:</label>
+									<label>First Name *</label>
 									<input type="text" name="firstname" class="form-control" required/>									
 								</div>
 								<div class="col-md-4">
-									<label>Last Name:</label>
+									<label>Last Name *</label>
 									<input type="text" name="lastname" class="form-control" required/>
 								</div>
 								<div class="col-md-4">
-									<label>Gender:</label>
+									<label>Gender</label>
 										<select name="gender" form="add_volunteer" class="form-control">
 											<option value="M">Male</option>
 											<option value="F">Female</option>
@@ -84,26 +84,26 @@
 
 							<div class="row form-group">
 								<div class="col-md-4">	
-									<label>Apt #:</label>
+									<label>Apt #</label>
 									<input type="text" name="aptnum" class="form-control"/>
 								</div>
 								<div class="col-md-4">
-									<label>Street #:</label>
+									<label>Street #</label>
 									<input type="text" name="streetnum" class="form-control" />
 								</div>
 								<div class="col-md-4">	
-									<label>Street:</label>
+									<label>Street</label>
 									<input type="text" name="street" class="form-control"/>
 								</div>								
 							</div>
 
 							<div class="row form-group">
 								<div class="col-md-4">	
-									<label>City:</label>
+									<label>City</label>
 									<input name="city" class="form-control" type="text">
 								</div>
 								<div class="col-md-4">	
-									<label>Province:</label>
+									<label>Province</label>
 										<select name="province" form="add_volunteer" class="form-control">
 											<option value="AB" >Alberta</option>
 											<option value="BC" >British Colunmbia</option>							
@@ -122,7 +122,7 @@
 										</select>
 								</div>	
 								<div class="col-md-4">	
-									<label>Country:</label>
+									<label>Country</label>
 										<select name="country" form="add_volunteer" class="form-control">
 											<option value="CA" selected>Canada</option>
 											<option value="ST">USA</option>
@@ -134,18 +134,18 @@
 
 							<div class="row form-group">
 								<div class="col-md-4">	
-									<label>Postal Code:</label>
+									<label>Postal Code</label>
 									<input name="postalcode" class="form-control" type="text"/>
 								</div>
 							
 							
 								<div class="col-md-4">		
-									<label >Home Phone:</label>
+									<label >Home Phone *</label>
 									<input name="homephone" class="form-control" type="text">
 								</div>
 
 								<div class="col-md-4">	
-									<label>Cell Phone:</label>
+									<label>Cell Phone</label>
 									<input name="cellphone" class="form-control" type="text">
 								</div>
 							</div>
@@ -153,15 +153,15 @@
 			
 							<div class="row form-group">
 								<div class="col-md-4">
-									<label>Email:</label>
+									<label>Email *</label>
 									<input name="email" class="form-control" type="text" required>
 								</div>
 								<div class="col-md-4">
-									<label>Emergency Contact:</label>
+									<label>Emergency Contact</label>
 									<input name="emergencycontact" class="form-control" type="text">
 								</div>
 								<div class="col-md-4">		
-									<label>Emergency #:</label>
+									<label>Emergency #</label>
 									<input name="emergencyphone" class="form-control" type="text">
 								</div>
 							</div>	
@@ -302,7 +302,7 @@
 							</div>
 
 
-						<h2>User Account </h2>
+						<h2 class="pagetitleadmin">User Account </h2>
 
 								<div class="row form-group">
 
@@ -321,13 +321,14 @@
 								</div>
 							</div>
 
-						<h2>Availability </h2>
+						<h2 class="pagetitleadmin">Availability </h2>
 						<%@include file="add_availabilities.jsp" %>			
 							</div>
 							<!--  br/>-->
-							<h2> Comments </h2>
+					<h2 class="pagetitleadmin"> Comments </h2>
+					
 					<div class="col-md-10">		
-						<input type="textarea" class="form-control" maxlength="50" name="notes"/>
+						<input type="textarea" class="form-control" maxlength="300" name="notes"/>
 					</div>
 
 						<input type="button" value="Cancel" class="btn btn-primary" onclick="javascript:history.go(-1)">

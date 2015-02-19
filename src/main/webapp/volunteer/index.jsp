@@ -157,7 +157,7 @@
 		</div>
 
 		<div class="row-fluid">				
-			<h3 class="pagetitle">Pending Approval <span class="pagedesc"> These appointments have not been approved by your volunteer coordinator </span></h3>
+			<h3 class="pagetitle">Pending Approval <span class="pagedesc"> The appointments below have not been approved by your volunteer coordinator </span></h3>
 			<c:forEach items="${pending_appointments}" var="pa">
 				<div class="pname">
 					<div class="row pbutton">

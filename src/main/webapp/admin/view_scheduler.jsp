@@ -122,37 +122,61 @@
 		</table>		
 	</form>
  -->
-	<table width="1200">
-	<tr>
-		<th width="120">Volunteer One</th>
-		<th width="100">Phone #</th>
-		<th width="200">Email</th>
-		<th width="120">Volunteer Two</th>
-		<th width="100">Phone #</th>
-		<th width="200">Email</th>
-		<th width="200">Date/Time</th>			
-		<th width="150">Action</th>
-		
-	</tr>
-	
-	
+ <div class="input-group"> <span class="input-group-addon">Filter</span>
+	<input id="filter" type="text" class="form-control" placeholder="Type here...">
+</div>
+	<table class="table table-striped">
+	<thead>
+		<tr>
+			<th width="120">Volunteer One</th>
+			<th width="100">Phone #</th>
+			<th width="200">Email</th>
+			<th width="120">Volunteer Two</th>
+			<th width="100">Phone #</th>
+			<th width="200">Email</th>
+			<th width="200">Date/Time</th>			
+			<th width="150">Action</th>
+			
+		</tr>
+	<thead>
+	<tbody class="searchable">
 	<c:forEach items="${matcheList}" var="ml">	
 		<tr>
-						<td>${ml.vDisplayName}</td>						
-						<td>${ml.vPhone}</td>
-						<td>${ml.vEmail}</td>
-						<td>${ml.pDisplayName}</td>						
-						<td>${ml.pPhone}</td>
-						<td>${ml.pEmail}</td>
-						<td>${ml.matchedTime}</td>										
-						<td><a href="<c:url value="/add_appointment/${ml.vId}?vId=${ml.pId}&time=${ml.matchedTime}"/>">Book Appointment</a></td>
-						
-					</tr>
+			<td>${ml.vDisplayName}</td>						
+			<td>${ml.vPhone}</td>
+			<td>${ml.vEmail}</td>
+			<td>${ml.pDisplayName}</td>						
+			<td>${ml.pPhone}</td>
+			<td>${ml.pEmail}</td>
+			<td>${ml.matchedTime}</td>										
+			<td><a href="<c:url value="/add_appointment/${ml.vId}?vId=${ml.pId}&time=${ml.matchedTime}"/>">Book Appointment</a></td>
+			
+		</tr>
 	</c:forEach>
+	<tbody>
 	
 </table>
 
 </div>
+	<script type="text/javascript">
+$(document).ready(function () {
 
+    (function ($) {
+
+        $('#filter').keyup(function () {
+
+            var rex = new RegExp($(this).val(), 'i');
+            $('.searchable tr').hide();
+            $('.searchable tr').filter(function () {
+                return rex.test($(this).text());
+            }).show();
+
+        })
+
+    }(jQuery));
+
+});
+
+	</script>
 </body>
 </html>
