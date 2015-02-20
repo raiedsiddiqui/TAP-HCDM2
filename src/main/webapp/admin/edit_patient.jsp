@@ -115,7 +115,7 @@
 					<div class="col-md-6">
 						<label>Clinic:</label>
 						<select name="clinic" form="editPatient" class="form-control">
-							<option value="1" <c:if test="${patient.clinic eq 1}">selected</c:if>>West End Clinic</option>
+							<option value="1" <c:if test="${patient.clinic eq 1}">selected</c:if>>McMaster Family Practice</option>
 							<option value="2" <c:if test="${patient.clinic eq 2}">selected</c:if>>Stonechurch Family Health Center</option>
 						</select>
 					</div>

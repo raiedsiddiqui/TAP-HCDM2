@@ -1,6 +1,7 @@
 package org.tapestry.controller;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -504,16 +505,53 @@ public class VolunteerController {
 				vl.remove(v);
 				break;
 			}
-		}
-		
+		}		
 		return vl;
-	//	return volunteerManager.getAllVolunteersByOrganization(volunteer.getOrganizationId());
 	}
 		
+	@RequestMapping(value="/authenticatePHRAjax", method = RequestMethod.GET)
+	@ResponseBody
+	public String authenticate111PHR(SecurityContextHolderAwareRequestWrapper request){		
+		System.out.println("in response body....");
+		User user = TapestryHelper.getLoggedInUser(request, userManager);
+   		int volId = TapestryHelper.getLoggedInVolunteerId(request);
+   		int organizationId = user.getOrganization();
+   		int patientId = TapestryHelper.getPatientId(request);
+   		
+   		//authenticate PHR for patient, set oscar_verified = 1
+   		patientManager.authenticatePHRPatientByID(patientId);  
+   		
+   		//send message to local admin
+   		List<User> coordinators = userManager.getVolunteerCoordinatorByOrganizationId(organizationId);   		
+   		StringBuffer sb = new StringBuffer();
+   		sb.append("[");
+   		sb.append(volunteerManager.getVolunteerNameById(volId));
+   		sb.append("] has verified [");
+   		if (patientManager.getPatientByID(patientId) != null)
+   			sb.append(patientManager.getPatientByID(patientId).getDisplayName());
+   		sb.append("] on [");
+   		
+   		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+   		sb.append(sdf.format(new Date()));
+   		sb.append("] with a photo ID.");
+   					
+		if (coordinators != null)
+		{	//send message to all coordinators in the organization						
+			for (int i = 0; i<coordinators.size(); i++)		
+				TapestryHelper.sendMessageToInbox("Authenticate PHR", sb.toString(), user.getUserID(), coordinators.get(i).getUserID(), messageManager);	
+		}
+		else{
+			System.out.println("Can't find any coordinator in organization id# " + organizationId);
+			logger.error("Can't find any coordinator in organization id# " + organizationId);
+		}	
+		
+		return "send message to VC...";
+	}
+	
 	//Activity in Volunteer
 	//display all activity input by volunteers
 	@RequestMapping(value="/view_activity_admin", method=RequestMethod.GET)
-	public String viewActivityByAdmin( SecurityContextHolderAwareRequestWrapper request, ModelMap model)
+	public String viewActivityByAdmin(SecurityContextHolderAwareRequestWrapper request, ModelMap model)
 	{	
 		List<Activity> activities = new ArrayList<Activity>();
 		List<Volunteer> volunteers = new ArrayList<Volunteer>();		
@@ -1093,6 +1131,55 @@ public class VolunteerController {
    		
    		return "admin/manage_appointments";
    	}
+   	
+   	@RequestMapping(value="/authenticatePHR", method=RequestMethod.GET)
+   	public String authenticatePHR(SecurityContextHolderAwareRequestWrapper request, ModelMap model)
+   	{
+   		User user = TapestryHelper.getLoggedInUser(request, userManager);
+   		int volId = TapestryHelper.getLoggedInVolunteerId(request);
+   		int organizationId = user.getOrganization();
+   		int patientId = TapestryHelper.getPatientId(request);
+   		
+   		//authenticate PHR for patient, set oscar_verified = 1
+   		patientManager.authenticatePHRPatientByID(patientId);  
+   		
+   		//send message to local admin
+   		List<User> coordinators = userManager.getVolunteerCoordinatorByOrganizationId(organizationId);   		
+   		StringBuffer sb = new StringBuffer();
+   		sb.append("[");
+   		sb.append(volunteerManager.getVolunteerNameById(volId));
+   		sb.append("] has verified [");
+   		String patientName = patientManager.getPatientByID(patientId).getDisplayName();
+   		if (patientManager.getPatientByID(patientId) != null)
+   			sb.append(patientName);
+   		sb.append("] on [");
+   		
+   		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+   		sb.append(sdf.format(new Date()));
+   		sb.append("] with a photo ID.");
+   					
+		if (coordinators != null)
+		{	//send message to all coordinators in the organization						
+			for (int i = 0; i<coordinators.size(); i++)		
+				TapestryHelper.sendMessageToInbox("Authenticate PHR", sb.toString(), user.getUserID(), coordinators.get(i).getUserID(), messageManager);	
+		}
+		else{
+			System.out.println("Can't find any coordinator in organization id# " + organizationId);
+			logger.error("Can't find any coordinator in organization id# " + organizationId);
+		}
+		//add logs
+	
+		sb = new StringBuffer();
+		sb.append(user.getName());
+		sb.append(" has authenticate PHR for patient:  ");
+		sb.append(patientName);		
+		sb.append(" on ");
+		sb.append(sdf.format(new Date()));
+		userManager.addUserLog(sb.toString(), user);
+		
+   		int appointmentId = TapestryHelper.getAppointmentId(request);   		
+		return "redirect:/patient/" + patientId + "?appointmentId=" + appointmentId+"&showAuthenticationMsg="+ true;
+   	}
      
    	@RequestMapping(value="/authenticate_myoscar/{volunteerId}", method=RequestMethod.POST)
    	public String authenticateMyOscar(@PathVariable("volunteerId") int id, @RequestParam(value="patientId", required=true) int patientId,
@@ -1305,19 +1392,25 @@ public class VolunteerController {
 				sb.append(" on ");
 				sb.append(date);
 				sb.append(".\n");
-				sb.append("This appointment is awaiting confirmation.");
+	//			sb.append("This appointment is awaiting confirmation.");
 				
-				String msg = sb.toString();
+				String msg;
+				
+	//			String msg = sb.toString();
 				
 				if (request.isUserInRole("ROLE_ADMIN")||(request.isUserInRole("ROLE_LOCAL_ADMIN"))) 
 				{//send message for user login as admin/volunteer coordinator				
+					msg = sb.toString();
 					TapestryHelper.sendMessageToInbox(msg, userId, volunteer1UserId, messageManager);//send message to volunteer1 
-					TapestryHelper.sendMessageToInbox(msg, userId, volunteer2UserId, messageManager);//send message to volunteer2				
+					TapestryHelper.sendMessageToInbox(msg, userId, volunteer2UserId, messageManager);//send message to volunteer2	
+					TapestryHelper.sendMessageToInbox(msg, userId, userId, messageManager);//send message to login user 
 				}
 				else //send message for user login as volunteer
 				{						
 					int organizationId = volunteer1.getOrganizationId();
 					List<User> coordinators = userManager.getVolunteerCoordinatorByOrganizationId(organizationId);
+					sb.append("This appointment is awaiting confirmation.");
+					msg = sb.toString();
 					
 					if (coordinators != null)
 					{	//send message to all coordinators in the organization						
@@ -1328,6 +1421,8 @@ public class VolunteerController {
 						System.out.println("Can't find any coordinator in organization id# " + organizationId);
 						logger.error("Can't find any coordinator in organization id# " + organizationId);
 					}
+					TapestryHelper.sendMessageToInbox(msg, userId, volunteer1UserId, messageManager);//send message to volunteer1 
+					TapestryHelper.sendMessageToInbox(msg, userId, volunteer2UserId, messageManager);//send message to volunteer2	
 				}						
 				
 				//after saving appointment in DB  
@@ -1842,23 +1937,23 @@ public class VolunteerController {
 		if (coordinators != null)			
 		{	//send message to all coordinators in the organization					
 			for (int i = 0; i<coordinators.size(); i++)		
-				TapestryHelper.sendMessageToInbox("HL7 Report", sb.toString(), userId, coordinators.get(i).getUserID(), messageManager);			
+				TapestryHelper.sendMessageToInbox("PDF/HL7 Report", sb.toString(), userId, coordinators.get(i).getUserID(), messageManager);			
 		}
 		else{
 			System.out.println("Can't find any coordinator in organization id# " + organizationId);
 			logger.error("Can't find any coordinator in organization id# " + organizationId);
 		}
 		
-		List<User> admins = userManager.getAllUsersWithRole("ROLE_ADMIN");
-		if (admins != null && admins.size() > 0)
-		{//send notification to all admins
-			for (User u: admins)
-				TapestryHelper.sendMessageToInbox("PDF Report", sb.toString(), userId, u.getUserID(), messageManager);
-		}
-		else{
-			System.out.println("Can't find any admin" );
-			logger.error("Can't find any admin ");
-		}		
+//		List<User> admins = userManager.getAllUsersWithRole("ROLE_ADMIN");
+//		if (admins != null && admins.size() > 0)
+//		{//send notification to all admins
+//			for (User u: admins)
+//				TapestryHelper.sendMessageToInbox("PDF Report", sb.toString(), userId, u.getUserID(), messageManager);
+//		}
+//		else{
+//			System.out.println("Can't find any admin" );
+//			logger.error("Can't find any admin ");
+//		}		
 		
 		///////////////////////
 		//todo:generate tapestry reprot, send it to MRP in Oscar, and send message to patient in MyOscar

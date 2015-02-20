@@ -88,6 +88,12 @@ public interface PatientManager {
 	@Transactional
 	public void deletePatientWithId(int id);
 	
+	/**
+	 * authenticate PHR for patient
+	 */
+	@Transactional
+	public void authenticatePHRPatientByID(int id);
+	
 	
 	
 }

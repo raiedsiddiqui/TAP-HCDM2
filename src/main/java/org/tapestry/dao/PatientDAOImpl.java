@@ -128,7 +128,7 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 				 ps.setString(8, p.getAlerts());
 				 ps.setString(9, p.getMyoscarVerified());
 				 ps.setString(10,  p.getClinic());
-				 ps.setString(11, "tapestry_patient");
+				 ps.setString(11, p.getUserName());//user name in myoscar
 				 ps.setInt(12, p.getMrp());
 				 ps.setString(13,  p.getMrpFirstName());
 				 ps.setString(14, p.getMrpLastName());
@@ -148,6 +148,13 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 				p.getGender(), p.getNotes(), p.getClinic(), p.getMyoscarVerified(), p.getAlerts(), p.getPartner(), 
 				p.getMrp(), p.getMrpFirstName(), p.getMrpLastName(), p.getPatientID());
 
+	}
+	
+	@Override
+	public void authenticatePHRPatientByID(int id) {
+		String sql = "UPDATE patients SET myoscar_verified=? WHERE patient_ID=? ";
+		getJdbcTemplate().update(sql, "1", id);
+		
 	}
 
 	@Override
@@ -208,5 +215,7 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 			return patient;
 		}
 	}
+
+	
 
 }

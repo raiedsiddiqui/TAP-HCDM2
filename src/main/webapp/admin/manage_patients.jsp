@@ -199,12 +199,12 @@
 					</div>						
 				</div>		
 					<label>MyOscar verified? </label>
-					<input type="radio" name="myoscar_verified" value="1" checked/>Yes
-					<input type="radio" name="myoscar_verified" value="0"/>No
+					<input type="radio" name="myoscar_verified" value="1" />Yes
+					<input type="radio" name="myoscar_verified" value="0" checked/>No
 					<br/>
 					<label>Clinic:</label>
 					<select name="clinic" form="newPatient" class="form-control">
-						<option value="1">West End Clinic</option>
+						<option value="1">McMaster Family Practice</option>
 						<option value="2">Stonechurch Family Health Center</option>
 					</select>
 					<!-- 

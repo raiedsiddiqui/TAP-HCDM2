@@ -1,11 +1,17 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=no"></meta>
+	<link href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="${pageContext.request.contextPath}/resources/css/bootstrap-responsive.min.css" rel="stylesheet" />  		
+		<script src="${pageContext.request.contextPath}/resources/js/jquery-2.0.3.min.js"></script>
+		<script src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
+		<script src="${pageContext.request.contextPath}/resources/js/tapestryUtils.js"></script>	
 	<title>Patient Surveys</title>
 	<%@include file="volunteer/volunteer_head.jsp" %>
 
@@ -23,12 +29,30 @@
 		float:right;
 	}
 	</style>
+	<script type="text/javascript">
+		function confirmAuthenticatPHR()
+		{
+			var x = confirm("Have you verified the client with a photo ID?");
+			if (x)
+				return true;
+			else
+				return false;
+		}
+	</script>
+	
 </head>
 	
 <body>
 	<%@include file="volunteer/subNavi.jsp" %>
-
+	<div id="displayAuthenticationDiv" class ="alert alert-info" style="display:none">
+		<spring:message code="message_authenticatePHR"/>
+	</div>
+	<c:if test="${not empty showAuthenticationMsg}">
+			<div class ="alert alert-info"><spring:message code="message_authenticatePHR"/></div>
+	</c:if>
+	
 	<div class="container">
+	<div id="myTest" ></div>
 	<div class="row">
 		<div class="col-md-7">
 			<c:if test="${not empty patient}">
@@ -48,10 +72,14 @@
 			</c:if>
 
 			<div class="visitcompletebox">
-<!-- 				<a href="<c:url value="/goMyOscarAuthenticate/${appointment.appointmentID}"/>" role="button" class="lgbtn">Authenticate PHR</a>-->				
+<!-- 				<a href="<c:url value="/goMyOscarAuthenticate/${appointment.appointmentID}"/>" role="button" class="lgbtn">Authenticate PHR</a>-->	
+					<c:if test="${patient.myoscarVerified == 0}">
+			  			<a href="<c:url value="/authenticatePHR"/>" Onclick="return confirmAuthenticatPHR()" role="button" class="lgbtn">Authenticate PHR</a>		
+						
+					</c:if>
 					<c:if test="${not empty appointment}">
-					<a href="<c:url value="/visit_complete/${appointment.appointmentID}"/>" role="button" class="lgbtn">Visit Complete</a>
-				</c:if>
+						<a href="<c:url value="/visit_complete/${appointment.appointmentID}"/>" role="button" class="lgbtn">Visit Complete</a>
+					</c:if>
 			</div>
 		</div>
 	</div>

@@ -753,6 +753,7 @@ public class TapestryController{
 			p.setNotes(request.getParameter("notes"));
 			p.setAlerts(request.getParameter("alerts"));
 			p.setClinic(request.getParameter("clinic"));
+			p.setUserName(request.getParameter("username_myoscar"));
 			p.setMrp(Integer.parseInt(request.getParameter("mrp")));
 			p.setMrpFirstName(request.getParameter("mrp_firstname"));
 			p.setMrpLastName(request.getParameter("mrp_lastname"));
@@ -858,6 +859,7 @@ public class TapestryController{
 			p.setClinic(request.getParameter("clinic"));
 			p.setAlerts(request.getParameter("alerts"));
 			p.setMyoscarVerified(request.getParameter("myoscar_verified"));
+			p.setUserName(request.getParameter("username_myoscar"));
 			p.setMrp(Integer.parseInt(request.getParameter("mrp")));
 			p.setMrpFirstName(request.getParameter("mrp_firstname"));
 			p.setMrpLastName(request.getParameter("mrp_lastname"));
@@ -908,8 +910,9 @@ public class TapestryController{
 	public String viewPatient(@PathVariable("patient_id") int id, @RequestParam(value="complete", required=false)
 					String completedSurvey, @RequestParam(value="aborted", required=false) String inProgressSurvey, 
 					@RequestParam(value="appointmentId", required=false) Integer appointmentId, 
+					@RequestParam(value="showAuthenticationMsg", required=false) boolean showAuthenticationMsg,
 					SecurityContextHolderAwareRequestWrapper request, ModelMap model)
-	{		
+	{	
 		Patient patient = patientManager.getPatientByID(id);
 		//Find the name of the current user
 		User u = TapestryHelper.getLoggedInUser(request);
@@ -947,6 +950,8 @@ public class TapestryController{
 		model.addAttribute("completedSurveys", completedSurveyResultList);
 		model.addAttribute("inProgressSurveys", incompleteSurveyResultList);
 		model.addAttribute("surveys", surveyList);
+		if (showAuthenticationMsg)
+			model.addAttribute("showAuthenticationMsg", true);
 //		ArrayList<Picture> pics = pictureDao.getPicturesForPatient(id);
 //		model.addAttribute("pictures", pics);
 		

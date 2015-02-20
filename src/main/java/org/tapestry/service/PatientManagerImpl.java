@@ -54,6 +54,11 @@ public class PatientManagerImpl implements PatientManager {
 	}
 
 	@Override
+	public void authenticatePHRPatientByID(int id) {
+		patientDao.authenticatePHRPatientByID(id);
+		
+	}
+	@Override
 	public List<Patient> getPatientsByGroup(int organizationId) {		
 		return patientDao.getPatientsByGroup(organizationId);
 	}
@@ -75,5 +80,7 @@ public class PatientManagerImpl implements PatientManager {
 		}
 		return null;
 	}
+
+	
 
 }

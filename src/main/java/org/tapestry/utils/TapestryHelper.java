@@ -1148,8 +1148,8 @@ public class TapestryHelper {
 			cell.setPadding(5);
 			table.addCell(cell);
 	            
-//			cell = new PdfPCell(new Phrase("Address: " + report.getPatient().getAddress(), sbFont));
-			cell = new PdfPCell(new Phrase("Address: 111 Sunny St, Hamilton, ON, L9H 1N1", sbFont));
+			cell = new PdfPCell(new Phrase("Address: " + report.getPatient().getAddress(), sbFont));
+//			cell = new PdfPCell(new Phrase("Address: 111 Sunny St, Hamilton, ON, L9H 1N1", sbFont));
 			cell.setBorderWidthTop(1f);
 			cell.setBorderWidthRight(1f);
 			cell.setBorderWidthLeft(0);
@@ -1227,7 +1227,7 @@ public class TapestryHelper {
 //			Phrase comb = new Phrase(); 
 //			comb.add(new Phrase("     ALERT :", rbFont));
 //			comb.add(new Phrase(" For Case Review wirh IP-TEAM", wbLargeFont));	    
-			cell = new PdfPCell(new Phrase("For Case Review wirh IP-TEAM", wbLargeFont));
+			cell = new PdfPCell(new Phrase("For Case Review with IP-TEAM", wbLargeFont));
 //			cell.addElement(comb);	
 			cell.setBackgroundColor(BaseColor.BLACK);	           
 			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -2491,6 +2491,20 @@ public class TapestryHelper {
 		} catch (MessagingException e) {
 			System.out.println("Error: Could not send email");
 			System.out.println(e.toString());			
+		}
+	}
+	
+	public static void updateUnReadMsg(SecurityContextHolderAwareRequestWrapper request, 
+			ModelMap model, int diff)
+	{
+		HttpSession session = request.getSession();
+		if (session.getAttribute("unread_messages") != null)
+		{				
+			int iUnRead = Integer.parseInt(session.getAttribute("unread_messages").toString());
+			iUnRead = iUnRead + diff;
+			
+			session.setAttribute("unread_messages", iUnRead);
+			model.addAttribute("unread", iUnRead);
 		}
 	}
 	

@@ -195,14 +195,14 @@
 								 		<input name="username" type="text" class="form-control" value="${volunteer.userName}">
 									</div>
 								</div>
-								
+								<!-- 
 								<div class="col-md-4">
 									<div class="input-group input-group-lg">
 								  		<span class="input-group-addon">Password</span>
-								  		<input type="password" name="password" class="form-control" >
+								  		<input type="password" name="password" class="form-control" value="${volunteer.password}">
 									</div>
 								</div>
-																							
+										 -->													
 								
 							</div>
 						<h2>Availability </h2>

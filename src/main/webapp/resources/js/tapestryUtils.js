@@ -11,3 +11,12 @@ function confirmDelete()
 	else
 		return false;
 }
+
+function confirmAuthenticatPHR()
+{
+	var x = confirm("Have you verified the client with a photo id?");
+	if (x)
+		return true;
+	else
+		return false;
+}

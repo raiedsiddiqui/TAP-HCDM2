@@ -71,4 +71,10 @@ public interface PatientDAO {
 	* @param id The ID of the patient to remove
 	*/
 	public void deletePatientWithId(int id);
+	
+	/**
+	 * verify patient authentication PHR
+	 * @param id patient ID
+	 */
+	public void authenticatePHRPatientByID(int id);
 }
