@@ -159,9 +159,7 @@ public class TapestryHelper {
 		if ("ROLE_ADMIN".equalsIgnoreCase(user.getRole()))
 			patients = patientManager.getAllPatients();	//For central Admin		
 		else		
-		{System.out.println("organization == " + user.getOrganization());
-			patients = patientManager.getPatientsByGroup(user.getOrganization());		
-		}
+			patients = patientManager.getPatientsByGroup(user.getOrganization());	
 		
 		if (session.getAttribute("allPatientWithFullInfos") != null)
 			patients = (List<Patient>)session.getAttribute("allPatientWithFullInfos");
@@ -1157,7 +1155,8 @@ public class TapestryHelper {
 			cell.setPadding(5);
 			table.addCell(cell);
 		     
-			cell = new PdfPCell(new Phrase("MRP: Kris Adamczyk", sbFont));
+			String mrpName = report.getPatient().getMrpFirstName() + report.getPatient().getMrpLastName();
+			cell = new PdfPCell(new Phrase("MRP: " + mrpName, sbFont));
 			cell.setBorderWidthLeft(1f);		        
 			cell.setBorderWidthTop(0);	          
 			cell.setBorderWidthBottom(0);

@@ -312,9 +312,10 @@ public class AppointmentDAOImpl extends JdbcDaoSupport implements AppointmentDAO
 				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, p.firstname AS p_firstname, "
 				+ "p.lastname AS p_lastname, v1.organization FROM appointments AS a INNER JOIN volunteers AS v1 "
 				+ "ON a.volunteer=v1.volunteer_ID INNER JOIN volunteers AS v2 ON a.partner=v2.volunteer_ID "
-				+ "INNER JOIN patients AS p ON a.patient=p.patient_ID WHERE v1.organization = ? ORDER BY a.date_time DESC";
+				+ "INNER JOIN patients AS p ON a.patient=p.patient_ID WHERE v1.organization = ? or v2.organization = ? "
+				+ "ORDER BY a.date_time DESC";
 								
-		return getJdbcTemplate().query(sql, new Object[]{organizationId}, new AppointmentMapper());
+		return getJdbcTemplate().query(sql, new Object[]{organizationId, organizationId}, new AppointmentMapper());
 	}
 	
 	@Override
@@ -325,10 +326,10 @@ public class AppointmentDAOImpl extends JdbcDaoSupport implements AppointmentDAO
 				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, p.firstname AS p_firstname, "
 				+ "p.lastname AS p_lastname, v1.organization FROM appointments AS a INNER JOIN volunteers AS v1 "
 				+ "ON a.volunteer=v1.volunteer_ID INNER JOIN volunteers AS v2 ON a.partner=v2.volunteer_ID "
-				+ "INNER JOIN patients AS p ON a.patient=p.patient_ID WHERE v1.organization = ? "
+				+ "INNER JOIN patients AS p ON a.patient=p.patient_ID WHERE v1.organization = ? or v2.organization = ? "
 				+ "AND a.date_time < CURDATE() ORDER BY a.date_time DESC";
 				
-		return getJdbcTemplate().query(sql, new Object[]{organizationId}, new AppointmentMapper());
+		return getJdbcTemplate().query(sql, new Object[]{organizationId, organizationId}, new AppointmentMapper());
 	}
 
 	@Override
@@ -339,10 +340,10 @@ public class AppointmentDAOImpl extends JdbcDaoSupport implements AppointmentDAO
 				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, p.firstname AS p_firstname, "
 				+ "p.lastname AS p_lastname, v1.organization FROM appointments AS a INNER JOIN volunteers AS v1 "
 				+ "ON a.volunteer=v1.volunteer_ID INNER JOIN volunteers AS v2 ON a.partner=v2.volunteer_ID "
-				+ "INNER JOIN patients AS p ON a.patient=p.patient_ID WHERE v1.organization = ? "
+				+ "INNER JOIN patients AS p ON a.patient=p.patient_ID WHERE v1.organization = ? or v2.organization = ? "
 				+ "AND a.date_time>=CURDATE() AND a.completed=0 AND a.status='Awaiting Approval' ORDER BY a.date_time DESC";
 				
-		return getJdbcTemplate().query(sql, new Object[]{organizationId}, new AppointmentMapper());
+		return getJdbcTemplate().query(sql, new Object[]{organizationId, organizationId}, new AppointmentMapper());
 	}
 
 	@Override

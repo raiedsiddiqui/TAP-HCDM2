@@ -1392,46 +1392,26 @@ public class TapestryController{
 			@RequestParam(value="appointmentId", required=true) int appointmentId, 	
 			ModelMap model, HttpServletResponse response, SecurityContextHolderAwareRequestWrapper request)
 	{	
-		Patient patient = patientManager.getPatientByID(id);
-		//call web service to get patient info from myoscar
-		String userName = "carolchou.test";
-		try{
-			PersonTransfer3 personInMyoscar = ClientManager.getClientByUsername(userName);
-						
-			StringBuffer sb = new StringBuffer();
-			if (personInMyoscar.getStreetAddress1() != null)
-				sb.append(personInMyoscar.getStreetAddress1());
-			String city = personInMyoscar.getCity();
-			if (city != null)
-			{
-				sb.append(", ");
-				sb.append(city);
-				patient.setCity(city);
-			}
-			
-			if (personInMyoscar.getProvince() != null)
-			{
-				sb.append(", ");
-				sb.append(personInMyoscar.getProvince());
-			}
-			
-			patient.setAddress(sb.toString());
-			
-			if (personInMyoscar.getBirthDate() != null)
-			{
-				Calendar birthDay = personInMyoscar.getBirthDate();
-				patient.setBod(Utils.getDateByCalendar(birthDay));
-			}
-			
-		} catch (Exception e){
-			System.err.println("Have some problems when calling myoscar web service");			
-		}
-				
 		Appointment appointment = appointmentManager.getAppointmentById(appointmentId);
 		Report report = new Report();		
-		ScoresInReport scores = new ScoresInReport();
-		    	
-		report.setPatient(patient);
+		ScoresInReport scores = new ScoresInReport();	
+		Patient patient = new Patient();
+		//call web service to get patient info from myoscar
+		HttpSession session = request.getSession();
+		List<Patient> patients = new ArrayList<Patient>();
+		if (session.getAttribute("allPatientWithFullInfos") != null)
+		{
+			patients = (List<Patient>)session.getAttribute("allPatientWithFullInfos");
+			
+			for (Patient p: patients)
+			{
+				if (p.getPatientID() == id)
+					patient = p;
+			}			
+			report.setPatient(patient);
+		}
+		else
+			System.out.println("Some thing wrong, can not get patient info from myosca...");
 		
 		//Plan and Key Observations
 		String keyObservation = appointmentManager.getKeyObservationByAppointmentId(appointmentId);

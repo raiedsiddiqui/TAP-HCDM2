@@ -184,11 +184,12 @@
 				    					<c:if test="${a.completed != true }">
 				    						<a href="<c:url value="/delete_appointment/${a.appointmentID}"/>" class="btn btn-danger pull-right btn-sm">Delete</a>
 				    					</c:if>
-										
-										<a href="<c:url value="/decline_appointment/${a.appointmentID}"/>" class="btn btn-warning pull-right btn-sm">Decline</a>
-										
-										<a href="<c:url value="/approve_appointment/${a.appointmentID}"/>" class="btn btn-primary pull-right btn-sm">Approve</a>
-										
+										<c:if test="${a.status != 'Declined' && a.status != 'Approved'}">
+											<a href="<c:url value="/decline_appointment/${a.appointmentID}"/>" class="btn btn-warning pull-right btn-sm">Decline</a>
+										</c:if>
+										<c:if test="${a.status == 'Awaiting Approval'}">
+											<a href="<c:url value="/approve_appointment/${a.appointmentID}"/>" class="btn btn-primary pull-right btn-sm">Approve</a>
+										</c:if>
 										<div class="panel">
 											<div class="panel-heading">
 				    							<h5 class="panel-title">

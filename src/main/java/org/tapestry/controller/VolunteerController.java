@@ -1109,7 +1109,7 @@ public class VolunteerController {
    		else{//For local Admin
    			int organizationId = user.getOrganization();
    			allPatients = patientManager.getPatientsByGroup(organizationId); 
-   			allAppointments = appointmentManager.getAppointmentsGroupByOrganization(organizationId);   			
+   			allAppointments = appointmentManager.getAppointmentsGroupByOrganization(organizationId);     			 			
    			allPastAppointments = appointmentManager.getPastAppointmentsGroupByOrganization(organizationId);
    			allPendingAppointments = appointmentManager.getPendingAppointmentsGroupByOrganization(organizationId);   			
    		}   		
@@ -1511,9 +1511,27 @@ public class VolunteerController {
 	{
 		appointmentManager.approveAppointment(id);
 		
-		//add logs
+		//send message to volunteer1 and volunteer2
 		User loggedInUser = TapestryHelper.getLoggedInUser(request);
+		
+		Appointment appt = appointmentManager.getAppointmentById(id);	
+		int v1UserId = volunteerManager.getUserIdByVolunteerId(appt.getVolunteerID());				
+		int v2UserId = volunteerManager.getUserIdByVolunteerId(appt.getPartnerId());
+		
+		String subject = "Appointment has been approved";
 		StringBuffer sb = new StringBuffer();
+		sb.append("The appointment which is on ");
+		sb.append(appt.getDate());
+		sb.append(" at ");
+		sb.append(appt.getTime());
+		sb.append(" has been approved by ");
+		sb.append(loggedInUser.getName());
+		
+		TapestryHelper.sendMessageToInbox(subject, sb.toString(), loggedInUser.getUserID(), v1UserId, messageManager);
+		TapestryHelper.sendMessageToInbox(subject, sb.toString(), loggedInUser.getUserID(), v2UserId, messageManager);
+		//add logs
+		
+		sb = new StringBuffer();
 		sb.append(loggedInUser.getName());
 		sb.append(" has approved the appointment #  ");
 		sb.append(id);				
