@@ -38,6 +38,7 @@
 			else
 				return false;
 		}
+		
 	</script>
 	
 </head>
@@ -47,6 +48,7 @@
 	<div id="displayAuthenticationDiv" class ="alert alert-info" style="display:none">
 		<spring:message code="message_authenticatePHR"/>
 	</div>
+
 	<c:if test="${not empty showAuthenticationMsg}">
 			<div class ="alert alert-info"><spring:message code="message_authenticatePHR"/></div>
 	</c:if>
@@ -75,7 +77,7 @@
 <!-- 				<a href="<c:url value="/goMyOscarAuthenticate/${appointment.appointmentID}"/>" role="button" class="lgbtn">Authenticate PHR</a>-->	
 					<c:if test="${patient.myoscarVerified == 0}">
 			  			<a href="<c:url value="/authenticatePHR"/>" Onclick="return confirmAuthenticatPHR()" role="button" class="lgbtn">Authenticate PHR</a>		
-						
+					
 					</c:if>
 					<c:if test="${not empty appointment}">
 						<a href="<c:url value="/visit_complete/${appointment.appointmentID}"/>" role="button" class="lgbtn">Visit Complete</a>

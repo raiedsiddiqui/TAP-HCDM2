@@ -141,26 +141,6 @@ public class AppointmentManagerImpl implements AppointmentManager {
 	}
 
 	@Override
-	public String getKeyObservationByAppointmentId(int id) {
-		return appointmentDao.getKeyObservationByAppointmentId(id);
-	}
-
-	@Override
-	public boolean addAlertsAndKeyObservations(int id, String alerts, String keyObservations) {
-		return appointmentDao.addAlertsAndKeyObservations(id, alerts, keyObservations);
-	}
-
-	@Override
-	public String getPlanByAppointmentId(int id) {
-		return appointmentDao.getPlanByAppointmentId(id);
-	}
-
-	@Override
-	public boolean addPlans(int id, String plan) {
-		return appointmentDao.addPlans(id, plan);
-	}
-
-	@Override
 	public void completeNarrative(int id) {
 		appointmentDao.completeNarrative(id);
 	}
@@ -182,7 +162,27 @@ public class AppointmentManagerImpl implements AppointmentManager {
 
 	@Override
 	public void archiveAppointment(Appointment a, String deletedBy) {
-		appointmentDao.archiveAppointment(a, deletedBy);		
+		appointmentDao.archiveAppointment(a, deletedBy);				
+	}
+	
+	@Override
+	public String getKeyObservationByAppointmentId(int id) {
+		return appointmentDao.getKeyObservationByAppointmentId(id);
+	}
+
+	@Override
+	public boolean addAlertsAndKeyObservations(int id, String alerts, String keyObservations) {
+		return appointmentDao.addAlertsAndKeyObservations(id, alerts, keyObservations);
+	}
+
+	@Override
+	public String getPlanByAppointmentId(int id) {
+		return appointmentDao.getPlanByAppointmentId(id);
+	}
+	
+	@Override
+	public boolean addPlans(int id, String plan) {
+		return appointmentDao.addPlans(id, plan);
 	}
 
 }

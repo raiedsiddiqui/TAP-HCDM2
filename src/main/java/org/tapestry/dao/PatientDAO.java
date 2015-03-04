@@ -77,4 +77,30 @@ public interface PatientDAO {
 	 * @param id patient ID
 	 */
 	public void authenticatePHRPatientByID(int id);
+	
+    /**
+     * @param id patientId
+     * @return String KeyObservation for a patient
+     */
+    public String getKeyObservationByPatient(int id);
+    
+    /**
+     * Create key Observation for a patient
+     * @param int id patientId, String keyObservation
+     * @return if it is successful for creating new record in database
+     */
+    public boolean addKeyObservations(int id, String keyObservations);
+    
+    /**
+     * @param id patientId
+     * @return String Plan for a patient
+     */
+    public String getPlanByPatientId(int id);
+    
+    /**
+     * Create Plan for a patient
+     * @param int id patientId, String plan
+     * @return if it is successful for creating new record in database
+     */
+    public boolean addPlans(int id, String plan);
 }

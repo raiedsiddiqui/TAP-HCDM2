@@ -163,6 +163,43 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 		getJdbcTemplate().update(sql, id);
 	}
 	
+	@Override
+	public String getKeyObservationByPatient(int id) {
+		String sql = "SELECT key_observations FROM patients WHERE patient_ID=?";
+		List<String> sList = getJdbcTemplate().queryForList(sql, new Object[]{id}, String.class);
+		
+		if (sList.isEmpty())
+			return null;
+		else
+			return sList.get(0);
+	}
+
+	@Override
+	public boolean addKeyObservations(int id, String keyObservations) {
+		String sql = "UPDATE patients SET key_observations=? WHERE patient_ID=? ";
+		getJdbcTemplate().update(sql, keyObservations, id);
+		return true;
+	}
+
+	@Override
+	public String getPlanByPatientId(int id) {
+		String sql = "SELECT plan FROM patients WHERE patient_ID=?";		
+		List<String> sList = getJdbcTemplate().queryForList(sql, new Object[]{id}, String.class);
+		
+		if (sList.isEmpty())
+			return null;
+		else
+			return sList.get(0);
+	}
+
+	@Override
+	public boolean addPlans(int id, String plan) {
+		String sql = "UPDATE patients SET plan=? WHERE patient_ID=? ";
+		getJdbcTemplate().update(sql, plan, id);
+		
+		return true;
+	}
+	
 	class PatientMapper implements RowMapper<Patient> {
 		public Patient mapRow(ResultSet rs, int rowNum) throws SQLException{
 			Patient patient = new Patient();			
@@ -216,6 +253,6 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 		}
 	}
 
-	
+
 
 }

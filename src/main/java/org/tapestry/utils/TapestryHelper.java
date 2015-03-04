@@ -217,14 +217,18 @@ public class TapestryHelper {
 					Calendar birthDate = person.getBirthDate();						
 					if (birthDate != null)
 						patient.setBod(Utils.getDateByCalendar(birthDate));
-					
+									
 					patient.setAge(age);
-					patient.setCity(person.getCity());					
-					patient.setHomePhone(person.getPhone1());		
-					if (person.getStreetAddress1() != null)
-						patient.setAddress(person.getStreetAddress1());
+					if (person.getStreetAddress1() != null)						
+						patient.setStreetAddress(person.getStreetAddress1());
 					else if(person.getStreetAddress2() != null)
-						patient.setAddress(person.getStreetAddress2());
+						patient.setStreetAddress(person.getStreetAddress2());
+					
+					patient.setCity(person.getCity());		
+					patient.setProvice(person.getProvince());
+					patient.setPostalCode(person.getPostalCode());
+					
+					patient.setHomePhone(person.getPhone1());
 					
 					break;
 				}//end of match patient's username 				
@@ -1146,8 +1150,11 @@ public class TapestryHelper {
 			cell.setPadding(5);
 			table.addCell(cell);
 	            
-			cell = new PdfPCell(new Phrase("Address: " + report.getPatient().getAddress(), sbFont));
-//			cell = new PdfPCell(new Phrase("Address: 111 Sunny St, Hamilton, ON, L9H 1N1", sbFont));
+			String address = report.getPatient().getAddress();
+			if (address == null)
+				address = "";
+//			cell = new PdfPCell(new Phrase("Address: " + report.getPatient().getAddress(), sbFont));
+			cell = new PdfPCell(new Phrase("Address: " + address, sbFont));
 			cell.setBorderWidthTop(1f);
 			cell.setBorderWidthRight(1f);
 			cell.setBorderWidthLeft(0);
@@ -1155,8 +1162,9 @@ public class TapestryHelper {
 			cell.setPadding(5);
 			table.addCell(cell);
 		     
-			String mrpName = report.getPatient().getMrpFirstName() + report.getPatient().getMrpLastName();
-			cell = new PdfPCell(new Phrase("MRP: " + mrpName, sbFont));
+//			String mrpName = report.getPatient().getMrpFirstName() + report.getPatient().getMrpLastName();
+			String mrpName = report.getPatient().getMrpLastName();
+			cell = new PdfPCell(new Phrase("MRP: Dr." + mrpName, sbFont));
 			cell.setBorderWidthLeft(1f);		        
 			cell.setBorderWidthTop(0);	          
 			cell.setBorderWidthBottom(0);
@@ -1180,7 +1188,7 @@ public class TapestryHelper {
 			cell.setPadding(5);
 			table.addCell(cell);
 		        
-			cell = new PdfPCell(new Phrase("Visit: " + report.getAppointment().getStrType(), sbFont));
+			cell = new PdfPCell(new Phrase("", sbFont));
 			cell.setBorderWidthRight(1f);
 			cell.setBorderWidthBottom(1f);
 			cell.setBorderWidthTop(0);
@@ -1192,9 +1200,10 @@ public class TapestryHelper {
 			//Patient Info	
 			table = new PdfPTable(1);
 			table.setWidthPercentage(100);
-			cell = new PdfPCell(new Phrase("TAPESTRY REPORT: [" + patientName + "] " + report.getPatient().getBod(), blFont));
-			
-//			cell = new PdfPCell(new Phrase("TAPESTRY REPORT: --- (1976-06-15)", blFont));
+			String birthDate = report.getPatient().getBod();
+			if (birthDate == null)
+				birthDate = "";
+			cell = new PdfPCell(new Phrase("TAPESTRY REPORT: " + patientName + " " + birthDate, blFont));
 			cell.setBorder(0);
 			table.addCell(cell);
 	            
@@ -1210,13 +1219,6 @@ public class TapestryHelper {
 			
 			cell = new PdfPCell(new Phrase(sb.toString(), rMediumFont));
 			table.addCell(cell);
-//			cell = new PdfPCell(new Phrase(report.getPatientGoals().get(0).toString(),rMediumFont));
-//			table.addCell(cell);
-//			cell = new PdfPCell(new Phrase(report.getPatientGoals().get(0).toString()));
-//			table.addCell(cell);
-//			cell = new PdfPCell(new Phrase(report.getPatientGoals().get(1).toString(),rMediumFont));
-//			table.addCell(cell);	            
-
 			document.add(table);			
 			//alerts
 			table = new PdfPTable(1);
@@ -1225,9 +1227,9 @@ public class TapestryHelper {
 		            
 //			Phrase comb = new Phrase(); 
 //			comb.add(new Phrase("     ALERT :", rbFont));
-//			comb.add(new Phrase(" For Case Review wirh IP-TEAM", wbLargeFont));	    
-			cell = new PdfPCell(new Phrase("For Case Review with IP-TEAM", wbLargeFont));
+//			comb.add(new Phrase(" For Case Review wirh IP-TEAM", wbLargeFont));	    			
 //			cell.addElement(comb);	
+			cell = new PdfPCell(new Phrase("Key Information", wbLargeFont));
 			cell.setBackgroundColor(BaseColor.BLACK);	           
 			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
 			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -1253,6 +1255,7 @@ public class TapestryHelper {
 			table.addCell(cell);
 			
 			String keyObservation = report.getAppointment().getKeyObservation();
+//			String keyObservation = report.getPatient().getKeyObservation();
 			if (keyObservation == null || keyObservation.equals(""))
 				cell = new PdfPCell(new Phrase(" "));
 			else
@@ -1272,8 +1275,12 @@ public class TapestryHelper {
 			table.addCell(cell);
 	            
 			List<String> pList = new ArrayList<String>();
-			if (!Utils.isNullOrEmpty(report.getAppointment().getPlans()))
-				pList = Arrays.asList(report.getAppointment().getPlans().split(";"));		
+//			String plans = report.getPatient().getPlans();
+			String plans = report.getAppointment().getPlans();
+//			if (!Utils.isNullOrEmpty(report.getAppointment().getPlans()))
+//				pList = Arrays.asList(report.getAppointment().getPlans().split(";"));	
+			if (!Utils.isNullOrEmpty(plans))
+				pList = Arrays.asList(plans.split(";"));		
 	    		
 			Map<String, String> pMap = new TreeMap<String, String>();
 	    		
@@ -1580,11 +1587,11 @@ public class TapestryHelper {
 			table.addCell(cell);
 	            
 			p = new Phrase();	   
-			underline = new Chunk("Screen II Nutrition Screening Tool:", sFont);
+			underline = new Chunk("Duke Social Support Index", sFont);
 			underline.setUnderline(0.1f, -1f); //0.1 thick, -1 y-location	  
 			p.add(underline); 	     
 			p.add(new Chunk("\n"));
-			p.add(new Chunk("(Score < 10 risk cut off)", iSmallFont));
+			p.add(new Chunk("(Score < 10 risk cut off), ranges from 6-18", iSmallFont));
 	            
 			sb = new StringBuffer();
 			sb.append(" ");	            	            
@@ -1675,7 +1682,7 @@ public class TapestryHelper {
 			table.addCell(nest_table2);
 	            	            	            
 			sb = new StringBuffer();
-			sb.append("MANTY:");
+			sb.append("Manty et al Mobility Measure-Categories:");
 			sb.append("\n");
 			sb.append("No Limitation");
 			sb.append("\n");
@@ -1714,11 +1721,9 @@ public class TapestryHelper {
 			sb = new StringBuffer();
 			sb.append("Rapid Assessment of Physical Activity(RAPA)");
 			sb.append("\n");
-			sb.append("Aerobic:ranges from 1-7");
-			sb.append("\n");
-			sb.append("Score < 6 Suboptimal Activity");
+			sb.append("Aerobic:ranges from 1-7(< 6 Suboptimal Activity)");
 			sb.append("\n");	
-			sb.append("Strength & Flexibility: ranges from 0-3)");
+			sb.append("Strength & Flexibility: ranges from 0-3");
 			sb.append("\n");	            
 	            
 			cell = new PdfPCell(new Phrase(sb.toString(), sFont));
@@ -1739,7 +1744,7 @@ public class TapestryHelper {
 			cell.setColspan(2);
 			table.addCell(cell);
 			
-			cell = new PdfPCell(new Phrase("Of the list of both life and health goals we just went through, can you pick 3 that you would like to focus on in the next 6 months?", sFont));
+			cell = new PdfPCell(new Phrase("Of the list of both life and health goals we just went through, can you pick 3 that you would like to focus on in the next 6 months?", sbFont));
 			cell.setColspan(2);
 			table.addCell(cell);
 						
@@ -1758,31 +1763,12 @@ public class TapestryHelper {
 						table.addCell(cell);
 				
 						cell = new PdfPCell(new Phrase(goal, sFont));
-						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-						cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);				
 						table.addCell(cell);
 					}
 				}
 			}
-			
-//			String key;
-//			for (Map.Entry<String, String> entry : report.getGoals().entrySet()) {
-//				key = entry.getKey().toString();
-//				if (key.equals("3") || key.equals("4") || key.equals("6") || key.equals("7") || key.equals("8"))
-//					key = "";
-//				
-//				if (key.equals("5") )
-//					key = "3";
-//				if (key.equals("9") )
-//					key = "4";
-//				cell = new PdfPCell(new Phrase(key, sFont));
-//				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-//				cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-//				table.addCell(cell);	            	
-//	            
-//				cell = new PdfPCell(new Phrase(entry.getValue(), sFont));
-//				table.addCell(cell); 
-//			}	  
+
 			cell = new PdfPCell(new Phrase(" "));
 			table.addCell(cell); 
 			
@@ -1799,7 +1785,10 @@ public class TapestryHelper {
 			cell.setColspan(2);
 			table.addCell(cell);
 	            
-			String value;
+			String tQuestionText, tQuestionAnswer,value;
+			int index;
+			Phrase comb;
+			
 			for (Map.Entry<String, String> entry : report.getDailyActivities().entrySet()) {
 				cell = new PdfPCell(new Phrase(entry.getKey(), sFont));
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -1809,7 +1798,16 @@ public class TapestryHelper {
 				value = entry.getValue().toString();
 				if (value.startsWith("Question "))
 					value = value.substring(16);
-				cell = new PdfPCell(new Phrase(value, sFont));
+							
+				index = value.indexOf("|");				
+				tQuestionText = value.substring(0, index);				
+				tQuestionAnswer = value.substring(index+1);
+				
+				comb = new Phrase(); 
+				comb.add(new Phrase(tQuestionText, sbFont));
+				comb.add(new Phrase(tQuestionAnswer, sFont));	    			
+				cell.addElement(comb);	
+				
 				table.addCell(cell); 
 			}	           
 			table.setWidths(cWidths);
@@ -1919,8 +1917,8 @@ public class TapestryHelper {
 		int index;
 		
 		if (questionTextList != null && questionTextList.size() > 0)
-   		{//remove the first element which is description about whole survey
-   			questionTextList.remove(0);
+   		{
+   			questionTextList.remove(0);//remove the first element which is description about whole survey
    			//combine Q2 and Q3 question text
    			StringBuffer sb = new StringBuffer();
    	   		sb.append(questionTextList.get(1));
@@ -1931,24 +1929,34 @@ public class TapestryHelper {
    			
    	   		if (questionAnswerList != null && questionAnswerList.size() > 0)
    	   		{//remove the first element which is empty or "-"
-	   	   	//	questionAnswerList.remove(0);
-	   	   	
-	   	   		content = new TreeMap<String, String>(); 
+   	   			content = new TreeMap<String, String>(); 
 		   	   		
 	   	   		for (int i = 0; i < questionAnswerList.size(); i++){
-	   	   			text = questionTextList.get(i);	   	   			
+	   	   			text = questionTextList.get(i);	  
+	   	   			
 	   	   			//remove observer notes
 	   		    	index = text.indexOf("/observernote/");	   		    	
 	   		    	if (index > 0)
 	   		    		text = text.substring(0, index);   
 	   		    	
+	   		    	//remove prompt... from question text
+	   		    	index = text.indexOf("(Prompt:");
+	   		    	int index1;
+	   		    	if (index > 0)
+	   		    		text = text.substring(0, index);
+	   		    	else
+	   		    	{//todo:should be removed after script is changed for consistency
+	   		    		index1 = text.indexOf("Prompt:");
+	   		    		if (index1 > 0)
+	   		    			text = text.substring(0, index1);
+	   		    	}	
+	   		    		
 	   	   			sb = new StringBuffer();	   	  
-	   	   			sb.append(text);
-	 //  	   			sb.append("<br/><br/>");
-	   	   			sb.append("\n");
-	 //  	   			sb.append("\"");
+	   	   			sb.append(text);	 
+	   	   			sb.append("|"); //add seperator for displaying in different font
+	   	   			sb.append("\n");	
 	   	   			sb.append(questionAnswerList.get(i));
-	//   	   			sb.append("\"");
+
 	   	   			content.put(String.valueOf(i + 1), sb.toString());
 	   	   		}		   	  
 	   	   		return content;

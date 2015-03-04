@@ -140,7 +140,7 @@
 
 		<div class="row">
 			<div class="col-md-12">
-				<input id="visitAlerts" type="textarea" class="form-control" name="keyObservations"/><br/>
+				<input id="visitAlerts" type="textarea" class="form-control" value="${keyObservation}" name="keyObservations"/><br/>
 			</div>
 		</div>
 

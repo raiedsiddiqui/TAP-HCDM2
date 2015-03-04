@@ -235,8 +235,15 @@ public interface AppointmentManager {
 	 */
 	@Transactional
 	public void archiveAppointment(Appointment a, String deletedBy);
-    
+        
     /**
+     * Set an appointment's narrative has been finished
+     * @param id
+     */
+	@Transactional
+    public void completeNarrative(int id);
+	
+	/**
      * @param id appointmentId
      * @return String KeyObservation for an appointment
      */
@@ -265,11 +272,4 @@ public interface AppointmentManager {
      */
 	@Transactional
     public boolean addPlans(int id, String plan);
-    
-    /**
-     * Set an appointment's narrative has been finished
-     * @param id
-     */
-	@Transactional
-    public void completeNarrative(int id);
 }

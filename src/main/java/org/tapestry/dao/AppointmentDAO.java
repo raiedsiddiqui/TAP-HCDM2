@@ -201,6 +201,19 @@ public interface AppointmentDAO {
     public void deleteAppointment(int id);
     
     /**
+     * Set an appointment's narrative has been finished
+     * @param id
+     */
+    public void completeNarrative(int id);
+    
+    /**
+     * Save a copy of deleted appointment
+     * @param appointment
+     * @param deletedBy
+     */
+    public void archiveAppointment(Appointment appointment, String deletedBy);
+    
+    /**
      * @param id appointmentId
      * @return String KeyObservation for an appointment
      */
@@ -225,17 +238,4 @@ public interface AppointmentDAO {
      * @return if it is successful for creating new record in database
      */
     public boolean addPlans(int id, String plan);
-    
-    /**
-     * Set an appointment's narrative has been finished
-     * @param id
-     */
-    public void completeNarrative(int id);
-    
-    /**
-     * Save a copy of deleted appointment
-     * @param appointment
-     * @param deletedBy
-     */
-    public void archiveAppointment(Appointment appointment, String deletedBy);
 }

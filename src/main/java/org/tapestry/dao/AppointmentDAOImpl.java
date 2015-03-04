@@ -396,7 +396,12 @@ public class AppointmentDAOImpl extends JdbcDaoSupport implements AppointmentDAO
 		
 	}
 
-
+	@Override
+	public void completeNarrative(int id) {
+		String sql = "UPDATE appointments SET hasNarrative=1 WHERE appointment_ID=? ";
+		getJdbcTemplate().update(sql, id);
+	}
+	
 	@Override
 	public String getKeyObservationByAppointmentId(int id) {
 		String sql = "SELECT key_observations FROM appointments WHERE appointment_ID=? ORDER BY date_time ASC";
@@ -432,12 +437,6 @@ public class AppointmentDAOImpl extends JdbcDaoSupport implements AppointmentDAO
 		getJdbcTemplate().update(sql, plan, id);
 		
 		return true;
-	}
-
-	@Override
-	public void completeNarrative(int id) {
-		String sql = "UPDATE appointments SET hasNarrative=1 WHERE appointment_ID=? ";
-		getJdbcTemplate().update(sql, id);
 	}
 	
 	class AppointmentMapper implements RowMapper<Appointment> {

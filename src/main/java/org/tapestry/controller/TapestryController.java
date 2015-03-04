@@ -1067,15 +1067,19 @@ public class TapestryController{
 		Appointment appointment = appointmentManager.getAppointmentById(appointmentId);
 		HL7Report report = new HL7Report();		
 		ScoresInReport scores = new ScoresInReport();
-		    	
-		report.setPatient(patient);
+		
 		//Plan and Key Observations
 		String keyObservation = appointmentManager.getKeyObservationByAppointmentId(appointmentId);
 		String plan = appointmentManager.getPlanByAppointmentId(appointmentId);
+		
+		report.setPatient(patient);
 		appointment.setKeyObservation(keyObservation);
 		appointment.setPlans(plan);
 				
 		report.setAppointment(appointment);
+		
+		User loginUser = TapestryHelper.getLoggedInUser(request);
+		report.setUser(loginUser);
 		
 		//Survey---  goals setting
 		List<SurveyResult> surveyResultList = surveyManager.getCompletedSurveysByPatientID(id);
@@ -1227,14 +1231,16 @@ public class TapestryController{
 		lAlert = AlertManager.getSocialLifeAlerts(socialLifeScore, lAlert);
 		
 		//summary tools for social supports
-		if ((qList != null)&&(qList.size()>0))
+		int socialSupportSize = qList.size();
+		if ((qList != null)&&(socialSupportSize>0))
 		{
 			int satisfactionScore = CalculationManager.getScoreByQuestionsList(qList.subList(0, 6));
 			scores.setSocialSatisfication(satisfactionScore);
-			int networkScore = CalculationManager.getScoreByQuestionsList(qList.subList(7, 10));
-			scores.setSocialNetwork(networkScore);
+			
+			int networkScore = CalculationManager.getSocialSupportNetworkScore(qList.subList(7, socialSupportSize));			
+	   		scores.setSocialNetwork(networkScore);
 		}
-		   		   		
+				   		   		
 		//Nutrition Alerts   		
 		try{
 			xml = new String(nutritionSurvey.getResults(), "UTF-8");
@@ -1295,17 +1301,7 @@ public class TapestryController{
 		
 		//summary tools for Mobility
 		scores = CalculationManager.getMobilityScore(qMap, scores);
-//		for (int i = 0; i < lAlert.size(); i++)
-//		{
-//			if (lAlert.get(i).contains("2.0"))
-//				scores.setMobilityWalking2(lAlert.get(i));
-//		   			
-//			if (lAlert.get(i).contains("0.5"))
-//				scores.setMobilityWalkingHalf(lAlert.get(i));
-//		   			
-//			if (lAlert.get(i).contains("climbing"))
-//				scores.setMobilityClimbing(lAlert.get(i));   			
-//		}		   		
+
 		String noLimitation = "No Limitation";   		
 		if (Utils.isNullOrEmpty(scores.getMobilityWalking2()))
 			scores.setMobilityWalking2(noLimitation);		   		
@@ -1334,7 +1330,7 @@ public class TapestryController{
 			String patientGoals = CalculationManager.getPatientGoalsMsg(Integer.valueOf(qList.get(7)), qList);			
 			gAS.add(patientGoals);
 			// three goals above tapestry questions from Q3
-			CalculationManager.setPatientGoalsMsg(qList.get(2), gAS);			
+			CalculationManager.setPatientGoalsMsg(qList.get(3), gAS);			
 			report.setPatientGoals(gAS);
 		}
 			
@@ -1418,7 +1414,7 @@ public class TapestryController{
 		String plan = appointmentManager.getPlanByAppointmentId(appointmentId);
 		appointment.setKeyObservation(keyObservation);
 		appointment.setPlans(plan);
-		
+
 		report.setAppointment(appointment);
 
 		//Survey---  goals setting
@@ -1481,49 +1477,8 @@ public class TapestryController{
    		LinkedHashMap<String, String> mMemorySurvey = ResultParser.getResults(xml);
    		qList = new ArrayList<String>();
    		questionTextList = new ArrayList<String>();
-   		questionTextList = ResultParser.getSurveyQuestions(xml);
-   		   		
-   		//only keep the second and forth question text in the list for memory
-//   		if ((questionTextList != null) && (questionTextList.size() > 0))
-//   		{
-//   			List<String> displayQuestionTextList = new ArrayList<String>();
-//   	   		displayQuestionTextList.add(TapestryHelper.removeObserverNotes(questionTextList.get(1)));
-//   	   		displayQuestionTextList.add(TapestryHelper.removeObserverNotes(questionTextList.get(3)));
-//   	   		
-//   	   		displayQuestionTextList = TapestryHelper.removeRedundantFromQuestionText(displayQuestionTextList, "of 2");
-//   	   	
-//   	   		//get answer list
-//   			qList = TapestryHelper.getQuestionListForMemorySurvey(mMemorySurvey);   
-//   			sMap = new TreeMap<String, String>(); 	
-//   	   		
-//   	   		//Care Plan/Advanced_Directive
-//   	   		try{
-//   	   			xml = new String(carePlanSurvey.getResults(), "UTF-8");
-//   	   		} catch (Exception e) {
-//   	   			xml = "";
-//   	   		}
-//   	   		
-//   	   		LinkedHashMap<String, String> mCarePlanSurvey = ResultParser.getResults(xml);
-//
-//   	   		questionTextList = new ArrayList<String>();
-//   	   		questionTextList = ResultParser.getSurveyQuestions(xml);   	   		
-//   	   		
-//   	   		//take 3 question text from the list
-//   	   		if ((questionTextList != null)&&(questionTextList.size() > 0))
-//   	   		{
-//	   	   		for (int i = 1; i <= 3; i++)
-//	   	   			displayQuestionTextList.add(TapestryHelper.removeObserverNotes(questionTextList.get(i)));
-//	   	   		
-//	   	   		displayQuestionTextList = TapestryHelper.removeRedundantFromQuestionText(displayQuestionTextList, "of 3");	
-//	   	   		
-//	   	   		//get answer list   		
-//	   	   		qList.addAll(TapestryHelper.getQuestionList(mCarePlanSurvey));   	   	   		
-//	   	   		
-//	   	   		sMap = TapestryHelper.getSurveyContentMapForMemorySurvey(displayQuestionTextList, qList);
-//	   	   			   	   		
-//	   	   		report.setAdditionalInfos(sMap);
-//   	   		}   
-//   		}
+   		questionTextList = ResultParser.getSurveyQuestions(xml);   		   		
+
    		List<String> displayQuestionTextList = new ArrayList<String>();
    		if ((questionTextList != null) && (questionTextList.size() > 0))
    		{   			
@@ -1666,11 +1621,13 @@ public class TapestryController{
 		lAlert = AlertManager.getSocialLifeAlerts(socialLifeScore, lAlert);
 		
 		//summary tools for social supports
-		if ((qList != null)&&(qList.size()>0))
+		int socialSupportSize = qList.size();
+		if ((qList != null)&&(socialSupportSize>0))
 		{
 			int satisfactionScore = CalculationManager.getScoreByQuestionsList(qList.subList(0, 6));
 			scores.setSocialSatisfication(satisfactionScore);
-			int networkScore = CalculationManager.getScoreByQuestionsList(qList.subList(7, 10));
+			
+			int networkScore = CalculationManager.getSocialSupportNetworkScore(qList.subList(7, socialSupportSize));
 	   		scores.setSocialNetwork(networkScore);
 		}
    		   		
@@ -1740,18 +1697,6 @@ public class TapestryController{
    		//summary tools for Mobility
    		scores = CalculationManager.getMobilityScore(qMap, scores);
    		
-//   		for (int i = 0; i < lAlert.size(); i++)
-//   		{
-//   			if (lAlert.get(i).contains("2.0"))
-//   				scores.setMobilityWalking2(lAlert.get(i));
-//   			
-//   			if (lAlert.get(i).contains("0.5"))
-//   				scores.setMobilityWalkingHalf(lAlert.get(i));
-//   			
-//   			if (lAlert.get(i).contains("climbing"))
-//   				scores.setMobilityClimbing(lAlert.get(i));   			
-//   		}
-//   		
    		String noLimitation = "No Limitation";   		
    		if (Utils.isNullOrEmpty(scores.getMobilityWalking2()))
    			scores.setMobilityWalking2(noLimitation);
@@ -1783,41 +1728,14 @@ public class TapestryController{
 		List<String> gAS = new ArrayList<String>();
 		if ((qList != null) && (qList.size()>0))
 		{
-//			String lifeGoals = "Life Goals: " + qList.get(1);		
-//			gAS.add(lifeGoals);
-//			String healthyGoals = "Health Goals : " + qList.get(4);
-//			gAS.add(healthyGoals);
-//			report.setPatientGoals(gAS);			
-			// for the patient goals on the top of report
-			String patientGoals = CalculationManager.getPatientGoalsMsg(Integer.valueOf(qList.get(7)), qList);			
+			// for the patient goals on the top of report			
+			String patientGoals = CalculationManager.getPatientGoalsMsg(Integer.valueOf(qList.get(7)), qList);
 			gAS.add(patientGoals);
 			
-			CalculationManager.setPatientGoalsMsg(qList.get(2), gAS);			
+			CalculationManager.setPatientGoalsMsg(qList.get(3), gAS);			
 			report.setPatientGoals(gAS);
 		}
 		
-//		//set goals on the Goals close to Tapestry question section
-//		sMap = new TreeMap<String, String>();
-//   		sMap = TapestryHelper.getSurveyContentMap(questionTextList, qList);   		
-//   		
-//   		Iterator iterator = sMap.entrySet().iterator();
-//   		String key, value;
-//   		int index;
-//   		while (iterator.hasNext()) {
-//   			Map.Entry mapEntry = (Map.Entry) iterator.next();
-//   			key = mapEntry.getKey().toString();
-//   			value = mapEntry.getValue().toString();
-//   			index = value.indexOf("?");
-//   			value = value.substring(index + 1);
-//   			if ("2".equals(key))
-//   				mapEntry.setValue("LIFE GOALS:" + value);
-//   			else if ("5".equals(key))
-//   				mapEntry.setValue("HEALTH GOALS:" + value);
-//   				
-//   		}
-//   		report.setGoals(sMap);
-		
-		/////
 		//get volunteer information
 		String volunteer = appointment.getVolunteer();
 		String partner = appointment.getPartner();

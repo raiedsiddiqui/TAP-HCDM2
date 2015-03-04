@@ -27,6 +27,9 @@ public class Patient{
 	private String address;
 	private String userName; //registered for MyOscar account
 	private int group; //based on volunteer's organization	
+	private String streetAddress;
+	private String provice;
+	private String postalCode;
 
 	public int getGroup() {
 		return group;
@@ -309,4 +312,29 @@ public class Patient{
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
+
+	public String getStreetAddress() {
+		return streetAddress;
+	}
+
+	public void setStreetAddress(String streetAddress) {
+		this.streetAddress = streetAddress;
+	}
+
+	public String getProvice() {
+		return provice;
+	}
+
+	public void setProvice(String provice) {
+		this.provice = provice;
+	}
+
+	public String getPostalCode() {
+		return postalCode;
+	}
+
+	public void setPostalCode(String postalCode) {
+		this.postalCode = postalCode;
+	}
+	
 }

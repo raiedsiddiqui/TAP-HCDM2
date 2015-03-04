@@ -28,6 +28,25 @@ public class CalculationManager {
 		return score;
 	}
 	
+	public static int getSocialSupportNetworkScore(List<String> qList)
+	{
+		int score = 0;
+		int iAnswer = 0;
+		
+		for (int i = 0; i < qList.size(); i++)
+		{
+			iAnswer = Integer.valueOf(qList.get(i).toString());
+			if (iAnswer <= 1)
+				score = score + 1;
+			else if (iAnswer == 2)
+				score = score + 2;
+			else if (iAnswer >= 3)
+				score = score + 3;								
+		}		
+		
+		return score;	
+	}
+	
 	public static int getGeneralHealthyScaleScore(List<String> qList){
 		int score = 0;
 		int iAnswer = 0;
@@ -165,15 +184,15 @@ public class CalculationManager {
 	{
 		String strScore;
 		if (score == 0)
-			strScore = "sedentary";
+			strScore = String.valueOf(score) + " sedentary";
 		else if (score == 1)
-			strScore = "under-active";
+			strScore = String.valueOf(score) + " under-active";
 		else if (score == 2)
-			strScore = "under-active regular-light activities";
+			strScore = String.valueOf(score) + " under-active regular-light activities";
 		else if (score == 3 || score == 4)
-			strScore = "under-active regular";
+			strScore = String.valueOf(score) + " under-active regular";
 		else if (score == 5 || score == 6)
-			strScore = "active";
+			strScore = String.valueOf(score) + " active";
 		else 
 			strScore = "";
 		

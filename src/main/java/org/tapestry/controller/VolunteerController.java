@@ -509,10 +509,11 @@ public class VolunteerController {
 		return vl;
 	}
 		
-	@RequestMapping(value="/authenticatePHRAjax", method = RequestMethod.GET)
+	@RequestMapping(value="/authenticatePHRAjax")
 	@ResponseBody
 	public String authenticate111PHR(SecurityContextHolderAwareRequestWrapper request){		
 		System.out.println("in response body....");
+		
 		User user = TapestryHelper.getLoggedInUser(request, userManager);
    		int volId = TapestryHelper.getLoggedInVolunteerId(request);
    		int organizationId = user.getOrganization();
@@ -1832,6 +1833,8 @@ public class VolunteerController {
 		
 		int patientId = appt.getPatientID();
 		Patient patient = patientManager.getPatientByID(patientId);
+//		String keyObservation = patientManager.getKeyObservationByPatient(patientId);
+		
 		//session.setAttribute("newNarrative", true);
 		HttpSession session = request.getSession();
 		if (session.getAttribute("newNarrative") != null)
@@ -1841,7 +1844,9 @@ public class VolunteerController {
 		}
 		
 		model.addAttribute("appointment", appt);
-		model.addAttribute("patient", patient);		
+		model.addAttribute("patient", patient);	
+//		model.addAttribute("keyObservation", keyObservation);	
+		
 		
 		if (session.getAttribute("unread_messages") != null)
 			model.addAttribute("unread", session.getAttribute("unread_messages"));
@@ -1852,20 +1857,21 @@ public class VolunteerController {
 	@RequestMapping(value="/saveAlertsAndKeyObservations", method=RequestMethod.POST)
 	public String saveAlertsAndKeyObservations(SecurityContextHolderAwareRequestWrapper request, ModelMap model)
 	{	
-		int appointmentId = TapestryHelper.getAppointmentId(request);		
-		String alerts = request.getParameter("alerts");
+		int appointmentId = TapestryHelper.getAppointmentId(request);	
+		int patientId = TapestryHelper.getPatientId(request);
+//		String alerts = request.getParameter("alerts"); //Alerts has been commented out on this page
 		String keyObservations = request.getParameter("keyObservations");
-		
-		appointmentManager.addAlertsAndKeyObservations(appointmentId, alerts, keyObservations);
+//		patientManager.addKeyObservations(patientId, keyObservations);
+		appointmentManager.addAlertsAndKeyObservations(appointmentId, "", keyObservations);
 		//add logs
 		User loggedInUser = TapestryHelper.getLoggedInUser(request);
 		StringBuffer sb = new StringBuffer();
 		sb.append(loggedInUser.getName());
-		sb.append(" has added alerts and key observation for appointment #  ");
-		sb.append(appointmentId);				
+		sb.append(" has added alerts and key observation for patient #  ");
+		sb.append(patientId);				
 		userManager.addUserLog(sb.toString(), loggedInUser);
 		
-		int patientId = TapestryHelper.getPatientId(request);		
+//		int patientId = TapestryHelper.getPatientId(request);		
 		Appointment appointment = appointmentManager.getAppointmentById(appointmentId);		
 		
 		if (TapestryHelper.completedAllSurveys(patientId, surveyManager))
@@ -1903,6 +1909,7 @@ public class VolunteerController {
 	public String savePlans(SecurityContextHolderAwareRequestWrapper request, ModelMap model)
 	{	
 		int appointmentId = TapestryHelper.getAppointmentId(request);
+		int patientId = TapestryHelper.getPatientId(request);
 		String seperator = ";";
 		
 		StringBuffer sb = new StringBuffer();		
@@ -1922,20 +1929,21 @@ public class VolunteerController {
 		}	
 		String plans = sb.toString();
 		appointmentManager.addPlans(appointmentId, plans);
+//		patientManager.addPlans(patientId, plans);
 		
 		//add logs
 		User loggedInUser = TapestryHelper.getLoggedInUser(request);
 		sb = new StringBuffer();
 		sb.append(loggedInUser.getName());
-		sb.append(" has added plans for appointment #  ");
-		sb.append(appointmentId);				
+		sb.append(" has added plans for patient #  ");
+		sb.append(patientId);				
 		userManager.addUserLog(sb.toString(), loggedInUser);
 		
 		//for temporary use, send a message to coordinator, hl7 report is ready to donwload on Admin side
 		///////////////
 		User user = TapestryHelper.getLoggedInUser(request, userManager);
 		int userId = user.getUserID();	
-		int patientId = TapestryHelper.getPatientId(request);
+//		int patientId = TapestryHelper.getPatientId(request);
 		Appointment a = appointmentManager.getAppointmentById(appointmentId);
 		Patient p;
 		if (patientId != 0)
@@ -2001,8 +2009,7 @@ public class VolunteerController {
 	@RequestMapping(value="/goMyOscarAuthenticate/{appointmentId}", method=RequestMethod.GET)
 	public String openMyOscarAuthenticate(@PathVariable("appointmentId") int id, 
 			SecurityContextHolderAwareRequestWrapper request, ModelMap model)
-	{	
-		
+	{			
 		HttpSession session = request.getSession();
 		session.setAttribute("appointmentId", id);
 		
@@ -2059,7 +2066,8 @@ public class VolunteerController {
 		userManager.addUserLog(sb.toString(), loggedInUser);
 		
 		Appointment appt = appointmentManager.getAppointmentById(id);
-		int patientId = appt.getPatientID();
+//		int patientId = appt.getPatientID();
+		int patientId = TapestryHelper.getPatientId(request);
 		Patient patient = patientManager.getPatientByID(patientId);
 		model.addAttribute("patient", patient);
 		model.addAttribute("appointment", appt);	
@@ -2069,6 +2077,8 @@ public class VolunteerController {
 			HttpSession  session = request.getSession();
 			if (session.getAttribute("unread_messages") != null)
 				model.addAttribute("unread", session.getAttribute("unread_messages"));
+//			String keyObservation = patientManager.getKeyObservationByPatient(patientId);
+//			model.addAttribute("keyObservation", keyObservation);	
 			
 			return "/volunteer/add_alerts_keyObservation";			
 		}

@@ -15,6 +15,7 @@ public class HL7Report {
 	private Appointment appointment;//visit,plan, key observation
 	private ScoresInReport scores;//summary of tapestry tools
 	private List<String> patientGoals; // patient goal(s)
+	private User user; //order provider
 
 	public HL7Report(){}
 
@@ -80,6 +81,14 @@ public class HL7Report {
 
 	public void setPatientGoals(List<String> patientGoals) {
 		this.patientGoals = patientGoals;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 	
 	

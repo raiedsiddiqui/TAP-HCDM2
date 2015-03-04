@@ -92,7 +92,37 @@ public interface PatientManager {
 	 * authenticate PHR for patient
 	 */
 	@Transactional
-	public void authenticatePHRPatientByID(int id);
+	public void authenticatePHRPatientByID(int id);	
+	
+    /**
+     * @param id patientId
+     * @return String KeyObservation for a patient
+     */
+	@Transactional
+    public String getKeyObservationByPatient(int id);
+
+    /**
+     * Create key Observation for a patient
+     * @param int id patientId,  String keyObservation
+     * @return if it is successful for creating new record in database
+     */
+	@Transactional
+    public boolean addKeyObservations(int id, String keyObservations);
+	
+	   /**
+     * @param id patienttId
+     * @return String Plan for a patient
+     */
+	@Transactional
+    public String getPlanByPatientId(int id);
+    
+    /**
+     * Create Plan for a patient
+     * @param int id patientId, String plan
+     * @return if it is successful for creating new record in database
+     */
+	@Transactional
+    public boolean addPlans(int id, String plan);
 	
 	
 	
