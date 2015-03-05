@@ -848,6 +848,8 @@ public class TapestryHelper {
 		return matched;
 	}
 	
+
+	
 	
 	// ==================== Survey =================================//
 	/**
@@ -1142,7 +1144,7 @@ public class TapestryHelper {
 			table.setWidthPercentage(100);
 			table.setWidths(new float[]{1f, 2f});
 			
-			PdfPCell cell = new PdfPCell(new Phrase(patientName, sbFont));
+			PdfPCell cell = new PdfPCell(new Phrase("Patient: " + patientName, sbFont));
 			cell.setBorderWidthTop(1f);
 			cell.setBorderWidthLeft(1f);
 			cell.setBorderWidthBottom(0);
@@ -1153,7 +1155,6 @@ public class TapestryHelper {
 			String address = report.getPatient().getAddress();
 			if (address == null)
 				address = "";
-//			cell = new PdfPCell(new Phrase("Address: " + report.getPatient().getAddress(), sbFont));
 			cell = new PdfPCell(new Phrase("Address: " + address, sbFont));
 			cell.setBorderWidthTop(1f);
 			cell.setBorderWidthRight(1f);
@@ -1162,7 +1163,6 @@ public class TapestryHelper {
 			cell.setPadding(5);
 			table.addCell(cell);
 		     
-//			String mrpName = report.getPatient().getMrpFirstName() + report.getPatient().getMrpLastName();
 			String mrpName = report.getPatient().getMrpLastName();
 			cell = new PdfPCell(new Phrase("MRP: Dr." + mrpName, sbFont));
 			cell.setBorderWidthLeft(1f);		        
@@ -1225,10 +1225,6 @@ public class TapestryHelper {
 			table.setWidthPercentage(100);
 			float[] cWidths = {1f, 18f};
 		            
-//			Phrase comb = new Phrase(); 
-//			comb.add(new Phrase("     ALERT :", rbFont));
-//			comb.add(new Phrase(" For Case Review wirh IP-TEAM", wbLargeFont));	    			
-//			cell.addElement(comb);	
 			cell = new PdfPCell(new Phrase("Key Information", wbLargeFont));
 			cell.setBackgroundColor(BaseColor.BLACK);	           
 			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -1261,7 +1257,6 @@ public class TapestryHelper {
 			else
 				cell = new PdfPCell(new Phrase(keyObservation));
 			table.addCell(cell);
-	//		table.addCell(new PdfPCell(new Phrase(" ")));
 			document.add(table);
 	
 			//Plan
@@ -1412,48 +1407,7 @@ public class TapestryHelper {
 			table.setWidths(aaWidths);
 			document.add(table);
 			document.add(new Phrase("    "));	
-//			document.newPage();
-			
-//			//Additional Information
-//			table = new PdfPTable(2);
-//			table.setWidthPercentage(100);
-//			cell = new PdfPCell(new Phrase("ADDITIONAL INFORMATION", wbLargeFont));
-//			cell.setBackgroundColor(BaseColor.BLACK);
-//			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-//			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-//			cell.setColspan(2);
-//			table.addCell(cell);
-//	            
-//			for (Map.Entry<String, String> entry : report.getAdditionalInfos().entrySet()) {
-//				if ("YES".equalsIgnoreCase(entry.getValue())){	            		
-//					cell = new PdfPCell(new Phrase(entry.getKey(), rMediumFont));		            	
-//					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);	
-//					cell.setPaddingBottom(5);
-//					table.addCell(cell);	            	
-//		            	
-//					cell = new PdfPCell(new Phrase(entry.getValue(), rMediumFont));
-//					cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-//					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-//					cell.setPaddingBottom(5);
-//					table.addCell(cell); 
-//				}
-//				else{
-//					cell = new PdfPCell(new Phrase(entry.getKey(), mFont));		            	
-//					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-//					cell.setPaddingBottom(5);
-//					table.addCell(cell);	            	
-//		            	
-//					cell = new PdfPCell(new Phrase(entry.getValue(), mFont));
-//					cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-//					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-//					cell.setPaddingBottom(5);
-//					table.addCell(cell); 
-//					}           		            	
-//			}
-//			float[] aWidths = {24f, 3f};
-//			table.setWidths(aWidths);
-//			document.add(table);
-//			document.newPage();
+
 			//Summary of Tapestry tools
 			table = new PdfPTable(3);
 			table.setWidthPercentage(100);
@@ -1680,9 +1634,13 @@ public class TapestryHelper {
 	            
 			table.addCell(nest_table1);
 			table.addCell(nest_table2);
-	            	            	            
-			sb = new StringBuffer();
-			sb.append("Manty et al Mobility Measure-Categories:");
+	            	            	     
+			p = new Phrase();
+			underline = new Chunk("Manty et al Mobility Measure-Categories:", sFont);
+			underline.setUnderline(0.1f, -1f); //0.1 thick, -1 y-location	 
+			p.add(underline);
+			
+			sb = new StringBuffer();			
 			sb.append("\n");
 			sb.append("No Limitation");
 			sb.append("\n");
@@ -1694,7 +1652,8 @@ public class TapestryHelper {
 			sb.append("\n");	          
 			sb.append("\n");	            
 	            
-			cell = new PdfPCell(new Phrase(sb.toString(), sFont));
+			p.add(new Chunk(sb.toString(), sFont));
+			cell = new PdfPCell(p);
 			cell.setNoWrap(false);	         
 			table.addCell(cell);   
 	            
@@ -1718,15 +1677,20 @@ public class TapestryHelper {
 			cell.setNoWrap(false);
 			table.addCell(cell);
 	            
-			sb = new StringBuffer();
-			sb.append("Rapid Assessment of Physical Activity(RAPA)");
+			p = new Phrase();
+			underline = new Chunk("Rapid Assessment of Physical Activity(RAPA)", sFont);
+			underline.setUnderline(0.1f, -1f); //0.1 thick, -1 y-location	 
+			p.add(underline);
+			
+			sb = new StringBuffer();			
 			sb.append("\n");
 			sb.append("Aerobic:ranges from 1-7(< 6 Suboptimal Activity)");
 			sb.append("\n");	
 			sb.append("Strength & Flexibility: ranges from 0-3");
 			sb.append("\n");	            
 	            
-			cell = new PdfPCell(new Phrase(sb.toString(), sFont));
+			p.add(new Chunk(sb.toString(), sFont));		
+			cell = new PdfPCell(p);
 			cell.setNoWrap(false);
 			cell.setBackgroundColor(BaseColor.LIGHT_GRAY);	 
 			table.addCell(cell);
@@ -1807,6 +1771,7 @@ public class TapestryHelper {
 				comb.add(new Phrase(tQuestionText, sbFont));
 				comb.add(new Phrase(tQuestionAnswer, sFont));	    			
 				cell.addElement(comb);	
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 				
 				table.addCell(cell); 
 			}	           
