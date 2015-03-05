@@ -316,7 +316,7 @@
 								<div class="col-md-4">
 									<div class="input-group input-group-lg">
 								  		<span class="input-group-addon">Password</span>
-								  		<input type="password" name="password" class="form-control" required>
+								  		<input type="password" name="password" class="form-control" value="tapestry" required>
 									</div>
 								</div>
 							</div>
