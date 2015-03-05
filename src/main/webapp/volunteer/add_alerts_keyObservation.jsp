@@ -128,19 +128,32 @@
 		</div> -->
 		<div class="row">
 			<div class="col-md-12">
-				<h2>Key Observations</h2>
+				<h2>Social Context</h2>
 			</div>
 		</div>
 
 		<div class="row">
 			<div class="col-md-12">
-				<p>Please enter the key observations in the text box below</p>	
+				<h4>Follow the example below </h4>
+
+				<p><b>[client firstname]</b> is <b>[age]</b> years old. He/She has ____ children and is <b>(employed/volunteering/retired/homemaker/etc)</b>. He/She is living <b>(alone/with partner/with child(ren)/with family/etc)</b>. 
+				<br/>
+				</p>
+				
+				<p>The three most important things that I observed about him/her are:<p>
+				
+				<ol>
+					<li>___________</li>
+					<li>___________</li>
+					<li>___________</li>
+				</ol>
+					
 			</div>
 		</div>
 
 		<div class="row">
 			<div class="col-md-12">
-				<input id="visitAlerts" type="textarea" class="form-control" value="${keyObservation}" name="keyObservations"/><br/>
+				<textarea id="visitAlerts" type="textarea" class="form-control" value="${keyObservation}" name="keyObservations"></textarea><br/>
 			</div>
 		</div>
 
