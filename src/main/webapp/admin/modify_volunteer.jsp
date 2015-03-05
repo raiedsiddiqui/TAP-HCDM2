@@ -195,6 +195,10 @@
 								 		<input name="username" type="text" class="form-control" value="${volunteer.userName}">
 									</div>
 								</div>
+								<div class="col-md-4">
+									<label>Password</label>
+									<p>Go to Other > Manage Users to change volunteer password. </p>
+								</div>
 								<!-- 
 								<div class="col-md-4">
 									<div class="input-group input-group-lg">
