@@ -202,43 +202,35 @@ public class TapestryHelper {
 		}		
 		return patients;
 	}
-	
-	public static Patient getPatientWithFullInfos(PatientManager patientManager, Patient patient){	
-		int age;				
-		try {			
-			List<PersonTransfer3> patientsInMyOscar = ClientManager.getClients();
-				
-			for(PersonTransfer3 person: patientsInMyOscar)
-			{	
-				
-				if (person.getUserName().equals(patient.getUserName()))
-				{
-					age = Utils.getAgeByBirthDate(person.getBirthDate());
-					Calendar birthDate = person.getBirthDate();						
-					if (birthDate != null)
-						patient.setBod(Utils.getDateByCalendar(birthDate));
-									
-					patient.setAge(age);
-					if (person.getStreetAddress1() != null)						
-						patient.setStreetAddress(person.getStreetAddress1());
-					else if(person.getStreetAddress2() != null)
-						patient.setStreetAddress(person.getStreetAddress2());
-					
-					patient.setCity(person.getCity());		
-					patient.setProvice(person.getProvince());
-					patient.setPostalCode(person.getPostalCode());
-					
-					patient.setHomePhone(person.getPhone1());
-					
-					break;
-				}//end of match patient's username 				
-			}//end of loop of all patient in MyOscar				
+
+	public static Patient getPatientWithFullInfos(Patient p){		
+		try{			
+			String userName = p.getUserName();			//username in MyOscar
+			
+			if (!Utils.isNullOrEmpty(userName))
+			{
+				PersonTransfer3 person = ClientManager.getClientByUsername(userName);				
+				int age = Utils.getAgeByBirthDate(person.getBirthDate());
+				Calendar birthDate = person.getBirthDate();						
+				if (birthDate != null)
+					p.setBod(Utils.getDateByCalendar(birthDate));								
+				p.setAge(age);
+				if (person.getStreetAddress1() != null)						
+					p.setStreetAddress(person.getStreetAddress1());
+				else if(person.getStreetAddress2() != null)
+					p.setStreetAddress(person.getStreetAddress2());				
+				p.setCity(person.getCity());		
+				p.setProvice(person.getProvince());
+				p.setPostalCode(person.getPostalCode());				
+		//		p.setHomePhone(person.getPhone1());
+			}
+			else
+				System.out.println("Patient's username is empty...");				
 		} catch (Exception e) {
 			System.out.println("something wrong when calling myoscar server...");			
 			e.printStackTrace();
-		}	
-		
-		return patient;
+		}			
+		return p;
 	}
 	/**
 	 * get patients from session or from DB
@@ -1113,11 +1105,12 @@ public class TapestryHelper {
 			//black font
 			Font sFont = new Font(Font.FontFamily.HELVETICA, 9);	
 			Font sbFont = new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD);	
-			Font mFont = new Font(Font.FontFamily.HELVETICA, 12);		        
-			Font bMediumFont = new Font(Font.FontFamily.HELVETICA , 16, Font.BOLD);		        
 			Font iSmallFont = new Font(Font.FontFamily.HELVETICA , 9, Font.ITALIC );
-			Font ibMediumFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLDITALIC);
+			Font mFont = new Font(Font.FontFamily.HELVETICA, 12);		
 			Font bmFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
+			Font imFont = new Font(Font.FontFamily.HELVETICA , 12, Font.ITALIC );
+			Font ibMediumFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLDITALIC);
+			Font bMediumFont = new Font(Font.FontFamily.HELVETICA , 16, Font.BOLD);	
 			Font blFont = new Font(Font.FontFamily.HELVETICA, 20, Font.BOLD);	
 			//set multiple images as header
 //			List<Image> imageHeader = new ArrayList<Image>();      	
@@ -1214,10 +1207,15 @@ public class TapestryHelper {
 			table.addCell(cell);
 			
 			StringBuffer sb = new StringBuffer();
-			sb.append("Goal I Am MOST Willing To Work On Over The Next 6 Months - Either By Myself Or With Support From My Doctor: ");
-			sb.append(report.getPatientGoals().get(0).toString());		
-			
-			cell = new PdfPCell(new Phrase(sb.toString(), rMediumFont));
+//			sb.append("Goal I Am MOST Willing To Work On Over The Next 6 Months - Either By Myself Or With Support From My Doctor: ");
+//			sb.append(report.getPatientGoals().get(0).toString());	
+			for (int i = 0; i < report.getPatientGoals().size(); i++)
+			{
+				sb.append(report.getPatientGoals().get(i));
+				sb.append("\n");
+			}			
+			cell = new PdfPCell(new Phrase(sb.toString(), mFont));
+			cell.setPadding(3);
 			table.addCell(cell);
 			document.add(table);			
 			//alerts
@@ -1231,12 +1229,24 @@ public class TapestryHelper {
 			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 			table.addCell(cell);
 			List<String> alerts = report.getAlerts(); 
-	         	            
-			for (int i =0; i<alerts.size(); i++){
-				cell = new PdfPCell(new Phrase(" . " + alerts.get(i).toString(), rmFont));		
-				cell.setPadding(3);
-				table.addCell(cell);
+			
+			sb = new StringBuffer();
+			for (int i =0; i<alerts.size(); i++)
+			{
+				sb.append(".");
+				sb.append(alerts.get(i));
+				sb.append("\n");
 			}
+			
+			cell = new PdfPCell(new Phrase(sb.toString(), rmFont));		
+			cell.setPadding(5);
+			table.addCell(cell);
+	         	            
+//			for (int i =0; i<alerts.size(); i++){
+//				cell = new PdfPCell(new Phrase(" . " + alerts.get(i).toString(), rmFont));		
+//				cell.setPadding(3);
+//				table.addCell(cell);
+//			}
 			document.add(table);
 			document.add(new Phrase("    "));   
 			//Key observation
@@ -1259,7 +1269,7 @@ public class TapestryHelper {
 			table.addCell(cell);
 			document.add(table);
 	
-			//Plan
+	/*		//Plan
 			table = new PdfPTable(2);
 			table.setWidthPercentage(100);
 			cell = new PdfPCell(new Phrase("Volunteer Follow-Up Plan", wbLargeFont));
@@ -1294,7 +1304,7 @@ public class TapestryHelper {
 			table.setWidths(new float[]{1f, 18f});
 			document.add(table);
 			document.add(new Phrase("    "));	 
-			document.newPage();	
+			document.newPage();	*/
 			//Memory Screen
 			table = new PdfPTable(2);
 			table.setWidthPercentage(100);
@@ -1406,11 +1416,11 @@ public class TapestryHelper {
 			float[] aaWidths = {24f, 3f};
 			table.setWidths(aaWidths);
 			document.add(table);
-			document.add(new Phrase("    "));	
-
+			document.newPage();	
+			
 			//Summary of Tapestry tools
 			table = new PdfPTable(3);
-			table.setWidthPercentage(100);
+			table.setWidthPercentage(110);
 			table.setWidths(new float[]{1.2f, 2f, 2f});
 			cell = new PdfPCell(new Phrase("Summary of TAPESTRY Tools", wbLargeFont));
 			cell.setBackgroundColor(BaseColor.GRAY);
@@ -1448,9 +1458,9 @@ public class TapestryHelper {
 			table.addCell(cell);	            
 	           
 			sb = new StringBuffer();
-			sb.append("Clock drawing test: ");
-			sb.append(report.getScores().getClockDrawingTest());
-			sb.append("\n");
+//			sb.append("Clock drawing test: ");
+//			sb.append(report.getScores().getClockDrawingTest());
+//			sb.append("\n");
 			sb.append("Timed up-and-go test score = ");
 			sb.append(report.getScores().getTimeUpGoTest());
 			sb.append("\n");
@@ -1458,13 +1468,13 @@ public class TapestryHelper {
 			sb.append(report.getScores().getEdmontonFrailScale());	
 			sb.append("\n");
 	            
-			cell = new PdfPCell(new Phrase(sb.toString(), iSmallFont));
+			cell = new PdfPCell(new Phrase(sb.toString(), imFont));
 			cell.setBackgroundColor(BaseColor.LIGHT_GRAY);	    
 			cell.setNoWrap(false);
 			table.addCell(cell);
 	            
 			Phrase p = new Phrase();
-			Chunk underline = new Chunk("Edmonton Frail Scale (Score Key):", sFont);
+			Chunk underline = new Chunk("Edmonton Frail Scale (Score Key):", mFont);
 			underline.setUnderline(0.1f, -1f); //0.1 thick, -1 y-location	 
 			p.add(underline);
 	            
@@ -1498,12 +1508,12 @@ public class TapestryHelper {
 			sb.append("\n");	            
 			sb.append("\n");
 	            
-			cell = new PdfPCell(new Phrase(sb.toString(), iSmallFont));
+			cell = new PdfPCell(new Phrase(sb.toString(), imFont));
 			cell.setNoWrap(false);
 			table.addCell(cell);
 	            
 			p = new Phrase();
-			underline = new Chunk("Screen II Nutrition Screening Tool:", sFont);
+			underline = new Chunk("Screen II Nutrition Screening Tool:", mFont);
 			underline.setUnderline(0.1f, -1f); //0.1 thick, -1 y-location	  
 			p.add(underline);
 	           
@@ -1535,17 +1545,17 @@ public class TapestryHelper {
 			sb.append("\n");	            
 			sb.append("\n");
 	            
-			cell = new PdfPCell(new Phrase(sb.toString(), iSmallFont));
+			cell = new PdfPCell(new Phrase(sb.toString(), imFont));
 			cell.setBackgroundColor(BaseColor.LIGHT_GRAY);	 
 			cell.setNoWrap(false);
 			table.addCell(cell);
 	            
 			p = new Phrase();	   
-			underline = new Chunk("Duke Social Support Index", sFont);
+			underline = new Chunk("Duke Social Support Index", mFont);
 			underline.setUnderline(0.1f, -1f); //0.1 thick, -1 y-location	  
 			p.add(underline); 	     
 			p.add(new Chunk("\n"));
-			p.add(new Chunk("(Score < 10 risk cut off), ranges from 6-18", iSmallFont));
+			p.add(new Chunk("(Score < 10 risk cut off), ranges from 6-18", sFont));
 	            
 			sb = new StringBuffer();
 			sb.append(" ");	            	            
@@ -1581,12 +1591,12 @@ public class TapestryHelper {
 			cell.setBorderWidthRight(0);	
 			nest_table1.addCell(cell);
 	            
-			cell = new PdfPCell(new Phrase("Walking 2.0 km ", sFont));	               
+			cell = new PdfPCell(new Phrase("Walking 2.0 km ", mFont));	               
 			cell.setVerticalAlignment(Element.ALIGN_TOP);	   
 			cell.setBorder(0);	            
 			nest_table1.addCell(cell);
 	            
-			cell = new PdfPCell(new Phrase("Walking 0.5 km ", sFont));	               
+			cell = new PdfPCell(new Phrase("Walking 0.5 km ", mFont));	               
 			cell.setVerticalAlignment(Element.ALIGN_TOP);
 			cell.setBorderWidthTop(1f);
 			cell.setBorderWidthLeft(0);
@@ -1594,7 +1604,7 @@ public class TapestryHelper {
 			cell.setBorderWidthRight(0);	
 			nest_table1.addCell(cell);
 	            
-			cell = new PdfPCell(new Phrase("Climbing Stairs ", sFont));	               
+			cell = new PdfPCell(new Phrase("Climbing Stairs ", mFont));	               
 			cell.setVerticalAlignment(Element.ALIGN_TOP);	 
 			cell.setBorderWidthTop(1f);
 			cell.setBorderWidthLeft(0);
@@ -1636,7 +1646,7 @@ public class TapestryHelper {
 			table.addCell(nest_table2);
 	            	            	     
 			p = new Phrase();
-			underline = new Chunk("Manty et al Mobility Measure-Categories:", sFont);
+			underline = new Chunk("Manty et al Mobility Measure-Categories:", mFont);
 			underline.setUnderline(0.1f, -1f); //0.1 thick, -1 y-location	 
 			p.add(underline);
 			
@@ -1672,13 +1682,13 @@ public class TapestryHelper {
 			sb.append(report.getScores().getpAStrengthAndFlexibility());        
 			sb.append("\n");
 	            
-			cell = new PdfPCell(new Phrase(sb.toString(), iSmallFont));
+			cell = new PdfPCell(new Phrase(sb.toString(), imFont));
 			cell.setBackgroundColor(BaseColor.LIGHT_GRAY);	 
 			cell.setNoWrap(false);
 			table.addCell(cell);
 	            
 			p = new Phrase();
-			underline = new Chunk("Rapid Assessment of Physical Activity(RAPA)", sFont);
+			underline = new Chunk("Rapid Assessment of Physical Activity(RAPA)", mFont);
 			underline.setUnderline(0.1f, -1f); //0.1 thick, -1 y-location	 
 			p.add(underline);
 			
@@ -1698,45 +1708,84 @@ public class TapestryHelper {
 			document.add(table);
 			document.add(new Phrase("    "));	
 			document.newPage();
-			//Goals			
-			table = new PdfPTable(2);
+			//Goals	
+			table = new PdfPTable(1);
 			table.setWidthPercentage(100);
-			cell = new PdfPCell(new Phrase("GOALS", bMediumFont));
+			cell = new PdfPCell(new Phrase("WHAT MATTERS TO ME", bMediumFont));
 			cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
 			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);	
-			cell.setColspan(2);
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);		
 			table.addCell(cell);
-			
-			cell = new PdfPCell(new Phrase("Of the list of both life and health goals we just went through, can you pick 3 that you would like to focus on in the next 6 months?", sbFont));
-			cell.setColspan(2);
+			//life goals
+			cell = new PdfPCell(new Phrase("LIFE GOALS:", bmFont));
+			cell.setBorderWidthBottom(0);
 			table.addCell(cell);
-						
-			List<String> gList = report.getPatientGoals();
-			if (gList != null && gList.size() > 0)
+			List<String> lifeGoals = report.getLifeGoals();
+			sb = new StringBuffer();
+			for (int i = 0; i < lifeGoals.size(); i++)
+			{				
+				sb.append(lifeGoals.get(i));
+				sb.append("\n");
+			}		
+			sb.append("\n");
+			cell = new PdfPCell(new Phrase(sb.toString(), mFont));
+			cell.setBorderWidthTop(0);
+			table.addCell(cell);
+			//health goals
+			cell = new PdfPCell(new Phrase("HEALTH GOALS:", bmFont));
+			cell.setBorderWidthBottom(0);
+			table.addCell(cell);
+			List<String> healthGoals = report.getHealthGoals();
+			sb = new StringBuffer();
+			for (int i = 0; i < healthGoals.size(); i++)
 			{
-				String goal;
-				for (int i = 1; i < gList.size(); i++)
-				{
-					goal = report.getPatientGoals().get(i);
-					if (goal != null)
-					{
-						cell = new PdfPCell(new Phrase(String.valueOf(i), sFont));
-						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-						cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-						table.addCell(cell);
-				
-						cell = new PdfPCell(new Phrase(goal, sFont));
-						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);				
-						table.addCell(cell);
-					}
-				}
-			}
-
-			cell = new PdfPCell(new Phrase(" "));
-			table.addCell(cell); 
+				sb.append(healthGoals.get(i));
+				sb.append("\n");
+			}	
+			sb.append("\n");
+			cell = new PdfPCell(new Phrase(sb.toString(), mFont));
+			cell.setBorderWidthTop(0);
+			table.addCell(cell);
 			
-			table.setWidths(cWidths);
+		///	
+//			table = new PdfPTable(2);
+//			table.setWidthPercentage(100);
+//			cell = new PdfPCell(new Phrase("GOALS", bMediumFont));
+//			cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+//			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+//			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);	
+//			cell.setColspan(2);
+//			table.addCell(cell);
+//			
+//			cell = new PdfPCell(new Phrase("Of the list of both life and health goals we just went through, can you pick 3 that you would like to focus on in the next 6 months?", sbFont));
+//			cell.setColspan(2);
+//			table.addCell(cell);
+//						
+//			List<String> gList = report.getPatientGoals();
+//			if (gList != null && gList.size() > 0)
+//			{
+//				String goal;
+//				for (int i = 1; i < gList.size(); i++)
+//				{
+//					goal = report.getPatientGoals().get(i);
+//					if (goal != null)
+//					{
+//						cell = new PdfPCell(new Phrase(String.valueOf(i), sFont));
+//						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+//						cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+//						table.addCell(cell);
+//				
+//						cell = new PdfPCell(new Phrase(goal, sFont));
+//						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);				
+//						table.addCell(cell);
+//					}
+//				}
+//			}
+//
+//			cell = new PdfPCell(new Phrase(" "));
+//			table.addCell(cell); 
+//			
+//			table.setWidths(cWidths);
 			document.add(table);			
 			//
 			//Tapestry Questions
@@ -1768,8 +1817,8 @@ public class TapestryHelper {
 				tQuestionAnswer = value.substring(index+1);
 				
 				comb = new Phrase(); 
-				comb.add(new Phrase(tQuestionText, sbFont));
-				comb.add(new Phrase(tQuestionAnswer, sFont));	    			
+				comb.add(new Phrase(tQuestionText, bmFont));
+				comb.add(new Phrase(tQuestionAnswer, mFont));	    			
 				cell.addElement(comb);	
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 				

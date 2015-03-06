@@ -43,21 +43,8 @@ public class ClientManager {
 		MyOscarCredentialsImpl credentials=new MyOscarCredentialsImpl(serverUrl, loginResultTransfer.getPerson().getId(), 
 				loginResultTransfer.getSecurityTokenKey(), "fake sessionId, not from browser", Locale.ENGLISH);		
 		
-		//--- this will retrieve an account and print some of the patients demographic information ---
-		System.out.println("username  === carolchou.test?====" + userName);
+		//--- this will retrieve an account and print some of the patients demographic information ---		
 		PersonTransfer3 client = AccountManager.getPerson(credentials, userName);	
-		
-		////todo:remove
-		if (client != null)
-		{
-			System.out.println("client carolchou.test Name ====" + client.getFirstName() + " " + client.getLastName());
-			System.out.println("client carolchou.test birthDate ====" + client.getBirthDate());
-			System.out.println("client carolchou.test address ====" + client.getStreetAddress1() + " " + client.getCity());
-			
-		}
-		else
-			System.out.println(" Can't not get client info from MyOscar...." );
-		////////////
 		
 		return client;
 	}

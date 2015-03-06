@@ -2,7 +2,6 @@ package org.tapestry.objects;
 
 import java.util.List;
 
-
 import org.tapestry.report.ScoresInReport;
 
 public class HL7Report {
@@ -16,6 +15,8 @@ public class HL7Report {
 	private ScoresInReport scores;//summary of tapestry tools
 	private List<String> patientGoals; // patient goal(s)
 	private User user; //order provider
+	private List<String> healthGoals;
+	private List<String> lifeGoals;
 
 	public HL7Report(){}
 
@@ -91,5 +92,23 @@ public class HL7Report {
 		this.user = user;
 	}
 	
+	public List<String> getHealthGoals() {
+		return healthGoals;
+	}
+
+
+	public void setHealthGoals(List<String> healthGoals) {
+		this.healthGoals = healthGoals;
+	}
+
+
+	public List<String> getLifeGoals() {
+		return lifeGoals;
+	}
+
+
+	public void setLifeGoals(List<String> lifeGoals) {
+		this.lifeGoals = lifeGoals;
+	}
 	
 }

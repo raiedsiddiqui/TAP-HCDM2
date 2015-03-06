@@ -1063,18 +1063,33 @@ public class TapestryController{
 			ModelMap model, HttpServletResponse response, SecurityContextHolderAwareRequestWrapper request) throws Exception
 	{	
 		Patient patient = patientManager.getPatientByID(id);		
-		patient = TapestryHelper.getPatientWithFullInfos(patientManager, patient);
 		Appointment appointment = appointmentManager.getAppointmentById(appointmentId);
 		HL7Report report = new HL7Report();		
 		ScoresInReport scores = new ScoresInReport();
 		
+		HttpSession session = request.getSession();
+		List<Patient> patients = new ArrayList<Patient>();
+		if (session.getAttribute("allPatientWithFullInfos") != null)
+		{
+			patients = (List<Patient>)session.getAttribute("allPatientWithFullInfos");
+			
+			for (Patient p: patients)
+			{
+				if (p.getPatientID() == id)
+					patient = p;
+			}	
+		}
+		else
+			patient = TapestryHelper.getPatientWithFullInfos(patient);	
+		report.setPatient(patient);
+		
 		//Plan and Key Observations
 		String keyObservation = appointmentManager.getKeyObservationByAppointmentId(appointmentId);
-		String plan = appointmentManager.getPlanByAppointmentId(appointmentId);
+//		String plan = appointmentManager.getPlanByAppointmentId(appointmentId);
 		
 		report.setPatient(patient);
 		appointment.setKeyObservation(keyObservation);
-		appointment.setPlans(plan);
+//		appointment.setPlans(plan);
 				
 		report.setAppointment(appointment);
 		
@@ -1186,14 +1201,14 @@ public class TapestryController{
 		//get score info for Summary of tapestry tools
 		if ((qList != null)&&(qList.size()>10))
 		{
-			if ("1".equals(qList.get(0))) 
-				scores.setClockDrawingTest("No errors");
-			else if ("2".equals(qList.get(0))) 
-				scores.setClockDrawingTest("Minor spacing errors");
-			else if ("3".equals(qList.get(0))) 
-				scores.setClockDrawingTest("Other errors");
-			else 
-				scores.setClockDrawingTest("Not done");
+//			if ("1".equals(qList.get(0))) 
+//				scores.setClockDrawingTest("No errors");
+//			else if ("2".equals(qList.get(0))) 
+//				scores.setClockDrawingTest("Minor spacing errors");
+//			else if ("3".equals(qList.get(0))) 
+//				scores.setClockDrawingTest("Other errors");
+//			else 
+//				scores.setClockDrawingTest("Not done");
 			
 			if ("1".equals(qList.get(10))) 
 				scores.setTimeUpGoTest("1 (0-10s)");
@@ -1325,13 +1340,10 @@ public class TapestryController{
 		
 		List<String> gAS = new ArrayList<String>();
 		if ((qList != null) && (qList.size()>0))
-		{
-			// for the patient goals on the top of report from Q8
-			String patientGoals = CalculationManager.getPatientGoalsMsg(Integer.valueOf(qList.get(7)), qList);			
-			gAS.add(patientGoals);
-			// three goals above tapestry questions from Q3
-			CalculationManager.setPatientGoalsMsg(qList.get(3), gAS);			
-			report.setPatientGoals(gAS);
+		{					
+			report.setPatientGoals(CalculationManager.getPatientGoals(qList));
+			report.setLifeGoals(CalculationManager.getLifeOrHealthGoals(qList, 1));
+			report.setHealthGoals(CalculationManager.getLifeOrHealthGoals(qList, 2));
 		}
 			
 		//get volunteer information
@@ -1403,17 +1415,17 @@ public class TapestryController{
 			{
 				if (p.getPatientID() == id)
 					patient = p;
-			}			
-			report.setPatient(patient);
+			}	
 		}
 		else
-			System.out.println("Some thing wrong, can not get patient info from myosca...");
+			patient = TapestryHelper.getPatientWithFullInfos(patient);	
+		report.setPatient(patient);
 		
 		//Plan and Key Observations
 		String keyObservation = appointmentManager.getKeyObservationByAppointmentId(appointmentId);
-		String plan = appointmentManager.getPlanByAppointmentId(appointmentId);
+//		String plan = appointmentManager.getPlanByAppointmentId(appointmentId);
 		appointment.setKeyObservation(keyObservation);
-		appointment.setPlans(plan);
+//		appointment.setPlans(plan);
 
 		report.setAppointment(appointment);
 
@@ -1574,14 +1586,14 @@ public class TapestryController{
 		//get score info for Summary of tapestry tools
 		if ((qList != null)&&(qList.size()>10))
 		{
-			if ("1".equals(qList.get(0))) 
-				scores.setClockDrawingTest("No errors");
-			else if ("2".equals(qList.get(0))) 
-				scores.setClockDrawingTest("Minor spacing errors");
-			else if ("3".equals(qList.get(0))) 
-				scores.setClockDrawingTest("Other errors");
-			else 
-				scores.setClockDrawingTest("Not done");
+//			if ("1".equals(qList.get(0))) 
+//				scores.setClockDrawingTest("No errors");
+//			else if ("2".equals(qList.get(0))) 
+//				scores.setClockDrawingTest("Minor spacing errors");
+//			else if ("3".equals(qList.get(0))) 
+//				scores.setClockDrawingTest("Other errors");
+//			else 
+//				scores.setClockDrawingTest("Not done");
 			
 			if ("1".equals(qList.get(10))) 
 				scores.setTimeUpGoTest("1 (0-10s)");
@@ -1708,10 +1720,12 @@ public class TapestryController{
    			scores.setMobilityClimbing(noLimitation);
    		
    		report.setScores(scores);
-   		model.addAttribute("scores", scores);
+//   		model.addAttribute("scores", scores);
 		
 		report.setAlerts(lAlert);
 		//end of alert
+		
+		//set life goals, health goals and Patient Goals in the report
 		try{
    			xml = new String(goals.getResults(), "UTF-8");
    		} catch (Exception e) {
@@ -1723,17 +1737,12 @@ public class TapestryController{
    		questionTextList = ResultParser.getSurveyQuestions(xml);
    	
    		//get answer list
-		qList = TapestryHelper.getQuestionList(mGoals);   
-		//set life goals and health goals on Patient Goals section  in the report
-		List<String> gAS = new ArrayList<String>();
+		qList = TapestryHelper.getQuestionList(mGoals);   		
 		if ((qList != null) && (qList.size()>0))
-		{
-			// for the patient goals on the top of report			
-			String patientGoals = CalculationManager.getPatientGoalsMsg(Integer.valueOf(qList.get(7)), qList);
-			gAS.add(patientGoals);
-			
-			CalculationManager.setPatientGoalsMsg(qList.get(3), gAS);			
-			report.setPatientGoals(gAS);
+		{					
+			report.setPatientGoals(CalculationManager.getPatientGoals(qList));
+			report.setLifeGoals(CalculationManager.getLifeOrHealthGoals(qList, 1));
+			report.setHealthGoals(CalculationManager.getLifeOrHealthGoals(qList, 2));
 		}
 		
 		//get volunteer information
@@ -1759,7 +1768,7 @@ public class TapestryController{
 			vMap.put(" Volunteer Notes", " ");
 		
 		report.setVolunteerInformations(vMap);		
-		model.addAttribute("report", report);	
+//		model.addAttribute("report", report);	
 		TapestryHelper.buildPDF(report, response);
 		
 		//add log

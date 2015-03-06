@@ -109,7 +109,7 @@ public class Hl7Utils {
 		Appointment a = report.getAppointment();
 		pv.getPatientClass().setValue("U");
 		pv.getAdmissionType().setValue("Follow up Visit");
-		pv.getAttendingDoctor(0).getIDNumber().setValue(p.getMrpFirstName() + " " + p.getMrpLastName()); //mrp
+		pv.getAttendingDoctor(0).getIDNumber().setValue("Dr " + p.getMrpLastName()); //mrp
 		pv.getAdmitDateTime().getDegreeOfPrecision().setValue(a.getDate() +"|" + a.getTime());
 		
 		//ORC Segment
@@ -118,7 +118,6 @@ public class Hl7Utils {
 		orc.getOrc2_PlacerOrderNumber(0).getUniversalID().setValue("TR" + patientId);
 		orc.getOrc5_OrderStatus().setValue("F");
 		orc.getOrc12_OrderingProvider(0).getAssigningAuthority().getUniversalID().setValue("Tapestry");//provider organization
-//		orc.getOrc12_OrderingProvider(0).getIDNumber().setValue("05808");//provider Id number
 		orc.getOrc12_OrderingProvider(0).getFamilyName().setValue("Tapestry FamilyN");//family name
 		orc.getOrc12_OrderingProvider(0).getGivenName().setValue("Tapestry FirstN");//first name
 		orc.getOrc15_OrderEffectiveDateTime().getTimeOfAnEvent().setValue(orbDate);	
@@ -129,14 +128,14 @@ public class Hl7Utils {
 		 * reached using named accessors.
 		 */
 		//patient goals goals survey Q8
-		List<String> goalsList = report.getPatientGoals();
+		List<String> lGoals = report.getPatientGoals();
 		ORU_R01_ORDER_OBSERVATION orderObservation = message.getRESPONSE().getORDER_OBSERVATION(0);		
-		fillOBXAndOBRField(1, goalsList.get(0), orderObservation, message, "TPLG", patientId, orbDate, "x33001", "PATIENT GOALS");
-	//	fillOBXAndOBRField(1, goalsList.get(0), orderObservation, message, "TPLG", patientId, orbDate, "6652-2", "PATIENT GOALS");
-		      
-		//For case Review with IP-TEAM                 
-		orderObservation = message.getRESPONSE().getORDER_OBSERVATION(1);
 		
+		String[] aGoals = new String[lGoals.size()];
+		lGoals.toArray(aGoals);
+		fillOBXAndOBRField(1, aGoals, orderObservation, message, "TPPG", lGoals.size(), patientId, orbDate, "x330015", "PATIENT GOALS");
+		//For key information                
+		orderObservation = message.getRESPONSE().getORDER_OBSERVATION(1);		
 		List<String> list = new ArrayList<String>();
 		list = report.getAlerts(); 
 		String[] alerts = list.toArray(new String[0]);
@@ -149,14 +148,22 @@ public class Hl7Utils {
 		fillOBXAndOBRField(3, keyObservation, orderObservation, message, "TPSC", patientId, orbDate, "x33003", "SOCIAL CONTEXT"); 
 		         
 		//volunteer follow up plan
-		orderObservation = message.getRESPONSE().getORDER_OBSERVATION(3);   
-		String[] plans;
-//		
-		if (a.getPlans() != null && a.getPlans() != "") 
-			plans = a.getPlans().split(";");     
-		else
-			plans = new String[]{""};
-		fillOBXAndOBRField(4, plans, orderObservation, message, "TPVP", plans.length, patientId, orbDate, "x33004", "VOLUNTEER PLANS"); 
+//		orderObservation = message.getRESPONSE().getORDER_OBSERVATION(3);   
+//		String[] plans;		
+//		if (a.getPlans() != null && a.getPlans() != "") 
+//			plans = a.getPlans().split(";");     
+//		else
+//			plans = new String[]{""};
+//		fillOBXAndOBRField(4, plans, orderObservation, message, "TPVP", plans.length, patientId, orbDate, "x33004", "VOLUNTEER PLANS"); 
+		//Life Goals from Q3
+		orderObservation = message.getRESPONSE().getORDER_OBSERVATION(3);
+						
+		List<String> lLifeGoals = report.getLifeGoals();
+		int lSize = lLifeGoals.size();		
+		String[] sLifeGoals = new String[lSize];
+		lLifeGoals.toArray(sLifeGoals);	
+		
+		fillOBXAndOBRField(4, sLifeGoals, orderObservation, message, "TPLG", lSize, patientId, orbDate, "x330015", "LIFE GOALS"); 
 				         
 		//memory screen        
 		list = report.getAdditionalInfos(); 
@@ -177,8 +184,9 @@ public class Hl7Utils {
 		//function status
 		ScoresInReport scores = report.getScores();
 		orderObservation = message.getRESPONSE().getORDER_OBSERVATION(6);
-		String[] functionStatus= new String[]{scores.getClockDrawingTest(), scores.getTimeUpGoTest(), scores.getEdmontonFrailScale()};
-		fillOBXAndOBRField(7, functionStatus, orderObservation, message, "TPFS", 3, patientId, orbDate, "x33007", "FUNCTIONAL STATUS");
+	//	String[] functionStatus= new String[]{scores.getClockDrawingTest(), scores.getTimeUpGoTest(), scores.getEdmontonFrailScale()};
+		String[] functionStatus= new String[]{scores.getTimeUpGoTest(), scores.getEdmontonFrailScale()};
+		fillOBXAndOBRField(7, functionStatus, orderObservation, message, "TPFS", 2, patientId, orbDate, "x33007", "FUNCTIONAL STATUS");
 		
 		//nutritional status
 		orderObservation = message.getRESPONSE().getORDER_OBSERVATION(7);     
@@ -196,19 +204,19 @@ public class Hl7Utils {
 		         
 		//physical activity
 		orderObservation = message.getRESPONSE().getORDER_OBSERVATION(10);
-//		String[] physicalActivity= new String[]{String.valueOf(scores.getpAAerobic()),String.valueOf(scores.getpAStrengthAndFlexibility())};
 		String[] physicalActivity= new String[]{String.valueOf(scores.getAerobicMessage()),String.valueOf(scores.getpAStrengthAndFlexibility())};
 		fillOBXAndOBRField(11, physicalActivity, orderObservation, message, "TPPA", 2, patientId, orbDate, "x330011", "PHYSICAL ACTIVITY");
 		//end of summary tools
 		                  
-		//Three goals from Goals survey Q3
+		//Health Goals from Q2
 		orderObservation = message.getRESPONSE().getORDER_OBSERVATION(11);
 		
-		int goalsSize = goalsList.size();
-		String[] threeGoals = new String[goalsSize -1] ;
-		for (int i = 1; i < goalsSize; i++)
-			threeGoals[i-1] = goalsList.get(i);
-		fillOBXAndOBRField(12, threeGoals, orderObservation, message, "TPHG", goalsSize-1, patientId, orbDate, "x330012", "HEALTHY GOALS"); 
+		List<String> lHealthGoals = report.getHealthGoals();
+		int hSize = lHealthGoals.size();		
+		String[] sHealthGoals = new String[hSize];
+		lHealthGoals.toArray(sHealthGoals);	
+		
+		fillOBXAndOBRField(12, sHealthGoals, orderObservation, message, "TPHG", hSize, patientId, orbDate, "x330012", "HEALTHY GOALS"); 
 		
 		//Tapesty questions
 		orderObservation = message.getRESPONSE().getORDER_OBSERVATION(12);
@@ -219,7 +227,7 @@ public class Hl7Utils {
 		orderObservation = message.getRESPONSE().getORDER_OBSERVATION(13);
 		String[] volunteerInfos = report.getVolunteerInformations().toArray(new String[0]);;
 		fillOBXAndOBRField(14, volunteerInfos, orderObservation, message, "TPVI", volunteerInfos.length, patientId,  orbDate, "x330014", "VOLUNTEER INFORMATION");
-
+		
 		Parser parser = new PipeParser(); 
 		return parser.encode(message);		 
 	}

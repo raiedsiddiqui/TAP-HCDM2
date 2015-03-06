@@ -7,7 +7,8 @@ import org.tapestry.report.ScoresInReport;
 
 public class Report {
 	private List<String> alerts; //alert:consider case review with IP-team
-//	private Map<String, String> healthGoals;
+	private List<String> healthGoals;
+	private List<String> lifeGoals;
 	private Map<String, String> dailyActivities;//tapestry questions
 	private Map<String, String> volunteerInformations;//volunteer information and notes
 	private Map<String, String> additionalInfos;//additional information
@@ -17,10 +18,31 @@ public class Report {
 	private List<String> patientGoals; // patient goal(s)
 	private Map<String, String> caringPlan;
 	private Map<String, String> memory;
-	private Map<String, String> goals;
+//	private Map<String, String> goals;
 
 	public Report(){}
 	
+	
+	public List<String> getHealthGoals() {
+		return healthGoals;
+	}
+
+
+	public void setHealthGoals(List<String> healthGoals) {
+		this.healthGoals = healthGoals;
+	}
+
+
+	public List<String> getLifeGoals() {
+		return lifeGoals;
+	}
+
+
+	public void setLifeGoals(List<String> lifeGoals) {
+		this.lifeGoals = lifeGoals;
+	}
+
+
 	public List<String> getPatientGoals() {
 		return patientGoals;
 	}
@@ -46,13 +68,6 @@ public class Report {
 	public void setAlerts(List<String> alerts) {
 		this.alerts = alerts;
 	}
-//	public Map<String, String> getHealthGoals() {
-//		return healthGoals;
-//	}
-//
-//	public void setHealthGoals(Map<String, String> healthGoals) {
-//		this.healthGoals = healthGoals;
-//	}
 
 	public Map<String, String> getDailyActivities() {
 		return dailyActivities;
@@ -110,14 +125,14 @@ public class Report {
 		this.memory = memory;
 	}
 
-	public Map<String, String> getGoals() {
-		return goals;
-	}
-
-	public void setGoals(Map<String, String> goals) {
-		this.goals = goals;
-	}
-	
+//	public Map<String, String> getGoals() {
+//		return goals;
+//	}
+//
+//	public void setGoals(Map<String, String> goals) {
+//		this.goals = goals;
+//	}
+//	
 	
 	
 }

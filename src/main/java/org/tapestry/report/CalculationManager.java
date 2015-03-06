@@ -379,6 +379,28 @@ public class CalculationManager {
 		return score;
 	}
 	
+	public static List<String> getPatientGoals(List<String> qList){
+		List<String> goals = new ArrayList<String>();
+		
+		goals.add("Goal 1 - " + getGoalMsg(qList.get(4)));
+		goals.add("Goal 2 - " + getGoalMsg(qList.get(5)));
+		goals.add("Goal 3 - " + getGoalMsg(qList.get(6)));
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("Goal I Am MOST Willing To Work On Over The Next 6 Months: ");
+		sb.append("Goal ");
+		sb.append(qList.get(7));
+		goals.add(sb.toString());
+		
+		return goals;
+	}
+	
+	public static List<String> getLifeOrHealthGoals(List<String> qList, int index)
+	{
+		//health goals are from Q2, index = 1; life goals are from Q3, index = 2		
+		return new ArrayList<String>(Arrays.asList(qList.get(index).split("-------<br>")));
+	}
+	
 	public static String getPatientGoalsMsg(int iAnswer, List<String> qList)
 	{
 		String msg="";
