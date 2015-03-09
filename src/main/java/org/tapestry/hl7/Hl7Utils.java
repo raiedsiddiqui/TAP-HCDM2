@@ -92,11 +92,13 @@ public class Hl7Utils {
 		String sex = p.getGender().substring(0,1);
 				 
 		pid.getSex().setValue(sex);//sex	
-		pid.getPatientIDInternalID(0).getID().setValue(String.valueOf(patientId));//patientId	
+		pid.getPid1_SetIDPatientID().setValue(String.valueOf(patientId));//patientId	
+//		pid.getPatientIDInternalID(0).getID().setValue(String.valueOf(patientId));//patientId	
 		pid.getPatientName().getFamilyName().setValue(p.getLastName());//last name		
 		pid.getPatientName().getGivenName().setValue(p.getFirstName());//first name
 		pid.getDateOfBirth().getTimeOfAnEvent().setValue(p.getBod());// birth date	
-		pid.getDateOfBirth().getDegreeOfPrecision().setValue(p.getBod()); // birth date	
+//		pid.getDateOfBirth().getDegreeOfPrecision().setValue(p.getBod()); // birth date	
+		pid.getPid8_Sex().setValue(p.getGender());//sex
 		pid.getPatientAddress(0).getStreetAddress().setValue(p.getStreetAddress());
 		pid.getPatientAddress(0).getCity().setValue(p.getCity());				 
 		pid.getPatientAddress(0).getCountry().setValue("Canada");

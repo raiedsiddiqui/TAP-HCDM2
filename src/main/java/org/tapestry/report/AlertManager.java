@@ -62,11 +62,8 @@ public class AlertManager {
 		String key = "";
 		String value = "";
 		String a2aValue = "";
-//		String a2bValue = ""; 
 		String a3aValue = "";
-//		String a3bValue ="";
 		String a4aValue = ""; 
-//		String a4bValue = "";
 		
 		Iterator iterator = mMobilitySurvey.entrySet().iterator();
 		while (iterator.hasNext()) {
@@ -76,21 +73,12 @@ public class AlertManager {
 			
 			if ("a2a".equalsIgnoreCase(key))
 				a2aValue = value;
-			
-//			if ("a2b".equalsIgnoreCase(key))
-//				a2bValue = value;
-			
+
 			if ("a3a".equalsIgnoreCase(key))
 				a3aValue = value;
-			
-//			if ("a3b".equalsIgnoreCase(key))
-//				a3bValue = value;
-			
+				
 			if ("a4a".equalsIgnoreCase(key))
 				a4aValue = value;
-			
-//			if ("a4b".equalsIgnoreCase(key))
-//				a4bValue = value;			
 		}
 		if ("4".equals(a2aValue))
 			alerts.add(AlertsInReport.MOBILITY_WALKING_ALERT1);
@@ -98,36 +86,6 @@ public class AlertManager {
 			alerts.add(AlertsInReport.MOBILITY_WALKING_ALERT2);
 		if ("4".equals(a4aValue))
 			alerts.add(AlertsInReport.MOBILITY_CLIMBING_ALERT);
-			
-//		if (("1".equals(a2aValue))&&(("2".equals(a2bValue))||("3".equals(a2bValue))||("4".equals(a2bValue))||("5".equals(a2bValue))))
-//			alerts.add(AlertsInReport.MOBILITY_WALKING_ALERT1);
-//				
-//		if ("2".equals(a2aValue))
-//			alerts.add(AlertsInReport.MOBILITY_WALKING_ALERT2);
-//		
-//		if (("3".equals(a2aValue))||("4".equals(a2aValue))||("5".equals(a2aValue)))
-//			alerts.add(AlertsInReport.MOBILITY_WALKING_ALERT3);
-//		
-//		if (("1".equals(a3aValue))&&(("2".equals(a3bValue))||("3".equals(a3bValue))||("4".equals(a3bValue))||("5".equals(a3bValue))
-//				||("6".equals(a3bValue))))
-//			alerts.add(AlertsInReport.MOBILITY_WALKING_ALERT4);
-//		
-//		if ("2".equals(a3aValue))
-//			alerts.add(AlertsInReport.MOBILITY_WALKING_ALERT5);
-//		
-//		if (("3".equals(a3aValue))||("4".equals(a3aValue))||("5".equals(a3aValue)))
-//			alerts.add(AlertsInReport.MOBILITY_WALKING_ALERT6);
-//		
-//		if (("1".equals(a4aValue))&&(("2".equals(a4bValue))||("3".equals(a4bValue))||("4".equals(a4bValue))||("5".equals(a4bValue))
-//				||("6".equals(a4bValue))||("7".equals(a4bValue))))
-//			alerts.add(AlertsInReport.MOBILITY_CLIMBING_ALERT1);
-//		
-//		if ("2".equals(a4aValue))
-//			alerts.add(AlertsInReport.MOBILITY_CLIMBING_ALERT2);
-//		
-//		if (("3".equals(a4aValue))||("4".equals(a4aValue))||("5".equals(a4aValue)))
-//			alerts.add(AlertsInReport.MOBILITY_CLIMBING_ALERT3);
-				
 		return alerts;
 	}
 	
@@ -141,8 +99,8 @@ public class AlertManager {
 		if ("2".equals(qList.get(6)))
 			alerts.add(AlertsInReport.EDMONTON_FRAIL_SCALE_ALERT3);
 		
-		if ("3".equals(qList.get(0)))
-			alerts.add(AlertsInReport.EDMONTON_FRAIL_SCALE_ALERT4);
+//		if ("3".equals(qList.get(0)))
+//			alerts.add(AlertsInReport.EDMONTON_FRAIL_SCALE_ALERT4);
 		
 		if ("3".equals(qList.get(10)) )
 			alerts.add(AlertsInReport.EDMONTON_FRAIL_SCALE_ALERT5);
