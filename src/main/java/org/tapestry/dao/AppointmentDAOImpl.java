@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 import org.tapestry.objects.Appointment;
+import org.tapestry.utils.Utils;
 
 /**
  * An implementation of the AppointmentDAO interface.
@@ -442,6 +443,7 @@ public class AppointmentDAOImpl extends JdbcDaoSupport implements AppointmentDAO
 	class AppointmentMapper implements RowMapper<Appointment> {
 		public Appointment mapRow(ResultSet rs, int rowNum) throws SQLException{
 			Appointment appointment = new Appointment();
+			String lastName;
 			
 			appointment.setAppointmentID(rs.getInt("appointment_ID"));
 			appointment.setVolunteerID(rs.getInt("volunteer"));
@@ -465,7 +467,11 @@ public class AppointmentDAOImpl extends JdbcDaoSupport implements AppointmentDAO
 			sb = new StringBuffer();
 			sb.append(rs.getString("p_firstname"));
 			sb.append(" ");
-			sb.append(rs.getString("p_lastname"));
+			lastName = rs.getString("p_lastname");
+			if (!Utils.isNullOrEmpty(lastName))
+				lastName = lastName.substring(0, 1).toUpperCase();
+			sb.append(lastName);
+			sb.append(".");
 			appointment.setPatient(sb.toString());
 			
 			appointment.setDate(rs.getString("appt_date"));
