@@ -155,6 +155,8 @@ public class TapestryHelper {
 		User user = getLoggedInUser(request);
 		List<Patient> patients;
 		HttpSession session = request.getSession();
+		StringBuffer sb;
+		String street1, street2, city, province;
 		
 		if ("ROLE_ADMIN".equalsIgnoreCase(user.getRole()))
 			patients = patientManager.getAllPatients();	//For central Admin		
@@ -182,12 +184,35 @@ public class TapestryHelper {
 								p.setBod(Utils.getDateByCalendar(birthDate));
 							
 							p.setAge(age);
-							p.setCity(person.getCity());					
-							p.setHomePhone(person.getPhone1());		
-							if (person.getStreetAddress1() != null)
-								p.setAddress(person.getStreetAddress1());
-							else if(person.getStreetAddress2() != null)
-								p.setAddress(person.getStreetAddress2());
+							
+							sb = new StringBuffer();
+							street1 = person.getStreetAddress1();
+							street2 = person.getStreetAddress2();
+							city = person.getCity();
+							province = person.getProvince();
+							p.setCity(city);					
+	//						p.setHomePhone(person.getPhone1());		
+							if (!Utils.isNullOrEmpty(street1))
+							{
+								sb.append(street1);	
+								sb.append(", ");
+							}
+							else if ((!Utils.isNullOrEmpty(street2)))
+							{
+								sb.append(street2);	
+								sb.append(", ");
+							}
+							
+							if (!Utils.isNullOrEmpty(city))
+							{
+								sb.append(city);
+								sb.append(", ");
+							}
+							
+							if (!Utils.isNullOrEmpty(province))
+								sb.append(province);
+							
+							p.setAddress(sb.toString());
 							
 							break;
 						}//end of match patient's username 

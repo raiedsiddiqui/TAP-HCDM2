@@ -19,14 +19,8 @@ public class AlertsInReport {
 	public static final String NUTRITION_ALERT5 = "Often or always coughs, chokes, or has pain when swallowing food or fluids";
 	public static final String DAILY_ACTIVITY_ALERT = "Has fallen in the last year";
 	public static final String PHYSICAL_ACTIVITY_ALERT = "Activity level is suboptimal";
-//	public static final String MOBILITY_WALKING_ALERT1 = "Preclinical Limitation in Walking 2.0 km";
-//	public static final String MOBILITY_WALKING_ALERT2 = "Minor Manifest Limitation in Walking 2.0 km";
 	public static final String MOBILITY_WALKING_ALERT1 = "Major Manifest Limitation in Walking 2.0 km";
-//	public static final String MOBILITY_WALKING_ALERT4 = "Preclinical Limitation in Walking 0.5 km";
-//	public static final String MOBILITY_WALKING_ALERT5 = "Minor Manifest Limitation in Walking 0.5 km";
 	public static final String MOBILITY_WALKING_ALERT2 = "Major Manifest Limitation in Walking 0.5 km";
-//	public static final String MOBILITY_CLIMBING_ALERT1 = "Preclinical Limitation in Climbing Stairs";
-//	public static final String MOBILITY_CLIMBING_ALERT2 = "Minor Manifest Limitation in Climbing Stairs";
 	public static final String MOBILITY_CLIMBING_ALERT = "Major Manifest Limitation in Climbing Stairs";
 	public static final String EDMONTON_FRAIL_SCALE_ALERT1 = "Edmonton Frail Scale socores indicates high risk";
 	public static final String EDMONTON_FRAIL_SCALE_ALERT2 = "Patient uses 5 or more prescription medications";

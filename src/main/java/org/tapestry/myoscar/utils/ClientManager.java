@@ -69,9 +69,7 @@ public class ClientManager {
 	{		
 		MiscUtils.setJvmDefaultSSLSocketFactoryAllowAllCertificates();
 	
-		Long lGroupId  = new Long(groupId);
-		System.out.println("groupId === "+ groupId + "user ==== " + user);
-		
+		Long lGroupId  = new Long(groupId);			
 		LoginResultTransfer3 loginResultTransfer = AccountManager.login(serverUrl, user, password);		
 		
 		MyOscarCredentialsImpl credentials=new MyOscarCredentialsImpl(serverUrl, loginResultTransfer.getPerson().getId(), 
