@@ -170,7 +170,7 @@ public class TapestryHelper {
 			int age;				
 			try {			
 				List<PersonTransfer3> patientsInMyOscar = ClientManager.getClients();
-				
+				System.out.println("size of persontransder3 is   ===   " + patientsInMyOscar.size());
 				for(PersonTransfer3 person: patientsInMyOscar)
 				{	
 					age = Utils.getAgeByBirthDate(person.getBirthDate());
@@ -233,7 +233,7 @@ public class TapestryHelper {
 			String userName = p.getUserName();			//username in MyOscar
 			
 			if (!Utils.isNullOrEmpty(userName))
-			{
+			{System.out.println("username === " + userName);
 				PersonTransfer3 person = ClientManager.getClientByUsername(userName);				
 				int age = Utils.getAgeByBirthDate(person.getBirthDate());
 				Calendar birthDate = person.getBirthDate();						

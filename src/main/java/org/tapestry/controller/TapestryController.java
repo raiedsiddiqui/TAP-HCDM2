@@ -1403,22 +1403,23 @@ public class TapestryController{
 		Appointment appointment = appointmentManager.getAppointmentById(appointmentId);
 		Report report = new Report();		
 		ScoresInReport scores = new ScoresInReport();	
-		Patient patient = new Patient();
+		Patient patient = patientManager.getPatientByID(id);
 		//call web service to get patient info from myoscar
 		HttpSession session = request.getSession();
 		List<Patient> patients = new ArrayList<Patient>();
-		if (session.getAttribute("allPatientWithFullInfos") != null)
-		{
-			patients = (List<Patient>)session.getAttribute("allPatientWithFullInfos");
-			
-			for (Patient p: patients)
-			{
-				if (p.getPatientID() == id)
-					patient = p;
-			}	
-		}
-		else
-			patient = TapestryHelper.getPatientWithFullInfos(patient);	
+//		if (session.getAttribute("allPatientWithFullInfos") != null)
+//		{
+//			patients = (List<Patient>)session.getAttribute("allPatientWithFullInfos");
+//			
+//			for (Patient p: patients)
+//			{
+//				if (p.getPatientID() == id)
+//					patient = p;
+//			}	
+//		}
+//		else
+//			patient = TapestryHelper.getPatientWithFullInfos(patient);	
+		patient = TapestryHelper.getPatientWithFullInfos(patient);	
 		report.setPatient(patient);
 		
 		//Plan and Key Observations

@@ -69,7 +69,7 @@ public class Hl7Utils {
 		Timestamp currentTime = new Timestamp(new java.util.Date().getTime());			
 		String orbDate = currentTime.toString().substring(0,10);
 		orbDate = orbDate.replace("-", "");		
-		User user = report.getUser();
+//		User user = report.getUser();
 		
 		// Populate the MSH Segment
 		ca.uhn.hl7v2.model.v23.segment.MSH mshSegment = message.getMSH();
@@ -85,7 +85,7 @@ public class Hl7Utils {
 		mshSegment.getDateTimeOfMessage().getTimeOfAnEvent().setValue(currentTime);
 				 
 		ca.uhn.hl7v2.model.v23.segment.PID pid = message.getRESPONSE().getPATIENT().getPID();
-		pid.getAlternatePatientID().getID().setValue("1");
+//		pid.getAlternatePatientID().getID().setValue("1");
 				 
 		Patient p = report.getPatient();
 		int patientId = p.getPatientID();
@@ -94,10 +94,12 @@ public class Hl7Utils {
 		pid.getSex().setValue(sex);//sex	
 		pid.getPid1_SetIDPatientID().setValue(String.valueOf(patientId));//patientId	
 //		pid.getPatientIDInternalID(0).getID().setValue(String.valueOf(patientId));//patientId	
-		pid.getPatientName().getFamilyName().setValue(p.getLastName());//last name		
-		pid.getPatientName().getGivenName().setValue(p.getFirstName());//first name
+//		pid.getPatientName().getFamilyName().setValue(p.getLastName());//last name		
+//		pid.getPatientName().getGivenName().setValue(p.getFirstName());//first name
+		pid.getPatientName().getFamilyName().setValue("Test");//last name		
+		pid.getPatientName().getGivenName().setValue("Patient");//first name
 		pid.getDateOfBirth().getTimeOfAnEvent().setValue(p.getBod());// birth date	
-//		pid.getDateOfBirth().getDegreeOfPrecision().setValue(p.getBod()); // birth date	
+
 		pid.getPid8_Sex().setValue(p.getGender());//sex
 		pid.getPatientAddress(0).getStreetAddress().setValue(p.getStreetAddress());
 		pid.getPatientAddress(0).getCity().setValue(p.getCity());				 
@@ -228,8 +230,8 @@ public class Hl7Utils {
 		//volunteer infor
 		orderObservation = message.getRESPONSE().getORDER_OBSERVATION(13);
 		String[] volunteerInfos = report.getVolunteerInformations().toArray(new String[0]);;
-		fillOBXAndOBRField(14, volunteerInfos, orderObservation, message, "TPVI", volunteerInfos.length, patientId,  orbDate, "x330014", "VOLUNTEER INFORMATION");
-		
+	//	fillOBXAndOBRField(14, volunteerInfos, orderObservation, message, "TPVI", volunteerInfos.length, patientId,  orbDate, "x330014", "VOLUNTEER INFORMATION");
+		fillOBXAndOBRField(14, volunteerInfos, orderObservation, message, "TPVI", volunteerInfos.length, patientId,  orbDate, "x330017", " ");
 		Parser parser = new PipeParser(); 
 		return parser.encode(message);		 
 	}
