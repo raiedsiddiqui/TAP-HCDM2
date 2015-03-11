@@ -48,7 +48,7 @@
  			<td>
  				<select name="patient" form="appt-form">
 					<c:forEach items="${patients}" var="p">							
-						<option value="${p.patientID}" <c:if test="${p.patientID eq selectedPatient}">selected</c:if>>${p.displayName}</option>
+						<option value="${p.patientID}" <c:if test="${p.patientID eq selectedPatient}">selected</c:if>>${p.firstName} ${p.lastName}</option>
 					</c:forEach>
 				</select>
  			</td>
