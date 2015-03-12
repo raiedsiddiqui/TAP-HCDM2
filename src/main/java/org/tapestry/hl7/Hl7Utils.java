@@ -171,17 +171,26 @@ public class Hl7Utils {
 				         
 		//memory screen        
 		list = report.getAdditionalInfos(); 
+		List<String> sList = new ArrayList<String>();		
+		for (int i = 0; i<list.size(); i++)
+		{
+			if (list.get(i).equals("1"))
+				sList.add("YES");
+			else
+				sList.add("NO");
+		}
+				
 		if (list.size() >= 2)
 		{
 			orderObservation = message.getRESPONSE().getORDER_OBSERVATION(4);
-			String[] memorys = new String[]{list.get(0), list.get(1)};
+			String[] memorys = new String[]{sList.get(0), sList.get(1)};
 			fillOBXAndOBRField(5, memorys, orderObservation, message, "TPMS", 2, patientId, orbDate, "x33005", "MEMORY SCREEN"); 
 		}          
 		//advance directives
 		if (list.size() >=5)
 		{
 			orderObservation = message.getRESPONSE().getORDER_OBSERVATION(5);
-			String[] aDirectives = {list.get(2), list.get(3), list.get(4)};
+			String[] aDirectives = {sList.get(2), sList.get(3), sList.get(4)};
 			fillOBXAndOBRField(6, aDirectives, orderObservation, message, "TPAD", 3, patientId, orbDate, "x33006", "ADVANCED DIRECTIVES");
 		}               
 		//Summary of tapestry tools

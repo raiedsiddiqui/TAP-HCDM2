@@ -26,7 +26,7 @@ public class AlertsInReport {
 	public static final String EDMONTON_FRAIL_SCALE_ALERT2 = "Patient uses 5 or more prescription medications";
 	public static final String EDMONTON_FRAIL_SCALE_ALERT3 = "At times, sometimes forgets to take prescription medication";
 	public static final String EDMONTON_FRAIL_SCALE_ALERT4 = "Other errors in the clock";
-	public static final String EDMONTON_FRAIL_SCALE_ALERT5 = "More that 20s";
+	public static final String EDMONTON_FRAIL_SCALE_ALERT5 = "More than 20s for the timed up-and-go test";
 	public static final String EDMONTON_FRAIL_SCALE_ALERT6 = "Requires assistance for timed up and go";
 	public static final String DUKE_INDEX_OF_SOCIAL_SUPPORT_ALERT = "Social Support Scale scores denotes hight risk";	
 	
