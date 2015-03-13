@@ -28,6 +28,8 @@ public class AlertsInReport {
 	public static final String EDMONTON_FRAIL_SCALE_ALERT4 = "Other errors in the clock";
 	public static final String EDMONTON_FRAIL_SCALE_ALERT5 = "More than 20s for the timed up-and-go test";
 	public static final String EDMONTON_FRAIL_SCALE_ALERT6 = "Requires assistance for timed up and go";
+	public static final String EDMONTON_FRAIL_SCALE_ALERT7 = "Often feels sad or depressed";
+	public static final String EDMONTON_FRAIL_SCALE_ALERT8 = "Sometimes loses control of their bladder";
 	public static final String DUKE_INDEX_OF_SOCIAL_SUPPORT_ALERT = "Social Support Scale scores denotes hight risk";	
 	
 	private AlertsInReport() {

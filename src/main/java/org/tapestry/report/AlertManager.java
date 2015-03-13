@@ -107,6 +107,13 @@ public class AlertManager {
 		
 		if ("4".equals(qList.get(10)))
 			alerts.add(AlertsInReport.EDMONTON_FRAIL_SCALE_ALERT6);
+		
+		if ("2".equals(qList.get(8)) )
+			alerts.add(AlertsInReport.EDMONTON_FRAIL_SCALE_ALERT7);
+		
+		if ("2".equals(qList.get(9)))
+			alerts.add(AlertsInReport.EDMONTON_FRAIL_SCALE_ALERT8);
+		
 		return alerts;
 	}
 	
