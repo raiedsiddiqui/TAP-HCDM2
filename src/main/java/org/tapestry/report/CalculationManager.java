@@ -35,7 +35,10 @@ public class CalculationManager {
 		
 		for (int i = 0; i < qList.size(); i++)
 		{
-			iAnswer = Integer.valueOf(qList.get(i).toString());
+			if (!Utils.isNullOrEmpty(qList.get(i)))
+				iAnswer = Integer.valueOf(qList.get(i).toString());
+			else
+				iAnswer = 0;
 			if (iAnswer <= 1)
 				score = score + 1;
 			else if (iAnswer == 2)
