@@ -32,13 +32,17 @@ public class CalculationManager {
 	{
 		int score = 0;
 		int iAnswer = 0;
+		Object obj;
 		
 		for (int i = 0; i < qList.size(); i++)
 		{
-			if (!Utils.isNullOrEmpty(qList.get(i)))
-				iAnswer = Integer.valueOf(qList.get(i).toString());
-			else
+			obj = qList.get(i);
+			
+			if (obj instanceof String)
 				iAnswer = 0;
+			else
+				iAnswer = Integer.valueOf(obj.toString());
+			
 			if (iAnswer <= 1)
 				score = score + 1;
 			else if (iAnswer == 2)
