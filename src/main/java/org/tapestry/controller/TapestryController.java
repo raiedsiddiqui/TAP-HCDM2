@@ -977,7 +977,6 @@ public class TapestryController{
 	public String viewPatientsFromAdmin(SecurityContextHolderAwareRequestWrapper request, ModelMap model)
 	{
 		HttpSession session = request.getSession();
-		
 		List<Patient> patients = TapestryHelper.getAllPatientsWithFullInfos(patientManager, request);
 		model.addAttribute("patients", patients);
 		
@@ -1407,19 +1406,19 @@ public class TapestryController{
 		//call web service to get patient info from myoscar
 		HttpSession session = request.getSession();
 		List<Patient> patients = new ArrayList<Patient>();
-//		if (session.getAttribute("allPatientWithFullInfos") != null)
-//		{
-//			patients = (List<Patient>)session.getAttribute("allPatientWithFullInfos");
-//			
-//			for (Patient p: patients)
-//			{
-//				if (p.getPatientID() == id)
-//					patient = p;
-//			}	
-//		}
-//		else
-//			patient = TapestryHelper.getPatientWithFullInfos(patient);	
-		patient = TapestryHelper.getPatientWithFullInfos(patient);	
+		if (session.getAttribute("allPatientWithFullInfos") != null)
+		{
+			patients = (List<Patient>)session.getAttribute("allPatientWithFullInfos");
+			
+			for (Patient p: patients)
+			{
+				if (p.getPatientID() == id)
+					patient = p;
+			}	
+		}
+		else
+			patient = TapestryHelper.getPatientWithFullInfos(patient);	
+		
 		report.setPatient(patient);
 		
 		//Plan and Key Observations
@@ -1490,21 +1489,25 @@ public class TapestryController{
    		LinkedHashMap<String, String> mMemorySurvey = ResultParser.getResults(xml);
    		qList = new ArrayList<String>();
    		questionTextList = new ArrayList<String>();
-   		questionTextList = ResultParser.getSurveyQuestions(xml);   		   		
-
+   		questionTextList = ResultParser.getSurveyQuestions(xml);  
+   		
    		List<String> displayQuestionTextList = new ArrayList<String>();
    		if ((questionTextList != null) && (questionTextList.size() > 0))
    		{   			
    	   		displayQuestionTextList.add(TapestryHelper.removeObserverNotes(questionTextList.get(1)));
-   	   		displayQuestionTextList.add(TapestryHelper.removeObserverNotes(questionTextList.get(3)));
    	   		
-   	   		displayQuestionTextList = TapestryHelper.removeRedundantFromQuestionText(displayQuestionTextList, "of 2");
-   	   	
    	   		//get answer list
    			qList = TapestryHelper.getQuestionListForMemorySurvey(mMemorySurvey);   
-   			sMap = new TreeMap<String, String>(); 	
+   			
+   			if (qList.get(0) != null && qList.get(0).equals("1") )   				
+   				displayQuestionTextList.add(TapestryHelper.removeObserverNotes(questionTextList.get(3)));
+   			else
+   				displayQuestionTextList.add(TapestryHelper.removeObserverNotes(questionTextList.get(2)));
+   			//remove redundant info 
+   	   		displayQuestionTextList = TapestryHelper.removeRedundantFromQuestionText(displayQuestionTextList, "of 2");
    			
    			//make map for memory survey
+   	   		sMap = new TreeMap<String, String>(); 	
    			sMap = TapestryHelper.getSurveyContentMapForMemorySurvey(displayQuestionTextList, qList);
    			 
    			report.setMemory(sMap);
@@ -1629,7 +1632,7 @@ public class TapestryController{
 		qList = new ArrayList<String>();   		
    		//get answer list
 		qList = TapestryHelper.getQuestionList(mSocialLifeSurvey);
-		
+			
 		int socialLifeScore = CalculationManager.getScoreByQuestionsList(qList);
 		lAlert = AlertManager.getSocialLifeAlerts(socialLifeScore, lAlert);
 		

@@ -15,6 +15,14 @@ public interface AppointmentDAO {
      */
     public List<Appointment> getAllAppointments();
     
+    
+    /**
+     * 
+     * @param id
+     * @return all appointments in a list for a volunteer
+     */
+    public List<Appointment> getAllAppointmentsByVolunteer(int id);
+    
     /**
      * @return all past appointments in a list
      */

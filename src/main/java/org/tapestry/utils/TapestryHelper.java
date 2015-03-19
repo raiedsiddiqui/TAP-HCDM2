@@ -170,7 +170,7 @@ public class TapestryHelper {
 			int age;				
 			try {			
 				List<PersonTransfer3> patientsInMyOscar = ClientManager.getClients();
-				System.out.println("size of persontransder3 is   ===   " + patientsInMyOscar.size());
+				
 				for(PersonTransfer3 person: patientsInMyOscar)
 				{	
 					age = Utils.getAgeByBirthDate(person.getBirthDate());
@@ -219,7 +219,7 @@ public class TapestryHelper {
 					}//end of loop of all patients in Tapestry
 				}//end of loop of all patient in MyOscar				
 			} catch (Exception e) {
-				System.out.println("something wrong when calling myoscar server...");			
+				System.out.println("something wrong when calling myoscar server...getClientList");			
 				e.printStackTrace();
 			}
 			
@@ -230,10 +230,9 @@ public class TapestryHelper {
 
 	public static Patient getPatientWithFullInfos(Patient p){		
 		try{			
-			String userName = p.getUserName();			//username in MyOscar
-			
+			String userName = p.getUserName();			//username in MyOscar			
 			if (!Utils.isNullOrEmpty(userName))
-			{System.out.println("username === " + userName);
+			{
 				PersonTransfer3 person = ClientManager.getClientByUsername(userName);				
 				int age = Utils.getAgeByBirthDate(person.getBirthDate());
 				Calendar birthDate = person.getBirthDate();						
@@ -252,7 +251,7 @@ public class TapestryHelper {
 			else
 				System.out.println("Patient's username is empty...");				
 		} catch (Exception e) {
-			System.out.println("something wrong when calling myoscar server...");			
+			System.out.println("something wrong when calling myoscar server...getClientByUsername...");			
 			e.printStackTrace();
 		}			
 		return p;

@@ -41,6 +41,20 @@ public class AppointmentDAOImpl extends JdbcDaoSupport implements AppointmentDAO
 	}
 
 	@Override
+	public List<Appointment> getAllAppointmentsByVolunteer(int id) {
+		String sql = "SELECT a.appointment_ID, a.volunteer, a.patient, DATE(a.date_time) AS appt_date,"
+				+ "TIME(a.date_time) AS appt_time, a.comments, a.status, a.completed, a.contactedAdmin, "
+				+ "a.partner, a.hasNarrative, a.type, v1.firstname AS v1_firstname, v1.lastname AS v1_lastname, "
+				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, p.firstname AS p_firstname, "
+				+ "p.lastname AS p_lastname, v1.organization FROM appointments AS a INNER JOIN volunteers "
+				+ "AS v1 ON a.volunteer=v1.volunteer_ID INNER JOIN volunteers AS v2 ON a.partner=v2.volunteer_ID "
+				+ "INNER JOIN patients AS p ON a.patient=p.patient_ID WHERE a.volunteer =? OR a.partner=? "
+				+ "ORDER BY a.date_time DESC";
+			
+		return getJdbcTemplate().query(sql, new Object[]{id, id}, new AppointmentMapper());
+	}
+	
+	@Override
 	public List<Appointment> getAllPastAppointments() {
 		String sql = "SELECT a.appointment_ID, a.volunteer, a.patient, DATE(a.date_time) AS appt_date,"
 				+ "TIME(a.date_time) AS appt_time, a.comments, a.status, a.completed, a.contactedAdmin, "

@@ -302,4 +302,9 @@ public class VolunteerManagerImpl implements VolunteerManager {
 		volunteerDao.archiveVolunteer(volunteer, deletedBy);
 	}
 
+	@Override
+	public Narrative getNarrativeByAppointmentId(int appointmentId) {
+		return narrativeDao.getNarrativeByAppointmentId(appointmentId);
+	}
+
 }

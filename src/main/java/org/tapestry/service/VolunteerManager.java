@@ -308,6 +308,14 @@ public interface VolunteerManager {
 	
 	/**
 	 * 
+	 * @param appointmentId
+	 * @return
+	 */
+	@Transactional
+	public Narrative getNarrativeByAppointmentId(int appointmentId);
+	
+	/**
+	 * 
 	 * @param narrative
 	 */
 	@Transactional

@@ -1,14 +1,13 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"  pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ page import='java.util.Date' %>
 <%@ page import="java.text.SimpleDateFormat" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"    pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Tapestry Volunteer Add Narrative for Appointment</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" href="${pageContext.request.contextPath}/resources/images/favicon.ico" type="image/x-icon" />
 		<link rel="shortcut icon" href="${pageContext.request.contextPath}/resources/images/favicon.ico" type="image/x-icon" />
 
@@ -63,33 +62,18 @@
 		}
 		
 	</style>
-
 </head>
 <body>
 <%@ include file="subNavi.jsp" %>
-<!-- 	breadcrumb START-->	
-	<div id="crumbs"> 
-		<ul>
-			<li> <a href="<c:url value="/"/>">Appointments</a> </li>
-			<li><a href="<c:url value="/?patientId=${patient.patientID}"/>">
-				<c:choose>
-					<c:when test="${not empty patient.preferredName}">
-						<b>${patient.preferredName} (${patient.gender})</b>
-					</c:when>
-					<c:otherwise>
-						<b>${patient.firstName}  ${patient.lastName}(${patient.gender})</b>
-					</c:otherwise>
-				</c:choose>
-				</a>
-			</li>
-			<li><a href="">${appointment.date}</a></li>
-			<li><a href=""><b>Narrative</b></a></li>
-		</ul>
-</div>
-	<div class="content">
+<a href="<c:url value="/view_narratives"/>" >My Narratives </a> > New Narrative<br/>
+<h3>Write Narrative</h3><br/>
+<h4>Client: ${patientDisplayName}</h4><br/>
+<h4>Visit Date: ${appointment.date}</h4>
+
+<div class="content">
 		<div class="row-fluid">
 			<div class="span12">
-				<form id="newNarrative" action="<c:url value="/add_narrative/${appointment.appointmentID}?flag=1"/>" method="POST">
+				<form id="addNarrative" action="<c:url value="/add_narrative/${appointment.appointmentID}?flag=0"/>" method="POST">
 					<table width="900">						
 						<tr><%SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); String currentDate = sdf.format(new Date()); %>
 							<td><label>Title : </label><input id="narrativeTitle" name="narrativeTitle" type="text" required></td>
@@ -109,9 +93,10 @@
 		<br/>
 		<div>
 		<input type="button" value="Cancel" class="btn btn-primary" onclick="javascript:history.go(-1)">		
-		<button id="newNarrativeButton" data-loading-text="Loading..." type="submit"  form="newNarrative" class="btn btn-primary">Save</button>		
+		<button id="addNarrative" data-loading-text="Loading..." type="submit"  form="addNarrative" class="btn btn-primary">Save</button>		
 		</div>		
 	</div>
+
 
 </body>
 </html>

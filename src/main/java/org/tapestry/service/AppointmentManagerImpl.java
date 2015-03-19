@@ -185,4 +185,9 @@ public class AppointmentManagerImpl implements AppointmentManager {
 		return appointmentDao.addPlans(id, plan);
 	}
 
+	@Override
+	public List<Appointment> getAllAppointmentsByVolunteer(int id) {		
+		return appointmentDao.getAllAppointmentsByVolunteer(id);
+	}
+
 }

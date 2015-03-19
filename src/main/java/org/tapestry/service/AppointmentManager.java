@@ -17,6 +17,12 @@ public interface AppointmentManager {
      */
 	@Transactional
     public List<Appointment> getAllAppointments();
+	
+	/**
+     * @return all requested volunteer's appointments in a list 
+     */
+	@Transactional
+	public List<Appointment> getAllAppointmentsByVolunteer(int id);
     
     /**
      * @return all past appointments in a list

@@ -74,7 +74,7 @@ public class ClientManager {
 		
 		MyOscarCredentialsImpl credentials=new MyOscarCredentialsImpl(serverUrl, loginResultTransfer.getPerson().getId(), 
 				loginResultTransfer.getSecurityTokenKey(), "fake sessionId, not from browser", Locale.ENGLISH);	
-	
+		
 		List<Long> patientIds = GroupManager.getMembersByPeopleGroupId(credentials, lGroupId, 0, 100);
 		
 		List<PersonTransfer3> patients = new ArrayList<PersonTransfer3>();

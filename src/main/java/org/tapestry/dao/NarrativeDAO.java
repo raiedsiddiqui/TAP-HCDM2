@@ -34,6 +34,13 @@ public interface NarrativeDAO {
 	public Narrative getNarrativeById(int narrativeId);
 	
 	/**
+	 * retrieve narrative for an appointment
+	 * @param appointmentId
+	 * @return
+	 */
+	public Narrative getNarrativeByAppointmentId(int appointmentId);
+	
+	/**
 	 * create new narrative
 	 * @param narrative
 	 */

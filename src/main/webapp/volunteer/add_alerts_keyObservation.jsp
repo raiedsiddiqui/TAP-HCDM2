@@ -99,12 +99,12 @@
 	</div>
 
 	<div id="new_narrative">
-		<c:if test="${not empty newNarrative}">					
+		<c:if test="${not empty NarrativeCreated}">					
 			<div class ="alert alert-info"><spring:message code="message_newNarrative"/></div>
 		</c:if>	
 		
 		<c:if test="${not appointment.hasNarrative}">
-			<a href="<c:url value="/new_narrative"/>"><h2><button class="btn lgbtn pull-right" type="submit">Narrrative</button></h2></a> 
+			<a href="<c:url value="/add_narrative"/>"><h2><button class="btn lgbtn pull-right" type="submit">Narrrative</button></h2></a> 
 		</c:if>  
 	</div>
 </div>

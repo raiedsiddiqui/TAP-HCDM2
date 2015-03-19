@@ -1,7 +1,6 @@
 package org.tapestry.controller;
 
 import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -1921,7 +1920,7 @@ public class VolunteerController {
 	
 	@RequestMapping(value="/schedule_appointment", method=RequestMethod.POST)
 	public String createAppointment(SecurityContextHolderAwareRequestWrapper request, ModelMap model)
-	{		System.out.println("schedul...");
+	{		
 		//set up appointment
 		Appointment appointment = new Appointment();		
 		int patientId = Integer.parseInt(request.getParameter("patient"));
@@ -2003,19 +2002,21 @@ public class VolunteerController {
 		int patientId = appt.getPatientID();
 		Patient patient = patientManager.getPatientByID(patientId);
 //		String keyObservation = patientManager.getKeyObservationByPatient(patientId);
-		
-		//session.setAttribute("newNarrative", true);
+				
 		HttpSession session = request.getSession();
-		if (session.getAttribute("newNarrative") != null)
+		if (session.getAttribute("narrativeMessage") != null)
 		{
-			model.addAttribute("newNarrative", true);
-			session.removeAttribute("newNarrative");
-		}
+			String message = session.getAttribute("narrativeMessage").toString();
+					
+			if ("C".equals(message)){
+				model.addAttribute("NarrativeCreated", true);
+				session.removeAttribute("narrativeMessage");
+			}
+		}	
 		
 		model.addAttribute("appointment", appt);
 		model.addAttribute("patient", patient);	
 //		model.addAttribute("keyObservation", keyObservation);	
-		
 		
 		if (session.getAttribute("unread_messages") != null)
 			model.addAttribute("unread", session.getAttribute("unread_messages"));
@@ -2235,8 +2236,7 @@ public class VolunteerController {
 		userManager.addUserLog(sb.toString(), loggedInUser);
 		
 		Appointment appt = appointmentManager.getAppointmentById(id);
-//		int patientId = appt.getPatientID();
-		int patientId = TapestryHelper.getPatientId(request);
+		int patientId = appt.getPatientID();	
 		Patient patient = patientManager.getPatientByID(patientId);
 		model.addAttribute("patient", patient);
 		model.addAttribute("appointment", appt);	
@@ -2248,45 +2248,71 @@ public class VolunteerController {
 				model.addAttribute("unread", session.getAttribute("unread_messages"));
 //			String keyObservation = patientManager.getKeyObservationByPatient(patientId);
 //			model.addAttribute("keyObservation", keyObservation);	
-			
-			return "/volunteer/add_alerts_keyObservation";			
+			return "redirect:/open_alerts_keyObservations/" + id;		
+					
 		}
 		else
 		{//follow up visit			
 			boolean completedAllSurveys = TapestryHelper.completedAllSurveys(patientId, surveyManager);
-			if (!Utils.isNullOrEmpty(appt.getComments()))
-			{//has alert
-				if (completedAllSurveys)
-					//alert attached to report
-					return "redirect:/open_plan/" + id ;
-				else
-				{					//todo: send Alert to MRP
-					String alerts = appt.getComments();
-					System.out.println("Alert send to MRP in Oscar  === " + alerts);	
-					return "redirect:/";
-				}				
+			if (completedAllSurveys)
+			{	//for temporary use, send a message to coordinator, hl7 report is ready to donwload on Admin side					
+				int userId = loggedInUser.getUserID();
+				String patientName = patient.getDisplayName();
+				int organizationId = appt.getGroup();						
+				List<User> coordinators = userManager.getVolunteerCoordinatorByOrganizationId(organizationId);
+								
+				sb = new StringBuffer();
+				sb.append(patientName);
+				sb.append("'s hl7/PDF report is ready to be downloaded. ");				
+				
+				if (coordinators != null)			
+				{	//send message to all coordinators in the organization					
+					for (int i = 0; i<coordinators.size(); i++)		
+						TapestryHelper.sendMessageToInbox("PDF/HL7 Report", sb.toString(), userId, coordinators.get(i).getUserID(), messageManager);			
+				}
+				else{
+					System.out.println("Can't find any coordinator in organization id# " + organizationId);
+					logger.error("Can't find any coordinator in organization id# " + organizationId);
+				}
 			}
-			else
-			{//does not have alert
-				if (completedAllSurveys)
-					return "redirect:/open_plan/" + id ;	
-				else
-					return "redirect:/";
-			}
+			
+			return "redirect:/";
+			
+//			if (!Utils.isNullOrEmpty(appt.getComments()))
+//			{//has alert
+//				if (completedAllSurveys)
+//					//alert attached to report
+//					return "redirect:/open_plan/" + id ;
+//				else
+//				{					//todo: send Alert to MRP
+//					String alerts = appt.getComments();
+//					System.out.println("Alert send to MRP in Oscar  === " + alerts);	
+//					return "redirect:/";
+//				}				
+//			}
+//			else
+//			{//does not have alert
+//				if (completedAllSurveys)
+//					return "redirect:/open_plan/" + id ;	
+//				else
+//					return "redirect:/";
+//			}
 		}
 	}
 	
 	//narrative 
 	@RequestMapping(value="/view_narratives", method=RequestMethod.GET)
 	public String getNarrativesByUser(SecurityContextHolderAwareRequestWrapper request, ModelMap model)
-	{	
-		List<Narrative> narratives = new ArrayList<Narrative>();
-		HttpSession  session = request.getSession();					
-		int loggedInVolunteerId = TapestryHelper.getLoggedInVolunteerId(request);
+	{			
+		int volunteerId = TapestryHelper.getLoggedInVolunteerId(request);
+		List<Patient> patients = patientManager.getPatientsForVolunteer(volunteerId);
+		List<Appointment> appointments = appointmentManager.getAllAppointmentsByVolunteer(volunteerId);
+			
+		model.addAttribute("patients", patients);	
+		model.addAttribute("appointments", appointments);	
 		
-		narratives = volunteerManager.getAllNarrativesByUser(loggedInVolunteerId);		
-
 		//check if there is message should be displayed
+		HttpSession  session = request.getSession();
 		if (session.getAttribute("narrativeMessage") != null)
 		{
 			String message = session.getAttribute("narrativeMessage").toString();
@@ -2298,11 +2324,40 @@ public class VolunteerController {
 			else if ("U".equals(message)){
 				model.addAttribute("narrativeUpdate", true);
 				session.removeAttribute("narrativeMessage");
-			}			
+			}	
+			else if ("C".equals(message)){
+				model.addAttribute("NarrativeCreated", true);
+				session.removeAttribute("narrativeMessage");
+			}
 		}		
-		TapestryHelper.setUnreadMsg(request, model, messageManager);		
-		model.addAttribute("narratives", narratives);	
-		return "/volunteer/view_narrative";
+		
+		return "/volunteer/narratives";
+		//////////////////////////////////////////////////////
+		
+//		List<Narrative> narratives = new ArrayList<Narrative>();
+//		HttpSession  session = request.getSession();					
+//		int loggedInVolunteerId = TapestryHelper.getLoggedInVolunteerId(request);
+//		
+//		narratives = volunteerManager.getAllNarrativesByUser(loggedInVolunteerId);		
+//
+//		//check if there is message should be displayed
+//		if (session.getAttribute("narrativeMessage") != null)
+//		{
+//			String message = session.getAttribute("narrativeMessage").toString();
+//					
+//			if ("D".equals(message)){
+//				model.addAttribute("narrativeDeleted", true);
+//				session.removeAttribute("narrativeMessage");
+//			}
+//			else if ("U".equals(message)){
+//				model.addAttribute("narrativeUpdate", true);
+//				session.removeAttribute("narrativeMessage");
+//			}			
+//		}		
+//		TapestryHelper.setUnreadMsg(request, model, messageManager);		
+//		model.addAttribute("narratives", narratives);	
+//		return "/volunteer/view_narrative";
+	
 	}
 	
 	//loading a existing narrative to view detail or make a change
@@ -2322,19 +2377,58 @@ public class VolunteerController {
 		return "/volunteer/modify_narrative";
 	}
 	
-	@RequestMapping(value="/new_narrative", method=RequestMethod.GET)
-	public String newNarrative(SecurityContextHolderAwareRequestWrapper request, ModelMap model)
+	//loading a existing narrative to view detail or make a change
+	@RequestMapping(value="/edit_narrative/{appointmentId}", method=RequestMethod.GET)
+	public String editNarrative(SecurityContextHolderAwareRequestWrapper request, 
+			@PathVariable("appointmentId") int appointmentId, ModelMap model)
 	{		
+		Narrative narrative = volunteerManager.getNarrativeByAppointmentId(appointmentId);				
+		//set Date format for editDate
+		String editDate = narrative.getEditDate();		
+		if(!Utils.isNullOrEmpty(editDate))
+			editDate = editDate.substring(0,10);		
+		narrative.setEditDate(editDate);
+			
+		model.addAttribute("narrative", narrative);			
+		TapestryHelper.setUnreadMsg(request, model, messageManager);
+		return "/volunteer/modify_narrative";
+	}
+	
+	@RequestMapping(value="/add_narrative", method=RequestMethod.GET)
+	public String newNarrative(SecurityContextHolderAwareRequestWrapper request, ModelMap model)
+	{				
 		int appointmentId = TapestryHelper.getAppointmentId(request);
 		
-		Appointment appt = appointmentManager.getAppointmentById(appointmentId);
+		if (appointmentId == 0) //Narratives==>New Narrative
+		{
+			
+			return "/volunteer/add_narrative";
+		}
+		else
+		{//Appointment ==> visit complete ==> social context ==> New Narrative
+			Appointment appt = appointmentManager.getAppointmentById(appointmentId);
+			
+			int patientId = appt.getPatientID();
+			Patient patient = patientManager.getPatientByID(patientId);
+			
+			model.addAttribute("appointment", appt);
+			model.addAttribute("patient", patient);
+			
+			return "/volunteer/new_narrative";
+		}
+	}
+	
+	@RequestMapping(value="/add_narrative/{appointment_id}", method=RequestMethod.GET)
+	public String addNarrative(@PathVariable("appointment_id") int id,SecurityContextHolderAwareRequestWrapper request, ModelMap model)
+	{		
+		Appointment appt = appointmentManager.getAppointmentById(id);
 		
 		int patientId = appt.getPatientID();
 		Patient patient = patientManager.getPatientByID(patientId);
 		
 		model.addAttribute("appointment", appt);
-		model.addAttribute("patient", patient);
-		return "/volunteer/new_narrative";
+		model.addAttribute("patientDisplayName", patient.getDisplayName());
+		return "/volunteer/add_narrative";
 	}
 	
 	//Modify a narrative and save the change in the DB
@@ -2388,15 +2482,14 @@ public class VolunteerController {
 		}				
 		return "redirect:/view_narratives";
 	}
-	
+			
 	//create a new narrative and save it in DB
-	@RequestMapping(value="/add_narrative", method=RequestMethod.POST)
-	public String addNarrative(SecurityContextHolderAwareRequestWrapper request, ModelMap model)
+	@RequestMapping(value="/add_narrative/{appointmentId}", method=RequestMethod.POST)
+	public String createNarrative(@PathVariable("appointmentId") int appointmentId, @RequestParam(value="flag", required=false) int flag,
+			SecurityContextHolderAwareRequestWrapper request, ModelMap model)
 	{			
-		int patientId = TapestryHelper.getPatientId(request);
-		int appointmentId = TapestryHelper.getAppointmentId(request);
 		int loggedInVolunteerId  = TapestryHelper.getLoggedInVolunteerId(request);		
-		
+		int patientId = appointmentManager.getAppointmentById(appointmentId).getPatientID();				
 		String title = request.getParameter("narrativeTitle");
 		String content = request.getParameter("narrativeContent");	
 		
@@ -2428,9 +2521,13 @@ public class VolunteerController {
 		userManager.addUserLog(sb.toString(), loggedInUser);
 		
 		HttpSession session = request.getSession();
-		session.setAttribute("newNarrative", true);
-
-		return "redirect:/open_alerts_keyObservations/" + appointmentId;
+//		session.setAttribute("newNarrative", true);
+		session.setAttribute("narrativeMessage","C");
+		
+		if (flag == 1)
+			return "redirect:/open_alerts_keyObservations/" + appointmentId;		
+		else
+			return  "redirect:/view_narratives";	
 	}
 	
 	@RequestMapping(value="/delete_narrative/{narrativeId}", method=RequestMethod.GET)
