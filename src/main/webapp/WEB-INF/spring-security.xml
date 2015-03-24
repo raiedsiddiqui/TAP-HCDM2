@@ -71,6 +71,8 @@
 		<intercept-url pattern="/approve_appointment/**" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN" />
 		<intercept-url pattern="/unapprove_appointment/**" access="ROLE_ADMIN" />
 		<intercept-url pattern="/upload_survey_template" access="ROLE_ADMIN" />
+		<intercept-url pattern="/download_report/**" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN"/>
+		<intercept-url pattern="/generate_report_hl7/**" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN"/>
 		<intercept-url pattern="/delete_survey_template/**" access = "ROLE_ADMIN" />
 		<intercept-url pattern="/assign_survey/**" access="ROLE_USER" />
 		<intercept-url pattern="/assign_surveys" access="ROLE_ADMIN" />
