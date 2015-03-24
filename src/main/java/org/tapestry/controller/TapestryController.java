@@ -124,7 +124,7 @@ public class TapestryController{
 	
 	@RequestMapping(value="/loginsuccess", method=RequestMethod.GET)
 	public String loginSuccess(SecurityContextHolderAwareRequestWrapper request)
-	{				
+	{			
 		User u = TapestryHelper.getLoggedInUser(request, userManager);
 		
 		StringBuffer sb = new StringBuffer();
@@ -1122,7 +1122,7 @@ public class TapestryController{
 			if (title.equalsIgnoreCase("Mobility"))//Mobility survey
 				mobilitySurvey = survey;
 			
-			if (title.equalsIgnoreCase("Social Life")) //Social Life(Duke Index of Social Support)
+			if (title.equalsIgnoreCase("4. Social Life")) //Social Life(Duke Index of Social Support)
 				socialLifeSurvey = survey;
 			
 			if (title.equalsIgnoreCase("General Health")) //General Health(Edmonton Frail Scale)
@@ -1457,7 +1457,7 @@ public class TapestryController{
 			if (title.equalsIgnoreCase("Mobility"))//Mobility survey
 				mobilitySurvey = survey;
 			
-			if (title.equalsIgnoreCase("Social Life")) //Social Life(Duke Index of Social Support)
+			if (title.equalsIgnoreCase("4. Social Life")) //Social Life(Duke Index of Social Support)
 				socialLifeSurvey = survey;
 			
 			if (title.equalsIgnoreCase("General Health")) //General Health(Edmonton Frail Scale)
@@ -1877,7 +1877,7 @@ public class TapestryController{
    		int organizationId = loggedInUser.getOrganization();
    		List<Patient> patientList = new ArrayList<Patient>();
    		List<SurveyResult> surveyResultList = new ArrayList<SurveyResult>();
-   		if (request.isUserInRole("ROLE_ADMIN"))
+   		if (request.isUserInRole("ROLE_ADMIN")||request.isUserInRole("ROLE_CLINICIAN"))
    		{
    			patientList = patientManager.getAllPatients();
    			surveyResultList = surveyManager.getAllSurveyResults();

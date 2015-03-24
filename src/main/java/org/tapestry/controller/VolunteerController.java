@@ -1087,7 +1087,12 @@ public class VolunteerController {
 
 			return "admin/index";
 		}
-		else{ //This should not happen, but catch any unforseen behavior and logout			
+		else if (request.isUserInRole("ROLE_CLINICIAN"))
+		{
+			return "redirect:/manage_surveys";
+		}
+		else
+		{ //This should not happen, but catch any unforseen behavior and logout			
 			return "redirect:/login";
 		}
 	}
@@ -2521,7 +2526,6 @@ public class VolunteerController {
 		userManager.addUserLog(sb.toString(), loggedInUser);
 		
 		HttpSession session = request.getSession();
-//		session.setAttribute("newNarrative", true);
 		session.setAttribute("narrativeMessage","C");
 		
 		if (flag == 1)
@@ -2553,4 +2557,11 @@ public class VolunteerController {
 				
 		return "redirect:/view_narratives";
 	}		
+	
+	//
+	@RequestMapping(value="/tesing", method=RequestMethod.GET)
+	public String testingDoubleForm(SecurityContextHolderAwareRequestWrapper request, ModelMap model)
+	{		System.out.println("hi there... double form in same html");
+		return "redirect:/profile?success=true";
+	}
 }

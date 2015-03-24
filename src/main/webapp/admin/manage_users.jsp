@@ -75,6 +75,7 @@
 						<c:if test="${u.role eq 'ROLE_USER'}">Volunteer</c:if>
 						<c:if test="${u.role eq 'ROLE_LOCAL_ADMIN'}">Local Administrator</c:if>
 						<c:if test="${u.role eq 'ROLE_RESEARCHER'}">Researcher</c:if>
+						<c:if test="${u.role eq 'ROLE_CLINICIAN'}">Clinician</c:if>
 					</td>
 					<td>${u.site}</td>
 					<td>${u.phoneNumber}</td>
@@ -162,10 +163,10 @@
 						</div>
 				</div>
 				<label><h4>User Role</h4></label>
-				<div class="row form-group">
-						
+				<div class="row form-group">						
 						<input type="radio" name="role" value="ROLE_ADMIN">Central Admin</input> <br/>
 						<input type="radio" name="role" value="ROLE_LOCAL_ADMIN" >Local Admin</input> <br/>
+						<input type="radio" name="role" value="ROLE_CLINICIAN" >Clinician</input> <br/>
 						<input type="radio" name="role" value="ROLE_RESEARCHER" checked>Researcher</input> <br/>
 				</div>
 						

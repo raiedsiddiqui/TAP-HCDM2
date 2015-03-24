@@ -6,7 +6,16 @@ public class DisplayedSurveyResult {
 	private String observerNotes;
 	private String title;
 	private String date;
+	private String questionText;
 	
+	public String getQuestionText() {
+		return questionText;
+	}
+
+	public void setQuestionText(String questionText) {
+		this.questionText = questionText;
+	}
+
 	public DisplayedSurveyResult(){
 		
 	}

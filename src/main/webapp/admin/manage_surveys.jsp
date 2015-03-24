@@ -21,8 +21,6 @@
 <body>
 	<div class="content">
 		<%@include file="navbar.jsp" %>
-		
-		
 		<div class="row-fluid">
 			<h2>Surveys</h2>
 			<c:if test="${not empty failed}">

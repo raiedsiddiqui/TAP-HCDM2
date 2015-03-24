@@ -32,16 +32,18 @@
 			<h4>Completed on: ${results[0].date}</h4>
 			<table class="table">
 				<tr>
-					<th>Question</th>
-					<th>Answer</th>
-					<th>Observer Notes</th>
+					<th width="20">Id</th>
+					<th width="350">Question</th>
+					<th width="300">Answer</th>
+					<th width="200">Observer Notes</th>
 				</tr>				
 				<c:forEach items="${results}" var="result">
 					
 					<tr>
-						<td>${result.questionId}</td>
-						<td>${result.questionAnswer}</td>
-						<td>${result.observerNotes}</td>
+						<td width="20">${result.questionId}</td>
+						<td width="350">${result.questionText}</td>
+						<td width="300">${result.questionAnswer}</td>
+						<td width="200">${result.observerNotes}</td>
 					</tr>
 					
 				</c:forEach>

@@ -1481,6 +1481,7 @@ public class TapestryHelper {
 			cell.setMinimumHeight(45f);
 			table.addCell(cell);	            
 	           
+			Phrase p = new Phrase();
 			sb = new StringBuffer();
 //			sb.append("Clock drawing test: ");
 //			sb.append(report.getScores().getClockDrawingTest());
@@ -1491,13 +1492,16 @@ public class TapestryHelper {
 			sb.append("Edmonton Frail Scale sore = ");
 			sb.append(report.getScores().getEdmontonFrailScale());	
 			sb.append("\n");
-	            
-			cell = new PdfPCell(new Phrase(sb.toString(), imFont));
+			p.add(new Chunk(sb.toString(), imFont));
+			p.add(new Chunk("(Add 1 to this score if there are minor spacing errors in the clock and add 2 if there are other errors in the clock.)", iSmallFont));
+
+			cell = new PdfPCell(p);            
+//			cell = new PdfPCell(new Phrase(sb.toString(), imFont));
 			cell.setBackgroundColor(BaseColor.LIGHT_GRAY);	    
 			cell.setNoWrap(false);
 			table.addCell(cell);
 	            
-			Phrase p = new Phrase();
+			p = new Phrase();
 			Chunk underline = new Chunk("Edmonton Frail Scale (Score Key):", mFont);
 			underline.setUnderline(0.1f, -1f); //0.1 thick, -1 y-location	 
 			p.add(underline);
@@ -1519,8 +1523,7 @@ public class TapestryHelper {
 			cell.setNoWrap(false);
 			table.addCell(cell);
 			
-			cell = new PdfPCell(new Phrase("Nutritional Status", mFont));
-	            	           
+			cell = new PdfPCell(new Phrase("Nutritional Status", mFont));	            	           
 			cell.setVerticalAlignment(Element.ALIGN_TOP);
 			cell.setMinimumHeight(35f);
 			table.addCell(cell);            
