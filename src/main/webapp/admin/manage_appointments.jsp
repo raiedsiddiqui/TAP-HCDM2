@@ -53,13 +53,14 @@
 		</div>
 		
 			<c:if test="${not empty success}">
-				<div class="alert alert-info">Appointment has been successfully booked</div>
+				<div class="alert alert-success">Appointment has been successfully booked</div>
 			 </c:if>
 			 <c:if test="${not empty noMachedTime }">
-			 	<div id = "noMatchInfo" class="alert alert-info">
+			 	<div id = "noMatchInfo" class="alert alert-warning">
 			 		<c:out value="${noMachedTime}" />
 			 	</div>
 			 </c:if>
+			
 			<!--<div class="panel-group" id="accordian">
 			<c:forEach items="${patients}" var="p">
 				
@@ -171,7 +172,7 @@
 					<div class="panel-heading">
 				    	<h4 class="panel-title">
 				    		<a data-toggle="collapse" data-parent="#accordion" href="#collapse${p.firstName}${p.lastName}">
-				        	${p.displayName}</a>
+				        	${p.firstName} ${p.lastName}</a>
 				      </h4>
 				    </div>
  				    
@@ -416,7 +417,6 @@
 		})
 		
 	</script>-->
-  
 
 </body>
 </html>

@@ -33,13 +33,13 @@
 				<div class="row">
 					<div class="col-md-3">
 						<label>Date:</label>
-							<div id="dp1" class="input-append">
+							<div id="dp" class="input-append" role="dialog">
 								<!-- <input id="activityDate" name="activityDate" data-format="yyyy-MM-dd" type="text" value = "${activityLog.date}" required> -->
 
 								<input id="activityDate" class="datepickera form-control" data-format="yyyy-MM-dd" type="text" placeholder="Select Date" name="activityDate" value = "${activityLog.date}" required>
-									<span class="add-on">
-										<!-- <i class="icon-calendar"></i> -->
-									</span>
+								<span class="add-on">
+									<!-- <i class="icon-calendar"></i> -->
+								</span>
 							</div>
 					</div>
 
@@ -48,10 +48,9 @@
 							<div id="tp1" class="input-append" role="dialog">
 								<!-- <input data-format="hh:mm:00" type="text" name="activityStartTime" id="activityStartTime" value="${activityLog.startTime}" > -->
 
-								<input id="activityStartTime" data-format="hh:mm:00" class="timepickera form-control" type="text" placeholder="Select Start Time" name="activityStartTime" value="${activityLog.startTime}">
-
+								<input id="activityStartTime" data-format="hh:mm:00" class="timepickera form-control" type="text" placeholder="Select Time" name="activityStartTime" value="${activityLog.startTime}" required>
 					    		<span class="add-on">
-					    			<!-- <i class="icon-time"></i> -->
+						    			<!-- <i class="icon-time"></i> -->
 					   			 </span>
 							</div>
 					</div>
@@ -62,11 +61,9 @@
 								<!-- <input data-format="hh:mm:00" type="text" name="activityEndTime" id="activityEndTime" value="${activityLog.endTime}"> -->
 
 
-								<input id="activityEndTime" data-format="hh:mm:00" class="timepickerb form-control" type="text" placeholder="Select End Time" name="activityEndTime" value="${activityLog.endTime}">
-
-
+								<input id="activityEndTime" data-format="hh:mm:00" class="timepickerb form-control" type="text" placeholder="Select Time" name="activityEndTime" value="${activityLog.endTime}" required>
 					    		<span class="add-on">
-					    			<!-- <i class="icon-time"></i> -->
+						    			<!-- <i class="icon-time"></i> -->
 					   			 </span>
 							</div>
 					</div>
@@ -95,7 +92,52 @@
 			</div>
 		</div>
 	</div>
+<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/lib/picker.js"></script>
+<script src="${pageContext.request.contextPath}/resources/lib/picker.date.js"></script>
+<script src="${pageContext.request.contextPath}/resources/lib/picker.time.js"></script>
+<script src="${pageContext.request.contextPath}/resources/lib/legacy.js"></script>
 
+
+<script type="text/javascript">
+
+	$('.datepickera').pickadate({
+    // Escape any âruleâ characters with an exclamation mark (!).
+    format: 'You selecte!d: dddd, dd mmm, yyyy',
+    formatSubmit: 'yyyy-mm-dd',
+    hiddenName: true
+   	// hiddenPrefix: 'prefix__',
+    // hiddenSuffix: '__suffix'
+	})
+	
+
+	$('.timepickera').pickatime({
+	    // Escape any âruleâ characters with an exclamation mark (!).
+	    formatSubmit: 'HH:i:00',
+	   	hiddenName: true,
+	   	min: [8,0],
+	   	max: [17,0]
+
+	    // hiddenPrefix: 'prefix__',
+	    // hiddenSuffix: '__suffix'
+	})
+
+	$('.timepickerb').pickatime({
+	    // Escape any âruleâ characters with an exclamation mark (!).
+	    formatSubmit: 'HH:i:00',
+	   	hiddenName: true,
+	   	min: [8,0],
+	   	max: [17,0]
+
+	    // hiddenPrefix: 'prefix__',
+	    // hiddenSuffix: '__suffix'
+	})
+
+		
+	</script>
+
+
+	<!--
 
 	<script type="text/javascript">
 		$(function(){
@@ -142,5 +184,6 @@
 		    // hiddenSuffix: '__suffix'
 		})
 	</script>
+-->
 </body>
 </html>

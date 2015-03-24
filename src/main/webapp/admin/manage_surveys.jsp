@@ -33,7 +33,7 @@
 					<div class="panel-heading">
 						<h4 class="panel-title">
 				    		<a class="accordion-toggle" data-toggle="collapse" href="#collapse${p.patientID}">
-				        	${p.displayName}
+				        	${p.firstName} ${p.lastName}
 				      		</a>
 				      	</h4>
 				    </div>
