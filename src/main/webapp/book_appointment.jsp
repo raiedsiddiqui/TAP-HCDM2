@@ -5,7 +5,7 @@
 			<h4>With patient:</h4>
 			<select id="selectpatient" name="patient" form="book-appointment-form" class="form-control">
 				<c:forEach items="${patients}" var="p">
-				<option value="${p.patientID}">${p.displayName}</option>
+				<option value="${p.patientID}">${p.firstName} ${p.lastName}</option>
 				</c:forEach>
 			</select><br />
 			

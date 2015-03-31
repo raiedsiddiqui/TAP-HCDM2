@@ -8,6 +8,7 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=no"></meta>
 
+
 	<title>Tapestry</title>
 
 
@@ -38,11 +39,11 @@
 <div class="content">
 	<div class="row">
 			<div class="col-md-8">
-				<h3 class="pagetitle">My Narratives <span class="pagedesc">Select client name and then select visit date</span> </h3>
+				<h3 class="pagetitle">My Narratives <span class="pagedesc">Select client name and then select visit date to which you want to attach a narrative</span> </h3>
 			</div>
-			<div class="col-md-4">	
+			<!-- <div class="col-md-4">	
 				<a href="<c:url value="/add_narrative"/>" class="pull-right lgbtn" data-toggle="modal" onclick="return false;">New Narrative</a>
-			</div>
+			</div> -->
 		</div>
 	</div>
 
@@ -57,6 +58,8 @@
 		<div class ="alert alert-info"><spring:message code="message_modifyNarrative"/></div>
 	</c:if>
 	
+
+
 	<div class="row-fluid">
 		<div class="panel-group" id="accordian">
 			<c:forEach items="${patients}" var="p">
@@ -115,5 +118,7 @@
 		</div>
 	</div>
 </div>
+
+
 </body>
 </html>
