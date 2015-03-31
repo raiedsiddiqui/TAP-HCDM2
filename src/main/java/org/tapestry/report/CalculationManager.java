@@ -32,16 +32,16 @@ public class CalculationManager {
 	{
 		int score = 0;
 		int iAnswer = 0;
-		Object obj;
 		
 		for (int i = 0; i < qList.size(); i++)
 		{
-			obj = qList.get(i);
-			
-			if (obj instanceof String)
+			try{
+				iAnswer = Integer.valueOf(qList.get(i).toString());
+			}catch(NumberFormatException ex)
+			{
+				System.out.println("input is string or empty, not digit");
 				iAnswer = 0;
-			else
-				iAnswer = Integer.valueOf(obj.toString());
+			}
 			
 			if (iAnswer <= 1)
 				score = score + 1;
@@ -213,46 +213,8 @@ public class CalculationManager {
 		{	
 			if (qList.get(i).equals("1") && i > score)
 				score = i;
-		}
-		
+		}		
 		return score;
-		
-		
-//		Integer[] answerArray = new Integer[6];
-		//set answer into an array from first 6 questions
-//		for(int i = 0; i < 6; i++)
-//			answerArray[i] = Integer.valueOf(qList.get(i));	
-		
-		
-//		Integer[] otherAnswers = removeFirstElementInArray(answerArray);
-//		
-//		if ((answerArray[0].intValue() == 1) && isAllOtherAnswersNo(otherAnswers))
-//			score = 2;
-//		
-//		otherAnswers = removeFirstElementInArray(otherAnswers);
-//		
-//		if ((answerArray[1].intValue() == 1) && isAllOtherAnswersNo(otherAnswers))
-//			score = 3;
-//		
-//		otherAnswers = removeFirstElementInArray(otherAnswers);
-//		
-//		if ((answerArray[2].intValue() == 1) && isAllOtherAnswersNo(otherAnswers))
-//			score = 4;
-//		
-//		otherAnswers = removeFirstElementInArray(otherAnswers);
-//		
-//		if ((answerArray[3].intValue() == 1) && isAllOtherAnswersNo(otherAnswers))
-//			score = 5;
-//		
-//		otherAnswers = removeFirstElementInArray(otherAnswers);
-//		
-//		if ((answerArray[4].intValue() == 1) && isAllOtherAnswersNo(otherAnswers))
-//			score = 6;		
-//	
-//		if (answerArray[5].intValue() == 1) 
-//			score = 7;		
-		
-//		return score;
 	}
 	
 	public static int getSFScoreForRAPA(List<String> qList){
@@ -306,7 +268,7 @@ public class CalculationManager {
 			if ("a4b".equalsIgnoreCase(key))
 				a4bValue = value;		
 		}
-		
+	
 		//score for walking in 2.0 km
 		if (a2aValue.equals("1"))
 		{
@@ -323,7 +285,7 @@ public class CalculationManager {
 			sb.append("minor manifest limition ");
 			sb = getModificationInfo(sb, a2bValue);
 		}
-		else if (a2aValue.equals("4"))
+		else 
 		{
 			sb.append("major manifest limition ");
 			sb = getModificationInfo(sb, a2bValue);
@@ -348,7 +310,7 @@ public class CalculationManager {
 			sb.append("minor manifest limition ");
 			sb = getModificationInfo(sb, a3bValue);
 		}
-		else if (a3aValue.equals("4"))
+		else 
 		{
 			sb.append("major manifest limition ");
 			sb = getModificationInfo(sb, a3bValue);
@@ -374,7 +336,7 @@ public class CalculationManager {
 			sb.append("minor manifest limition ");
 			sb = getModificationInfo(sb, a4bValue);
 		}
-		else if (a4aValue.equals("4"))
+		else
 		{
 			sb.append("major manifest limition ");
 			sb = getModificationInfo(sb, a4bValue);
@@ -455,29 +417,5 @@ public class CalculationManager {
 			sb.append("using modifications");
 		
 		return sb;
-	}
-	
-	private static Integer[] removeFirstElementInArray(Integer[] array){		
-		final Integer[] EMPTY_Integer_ARRAY = new Integer[0];
-		//convert array to ArrayList
-		List<Integer> list = new ArrayList<Integer>(Arrays.asList(array));
-		//remove first element from list
-		list.remove(0);	
-		
-		return list.toArray(EMPTY_Integer_ARRAY);
-	}
-	
-	private static boolean isAllOtherAnswersNo(Integer[] answers){
-		boolean allNo = true;
-		for(Integer a: answers){
-			if (a.equals(1))
-			{
-				allNo = false;
-				break;
-			}
-		}
-		
-		return allNo;
-	}
-	
+	}	
 }

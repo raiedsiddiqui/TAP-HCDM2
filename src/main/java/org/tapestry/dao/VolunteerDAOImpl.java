@@ -123,6 +123,12 @@ public class VolunteerDAOImpl extends JdbcDaoSupport implements VolunteerDAO {
 				v.getAvailabilityPerMonth(), v.getTechnologySkillsScore(), v.getPerceptionOfOlderAdultsScore(),
 				v.getvLCID(), v.getVolunteerId());		
 	}
+	
+	@Override
+	public void updateVolunteerAvalability(int volunteerId, String availablitly) {
+		String sql = "UPDATE volunteers SET availability=? WHERE volunteer_ID=?";
+		getJdbcTemplate().update(sql, availablitly, volunteerId);		
+	}	
 
 	@Override
 	public void deleteVolunteerById(int id) {
@@ -307,6 +313,8 @@ public class VolunteerDAOImpl extends JdbcDaoSupport implements VolunteerDAO {
 			
 		}
 	}
+
+	
 
 
 }

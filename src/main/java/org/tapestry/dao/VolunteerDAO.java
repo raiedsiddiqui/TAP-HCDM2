@@ -78,6 +78,12 @@ public interface VolunteerDAO {
 	public void updateVolunteer(Volunteer volunteer);
 	
 	/**
+	 * Modify volunteer
+	 * @param volunteer
+	 */
+	public void updateVolunteerAvalability(int volunteerId, String availablitly);
+	
+	/**
 	 * Delete a volunteer by giving ID
 	 * @param id
 	 */

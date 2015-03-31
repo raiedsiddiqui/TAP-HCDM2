@@ -106,6 +106,13 @@ public interface VolunteerManager {
 	public void updateVolunteer(Volunteer volunteer);
 	
 	/**
+	 * Modify volunteer availability
+	 * @param volunteerId and availability
+	 */
+	@Transactional
+	public void updateVolunteerAvalability(int volunteerId, String availability);
+	
+	/**
 	 * Delete a volunteer by giving ID
 	 * @param id
 	 */

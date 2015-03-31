@@ -864,6 +864,46 @@ public class TapestryHelper {
 		return matched;
 	}
 	
+	public static void showVolunteerAvailability(Volunteer volunteer, SecurityContextHolderAwareRequestWrapper request, ModelMap model){
+		String strAvailibilities = volunteer.getAvailability();
+		boolean mondayNull = false;
+		boolean tuesdayNull = false;
+		boolean wednesdayNull = false;
+		boolean thursdayNull = false;
+		boolean fridayNull = false;
+		
+		if (strAvailibilities.contains("1non"))
+			mondayNull = true;
+		if (strAvailibilities.contains("2non"))
+			tuesdayNull = true;
+		if (strAvailibilities.contains("3non"))
+			wednesdayNull = true;
+		if (strAvailibilities.contains("4non"))
+			thursdayNull = true;
+		if (strAvailibilities.contains("5non"))
+			fridayNull = true;
+		
+		String[] arrayAvailibilities = strAvailibilities.split(",");
+		
+		Utils.getPosition("1","monDropPosition",arrayAvailibilities,mondayNull, model);
+		Utils.getPosition("2","tueDropPosition",arrayAvailibilities,tuesdayNull, model);
+		Utils.getPosition("3","wedDropPosition",arrayAvailibilities,wednesdayNull, model);
+		Utils.getPosition("4","thuDropPosition",arrayAvailibilities,thursdayNull, model);
+		Utils.getPosition("5","friDropPosition",arrayAvailibilities,fridayNull, model);
+		
+		model.addAttribute("volunteer", volunteer);
+		model.addAttribute("mondayNull", mondayNull);
+		model.addAttribute("tuesdayNull", tuesdayNull);
+		model.addAttribute("wednesdayNull", wednesdayNull);
+		model.addAttribute("thursdayNull", thursdayNull);
+		model.addAttribute("fridayNull", fridayNull);
+//		model.addAttribute("organizations", organizations);		
+		
+		if (request.getSession().getAttribute("unread_messages") != null)
+			model.addAttribute("unread", request.getSession().getAttribute("unread_messages"));
+				
+	}
+	
 
 	
 	
@@ -1231,8 +1271,7 @@ public class TapestryHelper {
 			table.addCell(cell);
 			
 			StringBuffer sb = new StringBuffer();
-//			sb.append("Goal I Am MOST Willing To Work On Over The Next 6 Months - Either By Myself Or With Support From My Doctor: ");
-//			sb.append(report.getPatientGoals().get(0).toString());	
+
 			for (int i = 0; i < report.getPatientGoals().size(); i++)
 			{
 				sb.append(report.getPatientGoals().get(i));
@@ -1959,7 +1998,7 @@ public class TapestryHelper {
 		
 		if (questionTextList != null && questionTextList.size() > 0)
    		{
-   			questionTextList.remove(0);//remove the first element which is description about whole survey
+ //  			questionTextList.remove(0);//remove the first element which is description about whole survey
    			//combine Q2 and Q3 question text
    			StringBuffer sb = new StringBuffer();
    	   		sb.append(questionTextList.get(1));
@@ -2069,7 +2108,7 @@ public class TapestryHelper {
 	}
 	
 	/**
-	 * remove observer notes from answer
+	 * remove question text and observer notes from answer
 	 * @param questionMap
 	 * @return a list of survey question text
 	 */
@@ -2078,19 +2117,17 @@ public class TapestryHelper {
 		String question;
 		int index;
 		
-		
 		for (Map.Entry<String, String> entry : questionMap.entrySet()) {
    		    String key = entry.getKey();
    		    
    		    if (!key.equalsIgnoreCase("title") && !key.equalsIgnoreCase("date") && !key.equalsIgnoreCase("surveyId"))
    		    {
    		    	Object value = entry.getValue();
-   		    	question = value.toString();
-   		    	
-   		    	index = question.indexOf("/observernote/");
+   		    	question = value.toString();   		    	
+   		    	index = question.indexOf("/answer/");
    		    	
    		    	if (index > 0)
-   		    		question = question.substring(0, index);
+   		    		question = question.substring(index + 8);//length of /answer/ is 8
    		    	
    		    	if (!question.equals("-"))
    		    		qList.add(question);   		    	
@@ -2117,12 +2154,16 @@ public class TapestryHelper {
    		    {
    		    	Object value = entry.getValue();
    		    	question = value.toString();
+   		    	index = question.indexOf("/answer/");
+		    	
+		    	if (index > 0)
+		    		question = question.substring(index + 8);//length of /answer/ is 8
    		    	
-   		    	//remove observer notes
-   		    	index = question.indexOf("/observernote/");
-   		    	
-   		    	if (index > 0)
-   		    		question = question.substring(0, index);   		    	
+//   		    	//remove observer notes
+//   		    	index = question.indexOf("/observernote/");
+//   		    	
+//   		    	if (index > 0)
+//   		    		question = question.substring(0, index);   		    	
    		    	qList.add(question); 
    		    }   		   
    		}		
@@ -2147,10 +2188,15 @@ public class TapestryHelper {
    		    	Object value = entry.getValue();
    		    	question = value.toString();
    		    	
-   		    	index = question.indexOf("/observernote/");
+   		    	index = question.indexOf("/answer/");
+		    	
+		    	if (index > 0)
+		    		question = question.substring(index + 8);//length of /answer/ is 8
    		    	
-   		    	if (index > 0)
-   		    		question = question.substring(0, index);
+//   		    	index = question.indexOf("/observernote/");
+//   		    	
+//   		    	if (index > 0)
+//   		    		question = question.substring(0, index);
    		    	
    		    	if (!question.equals("-"))
    		    		qMap.put(key, question);    	
@@ -2485,7 +2531,6 @@ public class TapestryHelper {
 	public static void sendMessageToInbox(String msg, int sender, int recipient, MessageManager messageManager){		
 		sendMessageToInbox("New Appointment", msg, sender, recipient, messageManager);
 	}
-	
 	
 	
 	/**

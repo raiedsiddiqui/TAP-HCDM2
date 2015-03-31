@@ -559,7 +559,8 @@ public class TapestryController{
 	{
 		String newPassword;
 		String target;
-		if (request.isUserInRole("ROLE_USER")){
+		if (request.isUserInRole("ROLE_USER"))
+		{
 			String currentPassword = request.getParameter("currentPassword");
 			newPassword = request.getParameter("newPassword");
 			String confirmPassword = request.getParameter("confirmPassword");
@@ -570,22 +571,27 @@ public class TapestryController{
 				return "redirect:/profile?error=current";
 			}
 			target = "redirect:/profile?success=true";
-		} else {
-			System.out.println("Admin is changing password");
+		} 
+		else 
+		{			
 			newPassword = request.getParameter("newPassword");
 			target = "redirect:/manage_users";
 		}
-		ShaPasswordEncoder enc = new ShaPasswordEncoder();
-		String hashedPassword = enc.encodePassword(newPassword, null);
-		userManager.setPasswordForUser(userID, hashedPassword);
 		
-		User whosePwdChanged = userManager.getUserByID(userID);
-		User loggedInUser = TapestryHelper.getLoggedInUser(request, userManager);
-		StringBuffer sb = new StringBuffer();
-		sb.append(loggedInUser.getName());
-		sb.append(" has changed password for ");
-		sb.append(whosePwdChanged.getName());
-		userManager.addUserLog(sb.toString(), loggedInUser);		
+		if (!request.getParameter("newPassword").equals(""))
+		{
+			ShaPasswordEncoder enc = new ShaPasswordEncoder();
+			String hashedPassword = enc.encodePassword(newPassword, null);
+			userManager.setPasswordForUser(userID, hashedPassword);
+			
+			User whosePwdChanged = userManager.getUserByID(userID);
+			User loggedInUser = TapestryHelper.getLoggedInUser(request, userManager);
+			StringBuffer sb = new StringBuffer();
+			sb.append(loggedInUser.getName());
+			sb.append(" has changed password for ");
+			sb.append(whosePwdChanged.getName());
+			userManager.addUserLog(sb.toString(), loggedInUser);	
+		}
 	
 		return target;
 	}
@@ -1489,7 +1495,7 @@ public class TapestryController{
    		LinkedHashMap<String, String> mMemorySurvey = ResultParser.getResults(xml);
    		qList = new ArrayList<String>();
    		questionTextList = new ArrayList<String>();
-   		questionTextList = ResultParser.getSurveyQuestions(xml);  
+   		questionTextList = ResultParser.getSurveyQuestions(xml);     		
    		
    		List<String> displayQuestionTextList = new ArrayList<String>();
    		if ((questionTextList != null) && (questionTextList.size() > 0))
@@ -1510,7 +1516,7 @@ public class TapestryController{
    	   		sMap = new TreeMap<String, String>(); 	
    			sMap = TapestryHelper.getSurveyContentMapForMemorySurvey(displayQuestionTextList, qList);
    			 
-   			report.setMemory(sMap);
+   			report.setMemory(sMap);   		
    		}
    	   		
    		//Care Plan/Advanced_Directive
@@ -1610,8 +1616,9 @@ public class TapestryController{
 			else 
 				scores.setTimeUpGoTest("5 (Patient is unwilling)");
 		}		
-
-		int generalHealthyScore = CalculationManager.getGeneralHealthyScaleScore(qList);				
+		
+		int generalHealthyScore = CalculationManager.getGeneralHealthyScaleScore(qList);		
+		
 		lAlert = AlertManager.getGeneralHealthyAlerts(generalHealthyScore, lAlert, qList);
 		
 		if (generalHealthyScore < 5)
@@ -1620,7 +1627,7 @@ public class TapestryController{
 			scores.setEdmontonFrailScale(String.valueOf(generalHealthyScore) + " (Apparently Vulnerable)");
 		else
 			scores.setEdmontonFrailScale(String.valueOf(generalHealthyScore) + " (Frail)");		
-	
+		
 		//Social Life Alert
 		try{
    			xml = new String(socialLifeSurvey.getResults(), "UTF-8");
@@ -1646,7 +1653,7 @@ public class TapestryController{
 			int networkScore = CalculationManager.getSocialSupportNetworkScore(qList.subList(7, socialSupportSize));
 	   		scores.setSocialNetwork(networkScore);
 		}
-   		   		
+		  		   		
    		//Nutrition Alerts   		
    		try{
    			xml = new String(nutritionSurvey.getResults(), "UTF-8");
@@ -1724,8 +1731,6 @@ public class TapestryController{
    			scores.setMobilityClimbing(noLimitation);
    		
    		report.setScores(scores);
-//   		model.addAttribute("scores", scores);
-		
 		report.setAlerts(lAlert);
 		//end of alert
 		
@@ -1772,7 +1777,7 @@ public class TapestryController{
 			vMap.put(" Volunteer Notes", " ");
 		
 		report.setVolunteerInformations(vMap);		
-//		model.addAttribute("report", report);	
+
 		TapestryHelper.buildPDF(report, response);
 		
 		//add log

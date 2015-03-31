@@ -80,11 +80,12 @@ public class AlertManager {
 			if ("a4a".equalsIgnoreCase(key))
 				a4aValue = value;
 		}
-		if ("4".equals(a2aValue))
+	
+		if ("4".equals(a2aValue) || "5".equals(a2aValue))
 			alerts.add(AlertsInReport.MOBILITY_WALKING_ALERT1);
-		if ("4".equals(a3aValue))
+		if ("4".equals(a3aValue) || "5".equals(a3aValue))
 			alerts.add(AlertsInReport.MOBILITY_WALKING_ALERT2);
-		if ("4".equals(a4aValue))
+		if ("4".equals(a4aValue) || "5".equals(a4aValue))
 			alerts.add(AlertsInReport.MOBILITY_CLIMBING_ALERT);
 		return alerts;
 	}
@@ -98,9 +99,6 @@ public class AlertManager {
 		
 		if ("2".equals(qList.get(6)))
 			alerts.add(AlertsInReport.EDMONTON_FRAIL_SCALE_ALERT3);
-		
-//		if ("3".equals(qList.get(0)))
-//			alerts.add(AlertsInReport.EDMONTON_FRAIL_SCALE_ALERT4);
 		
 		if ("3".equals(qList.get(10)) )
 			alerts.add(AlertsInReport.EDMONTON_FRAIL_SCALE_ALERT5);

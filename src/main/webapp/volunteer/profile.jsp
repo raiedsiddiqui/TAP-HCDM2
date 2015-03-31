@@ -82,13 +82,15 @@
 			</c:when>
 			<c:when test="${errors == 'current'}">
 				<div class="alert alert-error"><spring:message code="message_passwordIncorrect"/></div>
-			</c:when>
+			</c:when>			
 		</c:choose>
 	</c:if>
 	<c:if test="${not empty success}">
 		<div class ="alert alert-info"><spring:message code="message_passwordChangedSuccessfully"/></div>
 	</c:if>						
-
+	<c:if test="${not empty availability }">
+		<div class ="alert alert-info"><spring:message code="message_availabilityChangedSuccessfully"/></div>
+	</c:if>
 	<div class="tab-content">
 		<div class="row">
 			<div class="col-md-12">				
@@ -127,6 +129,16 @@
 	  				<button class="btn btn-info" onClick="history.back()" class="pull-left">Cancel</button>
 	  				<button id="changePasswordButton" data-loading-text="Loading..." type="submit"  form="changePassword" class="pull-right lgbtn">Change Password</button>			
 			</div>
+		</div>
+		
+		<div id= "vAvailability">		
+			<form id="updateAvailability" action="<c:url value="/updateVolunteerAvailability/${volunteer.volunteerId}"/>" method="POST" >
+				<h2>Availability </h2>
+				<c:set var="availability" value="${volunteer.availability}"/>						
+				<%@include file="../admin/edit_availabilities.jsp" %>
+			</form>
+			<button class="btn btn-info" onClick="history.back()" class="pull-left">Cancel</button>
+	  		<button id="updateAvailability" data-loading-text="Loading..." type="submit"  form="updateAvailability" class="pull-right lgbtn">Update Availability</button>			
 		</div>
 	</div>
 </div>

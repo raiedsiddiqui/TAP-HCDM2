@@ -123,6 +123,12 @@ public class VolunteerManagerImpl implements VolunteerManager {
 	public void updateVolunteer(Volunteer volunteer) {
 		volunteerDao.updateVolunteer(volunteer);
 	}
+	
+	@Override
+	public void updateVolunteerAvalability(int volunteerId, String availability) {
+		volunteerDao.updateVolunteerAvalability(volunteerId, availability);
+		
+	}
 
 	@Override
 	public void deleteVolunteerById(int id) {
@@ -306,5 +312,6 @@ public class VolunteerManagerImpl implements VolunteerManager {
 	public Narrative getNarrativeByAppointmentId(int appointmentId) {
 		return narrativeDao.getNarrativeByAppointmentId(appointmentId);
 	}
+
 
 }

@@ -338,43 +338,44 @@ public class VolunteerController {
 			}				
 			session.setAttribute("organizations", organizations);
 		}
-		
-		String strAvailibilities = volunteer.getAvailability();
-		boolean mondayNull = false;
-		boolean tuesdayNull = false;
-		boolean wednesdayNull = false;
-		boolean thursdayNull = false;
-		boolean fridayNull = false;
-		
-		if (strAvailibilities.contains("1non"))
-			mondayNull = true;
-		if (strAvailibilities.contains("2non"))
-			tuesdayNull = true;
-		if (strAvailibilities.contains("3non"))
-			wednesdayNull = true;
-		if (strAvailibilities.contains("4non"))
-			thursdayNull = true;
-		if (strAvailibilities.contains("5non"))
-			fridayNull = true;
-		
-		String[] arrayAvailibilities = strAvailibilities.split(",");
-		
-		Utils.getPosition("1","monDropPosition",arrayAvailibilities,mondayNull, model);
-		Utils.getPosition("2","tueDropPosition",arrayAvailibilities,tuesdayNull, model);
-		Utils.getPosition("3","wedDropPosition",arrayAvailibilities,wednesdayNull, model);
-		Utils.getPosition("4","thuDropPosition",arrayAvailibilities,thursdayNull, model);
-		Utils.getPosition("5","friDropPosition",arrayAvailibilities,fridayNull, model);
-		
-		model.addAttribute("volunteer", volunteer);
-		model.addAttribute("mondayNull", mondayNull);
-		model.addAttribute("tuesdayNull", tuesdayNull);
-		model.addAttribute("wednesdayNull", wednesdayNull);
-		model.addAttribute("thursdayNull", thursdayNull);
-		model.addAttribute("fridayNull", fridayNull);
-		model.addAttribute("organizations", organizations);		
-		
-		if (session.getAttribute("unread_messages") != null)
-			model.addAttribute("unread", session.getAttribute("unread_messages"));
+		model.addAttribute("organizations", organizations);	
+		TapestryHelper.showVolunteerAvailability(volunteer, request, model);
+//		String strAvailibilities = volunteer.getAvailability();
+//		boolean mondayNull = false;
+//		boolean tuesdayNull = false;
+//		boolean wednesdayNull = false;
+//		boolean thursdayNull = false;
+//		boolean fridayNull = false;
+//		
+//		if (strAvailibilities.contains("1non"))
+//			mondayNull = true;
+//		if (strAvailibilities.contains("2non"))
+//			tuesdayNull = true;
+//		if (strAvailibilities.contains("3non"))
+//			wednesdayNull = true;
+//		if (strAvailibilities.contains("4non"))
+//			thursdayNull = true;
+//		if (strAvailibilities.contains("5non"))
+//			fridayNull = true;
+//		
+//		String[] arrayAvailibilities = strAvailibilities.split(",");
+//		
+//		Utils.getPosition("1","monDropPosition",arrayAvailibilities,mondayNull, model);
+//		Utils.getPosition("2","tueDropPosition",arrayAvailibilities,tuesdayNull, model);
+//		Utils.getPosition("3","wedDropPosition",arrayAvailibilities,wednesdayNull, model);
+//		Utils.getPosition("4","thuDropPosition",arrayAvailibilities,thursdayNull, model);
+//		Utils.getPosition("5","friDropPosition",arrayAvailibilities,fridayNull, model);
+//		
+//		model.addAttribute("volunteer", volunteer);
+//		model.addAttribute("mondayNull", mondayNull);
+//		model.addAttribute("tuesdayNull", tuesdayNull);
+//		model.addAttribute("wednesdayNull", wednesdayNull);
+//		model.addAttribute("thursdayNull", thursdayNull);
+//		model.addAttribute("fridayNull", fridayNull);
+//		model.addAttribute("organizations", organizations);		
+//		
+//		if (session.getAttribute("unread_messages") != null)
+//			model.addAttribute("unread", session.getAttribute("unread_messages"));
 				
 		return "/admin/modify_volunteer";
 	}
@@ -475,20 +476,34 @@ public class VolunteerController {
 	
 	@RequestMapping(value="/profile", method=RequestMethod.GET)
 	public String viewProfile(@RequestParam(value="error", required=false) String errorsPresent, 
-			@RequestParam(value="success", required=false) String success, SecurityContextHolderAwareRequestWrapper request, 
-			ModelMap model)
+			@RequestParam(value="success", required=false) String success, @RequestParam(value="availability", required=false) 
+			String a, SecurityContextHolderAwareRequestWrapper request, ModelMap model)
 	{	
 		User loggedInUser = TapestryHelper.getLoggedInUser(request, userManager);
 		model.addAttribute("loggedInUserId", loggedInUser.getUserID());
 		TapestryHelper.setUnreadMessage(request, model, messageManager);
+	
+		Volunteer volunteer = volunteerManager.getVolunteerById(TapestryHelper.getLoggedInVolunteerId(request));
+		TapestryHelper.showVolunteerAvailability(volunteer, request, model);
 		
 		if (errorsPresent != null)
 			model.addAttribute("errors", errorsPresent);
 		if(success != null)
 			model.addAttribute("success", true);
+		if (a != null)
+			model.addAttribute("availability", true);
+		
 //		List<Picture> pics = pictureManager.getPicturesForUser(loggedInUser.getUserID());
 //		model.addAttribute("pictures", pics);
 		return "/volunteer/profile";
+	}
+	
+	@RequestMapping(value="/updateVolunteerAvailability/{volunteerId}", method=RequestMethod.POST)
+	public String testingDoubleForm(@PathVariable("volunteerId") int id,SecurityContextHolderAwareRequestWrapper request, ModelMap model)
+	{		
+		String strAvailableTime = TapestryHelper.getAvailableTime(request);
+		volunteerManager.updateVolunteerAvalability(id, strAvailableTime);
+		return "redirect:/profile?availability=true";
 	}
 	
 	@RequestMapping(value="/volunteerList.html")
@@ -2558,10 +2573,5 @@ public class VolunteerController {
 		return "redirect:/view_narratives";
 	}		
 	
-	//
-	@RequestMapping(value="/tesing", method=RequestMethod.GET)
-	public String testingDoubleForm(SecurityContextHolderAwareRequestWrapper request, ModelMap model)
-	{		System.out.println("hi there... double form in same html");
-		return "redirect:/profile?success=true";
-	}
+
 }
