@@ -164,17 +164,6 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 	}
 	
 	@Override
-	public String getKeyObservationByPatient(int id) {
-		String sql = "SELECT key_observations FROM patients WHERE patient_ID=?";
-		List<String> sList = getJdbcTemplate().queryForList(sql, new Object[]{id}, String.class);
-		
-		if (sList.isEmpty())
-			return null;
-		else
-			return sList.get(0);
-	}
-
-	@Override
 	public boolean addKeyObservations(int id, String keyObservations) {
 		String sql = "UPDATE patients SET key_observations=? WHERE patient_ID=? ";
 		getJdbcTemplate().update(sql, keyObservations, id);

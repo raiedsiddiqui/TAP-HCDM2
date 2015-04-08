@@ -38,6 +38,7 @@ import org.tapestry.utils.Utils;
 import org.tapestry.myoscar.utils.ClientManager;
 import org.tapestry.objects.Appointment;
 import org.tapestry.objects.Availability;
+import org.tapestry.objects.DisplayedSurveyResult;
 import org.tapestry.objects.HL7Report;
 import org.tapestry.objects.Message;
 import org.tapestry.objects.Patient;
@@ -1528,7 +1529,7 @@ public class TapestryHelper {
 			sb.append("Timed up-and-go test score = ");
 			sb.append(report.getScores().getTimeUpGoTest());
 			sb.append("\n");
-			sb.append("Edmonton Frail Scale sore = ");
+			sb.append("Edmonton Frail Scale score = ");
 			sb.append(report.getScores().getEdmontonFrailScale());	
 			sb.append("\n");
 			p.add(new Chunk(sb.toString(), imFont));
@@ -1874,10 +1875,7 @@ public class TapestryHelper {
 				cell.setHorizontalAlignment(Element.ALIGN_CENTER);
 				table.addCell(cell);	            	
 	            
-				value = entry.getValue().toString();
-				if (value.startsWith("Question "))
-					value = value.substring(16);
-							
+				value = entry.getValue().toString();						
 				index = value.indexOf("|");				
 				tQuestionText = value.substring(0, index);				
 				tQuestionAnswer = value.substring(index+1);
@@ -1991,63 +1989,80 @@ public class TapestryHelper {
 	 * @param questionAnswerList
 	 * @return Map survey question text and answer
 	 */
-	public static Map<String, String> getSurveyContentMap(List<String> questionTextList, List<String> questionAnswerList){
-		Map<String, String> content;
+	public static Map<String, String> getSurveyContentMap(List<String> questionTextList, List<String> questionAnswerList){		
+		Map<String, String> content = new TreeMap<String, String>(); ;
 		String text;
-		int index;
-		
-		if (questionTextList != null && questionTextList.size() > 0)
-   		{
- //  			questionTextList.remove(0);//remove the first element which is description about whole survey
-   			//combine Q2 and Q3 question text
-   			StringBuffer sb = new StringBuffer();
-   	   		sb.append(questionTextList.get(1));
-   	   		sb.append("; ");
-   	   		sb.append(questionTextList.get(2));
-   	   		questionTextList.set(1, sb.toString());
-   	   		questionTextList.remove(2);
-   			
-   	   		if (questionAnswerList != null && questionAnswerList.size() > 0)
-   	   		{//remove the first element which is empty or "-"
-   	   			content = new TreeMap<String, String>(); 
-		   	   		
-	   	   		for (int i = 0; i < questionAnswerList.size(); i++){
-	   	   			text = questionTextList.get(i);	  
-	   	   			
-	   	   			//remove observer notes
-	   		    	index = text.indexOf("/observernote/");	   		    	
-	   		    	if (index > 0)
-	   		    		text = text.substring(0, index);   
-	   		    	
-	   		    	//remove prompt... from question text
-	   		    	index = text.indexOf("(Prompt:");
-	   		    	int index1;
-	   		    	if (index > 0)
-	   		    		text = text.substring(0, index);
-	   		    	else
-	   		    	{//todo:should be removed after script is changed for consistency
-	   		    		index1 = text.indexOf("Prompt:");
-	   		    		if (index1 > 0)
-	   		    			text = text.substring(0, index1);
-	   		    	}	
-	   		    		
-	   	   			sb = new StringBuffer();	   	  
-	   	   			sb.append(text);	 
-	   	   			sb.append("|"); //add seperator for displaying in different font
-	   	   			sb.append("\n");	
-	   	   			sb.append(questionAnswerList.get(i));
 
-	   	   			content.put(String.valueOf(i + 1), sb.toString());
-	   	   		}		   	  
-	   	   		return content;
-   	   		}
-   	   		else
-   	   			System.out.println("All answers in Goal Setting survey are empty!");   	   			
-   		}   			
-   		else
-   			System.out.println("Bad thing happens, no question text found for this Goal Setting survey!");
+		StringBuffer sb = new StringBuffer();
+		//remove the first element which is description about whole survey
+		questionTextList.remove(0);
+		List<String> questions = modifyDailyLifeActivityQuestions(questionTextList);
 		
-		return null;   	
+		if ((questions != null && questions.size() > 0)&&(questionAnswerList != null && questionAnswerList.size() > 0))
+		{
+			for (int i = 0; i < questionAnswerList.size(); i++)
+			{
+   	   			text = questions.get(i);	   	   			
+	   	   		sb = new StringBuffer();	   	  
+	   	   		sb.append(text);	 
+	   	   		sb.append("|"); //add seperator for displaying in different font
+	   	   		sb.append("\n");	
+	   	   		sb.append(questionAnswerList.get(i));
+	
+	   	   		content.put(String.valueOf(i + 1), sb.toString());   	   			
+			}
+		}
+		else
+   			System.out.println("Bad thing happens, no question text/answer found for this Goal Setting survey!");
+		
+		return content;
+
+	}
+	
+	/**
+	 * need to combine Q2 with Q3
+	 * @param questions
+	 * @return
+	 */
+	public static List<String> modifyDailyLifeActivityQuestions(List<String> questions)
+	{
+		int index;
+		String text;
+	
+		for (int i = 0; i < questions.size(); i++)
+		{
+			text = questions.get(i);
+			//remove Question * of *
+			if (text.startsWith("Question "))
+				text = text.substring(16);
+			//remove observer notes
+	    	index = text.indexOf("/observernote/");	   		    	
+	    	
+	    	if (index > 0)
+	    		text = text.substring(0, index);   
+	    	//remove prompt... from question text
+	    	index = text.indexOf("(Prompt:");
+	    	
+	    	if (index > 0)
+	    		text = text.substring(0, index);
+	    	else
+	    	{//todo:should be removed after script is changed for consistency
+	    		index = text.indexOf("Prompt:");
+	    		if (index > 0)
+	    			text = text.substring(0, index);
+	    	}
+	    	questions.set(i, text);
+		}
+			    	
+	    //combine Q2 and Q3 question text
+	    StringBuffer sb = new StringBuffer();
+	    sb.append(questions.get(1));
+	    sb.append("; ");
+	    sb.append(questions.get(2));
+	    questions.set(1, sb.toString());	    
+	    questions.remove(2);	
+	    	    	
+		return questions;
 	}
 	
 	/**
@@ -2169,6 +2184,53 @@ public class TapestryHelper {
    		}		
 		return qList;
 	}
+	
+	//for Social life survey
+	public static String getDetailedAnswersForSocialLifeSurvey(String answer, int index)
+	{
+		String[] answers = {"Hardly ever", "Some of the time", "Most of the time", "Very dissatisfied", 
+				"Somewhat dissatisfied", "Satisfied"};		
+		String detailedAnswer = "";
+		
+		if ((index >= 0)&&(index < 6))
+		{
+			if("1".equals(answer))
+				detailedAnswer = answers[0];				
+			else if ("2".equals(answer))
+				detailedAnswer = answers[1];
+			else
+				detailedAnswer = answers[2];
+		}
+		else if (index == 6)
+		{
+			if ("1".equals(answer))
+				detailedAnswer = answers[3];
+			else if ("2".equals(answer))
+				detailedAnswer = answers[4];
+			else
+				detailedAnswer = answers[5];
+		}
+		else
+			detailedAnswer = answer;
+				
+		return detailedAnswer;
+	}
+	//apply on Physical Activity/RAPA, Memory, Advanced Directive
+	public static String getDetailedAnswersForSurvey(String answer)
+	{
+		String[] answers = {"Yes", "No"};		
+		String detailedAnswer = "";
+					
+		if("1".equals(answer))
+			detailedAnswer = answers[0];
+		else if ("2".equals(answer))
+			detailedAnswer = answers[1];	
+		else
+			detailedAnswer = answer;
+		
+		return detailedAnswer;
+	}
+	
 	
 	/**
 	 * Refine question map, remove observer notes and other not related to question/answer 
@@ -2484,6 +2546,60 @@ public class TapestryHelper {
 		report.setVolunteerInformations(volunteerInfos);		
 		
 		return report;
+	}
+	
+	public static List<DisplayedSurveyResult> detailedResult(List<DisplayedSurveyResult> completedDisplayedResults)
+	{
+		String surveyId;
+		String answer, fullDescriptionAnswer;
+		DisplayedSurveyResult dr;
+		int j=0;
+		int ind=0;
+		
+		for (int i=0; i<completedDisplayedResults.size(); i++){
+			dr = completedDisplayedResults.get(i);
+			surveyId = dr.getSurveyId();
+			answer = dr.getQuestionAnswer();
+			
+			if (surveyId.equals("12") || surveyId.equals("14") || surveyId.equals("15"))
+			{
+				fullDescriptionAnswer = TapestryHelper.getDetailedAnswersForSurvey(answer);
+				dr.setQuestionAnswer(fullDescriptionAnswer);
+			}
+			else if (surveyId.equals("8"))
+			{
+				fullDescriptionAnswer = TapestryHelper.getDetailedAnswersForSocialLifeSurvey(answer, i);
+				dr.setQuestionAnswer(fullDescriptionAnswer);
+			}
+			
+			if (surveyId.equals("17"))
+			{ 
+				j++;
+				//get last question/answer in the Goals survey
+				if (j == 8)
+					ind = i;
+			}
+		}
+		
+		if (ind != 0)
+		{
+			String lastAns = completedDisplayedResults.get(ind).getQuestionAnswer();
+			
+			if (lastAns.equals("1"))
+				lastAns = completedDisplayedResults.get(ind-3).getQuestionAnswer();
+			else if (lastAns.equals("2"))
+				lastAns = completedDisplayedResults.get(ind-2).getQuestionAnswer();
+			else
+				lastAns = completedDisplayedResults.get(ind-1).getQuestionAnswer();
+			
+			//between "goal*a" and "<br>"
+//			lastAns = lastAns.substring(6,lastAns.indexOf("<br>"));//remove goal*a
+			if (lastAns.indexOf("<br>") != -1)
+				lastAns = lastAns.substring(0,lastAns.indexOf("<br>"));
+			completedDisplayedResults.get(ind).setQuestionAnswer(lastAns);			
+		}
+		
+		return completedDisplayedResults;
 	}
 	
 	//=========================== Message ==================================//

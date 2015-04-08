@@ -67,33 +67,37 @@ public class ClientManager {
 	
 	public static List<PersonTransfer3> getClients() throws Exception
 	{		
-		MiscUtils.setJvmDefaultSSLSocketFactoryAllowAllCertificates();
-	
-		Long lGroupId  = new Long(groupId);			
-		LoginResultTransfer3 loginResultTransfer = AccountManager.login(serverUrl, user, password);		
-		
-		MyOscarCredentialsImpl credentials=new MyOscarCredentialsImpl(serverUrl, loginResultTransfer.getPerson().getId(), 
-				loginResultTransfer.getSecurityTokenKey(), "fake sessionId, not from browser", Locale.ENGLISH);	
-		
-		List<Long> patientIds = GroupManager.getMembersByPeopleGroupId(credentials, lGroupId, 0, 100);
-		
+		MiscUtils.setJvmDefaultSSLSocketFactoryAllowAllCertificates();	
+		Long lGroupId  = new Long(groupId);		
 		List<PersonTransfer3> patients = new ArrayList<PersonTransfer3>();
-		PersonTransfer3 person;
-		
-		if (patientIds != null)
+		try{
+			LoginResultTransfer3 loginResultTransfer = AccountManager.login(serverUrl, user, password);		
+			
+			MyOscarCredentialsImpl credentials=new MyOscarCredentialsImpl(serverUrl, loginResultTransfer.getPerson().getId(), 
+					loginResultTransfer.getSecurityTokenKey(), "fake sessionId, not from browser", Locale.ENGLISH);	
+			
+			List<Long> patientIds = GroupManager.getMembersByPeopleGroupId(credentials, lGroupId, 0, 100);			
+			PersonTransfer3 person;
+			
+			if (patientIds != null)
+			{
+				 for(Long id: patientIds)
+				 {
+					 person = new PersonTransfer3();
+					 person = AccountManager.getPerson(credentials, id);
+					 
+					 patients.add(person);					 
+				 }
+			}
+			else
+				System.out.println("There not any client in tapestry group" );			
+			
+		}catch(Exception e)
 		{
-			 for(Long id: patientIds)
-			 {
-				 person = new PersonTransfer3();
-				 person = AccountManager.getPerson(credentials, id);
-				 
-				 patients.add(person);					 
-			 }
+			e.getMessage();
+			System.out.println(e.getMessage());
 		}
-		else
-			System.out.println("There not any client in tapestry group" );
-		
-		return patients;		
+		return patients;
 	}	
 	
 	public static List<RelationshipTransfer6> getMRPs(Long patientId) throws Exception {

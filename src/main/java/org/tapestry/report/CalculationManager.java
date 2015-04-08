@@ -191,15 +191,15 @@ public class CalculationManager {
 	{
 		String strScore;
 		if (score == 0)
-			strScore = String.valueOf(score) + " sedentary";
+			strScore = String.valueOf(score) + " (sedentary)";
 		else if (score == 1)
-			strScore = String.valueOf(score) + " under-active";
+			strScore = String.valueOf(score) + " (under-active)";
 		else if (score == 2)
-			strScore = String.valueOf(score) + " under-active regular-light activities";
+			strScore = String.valueOf(score) + " (under-active regular-light activities)";
 		else if (score == 3 || score == 4)
-			strScore = String.valueOf(score) + " under-active regular";
+			strScore = String.valueOf(score) + " (under-active regular)";
 		else if (score == 5 || score == 6)
-			strScore = String.valueOf(score) + " active";
+			strScore = String.valueOf(score) + " (active)";
 		else 
 			strScore = "";
 		
@@ -272,22 +272,22 @@ public class CalculationManager {
 		//score for walking in 2.0 km
 		if (a2aValue.equals("1"))
 		{
-			sb.append("no limition ");
+			sb.append("no limitation ");
 			sb = getModificationInfo(sb, a2bValue);			
 		}
 		else if (a2aValue.equals("2"))
 		{
-			sb.append("preclinical limition ");
+			sb.append("preclinical limitation ");
 			sb = getModificationInfo(sb, a2bValue);
 		}
 		else if (a2aValue.equals("3"))
 		{
-			sb.append("minor manifest limition ");
+			sb.append("minor manifest limitation ");
 			sb = getModificationInfo(sb, a2bValue);
 		}
 		else 
 		{
-			sb.append("major manifest limition ");
+			sb.append("major manifest limitation ");
 			sb = getModificationInfo(sb, a2bValue);
 		} 
 		
@@ -297,22 +297,22 @@ public class CalculationManager {
 		sb = new StringBuffer();
 		if (a3aValue.equals("1"))
 		{
-			sb.append("no limition ");
+			sb.append("no limitation ");
 			sb = getModificationInfo(sb, a3bValue);	
 		}
 		else if (a3aValue.equals("2"))
 		{
-			sb.append("preclinical limition ");
+			sb.append("preclinical limitation ");
 			sb = getModificationInfo(sb, a3bValue);
 		}
 		else if (a3aValue.equals("3"))
 		{
-			sb.append("minor manifest limition ");
+			sb.append("minor manifest limitation ");
 			sb = getModificationInfo(sb, a3bValue);
 		}
 		else 
 		{
-			sb.append("major manifest limition ");
+			sb.append("major manifest limitation ");
 			sb = getModificationInfo(sb, a3bValue);
 		} 
 		
@@ -323,22 +323,22 @@ public class CalculationManager {
 		sb = new StringBuffer();
 		if (a4aValue.equals("1"))
 		{
-			sb.append("no limition ");
+			sb.append("no limitation ");
 			sb = getModificationInfo(sb, a4bValue);	
 		}
 		else if (a4aValue.equals("2"))
 		{
-			sb.append("preclinical limition ");
+			sb.append("preclinical limitation ");
 			sb = getModificationInfo(sb, a4bValue);
 		}
 		else if (a4aValue.equals("3"))
 		{
-			sb.append("minor manifest limition ");
+			sb.append("minor manifest limitation ");
 			sb = getModificationInfo(sb, a4bValue);
 		}
 		else
 		{
-			sb.append("major manifest limition ");
+			sb.append("major manifest limitation ");
 			sb = getModificationInfo(sb, a4bValue);
 		} 
 		

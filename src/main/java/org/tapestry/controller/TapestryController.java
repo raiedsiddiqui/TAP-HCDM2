@@ -946,7 +946,27 @@ public class TapestryController{
 		List<SurveyResult> incompleteSurveyResultList = surveyManager.getIncompleteSurveysByPatientID(id);
 		Collections.sort(completedSurveyResultList);
 		Collections.sort(incompleteSurveyResultList);
-		List<SurveyTemplate> surveyList = surveyManager.getAllSurveyTemplates();		
+		//get display survey result for diplaying question text and answer
+		String xml;
+		LinkedHashMap<String, String> res;
+		List<DisplayedSurveyResult> displayedResults;
+		List<DisplayedSurveyResult> completedDisplayedResults = new ArrayList<DisplayedSurveyResult>();
+	
+		for (SurveyResult sr: completedSurveyResultList)
+		{
+	   		try{
+	   			xml = new String(sr.getResults(), "UTF-8");
+	   		} catch (Exception e) {
+	   			xml = "";
+	   		}
+	   		res = ResultParser.getResults(xml);
+	   		displayedResults = ResultParser.getDisplayedSurveyResults(res);
+	   		completedDisplayedResults.addAll(displayedResults);
+		}
+		//translate answers with full detailed information
+		completedDisplayedResults = TapestryHelper.detailedResult(completedDisplayedResults);
+
+//		List<SurveyTemplate> surveyList = surveyManager.getAllSurveyTemplates();		
 		
 		List<Patient> patientsForUser = patientManager.getPatientsForVolunteer(volunteerId);						
 		Appointment appointment = appointmentManager.getAppointmentById(appointmentId);
@@ -955,7 +975,8 @@ public class TapestryController{
 		model.addAttribute("patients", patientsForUser);
 		model.addAttribute("completedSurveys", completedSurveyResultList);
 		model.addAttribute("inProgressSurveys", incompleteSurveyResultList);
-		model.addAttribute("surveys", surveyList);
+		model.addAttribute("displayResults", completedDisplayedResults);
+//		model.addAttribute("surveys", surveyList);
 		if (showAuthenticationMsg)
 			model.addAttribute("showAuthenticationMsg", true);
 //		ArrayList<Picture> pics = pictureDao.getPicturesForPatient(id);
@@ -1558,7 +1579,7 @@ public class TapestryController{
    		LinkedHashMap<String, String> mDailyLifeActivitySurvey = ResultParser.getResults(xml);
    		questionTextList = new ArrayList<String>();
    		questionTextList = ResultParser.getSurveyQuestions(xml);   
-   	   		   		
+   		   		  		
    		qList = new ArrayList<String>();
    		qList = TapestryHelper.getQuestionList(mDailyLifeActivitySurvey);
    	   		
@@ -1747,6 +1768,7 @@ public class TapestryController{
    	
    		//get answer list
 		qList = TapestryHelper.getQuestionList(mGoals);   		
+			
 		if ((qList != null) && (qList.size()>0))
 		{					
 			report.setPatientGoals(CalculationManager.getPatientGoals(qList));
@@ -2352,6 +2374,8 @@ public class TapestryController{
    		
    		LinkedHashMap<String, String> res = ResultParser.getResults(xml);
    		List<DisplayedSurveyResult> displayedResults = ResultParser.getDisplayedSurveyResults(res);
+   		
+   		displayedResults = TapestryHelper.detailedResult(displayedResults);
 
    		model.addAttribute("results", displayedResults);
    		model.addAttribute("id", id);
@@ -2419,17 +2443,20 @@ public class TapestryController{
    	public String downloadCSV(@PathVariable("resultID") int id, HttpServletRequest request, HttpServletResponse response)
    	{
    		SurveyResult r = surveyManager.getSurveyResultByID(id);
+   		
    		String xml;
    		try{
    			xml = new String(r.getResults(), "UTF-8");
    		} catch (Exception e) {
    			xml = "";
    		}
-   		String res = ResultParser.resultsAsCSV(ResultParser.getResults(xml));   		
+   		String res = ResultParser.resultsAsCSV(ResultParser.getResults(xml));   
    		
    		response.setContentType("text/csv");
+   //		response.setContentType("text/xlsx");
    		response.setContentLength(res.length());
    		response.setHeader("Content-Disposition", "attachment; filename=\"result.csv\"");
+ //  		response.setHeader("Content-Disposition", "attachment; filename=\"result" + r.getPatientID() + ".xlsx\"");
    		try{
    			PrintWriter pw = new PrintWriter(response.getOutputStream());
    			pw.write(res);

@@ -66,8 +66,8 @@ public class ResultParser {
             results.put("title", title);
             Node dateNode = doc.getElementsByTagName("IssueDate").item(0);
             String date = dateNode.getTextContent().trim();
-            results.put("date", date);
-            
+            results.put("date", date);            
+                        
             NodeList questions = doc.getElementsByTagName("IndivoSurveyQuestion");                      
             for (int i = 0; i < questions.getLength(); i++){
                 Element question = (Element) questions.item(i);
@@ -78,18 +78,19 @@ public class ResultParser {
                 if (questionIDList.getLength() > 0){
                     Element questionID = (Element) questionIDList.item(0);
                     strQuestionID = questionID.getTextContent().trim();
-                    
-                    if (strQuestionID.equals("surveyHash") || strQuestionID.equals("surveyId")||strQuestionID.equals("finish"))
-                        continue;
-                    questionString += strQuestionID;
+              
+//                    if (strQuestionID.equals("surveyHash") || strQuestionID.equals("surveyId")||strQuestionID.equals("finish"))                  
+//                    	continue;
+                    if (strQuestionID.equals("surveyHash") ||strQuestionID.equals("finish"))                  
+                    	continue;
+                   
+                    questionString += strQuestionID;                  
                 }
-                
                 NodeList questionTextList = question.getElementsByTagName("QuestionText");
                 if (questionTextList.getLength() > 0){
                 	Element questionText = (Element) questionTextList.item(0);   
-                	strQuestionText = questionText.getTextContent().trim();
+                	strQuestionText = questionText.getTextContent().trim();                	
                 }
-               
                 sb = new StringBuffer();
                 sb.append(strQuestionText);
                 sb.append("/answer/");
@@ -127,6 +128,7 @@ public class ResultParser {
 		String observerNotes = "";
 		String qText = "";
 		String key;
+		String surveyId= "";
 		String title = getTitleOrDate(results, "title");
 		String date = getTitleOrDate(results, "date");		
 		String regex = "[0-9]"; 
@@ -135,6 +137,15 @@ public class ResultParser {
     		key = entry.getKey();        		
     		result = new DisplayedSurveyResult();  		
     		
+    		String seperator2 = "/answer/";
+    		int length2 = seperator2.length();	
+    		
+    		if (key.contains("surveyId"))
+    		{
+    			surveyId = entry.getValue();
+    			if (surveyId.indexOf(seperator2) != -1)
+    				surveyId = surveyId.substring(length2);
+    		}
     		//set question key, answer and observer notes
     		if (!key.contains("surveyId") && !key.equals("date") && !key.equals("title"))
     		{//all answer, observe note and question text are in the value of map  
@@ -142,11 +153,9 @@ public class ResultParser {
         			
     			String separator1 = "/observernote/";
     			int index1 = answer.indexOf(separator1);
-    			int length1 = separator1.length();        			
-    			String seperator2 = "/answer/";
+    			int length1 = separator1.length(); 
     			int index2 = answer.indexOf(seperator2);
-    			int length2 = seperator2.length();
-        			
+    			
     			questionAnswer = answer.substring(index2 + length2);
     			if (!questionAnswer.startsWith("-"))//remove first non-question-answer pair, only information
     			{
@@ -171,6 +180,7 @@ public class ResultParser {
     				result.setTitle(title); 
     				result.setDate(date);
     				result.setQuestionText(qText);
+    				result.setSurveyId(surveyId);
                 		
     				resultList.add(result);
         		}    			       			
@@ -201,9 +211,14 @@ public class ResultParser {
 		String separator = "/observernote/";
 		for (Map.Entry<String, String> r : results.entrySet())
 		{
+			System.out.println("key == "+ r.getKey());
+			System.out.println("value == "+ r.getValue());
+			System.out.println("================== == ");
 			ret += r.getKey() + join + r.getValue() + "\n";
-			//remove seperator from string
+			//remove separator from string
 			ret = ret.replaceAll(separator, "");
+			
+			System.out.println("ret == "+ ret);
 		}
 		return ret;
 	}

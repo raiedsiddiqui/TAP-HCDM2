@@ -7,6 +7,7 @@
 <html>
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=no"></meta>
+	
 	<link href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet" />
 		<link href="${pageContext.request.contextPath}/resources/css/bootstrap-responsive.min.css" rel="stylesheet" />  		
 		<script src="${pageContext.request.contextPath}/resources/js/jquery-2.0.3.min.js"></script>
@@ -143,22 +144,66 @@
  -->			
  				
  				<h4 class="pagetitle">Completed Surveys <span class="pagedesc"></span></h4>
+ 				<div id="display_completed_survey">
+ 					<div class="panel-group" id="accordian">
+						<c:forEach items="${completedSurveys}" var="csr">
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h4 class="panel-title">									
+					   			 		<a class="accordion-toggle" data-toggle="collapse" href="#collapse${csr.surveyID}">
+					   			 			<div class="row cbutton">
+												<div class="col-sm-6 col-xs-5">
+													${csr.surveyTitle}  
+												</div>												
+												<div class="col-sm-1 col-xs-2">
+													${fn:substring(csr.editDate, 0, 10)}													 
+												</div>
+												
+											</div>           
+					      				</a>                                                  
+				      				</h4>
+				    			</div>				    
+				   				<div id="collapse${csr.surveyID}" class="panel-collapse collapse">
+				    				<div class="panel-body">
+					      				<table class="table">
+											<tr>
+												<th>Question</th>
+												<th>Answer</th>																	
+											</tr>	
+											<c:forEach items="${displayResults}" var="dr">	
+										<!--  		<c:out value="${dr.surveyId}----${ csr.surveyID}" />-->
+												<c:if test="${dr.surveyId == csr.surveyID}">														      			
+								      				<tr>										      			
+										      			<td width="500" height="40">${dr.questionText }</td>					      					
+										      			<td>${dr.questionAnswer}</td>
+													</tr>
+												</c:if>
+											</c:forEach>
+										</table>
+				    				</div>
+								</div>
+							</div>
+						</c:forEach>
+		
+		</div>
+ 				
+ 				</div>
 <!-- 			      
 				</a>
 			    </div> -->
 <!-- 			    <div id="collapseTwo" class="accordion-body collapse">
- -->			    <div class="row">  
+			    <div class="row">  
  						<c:forEach items="${completedSurveys}" var="cs">
 							<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
 								<a href="#" class="surveybtnc btn">${cs.surveyTitle}<br/>
 									<span class="surveycomp">${cs.description}</span>
 								</a><br/>
 								
-								<!-- <span class="surveycomp">complete</span> -->
-					<!-- 		${cs.description} -->	
+							<span class="surveycomp">complete</span> 
+					 		${cs.description} 
 							</div>
  						</c:forEach>
- 					</div>
+ 					</div> -->
 <!-- 			    </div>
 			  </div>
  -->			  

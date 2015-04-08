@@ -67,11 +67,7 @@ public class PatientManagerImpl implements PatientManager {
 	public List<Patient> getGroupedPatientsByName(String partialName, int organizationId) {
 		return patientDao.getGroupedPatientsByName(partialName, organizationId);
 	}
-	@Override
-	public String getKeyObservationByPatient(int id) {
-		return patientDao.getKeyObservationByPatient(id);
-	}
-
+	
 	@Override
 	public boolean addKeyObservations(int id, String keyObservations) {
 		return patientDao.addKeyObservations(id, keyObservations);

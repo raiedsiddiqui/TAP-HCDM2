@@ -31,6 +31,7 @@ import org.tapestry.objects.HL7Report;
 import org.tapestry.objects.Message;
 import org.tapestry.objects.Narrative;
 import org.tapestry.objects.Patient;
+import org.tapestry.objects.SurveyTemplate;
 import org.tapestry.objects.User;
 import org.tapestry.objects.Volunteer;
 import org.tapestry.objects.Organization;
@@ -1026,7 +1027,7 @@ public class VolunteerController {
 		int unreadMessages;			
 		List<Appointment> remindingAppointments = new ArrayList<Appointment>();
 		HttpSession session = request.getSession();
-			
+							
 		if (request.isUserInRole("ROLE_USER"))
 		{
 			User loggedInUser = TapestryHelper.getLoggedInUser(request);
@@ -2021,7 +2022,6 @@ public class VolunteerController {
 		
 		int patientId = appt.getPatientID();
 		Patient patient = patientManager.getPatientByID(patientId);
-//		String keyObservation = patientManager.getKeyObservationByPatient(patientId);
 				
 		HttpSession session = request.getSession();
 		if (session.getAttribute("narrativeMessage") != null)
@@ -2032,11 +2032,9 @@ public class VolunteerController {
 				model.addAttribute("NarrativeCreated", true);
 				session.removeAttribute("narrativeMessage");
 			}
-		}	
-		
+		}			
 		model.addAttribute("appointment", appt);
 		model.addAttribute("patient", patient);	
-//		model.addAttribute("keyObservation", keyObservation);	
 		
 		if (session.getAttribute("unread_messages") != null)
 			model.addAttribute("unread", session.getAttribute("unread_messages"));
@@ -2049,9 +2047,8 @@ public class VolunteerController {
 	{	
 		int appointmentId = TapestryHelper.getAppointmentId(request);	
 		int patientId = TapestryHelper.getPatientId(request);
-//		String alerts = request.getParameter("alerts"); //Alerts has been commented out on this page
+
 		String keyObservations = request.getParameter("keyObservations");
-//		patientManager.addKeyObservations(patientId, keyObservations);
 		appointmentManager.addAlertsAndKeyObservations(appointmentId, "", keyObservations);
 		//add logs
 		User loggedInUser = TapestryHelper.getLoggedInUser(request);
@@ -2061,19 +2058,19 @@ public class VolunteerController {
 		sb.append(patientId);				
 		userManager.addUserLog(sb.toString(), loggedInUser);
 		
-//		int patientId = TapestryHelper.getPatientId(request);		
-		Appointment appointment = appointmentManager.getAppointmentById(appointmentId);		
-		
-		if (TapestryHelper.completedAllSurveys(patientId, surveyManager))
-			return "redirect:/open_plan/" + appointmentId ;	
-		else 
-		{
-			if (!Utils.isNullOrEmpty(appointment.getComments()))
-			{//todo:send alert to MRP	
-				
-			}				
-			return "redirect:/";	
-		}
+		return "redirect:/";	
+//		Appointment appointment = appointmentManager.getAppointmentById(appointmentId);		
+//		
+//		if (TapestryHelper.completedAllSurveys(patientId, surveyManager))
+//			return "redirect:/open_plan/" + appointmentId ;	
+//		else 
+//		{
+//			if (!Utils.isNullOrEmpty(appointment.getComments()))
+//			{//todo:send alert to MRP	
+//				
+//			}				
+//			return "redirect:/";	
+//		}
 	}
 	
 	@RequestMapping(value="/open_plan/{appointmentId}", method=RequestMethod.GET)
@@ -2242,9 +2239,7 @@ public class VolunteerController {
 	@RequestMapping(value="/complete_visit/{appointment_id}", method=RequestMethod.POST)
 	public String completeVisit(@PathVariable("appointment_id") int id, SecurityContextHolderAwareRequestWrapper request, 
 			ModelMap model) 
-	{
-//		boolean contactedAdmin = request.getParameter("contacted_admin") != null;
-		//set visit alert as comments in DB
+	{//set visit alert as comments in DB
 		appointmentManager.completeAppointment(id, request.getParameter("visitAlerts"));
 		//add logs
 		User loggedInUser = TapestryHelper.getLoggedInUser(request);
@@ -2261,18 +2256,8 @@ public class VolunteerController {
 		model.addAttribute("patient", patient);
 		model.addAttribute("appointment", appt);	
 		
-		if (appt.getType() == 0)
-		{//first visit				
-			HttpSession  session = request.getSession();
-			if (session.getAttribute("unread_messages") != null)
-				model.addAttribute("unread", session.getAttribute("unread_messages"));
-//			String keyObservation = patientManager.getKeyObservationByPatient(patientId);
-//			model.addAttribute("keyObservation", keyObservation);	
-			return "redirect:/open_alerts_keyObservations/" + id;		
-					
-		}
-		else
-		{//follow up visit			
+		if (appt.getType() != 0)
+		{	//follow up visit			
 			boolean completedAllSurveys = TapestryHelper.completedAllSurveys(patientId, surveyManager);
 			if (completedAllSurveys)
 			{	//for temporary use, send a message to coordinator, hl7 report is ready to donwload on Admin side					
@@ -2295,29 +2280,12 @@ public class VolunteerController {
 					logger.error("Can't find any coordinator in organization id# " + organizationId);
 				}
 			}
-			
-			return "redirect:/";
-			
-//			if (!Utils.isNullOrEmpty(appt.getComments()))
-//			{//has alert
-//				if (completedAllSurveys)
-//					//alert attached to report
-//					return "redirect:/open_plan/" + id ;
-//				else
-//				{					//todo: send Alert to MRP
-//					String alerts = appt.getComments();
-//					System.out.println("Alert send to MRP in Oscar  === " + alerts);	
-//					return "redirect:/";
-//				}				
-//			}
-//			else
-//			{//does not have alert
-//				if (completedAllSurveys)
-//					return "redirect:/open_plan/" + id ;	
-//				else
-//					return "redirect:/";
-//			}
-		}
+		}		
+		HttpSession  session = request.getSession();
+		if (session.getAttribute("unread_messages") != null)
+			model.addAttribute("unread", session.getAttribute("unread_messages"));
+
+		return "redirect:/open_alerts_keyObservations/" + id;	
 	}
 	
 	//narrative 

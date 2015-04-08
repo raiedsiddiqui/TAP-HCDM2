@@ -94,14 +94,7 @@ public interface PatientManager {
 	@Transactional
 	public void authenticatePHRPatientByID(int id);	
 	
-    /**
-     * @param id patientId
-     * @return String KeyObservation for a patient
-     */
-	@Transactional
-    public String getKeyObservationByPatient(int id);
-
-    /**
+     /**
      * Create key Observation for a patient
      * @param int id patientId,  String keyObservation
      * @return if it is successful for creating new record in database

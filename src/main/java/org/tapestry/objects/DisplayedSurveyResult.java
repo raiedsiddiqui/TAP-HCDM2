@@ -7,6 +7,7 @@ public class DisplayedSurveyResult {
 	private String title;
 	private String date;
 	private String questionText;
+	private String surveyId;
 	
 	public String getQuestionText() {
 		return questionText;
@@ -50,7 +51,13 @@ public class DisplayedSurveyResult {
 	public void setObserverNotes(String observerNotes) {
 		this.observerNotes = observerNotes;
 	}
-	
-	
 
+	public String getSurveyId() {
+		return surveyId;
+	}
+
+	public void setSurveyId(String surveyId) {
+		this.surveyId = surveyId;
+	}
+	
 }
