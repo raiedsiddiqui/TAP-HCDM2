@@ -1164,7 +1164,7 @@ public class TapestryHelper {
 			rSmallFont.setColor(BaseColor.RED);
 			//green font
 			Font gbMediumFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
-			gbMediumFont.setColor(BaseColor.GREEN);
+			gbMediumFont.setColor(BaseColor.BLUE);
 			Font gbSmallFont = new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD);
 			gbSmallFont.setColor(BaseColor.GREEN);
 			//black font
