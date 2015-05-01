@@ -60,7 +60,7 @@
 				<c:forEach items="${patients}" var="p">
 					<tr>
 						<td>${p.patientID}</td>
-						<td><a href="<c:url value="/display_client/${p.patientID}"/>">${p.firstName}${p.lastName}</a></td>						
+						<td><a href="<c:url value="/display_client/${p.patientID}"/>">${p.firstName} ${p.lastName}</a></td>						
 						<td>${p.bod}</td>
 						<td>${p.age}</td>
 						<td>${p.gender}</td>

@@ -1190,8 +1190,9 @@ public class TapestryHelper {
 			//blue font
 			Font gbMediumFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
 			gbMediumFont.setColor(BaseColor.BLUE);
-	//		Font gbSmallFont = new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD);
-		//	gbSmallFont.setColor(BaseColor.GREEN);
+			Font gbSmallFont = new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD);
+			gbSmallFont.setColor(BaseColor.BLUE);
+
 			//black font
 			Font sFont = new Font(Font.FontFamily.HELVETICA, 9);	
 			Font sbFont = new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD);	

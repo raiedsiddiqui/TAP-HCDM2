@@ -1,4 +1,4 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
@@ -7,12 +7,12 @@
 <html>
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=no"></meta>
-	
+	<!--
 	<link href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet" />
 		<link href="${pageContext.request.contextPath}/resources/css/bootstrap-responsive.min.css" rel="stylesheet" />  		
 		<script src="${pageContext.request.contextPath}/resources/js/jquery-2.0.3.min.js"></script>
 		<script src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
-		<script src="${pageContext.request.contextPath}/resources/js/tapestryUtils.js"></script>	
+		<script src="${pageContext.request.contextPath}/resources/js/tapestryUtils.js"></script>	-->
 	<title>Patient Surveys</title>
 	<%@include file="volunteer/volunteer_head.jsp" %>
 
@@ -28,6 +28,9 @@
 	.visitcompletebox {
 		padding-top: 20px;
 		float:right;
+	}
+	.panel-heading {
+		padding: 0;
 	}
 	</style>
 	<script type="text/javascript">
@@ -143,51 +146,43 @@
 <!-- 			      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordionSurveys" href="#collapseTwo">
  -->			
  				
- 				<h4 class="pagetitle">Completed Surveys <span class="pagedesc"></span></h4>
- 				<div id="display_completed_survey">
- 					<div class="panel-group" id="accordian">
-						<c:forEach items="${completedSurveys}" var="csr">
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<h4 class="panel-title">									
-					   			 		<a class="accordion-toggle" data-toggle="collapse" href="#collapse${csr.surveyID}">
-					   			 			<div class="row cbutton">
-												<div class="col-sm-6 col-xs-5">
-													${csr.surveyTitle}  
-												</div>												
-												<div class="col-sm-1 col-xs-2">
-													${fn:substring(csr.editDate, 0, 10)}													 
-												</div>
-												
-											</div>           
-					      				</a>                                                  
-				      				</h4>
-				    			</div>				    
-				   				<div id="collapse${csr.surveyID}" class="panel-collapse collapse">
-				    				<div class="panel-body">
-					      				<table class="table">
-											<tr>
-												<th>Question</th>
-												<th>Answer</th>																	
-											</tr>	
-											<c:forEach items="${displayResults}" var="dr">	
-										<!--  		<c:out value="${dr.surveyId}----${ csr.surveyID}" />-->
-												<c:if test="${dr.surveyId == csr.surveyID}">														      			
-								      				<tr>										      			
-										      			<td width="500" height="40">${dr.questionText }</td>					      					
-										      			<td>${dr.questionAnswer}</td>
-													</tr>
-												</c:if>
-											</c:forEach>
-										</table>
-				    				</div>
-								</div>
-							</div>
+<h4 class="pagetitle">Completed Surveys <span class="pagedesc"></span></h4>
+
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+	<c:forEach items="${completedSurveys}" var="csr">
+		<div class="panel panel-default">
+			<div class="panel-heading" role="tab" id="headingOne">
+      			<h4 class="panel-title">
+      				<a class="surveybtnc btn accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse${csr.surveyID}">
+      					${csr.surveyTitle}
+      				</a>
+      			</h4>
+      		</div>
+
+			<div id="collapse${csr.surveyID}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+				<div class="panel-body">
+					<table class="table">
+						<tr>
+							<th>Question</th>
+							<th>Answer</th>																	
+						</tr>	
+						<c:forEach items="${displayResults}" var="dr">	
+							<c:if test="${dr.surveyId == csr.surveyID}">														      			
+			      				<tr>										      			
+					      			<td width="50%" height="40">${dr.questionText }</td>					      					
+					      			<td width="50%">${dr.questionAnswer}</td>
+								</tr>
+							</c:if>
 						</c:forEach>
-		
+					</table>
+				</div>
+			</div>
+
 		</div>
- 				
- 				</div>
+	</c:forEach>
+</div>
+
+
 <!-- 			      
 				</a>
 			    </div> -->

@@ -14,12 +14,11 @@
 <link href="${pageContext.request.contextPath}/resources/css/custom.css" rel="stylesheet" />     
 <link href="${pageContext.request.contextPath}/resources/css/animate.min.css" rel="stylesheet" />     
 
-<script src="${pageContext.request.contextPath}/resources/js/jquery-2.0.3.min.js"></script>
+<!-- <script src="${pageContext.request.contextPath}/resources/js/jquery-2.0.3.min.js"></script>
+ -->
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
 
 
 <!-- FONTS -->
-<link href='//fonts.googleapis.com/css?family=Krona+One' rel='stylesheet' type='text/css'>
-<!-- FONTS -->
-<link href='//fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
 <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,400,600' rel='stylesheet' type='text/css'>
