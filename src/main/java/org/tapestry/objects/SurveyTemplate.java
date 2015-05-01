@@ -16,6 +16,7 @@ public class SurveyTemplate {
 	private String description;
 	private String createdDate;
 	private boolean showDelete;
+	private int site;
 
 	public SurveyTemplate(){
 		//Default constructor
@@ -135,5 +136,12 @@ public class SurveyTemplate {
 	public void setShowDelete(boolean showDelete) {
 		this.showDelete = showDelete;
 	}
-	
+
+	public int getSite() {
+		return site;
+	}
+
+	public void setSite(int site) {
+		this.site = site;
+	}
 }

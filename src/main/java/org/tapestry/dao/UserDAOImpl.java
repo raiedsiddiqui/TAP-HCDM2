@@ -270,9 +270,8 @@ public class UserDAOImpl extends JdbcDaoSupport implements UserDAO {
 			u.setEmail(rs.getString("email"));
 			u.setPassword(rs.getString("password"));
 			u.setOrganization(rs.getInt("organization"));
+			u.setSite(rs.getInt("site"));
 			
-			if (!Utils.isNullOrEmpty(rs.getString("site")))
-				u.setSite(rs.getString("site"));
 			if (!Utils.isNullOrEmpty(rs.getString("phone_number")))
 				u.setPhoneNumber(rs.getString("phone_number"));
 			

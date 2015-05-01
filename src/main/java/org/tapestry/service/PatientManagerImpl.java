@@ -37,6 +37,11 @@ public class PatientManagerImpl implements PatientManager {
 	public List<Patient> getPatientsByPartialName(String partialName) {
 		return patientDao.getPatientsByPartialName(partialName);
 	}
+	
+	@Override
+	public List<Patient> getPatientsBySite(int siteId) {		
+		return patientDao.getPatientsBySite(siteId);
+	}
 
 	@Override
 	public int createPatient(Patient p) {
@@ -57,10 +62,6 @@ public class PatientManagerImpl implements PatientManager {
 	public void authenticatePHRPatientByID(int id) {
 		patientDao.authenticatePHRPatientByID(id);
 		
-	}
-	@Override
-	public List<Patient> getPatientsByGroup(int organizationId) {		
-		return patientDao.getPatientsByGroup(organizationId);
 	}
 
 	@Override
@@ -97,6 +98,5 @@ public class PatientManagerImpl implements PatientManager {
 		return null;
 	}
 
-	
 
 }

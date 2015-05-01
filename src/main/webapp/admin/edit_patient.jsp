@@ -99,7 +99,7 @@
 					<div class="col-md-6">
 						<label>Volunteer2:</label>
 						<select name="volunteer2" id="volunteer2" form="editPatient" class="form-control">
-						<c:forEach items="${volunteers}" var="v">
+							<c:forEach items="${volunteers}" var="v">
 								<option value="${v.volunteerId}" <c:if test="${v.volunteerId eq patient.partner}">selected</c:if>>${v.displayName}</option>
 							</c:forEach> 	
 						</select><br />
@@ -113,10 +113,11 @@
 						<input type="radio" name="myoscar_verified" value="0" <c:if test="${patient.myoscarVerified eq 0}">checked</c:if>/>No
 					</div>
 					<div class="col-md-6">
-						<label>Clinic:</label>
+						<label>Clinic:</label>						
 						<select name="clinic" form="editPatient" class="form-control">
-							<option value="1" <c:if test="${patient.clinic eq 1}">selected</c:if>>McMaster Family Practice</option>
-							<option value="2" <c:if test="${patient.clinic eq 2}">selected</c:if>>Stonechurch Family Health Center</option>
+							<c:forEach items="${clinics}" var="c">
+								<option value="${c.clinicId}" <c:if test="${c.clinicId eq patient.clinic}">selected</c:if>>${c.clinicName}</option>
+							</c:forEach>
 						</select>
 					</div>
 				</div>

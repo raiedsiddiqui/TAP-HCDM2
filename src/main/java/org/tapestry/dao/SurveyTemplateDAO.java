@@ -22,12 +22,26 @@ public interface SurveyTemplateDAO {
 	 */
 	public List<SurveyTemplate> getAllSurveyTemplates();
 	
+	
+	/**
+	 * A list of Survey template
+	 * @return a list of SurveyTemplate objects belong to a same site
+	 */
+	public List<SurveyTemplate> getSurveyTemplatesBySite(int siteId);
+	
 	/**
 	 * A list of Survey template which title contains partialTitle
 	 * @param partialTitle
 	 * @return a list of SurveyTemplate objects
 	 */
 	public List<SurveyTemplate> getSurveyTemplatesByPartialTitle(String partialTitle);
+	
+	/**
+	 * 
+	 * @param title
+	 * @return surveyId
+	 */
+	public int getSurveyIdByTitle(String title);
 	
 	/**
 	 * Uploads a survey template to the database
@@ -48,10 +62,16 @@ public interface SurveyTemplateDAO {
 	public void deleteSurveyTemplate(int id);
 	
 	/**
-	 * Count how many survey template 
+	 * Count how many survey templates 
 	 * @return number of survey template
 	 */
 	public int countSurveyTemplate();
+	
+	/**
+	 * Count how many survey templates for a site
+	 * @return number of survey template
+	 */
+	public int countSurveyTemplateBySite(int site);
 	
 	/**
 	 * Keep a copy of deleted survey template

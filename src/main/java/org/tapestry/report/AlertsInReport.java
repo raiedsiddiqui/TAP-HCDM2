@@ -13,7 +13,7 @@ public class AlertsInReport {
 	public static final String NUTRITION_ALERT2A = "Doesn’t know if weight changed";	
 	public static final String NUTRITION_ALERT2B = "Gained > 10 pounds";
 	public static final String NUTRITION_ALERT2C = "Lost > 10 pounds";
-	public static final String NUTRITION_ALERT3 = "Skip meals";
+	public static final String NUTRITION_ALERT3 = "Skip meals almost every day";
 	public static final String NUTRITION_ALERT4 = "Poor Appetitite";
 	public static final String NUTRITION_ALERT5 = "Often or always coughs, chokes, or has pain when swallowing food or fluids";
 	public static final String DAILY_ACTIVITY_ALERT = "Has fallen in the last year";

@@ -44,6 +44,11 @@ public class SurveyManagerImpl implements SurveyManager {
 	public List<SurveyResult> getAllSurveyResults() {
 		return surveyResultDao.getAllSurveyResults();
 	}
+	
+	@Override
+	public List<SurveyResult> getAllSurveyResultsBySite(int siteId) {
+		return surveyResultDao.getAllSurveyResultsBySite(siteId);
+	}
 
 	@Override
 	public List<SurveyResult> getAllSurveyResultsBySurveyId(int id) {
@@ -51,8 +56,13 @@ public class SurveyManagerImpl implements SurveyManager {
 	}
 
 	@Override
-	public List<SurveyResult> getSurveyResultByPatientAndSurveyId(int patientId, int surveyId) {
+	public SurveyResult getSurveyResultByPatientAndSurveyId(int patientId, int surveyId) {
 		return surveyResultDao.getSurveyResultByPatientAndSurveyId(patientId, surveyId);
+	}
+
+	@Override
+	public SurveyResult getCompletedSurveyResultByPatientAndSurveyTitle(int patientId, String surveyTitle) {
+		return surveyResultDao.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, surveyTitle);
 	}
 
 	@Override
@@ -86,6 +96,11 @@ public class SurveyManagerImpl implements SurveyManager {
 	}
 
 	@Override
+	public boolean hasCompleteSurvey(int surveyId, int patientId){
+		return surveyResultDao.hasCompleteSurvey(surveyId, patientId);
+	}
+	
+	@Override
 	public SurveyTemplate getSurveyTemplateByID(int id) {
 		return surveyTemplateDao.getSurveyTemplateByID(id);
 	}
@@ -96,24 +111,53 @@ public class SurveyManagerImpl implements SurveyManager {
 	}
 
 	@Override
-	public List<SurveyTemplate> getSurveyTemplatesWithCanDelete() {
-		List<SurveyTemplate> surveyTemplates = getAllSurveyTemplates();
+	public List<SurveyTemplate> getSurveyTemplatesBySite(int siteId) {
+		return surveyTemplateDao.getSurveyTemplatesBySite(siteId);
+	}
+
+	@Override
+	public List<SurveyTemplate> getSurveyTemplatesWithCanDelete(int siteId) {
+		List<SurveyTemplate> surveyTemplates;
 		int surveyTemplateId;
-			
-		for (SurveyTemplate st: surveyTemplates)
+		boolean noDelete;
+		
+		if (siteId == 0)//for central admin
 		{
-			surveyTemplateId = st.getSurveyID();
-			if(surveyResultDao.countSurveysBySurveyTemplateId(surveyTemplateId) > 0)
-				st.setShowDelete(false);
-			else
-				st.setShowDelete(true);			
+			surveyTemplates = getAllSurveyTemplates();			
+			for (SurveyTemplate st: surveyTemplates)
+			{
+				surveyTemplateId = st.getSurveyID();
+				noDelete = surveyResultDao.countSurveysBySurveyTemplateId(surveyTemplateId) > 0;
+				if(noDelete)
+					st.setShowDelete(false);
+				else
+					st.setShowDelete(true);			
+			}
 		}
+		else// for local admin/site admin
+		{
+			surveyTemplates = this.getSurveyTemplatesBySite(siteId);			
+			for (SurveyTemplate st: surveyTemplates)
+			{
+				surveyTemplateId = st.getSurveyID();
+				noDelete = surveyResultDao.countSurveysBySurveyTemplateId(surveyTemplateId) > 0;
+				if(noDelete)
+					st.setShowDelete(false);
+				else
+					st.setShowDelete(true);			
+			}
+		}	
 		return surveyTemplates;
 	}
 
 	@Override
 	public List<SurveyTemplate> getSurveyTemplatesByPartialTitle(String partialTitle) {
 		return surveyTemplateDao.getSurveyTemplatesByPartialTitle(partialTitle);
+	}
+	
+	@Override
+	public int getSurveyIdByTitle(String title){
+		return surveyTemplateDao.getSurveyIdByTitle(title);
 	}
 
 	@Override

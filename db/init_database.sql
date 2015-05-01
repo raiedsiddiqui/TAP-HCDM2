@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS users (
 	username VARCHAR(255) NOT NULL,
 	password VARCHAR(255) NOT NULL,
 	phone_number VARCHAR(20),
-	site VARCHAR(50),
+	site INT UNSIGNED NOT NULL,
 	enabled BOOLEAN NOT NULL,
 	email VARCHAR(50) NOT NULL,
 	role VARCHAR(45),
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS patients (
 	volunteer TINYINT UNSIGNED NOT NULL, /* Same as user_ID */
 	notes TEXT,
 	alerts TEXT,	
-	clinic VARCHAR(255),
+	clinic MEDIUMINT UNSIGNED,
 	myoscar_verified TINYINT(1) NOT NULL, /* 0--not authenticated, 1--authenticated*/
 	volunteer2 TINYINT UNSIGNED NOT NULL,/* Same as user_ID */
 	username VARCHAR(255) NOT NULL, /* username used to login in myoscar account */
@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS surveys (
 	last_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, /*Automatically updates when record changed*/
     priority TINYINT(1), /*Between 0-9*/
     description TEXT,
+    site MEDIUMINT UNSIGNED NOT NULL,
 	PRIMARY KEY (survey_ID)
 );
 
@@ -179,10 +180,18 @@ CREATE TABLE IF NOT EXISTS organizations (
 CREATE TABLE IF NOT EXISTS clinics(
 	clinic_ID MEDIUMINT UNSIGNED NOT NULL AUTO_INCREMENT,
 	clinic_name VARCHAR(255) NOT NULL,
-	location VARCHAR(255),
-	province VARCHAR(50),
+	address VARCHAR(255),
+	phone VARCHAR(50),
+	site_ID MEDIUMINT UNSIGNED NOT NULL,
 	
 	PRIMARY KEY (clinic_ID)		
+);
+
+CREATE TABLE IF NOT EXISTS sites(
+	site_ID MEDIUMINT UNSIGNED NOT NULL AUTO_INCREMENT,
+	site_name VARCHAR(255) NOT NULL,
+		
+	PRIMARY KEY (site_ID)		
 );
 
 CREATE TABLE IF NOT EXISTS mrps(
@@ -237,6 +246,7 @@ CREATE TABLE IF NOT EXISTS surveys_archive (
 	deleted_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, /*Automatically updates when record changed*/
     priority TINYINT(1), /*Between 0-9*/
     description TEXT,
+    site MEDIUMINT UNSIGNED NOT NULL,
     deleted_by VARCHAR(255) NOT NULL,
 	 	
 	PRIMARY KEY (id)

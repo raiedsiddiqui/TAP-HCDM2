@@ -86,6 +86,17 @@ public class SurveyResultDAOImpl extends JdbcDaoSupport implements SurveyResultD
 	}
 
 	@Override
+	public List<SurveyResult> getAllSurveyResultsBySite(int siteId) {
+		String sql = "SELECT survey_results.*, surveys.title, surveys.description, patients.firstname, patients.lastname FROM survey_results"
+				+ " INNER JOIN surveys ON survey_results.survey_ID = surveys.survey_ID INNER JOIN patients"
+				+ " ON survey_results.patient_ID=patients.patient_ID WHERE surveys.site=? ORDER BY survey_results.startDate ";
+		List<SurveyResult> results = getJdbcTemplate().query(sql, new Object[]{siteId},  new SurveyResultMapper());
+		
+		return results;
+	}
+
+
+	@Override
 	public List<SurveyResult> getAllSurveyResultsBySurveyId(int surveyId) {
 		String sql = "SELECT survey_results.*, surveys.title, surveys.description, patients.firstname, patients.lastname FROM survey_results"
 				+ " INNER JOIN surveys ON survey_results.survey_ID = surveys.survey_ID INNER JOIN patients"
@@ -97,14 +108,25 @@ public class SurveyResultDAOImpl extends JdbcDaoSupport implements SurveyResultD
 	}
 
 	@Override
-	public List<SurveyResult> getSurveyResultByPatientAndSurveyId(int patientId, int surveyId) {
+	public SurveyResult getSurveyResultByPatientAndSurveyId(int patientId, int surveyId) {
 		String sql = "SELECT survey_results.*, surveys.title, surveys.description, patients.firstname, patients.lastname FROM survey_results"
 				+ " INNER JOIN surveys ON survey_results.survey_ID = surveys.survey_ID INNER JOIN patients"
 				+ " ON survey_results.patient_ID=patients.patient_ID WHERE survey_results.patient_ID=? AND survey_results.survey_ID=?"
 				+ " ORDER BY survey_results.startDate ";
-		List<SurveyResult> results = getJdbcTemplate().query(sql, new Object[]{patientId,surveyId}, new SurveyResultMapper());
+		SurveyResult result = getJdbcTemplate().queryForObject(sql, new Object[]{patientId,surveyId}, new SurveyResultMapper());
 		
-		return results;
+		return result;
+	}
+	
+	@Override
+	public SurveyResult getCompletedSurveyResultByPatientAndSurveyTitle(int patientId, String surveyTitle) {
+		String sql = "SELECT survey_results.*, surveys.title, surveys.description, patients.firstname, patients.lastname FROM survey_results"
+				+ " INNER JOIN surveys ON survey_results.survey_ID = surveys.survey_ID INNER JOIN patients"
+				+ " ON survey_results.patient_ID=patients.patient_ID WHERE survey_results.patient_ID=? AND surveys.title=? "
+				+ "AND survey_results.completed=1 ORDER BY survey_results.startDate ";
+		SurveyResult result = getJdbcTemplate().queryForObject(sql, new Object[]{patientId,surveyTitle}, new SurveyResultMapper());
+		
+		return result;
 	}
 
 	@Override
@@ -158,10 +180,28 @@ public class SurveyResultDAOImpl extends JdbcDaoSupport implements SurveyResultD
 		return getJdbcTemplate().queryForInt(sql, new Object[]{patientId});
 	}	
 	
+	public boolean hasCompleteSurvey(int surveyId, int patientId){
+		boolean hasCompleted = false;		
+		String sql = "SELECT COUNT(*) as c FROM survey_results WHERE (patient_ID=?) AND (survey_ID=?) AND (completed=1)";
+		int count = getJdbcTemplate().queryForInt(sql, new Object[]{patientId, surveyId});
+		
+		if (count == 1)
+			hasCompleted = true;
+		
+		return hasCompleted;
+	}
+	
 	@Override
 	public int countSurveysBySurveyTemplateId(int surveyTemplateId) {
 		String sql = "SELECT COUNT(*) as c FROM survey_results WHERE (survey_ID=?)";
 		return getJdbcTemplate().queryForInt(sql, new Object[]{surveyTemplateId});
+	}
+	
+	@Override
+	public int countSurveysBySurveyTemplateIdAndSite(int surveyTemplateId, int siteId) {
+		String sql = "SELECT COUNT(*) as c FROM survey_results INNER JOIN surveys ON survey_results.survey_ID = surveys.survey_ID "
+				+ "WHERE (surveys.survey_ID=?) AND (surveys.site=?)";
+		return getJdbcTemplate().queryForInt(sql, new Object[]{surveyTemplateId, siteId});
 	}
 		
 	class SurveyResultMapper implements RowMapper<SurveyResult> {

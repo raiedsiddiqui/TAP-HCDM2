@@ -28,11 +28,19 @@ public interface SurveyManager {
 	public List<SurveyTemplate> getAllSurveyTemplates();
 	
 	/**
+	 * 
+	 * @param siteId
+	 * @return A list of Survey templates grouped by site
+	 */
+	@Transactional
+	public List<SurveyTemplate> getSurveyTemplatesBySite(int siteId); 
+	
+	/**
 	 * check if there is any survey result associates with survey template(can not be deleted)
 	 * @return
 	 */
 	@Transactional
-	public List<SurveyTemplate> getSurveyTemplatesWithCanDelete();
+	public List<SurveyTemplate> getSurveyTemplatesWithCanDelete(int siteId);
 	/**
 	 * A list of Survey template which title contains partialTitle
 	 * @param partialTitle
@@ -40,6 +48,15 @@ public interface SurveyManager {
 	 */
 	@Transactional
 	public List<SurveyTemplate> getSurveyTemplatesByPartialTitle(String partialTitle);
+	
+	/**
+	 * 
+	 * @param title
+	 * @return surveyId
+	 */
+	@Transactional
+	public int getSurveyIdByTitle(String title);
+	
 	/**
 	 * Uploads a survey template to the database
 	 * @param st
@@ -100,6 +117,14 @@ public interface SurveyManager {
 	public SurveyResult getSurveyResultByID(int id);
 	
 	/**
+	 * 
+	 * @param siteId
+	 * @return
+	 */
+	@Transactional
+	public List<SurveyResult> getAllSurveyResultsBySite(int siteId);
+	
+	/**
 	 * Ordered by title ascending
 	 * @return a list of SurveyResult objects
 	 */
@@ -115,13 +140,22 @@ public interface SurveyManager {
 	public List<SurveyResult> getAllSurveyResultsBySurveyId(int id);
 	
 	/**
-	 * Retrieves all survey results by survey Id and patientId
+	 * Retrieves survey result by survey Id and patientId
 	 * @param itemsToReturn 
 	 * @param id survey ID
-	 * @return a list of SurveyResult objects
+	 * @return a  SurveyResult object
 	 */
 	@Transactional
-	public List<SurveyResult> getSurveyResultByPatientAndSurveyId(int patientId, int surveyId);
+	public SurveyResult getSurveyResultByPatientAndSurveyId(int patientId, int surveyId);
+	
+	/**
+	 * Retrieves  completed survey result by survey Id and patientId
+	 * @param itemsToReturn 
+	 * @param id survey ID
+	 * @return a  SurveyResult object
+	 */
+	@Transactional
+	public SurveyResult getCompletedSurveyResultByPatientAndSurveyTitle(int patientId, String surveyTitle);
 	
 	/**
 	 * Uploads a survey template to the database
@@ -166,6 +200,15 @@ public interface SurveyManager {
 	 */
 	@Transactional
 	public int countCompletedSurveys(int patientId);
+	
+	/**
+	 * 
+	 * @param surveyId
+	 * @param patientId
+	 * @return true if the survey is completed for the patient
+	 */
+	@Transactional
+	public boolean hasCompleteSurvey(int surveyId, int patientId);	
 	
 	/**
 	 * Keep a copy of deleted survey template

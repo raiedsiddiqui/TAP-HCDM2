@@ -42,12 +42,6 @@ public interface PatientManager {
 	*/
 	@Transactional
     public List<Patient> getPatientsForVolunteer(int volunteer);
-	
-	/**
-	* List all the patients group by volunteer's organization in the database
-	* @return a List of Patient objects
-	*/
-    public List<Patient> getPatientsByGroup(int organizationId);
     
     /**
 	 * search a group of patients by partial name
@@ -65,6 +59,14 @@ public interface PatientManager {
 	 */
 	@Transactional
 	public List<Patient> getGroupedPatientsByName(String partialName, int organizationId);
+	
+	/**
+	 * 
+	 * @param siteId
+	 * @return
+	 */
+	@Transactional
+	public List<Patient> getPatientsBySite(int siteId);
 		
 	/**
 	 * Create a patient in the database

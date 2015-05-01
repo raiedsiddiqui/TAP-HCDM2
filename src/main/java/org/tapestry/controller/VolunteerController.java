@@ -1128,8 +1128,10 @@ public class VolunteerController {
    			allPendingAppointments = appointmentManager.getAllPendingAppointments();
    		}
    		else{//For local Admin
-   			int organizationId = user.getOrganization();
-   			allPatients = patientManager.getPatientsByGroup(organizationId); 
+   			int organizationId = user.getOrganization();   			
+   			
+   			allPatients = patientManager.getPatientsBySite(user.getSite());   
+   			
    			allAppointments = appointmentManager.getAppointmentsGroupByOrganization(organizationId);     			 			
    			allPastAppointments = appointmentManager.getPastAppointmentsGroupByOrganization(organizationId);
    			allPendingAppointments = appointmentManager.getPendingAppointmentsGroupByOrganization(organizationId);   			
@@ -1312,7 +1314,7 @@ public class VolunteerController {
    		}
    		else
    		{//for local admin/VC
-   			patients = TapestryHelper.getPatientsByOrganization(request, patientManager, loggedInUser.getOrganization());
+   			patients = TapestryHelper.getPatientsBySite(request, patientManager, loggedInUser.getSite());
    	   		model.addAttribute("patients", patients);
    	   		
    			return "/admin/admin_book_appointment";	

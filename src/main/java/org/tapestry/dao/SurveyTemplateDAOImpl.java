@@ -38,6 +38,14 @@ public class SurveyTemplateDAOImpl extends JdbcDaoSupport implements SurveyTempl
 		
 		return surveyTemplates;
 	}
+	
+	@Override
+	public List<SurveyTemplate> getSurveyTemplatesBySite(int siteId) {
+		String sql = "SELECT * FROM surveys WHERE site=? ORDER BY priority DESC";
+		List<SurveyTemplate> surveyTemplates = getJdbcTemplate().query(sql,new Object[]{siteId}, new SurveyTemplateMapper());
+		
+		return surveyTemplates;
+	}
 
 	@Override
 	public List<SurveyTemplate> getSurveyTemplatesByPartialTitle(String partialTitle) {
@@ -46,31 +54,41 @@ public class SurveyTemplateDAOImpl extends JdbcDaoSupport implements SurveyTempl
 		
 		return surveyTemplates;
 	}
+	
+	@Override
+	public int getSurveyIdByTitle(String title){
+		String sql = "SELECT survey_ID FROM surveys WHERE title=?";
+		return getJdbcTemplate().queryForInt(sql, new Object[] {title});
+	}
 
 	@Override
 	public void uploadSurveyTemplate(SurveyTemplate st) {
-		String sql = "INSERT INTO surveys (title, type, contents, priority, description) values (?,?,?,?,?)";
-		getJdbcTemplate().update(sql, st.getTitle(), st.getType(), st.getContents(), st.getPriority(), st.getDescription());
+		String sql = "INSERT INTO surveys (title, type, contents, priority, description, site) values (?,?,?,?,?,?)";
+		getJdbcTemplate().update(sql, st.getTitle(), st.getType(), st.getContents(), st.getPriority(), st.getDescription(), st.getSite());
 	}	
 
 	@Override
 	public void updateSurveyTemplate(SurveyTemplate st) {
 		String sql = "UPDATE surveys SET title=?, description=? WHERE survey_ID=?";
-		getJdbcTemplate().update(sql, st.getTitle(), st.getDescription(), st.getSurveyID());
-		
+		getJdbcTemplate().update(sql, st.getTitle(), st.getDescription(), st.getSurveyID());		
 	}
 
 	@Override
 	public void deleteSurveyTemplate(int id) {
 		String sql = "DELETE FROM surveys WHERE survey_ID=?";
 		getJdbcTemplate().update(sql, id);
-
 	}
 
 	@Override
 	public int countSurveyTemplate() {
 		String sql = "SELECT COUNT(*) as c FROM surveys";
 		return getJdbcTemplate().queryForInt(sql);
+	}
+	
+	@Override
+	public int countSurveyTemplateBySite(int site) {
+		String sql = "SELECT COUNT(*) as c FROM surveys WHERE site=?";
+		return getJdbcTemplate().queryForInt(sql, new Object[] {site});
 	}
 	
 	class SurveyTemplateMapper implements RowMapper<SurveyTemplate> {
@@ -83,6 +101,7 @@ public class SurveyTemplateDAOImpl extends JdbcDaoSupport implements SurveyTempl
             st.setContents(rs.getBytes("contents"));
             st.setPriority(rs.getInt("priority"));
             st.setDescription(rs.getString("description"));
+            st.setSite(rs.getInt("site"));
             
             //format date, remove time
             String date = rs.getString("last_modified");
@@ -94,12 +113,11 @@ public class SurveyTemplateDAOImpl extends JdbcDaoSupport implements SurveyTempl
 
 	@Override
 	public void archiveSurveyTemplate(SurveyTemplate st, String deletedBy) {
-		String sql = "INSERT INTO surveys_archive (deleted_survey_ID, title, type, contents, priority, description, deleted_by) "
+		String sql = "INSERT INTO surveys_archive (deleted_survey_ID, title, type, contents, priority, description, deleted_by, site) "
 				+ "values (?,?,?,?,?,?,?)";
 		getJdbcTemplate().update(sql, st.getSurveyID(),st.getTitle(), st.getType(), st.getContents(), st.getPriority(), 
-				st.getDescription(), deletedBy);
+				st.getDescription(), deletedBy, st.getSite());
 		
 	}
-
 
 }

@@ -12,7 +12,7 @@ public class Patient{
 	private String notes;	
 	private String bod;// birth of date
 	private int age;
-	private String clinic;
+	private int clinic;
 	private int mrp; // family doctor
 	private String mrpFirstName;
 	private String mrpLastName;
@@ -85,11 +85,11 @@ public class Patient{
 		this.age = age;
 	}
 
-	public String getClinic() {
+	public int getClinic() {
 		return clinic;
 	}
 
-	public void setClinic(String clinic) {
+	public void setClinic(int clinic) {
 		this.clinic = clinic;
 	}
 

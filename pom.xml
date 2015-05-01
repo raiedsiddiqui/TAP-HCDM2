@@ -260,13 +260,7 @@
 		</dependency>
 		
 		<!-- itex for PDF file generator -->
-		 <!--dependency>
-  			<groupId>com.itextpdf</groupId>
-            <artifactId>itextpdf</artifactId>
-            <version>5.4.1</version>
-        </dependency>  -->
-        
-        <dependency>
+		<dependency>
 			<groupId>com.itextpdf</groupId>
 			<artifactId>itextpdf</artifactId>
 			<version>5.5.2</version>
@@ -277,6 +271,20 @@
 			<artifactId>itext</artifactId>
 			<version>2.1.7</version>
 	    </dependency>
+	    
+	    <!-- read/write Excel -->
+	    <dependency>
+	        <groupId>org.apache.poi</groupId>
+	        <artifactId>poi</artifactId>
+	        <version>3.10-FINAL</version>
+	        <type>jar</type>
+	    </dependency>
+		
+		<dependency>
+		    <groupId>org.apache.poi</groupId>
+		    <artifactId>poi-ooxml</artifactId>
+		    <version>3.10-FINAL</version>
+		</dependency>
 		    
 		<!-- Jackson JSON Mapper -->
 		

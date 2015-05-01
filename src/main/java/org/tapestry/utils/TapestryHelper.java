@@ -43,6 +43,8 @@ import org.tapestry.objects.HL7Report;
 import org.tapestry.objects.Message;
 import org.tapestry.objects.Patient;
 import org.tapestry.objects.Report;
+import org.tapestry.objects.ResearchData;
+import org.tapestry.objects.Site;
 import org.tapestry.objects.SurveyResult;
 import org.tapestry.objects.SurveyTemplate;
 import org.tapestry.objects.User;
@@ -53,6 +55,7 @@ import org.tapestry.report.CalculationManager;
 import org.tapestry.report.ScoresInReport;
 import org.tapestry.service.AppointmentManager;
 import org.tapestry.service.MessageManager;
+import org.tapestry.service.OrganizationManager;
 import org.tapestry.service.PatientManager;
 import org.tapestry.service.SurveyManager;
 import org.tapestry.service.UserManager;
@@ -87,6 +90,17 @@ public class TapestryHelper {
 	//Mail-related settings
    	private static String mailAddress = "";
    	private static Session session;
+   	//Survey's title in the mumps script
+   	public static final String titleOfDailyLifeActivities = "Daily Life Activities";
+	public static final String titleOfGeneralHealth = "General Health";//EFS, Edminton Frail Scale
+	public static final String titleOfSocialLife = "Social Life"; //Duke_Social_Support_Index
+	public static final String titleOfNutrition = "Nutrition"; //Screen II
+	public static final String titleOfAdvancedCarePlanning = "Advanced Care Planning"; //Advance Directives
+	public static final String titleOfMemory = "Your Memory"; //Memory
+	public static final String titleOfRAPA = "RAPA (Rapid Assessment of Physical Activity)";
+	public static final String titleOfMobility = "Mobility Survey";
+	public static final String titleOfGoals = "Goals";
+	public static final String titleOfEQ5D = "EQ5D";
    	/**
    	 * Reads the file /WEB-INF/classes/db.yaml and gets the values contained therein
    	 * Set up for mail system
@@ -161,8 +175,9 @@ public class TapestryHelper {
 		
 		if ("ROLE_ADMIN".equalsIgnoreCase(user.getRole()))
 			patients = patientManager.getAllPatients();	//For central Admin		
-		else		
-			patients = patientManager.getPatientsByGroup(user.getOrganization());	
+		else
+			patients = patientManager.getPatientsBySite(user.getSite());
+
 		
 		if (session.getAttribute("allPatientWithFullInfos") != null)
 			patients = (List<Patient>)session.getAttribute("allPatientWithFullInfos");
@@ -192,7 +207,7 @@ public class TapestryHelper {
 							city = person.getCity();
 							province = person.getProvince();
 							p.setCity(city);					
-	//						p.setHomePhone(person.getPhone1());		
+	
 							if (!Utils.isNullOrEmpty(street1))
 							{
 								sb.append(street1);	
@@ -287,14 +302,14 @@ public class TapestryHelper {
 	 * @param patientManager
 	 * @return a list of Patient
 	 */
-   	public static List<Patient> getPatientsByOrganization(SecurityContextHolderAwareRequestWrapper request, 
-   			PatientManager patientManager, int organizationId )
+   	public static List<Patient> getPatientsBySite(SecurityContextHolderAwareRequestWrapper request, 
+   			PatientManager patientManager, int siteId )
    	{   		
    		HttpSession session = request.getSession();		
 		List<Patient> patients;
 		if (session.getAttribute("grouped_patient_list") == null)
 		{
-			patients = patientManager.getPatientsByGroup(organizationId);			
+			patients = patientManager.getPatientsBySite(siteId);	
 			//save in the session
 			if (patients != null && patients.size()>0)
 				session.setAttribute("grouped_patient_list", patients);
@@ -382,6 +397,16 @@ public class TapestryHelper {
 	 * @return
 	 */
 	public static User getLoggedInUser(SecurityContextHolderAwareRequestWrapper request){
+		HttpSession session = request.getSession();		
+		return (User)session.getAttribute("loggedInUser");
+	}
+	
+	/**
+	 * 
+	 * @param request
+	 * @return login user
+	 */
+	public static User getLoggedInUser(HttpServletRequest request){
 		HttpSession session = request.getSession();		
 		return (User)session.getAttribute("loggedInUser");
 	}
@@ -919,11 +944,11 @@ public class TapestryHelper {
 		HttpSession session = request.getSession();		
 		List<SurveyTemplate> surveyTemplateList;
 		if (session.getAttribute("survey_template_list") == null)
-		{
-		//	surveyTemplateList = surveyManager.getAllSurveyTemplates();
-			
-			surveyTemplateList = surveyManager.getSurveyTemplatesWithCanDelete();
-			
+		{			
+			if (request.isUserInRole("ROLE_ADMIN"))//central admin 
+				surveyTemplateList = surveyManager.getSurveyTemplatesWithCanDelete(0);
+			else //local admin/site admin
+				surveyTemplateList = surveyManager.getSurveyTemplatesWithCanDelete(getLoggedInUser(request).getSite());
 			//save in the session
 			if (surveyTemplateList != null && surveyTemplateList.size()>0)
 				session.setAttribute("survey_template_list", surveyTemplateList);
@@ -1043,7 +1068,7 @@ public class TapestryHelper {
    			assignSurveysToClient(selectSurveyTemplats, patientIds, request, surveyManager);
    			model.addAttribute("successful", true);
   		}catch (Exception e){
-  			System.out.println("something wrong");
+  			System.out.println("something wrong with assingn survey to client === " + e.getMessage());
   		} 
    	}
    	/**
@@ -1101,8 +1126,8 @@ public class TapestryHelper {
 		}				
 		else	
 		{// For local Admin/VC
-			volunteers = volunteerManager.getAllVolunteersByOrganization(organizationId);	
-			patientList = patientManager.getPatientsByGroup(organizationId);
+			volunteers = volunteerManager.getAllVolunteersByOrganization(organizationId);			
+			patientList = patientManager.getPatientsBySite(user.getSite());			
 		}
 	
 		model.addAttribute("volunteers", volunteers);	  
@@ -1162,11 +1187,11 @@ public class TapestryHelper {
 			rMediumFont.setColor(BaseColor.RED);		        
 			Font rSmallFont = new Font(Font.FontFamily.HELVETICA, 8);
 			rSmallFont.setColor(BaseColor.RED);
-			//green font
+			//blue font
 			Font gbMediumFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
-			gbMediumFont.setColor(BaseColor.GREEN);
-			Font gbSmallFont = new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD);
-			gbSmallFont.setColor(BaseColor.GREEN);
+			gbMediumFont.setColor(BaseColor.BLUE);
+	//		Font gbSmallFont = new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD);
+		//	gbSmallFont.setColor(BaseColor.GREEN);
 			//black font
 			Font sFont = new Font(Font.FontFamily.HELVETICA, 9);	
 			Font sbFont = new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD);	
@@ -1989,7 +2014,7 @@ public class TapestryHelper {
 	 * @param questionAnswerList
 	 * @return Map survey question text and answer
 	 */
-	public static Map<String, String> getSurveyContentMap(List<String> questionTextList, List<String> questionAnswerList){		
+	public static Map<String, String> getSurveyContentMapForDailyLife(List<String> questionTextList, List<String> questionAnswerList){		
 		Map<String, String> content = new TreeMap<String, String>(); ;
 		String text;
 
@@ -1997,7 +2022,7 @@ public class TapestryHelper {
 		//remove the first element which is description about whole survey
 		questionTextList.remove(0);
 		List<String> questions = modifyDailyLifeActivityQuestions(questionTextList);
-		
+				
 		if ((questions != null && questions.size() > 0)&&(questionAnswerList != null && questionAnswerList.size() > 0))
 		{
 			for (int i = 0; i < questionAnswerList.size(); i++)
@@ -2192,7 +2217,7 @@ public class TapestryHelper {
 				"Somewhat dissatisfied", "Satisfied"};		
 		String detailedAnswer = "";
 		
-		if ((index >= 0)&&(index < 6))
+		if ((index >= 0)&&(index < 7))
 		{
 			if("1".equals(answer))
 				detailedAnswer = answers[0];				
@@ -2201,7 +2226,7 @@ public class TapestryHelper {
 			else
 				detailedAnswer = answers[2];
 		}
-		else if (index == 6)
+		else if (index == 7)
 		{
 			if ("1".equals(answer))
 				detailedAnswer = answers[3];
@@ -2550,57 +2575,515 @@ public class TapestryHelper {
 	
 	public static List<DisplayedSurveyResult> detailedResult(List<DisplayedSurveyResult> completedDisplayedResults)
 	{
-		String surveyId;
-		String answer, fullDescriptionAnswer;
-		DisplayedSurveyResult dr;
-		int j=0;
-		int ind=0;
+		String surveyTitle;	
+		String answer;
+		DisplayedSurveyResult dr;		
+		int g = 0; //indicator for social life
+		int j=0;// for goals
+		int k=0; //for daily activities
+		int l = 0; // indicator for general health
+		int m = 0; // indicator for EQ5D
+		int n = 0; // indicator for Nutrition
 		
 		for (int i=0; i<completedDisplayedResults.size(); i++){
 			dr = completedDisplayedResults.get(i);
-			surveyId = dr.getSurveyId();
 			answer = dr.getQuestionAnswer();
+			surveyTitle = dr.getTitle();			
+			//since title of survey could be different between the one in the survey and the one displayed
+			//RAPA, Memory, Advance Care
+			if (surveyTitle.contains(titleOfRAPA) || surveyTitle.contains(titleOfMemory) || surveyTitle.contains(titleOfAdvancedCarePlanning))
+				dr.setQuestionAnswer(getDetailedAnswersForSurvey(answer));
 			
-			if (surveyId.equals("12") || surveyId.equals("14") || surveyId.equals("15"))
+			if (surveyTitle.contains(titleOfSocialLife))// Social Life
 			{
-				fullDescriptionAnswer = TapestryHelper.getDetailedAnswersForSurvey(answer);
-				dr.setQuestionAnswer(fullDescriptionAnswer);
-			}
-			else if (surveyId.equals("8"))
-			{
-				fullDescriptionAnswer = TapestryHelper.getDetailedAnswersForSocialLifeSurvey(answer, i);
-				dr.setQuestionAnswer(fullDescriptionAnswer);
+				g++;				
+				dr.setQuestionAnswer(getDetailedAnswersForSocialLifeSurvey(answer, g));
 			}
 			
-			if (surveyId.equals("17"))
+			if (surveyTitle.contains(titleOfGoals))// Goals
 			{ 
 				j++;
 				//get last question/answer in the Goals survey
 				if (j == 8)
-					ind = i;
+				{					
+					String lastAns = completedDisplayedResults.get(i).getQuestionAnswer();
+					
+					if (lastAns.equals("1"))
+						lastAns = completedDisplayedResults.get(i-3).getQuestionAnswer();
+					else if (lastAns.equals("2"))
+						lastAns = completedDisplayedResults.get(i-2).getQuestionAnswer();
+					else
+						lastAns = completedDisplayedResults.get(i-1).getQuestionAnswer();					
+					//between "goal*a" and "<br>"
+					if (lastAns.indexOf("<br>") != -1)
+						lastAns = lastAns.substring(0,lastAns.indexOf("<br>"));
+					completedDisplayedResults.get(i).setQuestionAnswer(lastAns);
+				}
 			}
-		}
-		
-		if (ind != 0)
-		{
-			String lastAns = completedDisplayedResults.get(ind).getQuestionAnswer();
 			
-			if (lastAns.equals("1"))
-				lastAns = completedDisplayedResults.get(ind-3).getQuestionAnswer();
-			else if (lastAns.equals("2"))
-				lastAns = completedDisplayedResults.get(ind-2).getQuestionAnswer();
-			else
-				lastAns = completedDisplayedResults.get(ind-1).getQuestionAnswer();
+			if (surveyTitle.contains(titleOfDailyLifeActivities)) //Daily Life Activity
+			{
+				k++;
+				//get the seventh question about falling
+				if (k==7)
+					dr.setQuestionAnswer(getDetailedAnswersForSurvey(answer));
+			}
 			
-			//between "goal*a" and "<br>"
-//			lastAns = lastAns.substring(6,lastAns.indexOf("<br>"));//remove goal*a
-			if (lastAns.indexOf("<br>") != -1)
-				lastAns = lastAns.substring(0,lastAns.indexOf("<br>"));
-			completedDisplayedResults.get(ind).setQuestionAnswer(lastAns);			
+			if (surveyTitle.contains(titleOfGeneralHealth))
+			{
+				l++;
+				dr.setQuestionAnswer(getFullDescriptionForGeneralHealth(l, answer));				
+			}
+			
+			if (surveyTitle.contains(titleOfEQ5D))
+			{
+				m++;
+				dr.setQuestionAnswer(getFullDescriptionForEQ5D(m, answer));				
+			}
+			
+			if (surveyTitle.contains(titleOfNutrition))
+			{
+				n++;
+				dr.setQuestionAnswer(getFullDescriptionForNutrition(n, answer));
+			}
+			
+			if (surveyTitle.contains(titleOfMobility))
+				dr.setQuestionAnswer(getFullDescriptionForMobility(dr.getQuestionId(), answer));
 		}
-		
 		return completedDisplayedResults;
 	}
+	
+	private static String getFullDescriptionForMobility(String questionId, String answer)
+	{
+		String fullDesAnswer="";
+		int ind = Integer.valueOf(answer);
+		
+		if (questionId.equals("a2a") || questionId.equals("a3a") || questionId.equals("a4a"))
+		{
+			 switch (ind) {
+			 	case 1: fullDesAnswer = "Able to manage without difficulty";			
+			 			break;
+			 	case 2: fullDesAnswer = "Able to manage with some difficulty";
+			 			break;
+			 	case 3: fullDesAnswer = "Able to manage with a great deal of difficulty";
+			 			break;
+			 	case 4: fullDesAnswer = "Able to manage with the help of another person";
+			 			break;	
+			 	case 5: fullDesAnswer = "Unable to manage even with help";
+			 			break;	
+			 }
+		}
+		
+		if (questionId.equals("a2b"))
+		{
+			 switch (ind) {
+			 	case 1: fullDesAnswer = "I am able to walk 2 km the same way I always have";			
+			 			break;
+			 	case 2: fullDesAnswer = "I need to rest in the middle of the walk";
+			 			break;
+			 	case 3: fullDesAnswer = "I need to use a walking aid (cane/crutch/walker)";
+			 			break;
+			 	case 4: fullDesAnswer = "I walk 2 km less often than I used to";
+			 			break;	
+			 	case 5: fullDesAnswer = "It takes me longer to walk 2 km than it used to";			 	
+			 			break;	
+			 	case 6: fullDesAnswer = "I am more tired after walking 2 km than I used to be";
+			 			break;
+			 }
+		}
+		
+		if (questionId.equals("a3b"))
+		{
+			 switch (ind) {
+			 	case 1: fullDesAnswer = "I am able to walk 0.5 km the same way I always have";			
+			 			break;
+			 	case 2: fullDesAnswer = "I need to rest in the middle of the walk";
+			 			break;
+			 	case 3: fullDesAnswer = "I need to use a walking aid (cane/crutch/walker)";
+			 			break;
+			 	case 4: fullDesAnswer = "I walk 0.5 km less often than I used to";
+			 			break;	
+			 	case 5: fullDesAnswer = "It takes me longer to walk 0.5 km than it used to";			 	
+			 			break;	
+			 	case 6: fullDesAnswer = "I am more tired after walking 0.5 km than I used to be";
+			 			break;
+			 }
+		}
+		
+		if (questionId.equals("a4b"))
+		{
+			 switch (ind) {
+			 	case 1: fullDesAnswer = "I am able to climb the stairs the same way I always have";			
+			 			break;
+			 	case 2: fullDesAnswer = "I need to rest in the middle of the flight of stairs";
+			 			break;
+			 	case 3: fullDesAnswer = "I need to use a walking aid (cane/crutch/walker)";
+			 			break;
+			 	case 4: fullDesAnswer = "I need support from the handrails";
+			 			break;	
+			 	case 5: fullDesAnswer = "I climb the stairs less often than I used to";			 	
+			 			break;	
+			 	case 6: fullDesAnswer = "It takes me longer to climb the stairs than it used to";
+			 			break;
+			 }
+		}
+		return fullDesAnswer;
+	}
+	
+	private static String getFullDescriptionForGeneralHealth(int ind, String answer)
+	{
+		String fullDesAnswer="";
+        switch (ind) {
+            case 1: if (answer.equals("1"))
+            			fullDesAnswer = "No errors";
+            		else if(answer.equals("2"))
+            			fullDesAnswer = "Minor spacing errors";
+            		else
+            			fullDesAnswer = "Other errors";
+                    break;
+            case 2: if (answer.equals("1"))
+            			fullDesAnswer = "0";
+		    		else if(answer.equals("2"))
+		    			fullDesAnswer = "1-2";
+		    		else
+		    			fullDesAnswer = "More than 2";
+                    break;
+            case 3: if (answer.equals("1"))
+		    			fullDesAnswer = "Excellent";
+		    		else if(answer.equals("2"))
+		    			fullDesAnswer = "Very good";
+		    		else if(answer.equals("3"))
+		    			fullDesAnswer = "Good";
+		    		else if(answer.equals("4"))
+		    			fullDesAnswer = "Fair";
+		    		else
+		    			fullDesAnswer = "Poor";
+            		break;
+            case 4: if (answer.equals("1"))
+		    			fullDesAnswer = "0-1";
+		    		else if(answer.equals("2"))
+		    			fullDesAnswer = "1-2";
+		    		else
+		    			fullDesAnswer = "5-8";
+		            break;	
+            case 5: if (answer.equals("1"))
+		    			fullDesAnswer = "Always";
+		    		else if(answer.equals("2"))
+		    			fullDesAnswer = "Sometimes";
+		    		else
+		    			fullDesAnswer = "Never";
+		            break;	
+            case 6: case 7: case 8: case 9: case 10:
+            		if (answer.equals("1"))
+            			fullDesAnswer = "No";    		
+            		else
+            			fullDesAnswer = "Yes";
+            		break;	
+            case 11:if (answer.equals("1"))
+		    			fullDesAnswer = "0-10s";
+		    		else if(answer.equals("2"))
+		    			fullDesAnswer = "11-20s";
+		    		else if(answer.equals("3"))
+		    			fullDesAnswer = "More than 20s";
+		    		else if(answer.equals("4"))
+		    			fullDesAnswer = "Patient requires assistance";
+		    		else
+		    			fullDesAnswer = "Patient is unwilling";
+		            break;	
+        }		
+		return fullDesAnswer;
+	}
+	
+	private static String getFullDescriptionForEQ5D(int ind, String answer)
+	{
+		String fullDesAnswer="";
+        switch (ind) {          
+            case 1: if (answer.equals("1"))
+		    			fullDesAnswer = "I have no problems in walking about";
+		    		else if(answer.equals("2"))
+		    			fullDesAnswer = "I have slight problems in walking about";
+		    		else if(answer.equals("3"))
+		    			fullDesAnswer = "I have moderate problems in walking about";
+		    		else if(answer.equals("4"))
+		    			fullDesAnswer = "I have severe problems in walking about";
+		    		else
+		    			fullDesAnswer = "I am unable to walk about";
+            		break;
+            case 2: if (answer.equals("1"))
+		    			fullDesAnswer = "I have no problems washing or dressing myself";
+		    		else if(answer.equals("2"))
+		    			fullDesAnswer = "I have slight problems washing or dressing myself";
+		    		else if(answer.equals("3"))
+		    			fullDesAnswer = "I have moderate problems washing or dressing myself";
+		    		else if(answer.equals("4"))
+		    			fullDesAnswer = "I have severe problems washing or dressing myself";
+		    		else
+		    			fullDesAnswer = "I am unable to wash or dress myself";
+		    		break;
+            case 3: if (answer.equals("1"))
+		    			fullDesAnswer = "I have no problems doing my usual activities";
+		    		else if(answer.equals("2"))
+		    			fullDesAnswer = "I have slight problems doing my usual activities";
+		    		else if(answer.equals("3"))
+		    			fullDesAnswer = "I have moderate problems doing my usual activities";
+		    		else if(answer.equals("4"))
+		    			fullDesAnswer = "I have severe problems doing my usual activities";
+		    		else
+		    			fullDesAnswer = "I am unable to do my usual activities";
+		    		break;	
+            case 4: if (answer.equals("1"))
+		    			fullDesAnswer = "I have no pain or discomfort";
+		    		else if(answer.equals("2"))
+		    			fullDesAnswer = "I have slight pain or discomfort";
+		    		else if(answer.equals("3"))
+		    			fullDesAnswer = "I have moderate pain or discomfort";
+		    		else if(answer.equals("4"))
+		    			fullDesAnswer = "I have severe pain or discomfort";
+		    		else
+		    			fullDesAnswer = "I have extreme pain or discomfort";
+		    		break;	
+            case 5:if (answer.equals("1"))
+		    			fullDesAnswer = "I am not anxious or depressed";
+		    		else if(answer.equals("2"))
+		    			fullDesAnswer = "I am slightly anxious or depressed";
+		    		else if(answer.equals("3"))
+		    			fullDesAnswer = "I am moderately anxious or depressed";
+		    		else if(answer.equals("4"))
+		    			fullDesAnswer = "I am severely anxious or depressed";
+		    		else
+		    			fullDesAnswer = "I am extremely anxious or depressed";
+		    		break;	
+            case 6:
+	            	fullDesAnswer = answer;
+	            	break;
+        }
+		
+		return fullDesAnswer;
+	}
+	
+	private static String getFullDescriptionForNutrition(int ind, String answer)
+	{
+		String fullDesAnswer="";
+        switch (ind) {          
+            case 1: if (answer.equals("1"))
+		    			fullDesAnswer = "No, my weight stayed within a few pounds";
+		    		else if(answer.equals("2"))
+		    			fullDesAnswer = "I don't know how much I weigh or if my weight has changed";
+		    		else if(answer.equals("3"))
+		    			fullDesAnswer = "Yes, I gained more than 10 pounds";
+		    		else if(answer.equals("4"))
+		    			fullDesAnswer = "Yes, I gained 6 to 10 pounds";
+		    		else if(answer.equals("5"))
+		    			fullDesAnswer = "Yes, I gained about 5 pounds";
+		    		else if(answer.equals("6"))
+		    			fullDesAnswer = "Yes, I lost more than 10 pounds";
+		    		else if(answer.equals("7"))
+		    			fullDesAnswer = "Yes, I lost 6 to 10 pounds";
+		    		else 
+		    			fullDesAnswer = "Yes, I lost about 5 pounds";
+            			break;
+            case 2: if (answer.equals("1"))
+		    			fullDesAnswer = "Yes";
+		    		else if(answer.equals("2"))
+		    			fullDesAnswer = "No";
+		    		else
+		    			fullDesAnswer = "No, but it changed anyway";
+		    		break;
+            case 3: if (answer.equals("1"))
+		    			fullDesAnswer = "more than it should be";
+		    		else if(answer.equals("2"))
+		    			fullDesAnswer = "just right";
+		    		else
+		    			fullDesAnswer = "less than it should be";
+		    		break;	
+            case 4: if (answer.equals("1"))
+		    			fullDesAnswer = "Never or rarely";
+		    		else if(answer.equals("2"))
+		    			fullDesAnswer = "Sometimes";
+		    		else if(answer.equals("3"))
+		    			fullDesAnswer = "Often";
+		    		else 
+		    			fullDesAnswer = "Almost everyday";
+		    		break;	
+            case 5: if (answer.equals("1"))
+	    			fullDesAnswer = "I eat most foods";
+	    		else if(answer.equals("2"))
+	    			fullDesAnswer = "I limit some foods and I am managing fine";
+	    		else if(answer.equals("3"))
+	    			fullDesAnswer = "I limit some foods and I am finding it difficult to manage";	    		
+	    		break;
+            case 6:if (answer.equals("1"))
+		    			fullDesAnswer = "Very good";
+		    		else if(answer.equals("2"))
+		    			fullDesAnswer = "Good";
+		    		else if(answer.equals("3"))
+		    			fullDesAnswer = "Fair";		    		
+		    		else
+		    			fullDesAnswer = "Poor";
+		    		break;	
+           case 7:if (answer.equals("1"))
+	    			fullDesAnswer = "Five or more";
+	    		else if(answer.equals("2"))
+	    			fullDesAnswer = "Four";
+	    		else if(answer.equals("3"))
+	    			fullDesAnswer = "Three";
+	    		else if(answer.equals("4"))
+	    			fullDesAnswer = "Two";
+	    		else
+	    			fullDesAnswer = "Less than two";
+	    		break;	
+            case 8:if (answer.equals("1"))
+	    			fullDesAnswer = "Two or more times a day";
+	    		else if(answer.equals("2"))
+	    			fullDesAnswer = "One to two times a day";
+	    		else if(answer.equals("3"))
+	    			fullDesAnswer = "Once a day";		    		
+	    		else
+	    			fullDesAnswer = "Less than once a day";
+	    		break;
+            case 9:if (answer.equals("1"))
+	    			fullDesAnswer = "Three or more times a day";
+	    		else if(answer.equals("2"))
+	    			fullDesAnswer = "Two to three times a day";
+	    		else if(answer.equals("3"))
+	    			fullDesAnswer = "One to two times a day";
+	    		else if(answer.equals("4"))
+	    			fullDesAnswer = "Usually once a day";
+	    		else
+	    			fullDesAnswer = "Less than once a day";
+	    		break;
+            case 10:if (answer.equals("1"))
+	    			fullDesAnswer = "Eight or more cups";
+	    		else if(answer.equals("2"))
+	    			fullDesAnswer = "Five to seven cups";
+	    		else if(answer.equals("3"))
+	    			fullDesAnswer = "Three to four cups";
+	    		else if(answer.equals("4"))
+	    			fullDesAnswer = "About two cups";
+	    		else
+	    			fullDesAnswer = "Less than two cups";
+	    		break;
+            case 11: case 12:if (answer.equals("1"))
+	    			fullDesAnswer = "Never";
+	    		else if(answer.equals("2"))
+	    			fullDesAnswer = "Rarely";
+	    		else if(answer.equals("3"))
+	    			fullDesAnswer = "Sometimes";		    		
+	    		else
+	    			fullDesAnswer = "Often or always";
+	    		break;
+            case 13:if (answer.equals("1"))
+	    			fullDesAnswer = "Never or rarely";    		
+	    		else if(answer.equals("2"))
+	    			fullDesAnswer = "Sometimes";		    		
+	    		else
+	    			fullDesAnswer = "Often or always";
+	    		break;
+            case 14: if (answer.equals("1"))
+	    			fullDesAnswer = "Never or rarely";
+	    		else if(answer.equals("2"))
+	    			fullDesAnswer = "Sometimes";
+	    		else if(answer.equals("3"))
+	    			fullDesAnswer = "Often";		    		
+	    		else
+	    			fullDesAnswer = "Almost always";
+	    		break;
+            case 15: if (answer.equals("1"))
+	    			fullDesAnswer = "I do";
+	    		else if(answer.equals("2"))
+	    			fullDesAnswer = "I share my cooking with someone else";
+	    		else
+	    			fullDesAnswer = "Someone else cooks most of my meals";
+	    		break;
+            case 16:if (answer.equals("1"))
+	    			fullDesAnswer = "I enjoy cooking most of my meals";
+	    		else if(answer.equals("2"))
+	    			fullDesAnswer = "I sometimes find cooking a chore";
+	    		else if(answer.equals("3"))
+	    			fullDesAnswer = "I usually find cooking a chore";
+	    		else if(answer.equals("4"))
+	    			fullDesAnswer = "I'm satisfied with the quality of food prepared by others";
+	    		else
+	    			fullDesAnswer = "I'm not satisfied with the quality of food prepared by others";
+	    		break;
+            case 17: if (answer.equals("1"))
+	    			fullDesAnswer = "Never or rarely";
+	    		else if(answer.equals("2"))
+	    			fullDesAnswer = "Sometimes";
+	    		else if(answer.equals("3"))
+	    			fullDesAnswer = "Often";		    		
+	    		else
+	    			fullDesAnswer = "Always";
+	    		break;
+        }
+		
+		return fullDesAnswer;
+	}
+	
+	  /**
+     * Concatenate a LinkedHashMap of results with the specified characters
+     * @param results The results list returned by getResults()
+     * @param join The character(s) to use to separate the question ID from the answer
+     * @return The results
+     */
+    private static String joinResults(LinkedHashMap<String, String> results, String join){
+		String ret = "";
+		String separator1 = "/observernote/";
+		String separator2 = "/answer/";
+		String key, value;
+		String observerNotes = "";
+		int index1, index2;
+		StringBuffer sb = new StringBuffer();
+		StringBuffer sb1 = new StringBuffer();
+		
+		for (Map.Entry<String, String> r : results.entrySet())
+		{
+			key = r.getKey();
+			value = r.getValue();
+			if (!key.contains("surveyId") && !key.equals("date") && !key.equals("title"))
+			{			
+				index2 = value.indexOf(separator2);
+				if (!value.startsWith("-"))//remove first non-question-answer pair, only information
+    			{
+					index1 = value.indexOf(separator1);					
+					
+    				if ((index1 != -1) && (index1 + separator1.length() != index2))// has /observernote/...
+    				{
+    					observerNotes = value.substring(index1 + separator1.length(), index2);     
+    					sb1.append(observerNotes);
+    				//	sb1.append(";");    					
+    				}
+    			}				
+				if (index2 != -1)
+					value = value.substring(index2 + separator2.length());				
+			
+				if (!value.startsWith("-"))
+				{
+					sb.append(value);
+					sb.append(join);
+				}	
+			}
+			else
+				continue;			
+		}
+		sb1.append(join);
+		sb.append(sb1.toString());
+		ret = sb.toString();
+					
+		System.out.println("ret == "+ ret);
+		return ret;
+	}
+    
+    /**
+     * Converts a result set to a series of comma-separated values that
+     * can then be loaded into a spreadsheet or something.
+     * @param results The LinkedHashMap returned by getResults()
+     * @return The results as comma-separated values
+     */
+    public static String resultsAsExcel(LinkedHashMap<String, String> results){
+		return joinResults(results, ";");
+	}
+	
 	
 	//=========================== Message ==================================//
 	/**
@@ -2729,7 +3212,225 @@ public class TapestryHelper {
 		
 	}
 
+	//======================test===================================//
+	public static boolean hasSurveyResultByPatient(int patientId, SurveyManager surveyManager)
+	{
+		boolean hasResult = false;
+		int surveyId = surveyManager.getSurveyIdByTitle("4. Social Life");
+		
+		if (surveyManager.hasCompleteSurvey(surveyId, patientId))
+			hasResult = true;
+		else
+		{
+			surveyId = surveyManager.getSurveyIdByTitle("2. Goals");
+			
+			if (surveyManager.hasCompleteSurvey(surveyId, patientId))
+				hasResult = true;
+			else
+			{
+				surveyId = surveyManager.getSurveyIdByTitle("EQ5D");
+				
+				if (surveyManager.hasCompleteSurvey(surveyId, patientId))
+					hasResult = true;
+			}
+		}		
+		return hasResult;
+	}
 	
+	public static List<ResearchData> getResearchDatas(PatientManager patientManager, SurveyManager surveyManager, int siteId)
+	{
+		List<Patient> patients;
+		if (siteId == 0)//for central admin
+			patients = patientManager.getAllPatients();	
+		else
+			patients = patientManager.getPatientsBySite(siteId);
 	
+		SurveyResult sr;
+		List<ResearchData> researchDatas = new ArrayList<ResearchData>();
+		ResearchData rData;
+		int patientId, size;
+		String xml, observerNote;
+		LinkedHashMap<String, String> res;
+		List<DisplayedSurveyResult> displayedResults;
+		StringBuffer sb;
+		String[] goalsArray;
+	
+		for (int i = 0; i < patients.size(); i++)
+		{
+			rData = new ResearchData();
+			patientId = patients.get(i).getPatientID();
+			
+			if (!hasSurveyResultByPatient(patientId, surveyManager))
+				continue;
+			rData.setPatientId(patientId);
+		
+			//Social life
+			try{
+				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "4. Social Life");
+			}catch (Exception e) {
+				System.out.println("throws exception on Social life === patient id == " + patientId);
+				sr = null;
+			}
+			
+			if (sr != null)
+			{
+				sb = new StringBuffer();
+				
+				try{
+					xml = new String(sr.getResults(), "UTF-8");
+			   	} catch (Exception e) {
+			   		xml = "";
+			   	}
+				res = ResultParser.getResults(xml);
+				displayedResults = ResultParser.getDisplayedSurveyResults(res);		
+			   		
+				rData.setdSS1_role_TO(displayedResults.get(0).getQuestionAnswer());
+				rData.setdSS2_under_TO(displayedResults.get(1).getQuestionAnswer());
+				rData.setdSS3_useful_TO(displayedResults.get(2).getQuestionAnswer());
+				rData.setdSS4_listen_TO(displayedResults.get(3).getQuestionAnswer());
+				rData.setdSS5_happen_TO(displayedResults.get(4).getQuestionAnswer());
+				rData.setdSS6_talk_TO(displayedResults.get(5).getQuestionAnswer());
+				rData.setdSS7_satisfied_TO(displayedResults.get(6).getQuestionAnswer());
+				rData.setdSS8_nofam_TO(displayedResults.get(7).getQuestionAnswer());		   		
+				rData.setdSS9_timesnotliving_TO(displayedResults.get(8).getQuestionAnswer());
+				rData.setdSS10_timesphone_TO(displayedResults.get(9).getQuestionAnswer());	
+				
+				if (displayedResults.size() == 11)
+					rData.setdSS11_timesclubs_TO(displayedResults.get(10).getQuestionAnswer());
+			   		
+				for (int j=0; j<displayedResults.size(); j++)
+				{
+					observerNote = displayedResults.get(j).getObserverNotes();
+					if (!Utils.isNullOrEmpty(observerNote))
+					{
+						sb.append(displayedResults.get(j).getObserverNotes());			
+						sb.append("\n");
+			   		}
+			   	}
+				rData.setdSS_notes_TO(sb.toString());					
+			}		
+			//EQ5D
+			try{
+				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "EQ5D");
+			}catch (Exception e) {
+				System.out.println("throws exception on EQ5D=== patient id == " + patientId);
+				sr = null;
+			}
+			
+			if (sr != null)
+			{
+				sb = new StringBuffer();
+				
+				try{
+					xml = new String(sr.getResults(), "UTF-8");
+			   	} catch (Exception e) {
+			   		xml = "";
+			   	}
+				res = ResultParser.getResults(xml);
+				displayedResults = ResultParser.getDisplayedSurveyResults(res);		
+				rData.seteQ5D1_Mobility_TO(displayedResults.get(0).getQuestionAnswer());
+				rData.seteQ5D2_2Selfcare_TO(displayedResults.get(1).getQuestionAnswer());
+				rData.seteQ5D3_Usualact_TO(displayedResults.get(2).getQuestionAnswer());
+				rData.seteQ5D4_Pain_TO(displayedResults.get(3).getQuestionAnswer());
+				rData.seteQ5D5_Anxdep_TO(displayedResults.get(4).getQuestionAnswer());
+				rData.seteQ5D6_Healthstate_TO(displayedResults.get(5).getQuestionAnswer());				
+				
+				for (int j=0; j<displayedResults.size()-1; j++)
+				{
+					observerNote = displayedResults.get(j).getObserverNotes();
+					if (!Utils.isNullOrEmpty(observerNote))
+					{
+						sb.append(displayedResults.get(j).getObserverNotes());
+						sb.append("\n");
+			   		}
+			   	}
+				rData.seteQ5D5_notes_TO(sb.toString());
+				rData.seteQ5D6_Healthstate_notes_TO(displayedResults.get(5).getObserverNotes());				
+			}
+			//Goals
+			try{
+				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "2. Goals");
+			}catch (Exception e) {
+				System.out.println("throws exception on Goals === patient id == " + patientId);
+				sr = null;
+			}
+			
+			if (sr != null)
+			{
+				sb = new StringBuffer();
+				
+				try{
+					xml = new String(sr.getResults(), "UTF-8");
+			   	} catch (Exception e) {
+			   		xml = "";
+			   	}
+				res = ResultParser.getResults(xml);
+				displayedResults = ResultParser.getDisplayedSurveyResults(res);		
+		
+				rData.setGoals1Matter_TO(displayedResults.get(0).getQuestionAnswer());
+				rData.setGoals2Life_TO(displayedResults.get(1).getQuestionAnswer());
+				rData.setGoals3Health_TO(displayedResults.get(2).getQuestionAnswer());
+				rData.setGoals4List_TO(displayedResults.get(3).getQuestionAnswer());
+												
+				goalsArray = displayedResults.get(4).getQuestionAnswer().split("<br>");
+				size = goalsArray.length;
+				if (size == 3)
+				{
+					rData.setGoals5FirstSpecific_TO(goalsArray[0]);
+					rData.setGoals6FirstBaseline_TO(goalsArray[1]);
+					rData.setGoals7FirstTaget_TO(goalsArray[2]);
+				}				
+							
+				goalsArray = displayedResults.get(5).getQuestionAnswer().split("<br>");
+				size = goalsArray.length;
+				if (size == 3)
+				{
+					rData.setGoals5SecondSpecific_TO(goalsArray[0]);
+					rData.setGoals6SecondBaseline_TO(goalsArray[1]);
+					rData.setGoals7SecondTaget_TO(goalsArray[2]);
+				}
+				
+				goalsArray = displayedResults.get(6).getQuestionAnswer().split("<br>");
+				size = goalsArray.length;
+				if (size == 3)
+				{
+					rData.setGoals5ThirdSpecific_TO(goalsArray[0]);
+					rData.setGoals6ThirdBaseline_TO(goalsArray[1]);	
+					rData.setGoals7ThirdTaget_TO(goalsArray[2]);
+				}				
+				rData.setGoals8pPriority_TO(displayedResults.get(7).getQuestionAnswer());
+				
+				for (int j=0; j<displayedResults.size(); j++)
+				{
+					observerNote = displayedResults.get(j).getObserverNotes();
+					if (!Utils.isNullOrEmpty(observerNote))
+					{
+						sb.append(displayedResults.get(j).getObserverNotes());
+						sb.append("\n");
+			   		}
+			   	}
+				rData.setGoalsDiscussion_notes_TO(sb.toString());			
+			}			
+			researchDatas.add(rData);
+		}		
+		return researchDatas;
+	}	
+	
+	public static List<Site> getSites(SecurityContextHolderAwareRequestWrapper request, OrganizationManager organizationManager)
+	{
+		HttpSession session = request.getSession();
+		List<Site> sites = new ArrayList<Site>();
+		
+		if (session.getAttribute("sites") != null)
+			sites = (List<Site>)session.getAttribute("sites");
+		else
+		{
+			sites = organizationManager.getAllSites();
+			session.setAttribute("sites", sites);
+		}
+		
+		return sites;
+
+	}
 
 }

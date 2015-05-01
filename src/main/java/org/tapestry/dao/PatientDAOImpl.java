@@ -10,14 +10,12 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
-import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import org.tapestry.utils.TapestryHelper;
 import org.tapestry.objects.Patient;
 
 /**
@@ -35,9 +33,10 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 	@Override
 	public Patient getPatientByID(int id) {
 		String sql = "SELECT p.*, v1.firstname AS v1_firstname, v1.lastname AS v1_lastname, "
-				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, v1.organization FROM patients "
-				+ "AS p INNER JOIN volunteers AS v1 ON p.volunteer=v1.volunteer_ID INNER JOIN "
-				+ "volunteers AS v2 ON p.volunteer2=v2.volunteer_ID WHERE p.patient_ID=?";
+				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, v1.organization, "
+				+ "c.clinic_name FROM patients AS p INNER JOIN volunteers AS v1 ON p.volunteer=v1.volunteer_ID "
+				+ "INNER JOIN volunteers AS v2 ON p.volunteer2=v2.volunteer_ID INNER JOIN clinics AS c "
+				+ "ON p.clinic=c.clinic_ID WHERE p.patient_ID=?";
 		
 		return getJdbcTemplate().queryForObject(sql, new Object[]{id}, new PatientMapper());
 	}
@@ -45,9 +44,9 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 	@Override
 	public List<Patient> getAllPatients() {
 		String sql = "SELECT p.*, v1.firstname AS v1_firstname, v1.lastname AS v1_lastname, "
-				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, v1.organization, v1.organization"
-				+ " FROM patients AS p INNER JOIN volunteers AS v1 ON p.volunteer=v1.volunteer_ID INNER JOIN "
-				+ "volunteers AS v2 ON p.volunteer2=v2.volunteer_ID ";
+				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, v1.organization, v1.organization, "
+				+ "c.clinic_name FROM patients AS p INNER JOIN volunteers AS v1 ON p.volunteer=v1.volunteer_ID INNER JOIN "
+				+ "volunteers AS v2 ON p.volunteer2=v2.volunteer_ID INNER JOIN clinics AS c ON p.clinic=c.clinic_ID";
 		
 		return getJdbcTemplate().query(sql, new PatientMapper());
 	}
@@ -55,29 +54,20 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 	@Override
 	public List<Patient> getPatientsForVolunteer(int volunteerId) {		
 		String sql = "SELECT p.*, v1.firstname AS v1_firstname, v1.lastname AS v1_lastname, "
-				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, v1.organization FROM patients "
+				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, v1.organization, c.clinic_name FROM patients "
 				+ "AS p INNER JOIN volunteers AS v1 ON p.volunteer=v1.volunteer_ID INNER JOIN "
-				+ "volunteers AS v2 ON p.volunteer2=v2.volunteer_ID WHERE p.volunteer=? OR p.volunteer2=? ";
+				+ "volunteers AS v2 ON p.volunteer2=v2.volunteer_ID INNER JOIN clinics AS c ON p.clinic=c.clinic_ID "
+				+ "WHERE p.volunteer=? OR p.volunteer2=? ";
 		
 		return getJdbcTemplate().query(sql, new Object[]{volunteerId, volunteerId}, new PatientMapper());
 	}
 	
 	@Override
-	public List<Patient> getPatientsByGroup(int organizationId) {
-		String sql = "SELECT p.*, v1.firstname AS v1_firstname, v1.lastname AS v1_lastname, "
-				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, v1.organization FROM patients "
-				+ "AS p INNER JOIN volunteers AS v1 ON p.volunteer=v1.volunteer_ID INNER JOIN "
-				+ "volunteers AS v2 ON p.volunteer2=v2.volunteer_ID WHERE v1.organization =? OR v2.organization =?";
-		
-		return getJdbcTemplate().query(sql, new Object[]{organizationId, organizationId}, new PatientMapper());
-	}
-
-	@Override
 	public List<Patient> getPatientsByPartialName(String partialName) {	
 		String sql = "SELECT p.*, v1.firstname AS v1_firstname, v1.lastname AS v1_lastname, "
-				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, v1.organization FROM patients "
+				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, v1.organization, c.clinic_name FROM patients "
 				+ "AS p INNER JOIN volunteers AS v1 ON p.volunteer=v1.volunteer_ID INNER JOIN "
-				+ "volunteers AS v2 ON p.volunteer2=v2.volunteer_ID WHERE UPPER(p.firstname) "
+				+ "volunteers AS v2 ON p.volunteer2=v2.volunteer_ID INNER JOIN clinics AS c ON p.clinic=c.clinic_ID WHERE UPPER(p.firstname) "
 				+ "LIKE UPPER('%" + partialName + "%') OR UPPER(p.lastname) LIKE UPPER('%" + partialName + "%') ";
 		
 		return getJdbcTemplate().query(sql, new PatientMapper());
@@ -86,23 +76,25 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 	@Override
 	public List<Patient> getGroupedPatientsByName(String partialName, int organizationId) {
 		String sql = "SELECT p.*, v1.firstname AS v1_firstname, v1.lastname AS v1_lastname, "
-				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, v1.organization FROM patients "
+				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, v1.organization, c.clinic_name FROM patients "
 				+ "AS p INNER JOIN volunteers AS v1 ON p.volunteer=v1.volunteer_ID INNER JOIN "
-				+ "volunteers AS v2 ON p.volunteer2=v2.volunteer_ID WHERE (UPPER(p.firstname) "
+				+ "volunteers AS v2 ON p.volunteer2=v2.volunteer_ID INNER JOIN clinics AS c ON p.clinic=c.clinic_ID WHERE (UPPER(p.firstname) "
 				+ "LIKE UPPER('%" + partialName + "%') OR UPPER(p.lastname) LIKE UPPER('%" + partialName + "%')) "
 				+ "AND v1.organization =? ";
 		
 		return getJdbcTemplate().query(sql, new Object[]{organizationId}, new PatientMapper());
 	}
 
-//	@Override
-//	public void createPatient(Patient p) {	
-//		String sql = "INSERT INTO patients (firstname, lastname, preferredname, volunteer,"
-//				+ " gender, notes, volunteer2, alerts, myoscar_verified, clinic, username) VALUES (?, ?, ?, ?,"
-//				+ " ?, ?, ?, ?, ?, ?, ?)";
-//		getJdbcTemplate().update(sql, p.getFirstName(),  p.getLastName(), p.getPreferredName(), p.getVolunteer(), p.getGender(),
-//				p.getNotes(), p.getPartner(), p.getAlerts(), p.getMyoscarVerified(), p.getClinic(), "tapestry_patient");
-//	}
+	@Override
+	public List<Patient> getPatientsBySite(int siteId) {
+		String sql = "SELECT p.*, v1.firstname AS v1_firstname, v1.lastname AS v1_lastname, "
+				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, v1.organization, c.clinic_name FROM patients "
+				+ "AS p INNER JOIN volunteers AS v1 ON p.volunteer=v1.volunteer_ID INNER JOIN "
+				+ "volunteers AS v2 ON p.volunteer2=v2.volunteer_ID INNER JOIN clinics AS c ON p.clinic=c.clinic_ID "
+				+ "WHERE c.site_ID =? ";
+		
+		return getJdbcTemplate().query(sql, new Object[]{siteId}, new PatientMapper());
+	}
 	
 	@Override
 	public int createPatient(final Patient p) {	
@@ -127,7 +119,7 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 				 ps.setInt(7, p.getPartner());
 				 ps.setString(8, p.getAlerts());
 				 ps.setString(9, p.getMyoscarVerified());
-				 ps.setString(10,  p.getClinic());
+				 ps.setInt(10,  p.getClinic());
 				 ps.setString(11, p.getUserName());//user name in myoscar
 				 ps.setInt(12, p.getMrp());
 				 ps.setString(13,  p.getMrpFirstName());
@@ -205,10 +197,9 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 				patient.setGender("Female");
 			else
 				patient.setGender("Other");
-			//set clinic
-			String clinicCode = rs.getString("clinic");
-			patient.setClinic(clinicCode);
-			patient.setClinicName(TapestryHelper.getClinicName(clinicCode));			
+			//set clinic			
+			patient.setClinic(rs.getInt("clinic"));
+			patient.setClinicName(rs.getString("clinic_name"));			
 			patient.setVolunteer(rs.getInt("volunteer"));
 			patient.setNotes(rs.getString("notes"));
 			patient.setAlerts(rs.getString("alerts"));			
@@ -241,7 +232,6 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 			return patient;
 		}
 	}
-
 
 
 }

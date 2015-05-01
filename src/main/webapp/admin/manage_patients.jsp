@@ -203,10 +203,13 @@
 					<input type="radio" name="myoscar_verified" value="0" checked/>No
 					<br/>
 					<label>Clinic:</label>
-					<select name="clinic" form="newPatient" class="form-control">
-						<option value="1">McMaster Family Practice</option>
-						<option value="2">Stonechurch Family Health Center</option>
+					<select name="clinic" form="newPatient" class="form-control">					
+						<option value=""></option>
+						<c:forEach items="${clinics}" var="c">
+							<option value="${c.clinicId}">${c.clinicName}</option>
+						</c:forEach>
 					</select>
+					
 					<!-- 
 					<label>Availability:</label><br/>
 					<%@include file="add_availabilities.jsp" %>   

@@ -19,7 +19,6 @@ import org.xml.sax.InputSource;
 
 
 public class ResultParser {
-
     private static Document loadXMLFromString(String xml) throws Exception {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -208,17 +207,15 @@ public class ResultParser {
      */
     private static String joinResults(LinkedHashMap<String, String> results, String join){
 		String ret = "";
-		String separator = "/observernote/";
+		String separator1 = "/observernote/";
+		String separator2 = "/answer/";
+		
 		for (Map.Entry<String, String> r : results.entrySet())
 		{
-			System.out.println("key == "+ r.getKey());
-			System.out.println("value == "+ r.getValue());
-			System.out.println("================== == ");
 			ret += r.getKey() + join + r.getValue() + "\n";
 			//remove separator from string
-			ret = ret.replaceAll(separator, "");
-			
-			System.out.println("ret == "+ ret);
+			ret = ret.replaceAll(separator1, "");
+			ret = ret.replaceAll(separator2, "");
 		}
 		return ret;
 	}
@@ -246,5 +243,6 @@ public class ResultParser {
 		String s = joinResults(results, ": ");
 		return s.replace("\n", "<br/>");
 	}
+	
 
 }

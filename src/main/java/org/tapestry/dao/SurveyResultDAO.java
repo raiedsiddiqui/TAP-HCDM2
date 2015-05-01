@@ -47,6 +47,13 @@ public interface SurveyResultDAO {
 	public List<SurveyResult> getAllSurveyResults();
 	
 	/**
+	 * 
+	 * @param siteId
+	 * @return a list of SurveyResult objects
+	 */
+	public List<SurveyResult> getAllSurveyResultsBySite(int siteId);
+	
+	/**
 	 * Retrieves all survey results by survey Id	
 	 * @param id survey ID
 	 * @return a list of SurveyResult objects
@@ -59,7 +66,15 @@ public interface SurveyResultDAO {
 	 * @param id survey ID
 	 * @return a list of SurveyResult objects
 	 */
-	public List<SurveyResult> getSurveyResultByPatientAndSurveyId(int patientId, int surveyId);
+	public SurveyResult getSurveyResultByPatientAndSurveyId(int patientId, int surveyId);
+	
+	/**
+	 * Retrieves all completed survey results by survey Id and patientId
+	 * @param itemsToReturn 
+	 * @param id survey ID
+	 * @return a list of SurveyResult objects
+	 */
+	public SurveyResult getCompletedSurveyResultByPatientAndSurveyTitle(int patientId, String surveyTitle);
 	
 	/**
 	 * Uploads a survey template to the database
@@ -102,9 +117,25 @@ public interface SurveyResultDAO {
 	/**
 	 * Count number of survey result for a survey template
 	 * @param surveyTemplateId 
-	 * @return number of survey result 
+	 * @return number of survey results 
 	 */
 	public int countSurveysBySurveyTemplateId(int surveyTemplateId);
+	
+	/**
+	 * 
+	 * @param surveyTemplateId
+	 * @param siteId
+	 * @return a list of survey results for selected survey and site
+	 */
+	public int countSurveysBySurveyTemplateIdAndSite(int surveyTemplateId, int siteId);
+	
+	/**
+	 * 
+	 * @param surveyId
+	 * @param patientId
+	 * @return true if survey is completed by patient
+	 */
+	public boolean hasCompleteSurvey(int surveyId, int patientId);
 	
 	/**
 	 * Keep a copy of deleted survey result

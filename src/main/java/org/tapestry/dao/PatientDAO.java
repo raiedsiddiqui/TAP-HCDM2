@@ -43,15 +43,16 @@ public interface PatientDAO {
 	 * search by name for a grouped patients
 	 * @param partialName
 	 * @param organizationId
-	 * @return a list of volunteers whose name contain partialName and belong to an organization
+	 * @return a list of volunteers whose name contain partialName and belong to a site
 	 */
-	public List<Patient> getGroupedPatientsByName(String partialName, int organizationId);
-	
-	/**
-	* List all the patients group by volunteer's organization in the database
-	* @return An ArrayList of Patient objects
-	*/
-    public List<Patient> getPatientsByGroup(int organizationId);
+	public List<Patient> getGroupedPatientsByName(String partialName, int siteId);
+		    
+    /**
+     * 
+     * @param siteId
+     * @return all patients belong to  same site(siteId)
+     */
+    public List<Patient> getPatientsBySite(int siteId);
 	
 	/**
 	* create a patient in the database

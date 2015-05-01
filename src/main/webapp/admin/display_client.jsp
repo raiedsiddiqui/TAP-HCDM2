@@ -177,19 +177,14 @@
  -->
 	<h2>Upcoming Visits</h2>
 	<table  class="table table-striped" width="970" border="1">
-		<tr>
-			
-			<th width="500">Visit Date</th>
-			
-			<th>Assigned Volunteers</th>
-			
+		<tr>			
+			<th width="500">Visit Date</th>			
+			<th>Assigned Volunteers</th>			
 		</tr>
-		<c:forEach items="${upcomingVisits}" var="uVistits">
-		
+		<c:forEach items="${upcomingVisits}" var="uVistits">		
 		<tr >
 			<td>${uVistits.date}</td>			
-			<td>${uVistits.volunteer},&nbsp &nbsp ${uVistits.partner}</td>
-			
+			<td>${uVistits.volunteer},&nbsp &nbsp ${uVistits.partner}</td>			
 		</tr>
 		</c:forEach>
 	</table>
@@ -199,17 +194,15 @@
 			<th width="300">Visit #</th>
 			<th width="300"> Visit Date</th>		
 			<th>Assigned Volunteers</th>
-			<c:if test="${showReport}">
-				<th>Report/PDF</th>
-				<th>Report/HL7</th>
-			</c:if>
+			<th>Report/PDF</th>
+			<th>Report/HL7</th>			
 		</tr>
 		<c:forEach items="${completedVisits}" var="cVistits">
 		<tr >
 			<td>${cVistits.appointmentID}</td>	
 			<td>${cVistits.date}</td>			
-			<td>${cVistits.volunteer},&nbsp &nbsp ${cVistits.partner}</td>
-			<c:if test="${showReport}">
+			<td>${cVistits.volunteer},&nbsp &nbsp ${cVistits.partner}</td>	
+			<c:if test="${cVistits.completed}">
 				<td><a href="<c:url value="/download_report/${patient.patientID}?appointmentId=${cVistits.appointmentID}"/>">DOWNLOAD</a> </td>
 				<td><a href="<c:url value="/generate_report_hl7/${patient.patientID}?appointmentId=${cVistits.appointmentID}"/>">DOWNLOAD</a> </td>
 			</c:if>
