@@ -1297,17 +1297,28 @@ public class TapestryHelper {
 			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 			table.addCell(cell);
 			
-			StringBuffer sb = new StringBuffer();
+			List<String> patientGoals = report.getPatientGoals();
+			Phrase pp = new Phrase();
+			Chunk c = new Chunk("What Matters Most To Me: ", bmFont);			 
+			pp.add(c);
+			pp.add(new Chunk(patientGoals.get(0) + "\n", mFont));
+			
+			c = new Chunk("GOAL 1  ", bmFont);			 
+			pp.add(c);
+			pp.add(new Chunk(patientGoals.get(1)+ "\n", mFont));
+			
+			c = new Chunk("GOAL 2  ", bmFont);			 
+			pp.add(c);
+			pp.add(new Chunk(patientGoals.get(2)+ "\n", mFont));
 
-			for (int i = 0; i < report.getPatientGoals().size(); i++)
-			{
-				sb.append(report.getPatientGoals().get(i));
-				sb.append("\n");
-			}			
-			cell = new PdfPCell(new Phrase(sb.toString(), mFont));
-			cell.setPadding(3);
-			table.addCell(cell);
-			document.add(table);			
+			c = new Chunk("GOAL 3  ", bmFont);			 
+			pp.add(c);
+			pp.add(new Chunk(patientGoals.get(3)+ "\n", mFont));
+
+			cell = new PdfPCell(pp);			
+			table.addCell(cell);		
+			document.add(table);	
+			
 			//alerts
 			table = new PdfPTable(1);
 			table.setWidthPercentage(100);
@@ -1320,7 +1331,7 @@ public class TapestryHelper {
 			table.addCell(cell);
 			List<String> alerts = report.getAlerts(); 
 			
-			sb = new StringBuffer();
+			StringBuffer sb = new StringBuffer();
 			for (int i =0; i<alerts.size(); i++)
 			{
 				sb.append(".");
@@ -1330,13 +1341,7 @@ public class TapestryHelper {
 			
 			cell = new PdfPCell(new Phrase(sb.toString(), rmFont));		
 			cell.setPadding(5);
-			table.addCell(cell);
-	         	            
-//			for (int i =0; i<alerts.size(); i++){
-//				cell = new PdfPCell(new Phrase(" . " + alerts.get(i).toString(), rmFont));		
-//				cell.setPadding(3);
-//				table.addCell(cell);
-//			}
+			table.addCell(cell);			
 			document.add(table);
 			document.add(new Phrase("    "));   
 			//Key observation
@@ -1351,50 +1356,13 @@ public class TapestryHelper {
 			table.addCell(cell);
 			
 			String keyObservation = report.getAppointment().getKeyObservation();
-//			String keyObservation = report.getPatient().getKeyObservation();
 			if (keyObservation == null || keyObservation.equals(""))
 				cell = new PdfPCell(new Phrase(" "));
 			else
 				cell = new PdfPCell(new Phrase(keyObservation));
 			table.addCell(cell);
 			document.add(table);
-	
-	/*		//Plan
-			table = new PdfPTable(2);
-			table.setWidthPercentage(100);
-			cell = new PdfPCell(new Phrase("Volunteer Follow-Up Plan", wbLargeFont));
-			cell.setBackgroundColor(BaseColor.BLACK);
-			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);	
-			cell.setColspan(2);
-			table.addCell(cell);
-	            
-			List<String> pList = new ArrayList<String>();
-//			String plans = report.getPatient().getPlans();
-			String plans = report.getAppointment().getPlans();
-//			if (!Utils.isNullOrEmpty(report.getAppointment().getPlans()))
-//				pList = Arrays.asList(report.getAppointment().getPlans().split(";"));	
-			if (!Utils.isNullOrEmpty(plans))
-				pList = Arrays.asList(plans.split(";"));		
-	    		
-			Map<String, String> pMap = new TreeMap<String, String>();
-	    		
-			for (int i = 1; i<= pList.size(); i++){
-				pMap.put(String.valueOf(i), pList.get(i-1));
-			}
-			for (Map.Entry<String, String> entry : pMap.entrySet()) {
-				cell = new PdfPCell(new Phrase(entry.getKey()));
-				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-				table.addCell(cell);	            	
-	            	
-				cell = new PdfPCell(new Phrase(entry.getValue()));
-				table.addCell(cell); 
-			}			
-			table.setWidths(new float[]{1f, 18f});
-			document.add(table);
-			document.add(new Phrase("    "));	 
-			document.newPage();	*/
+			
 			//Memory Screen
 			table = new PdfPTable(2);
 			table.setWidthPercentage(100);
@@ -1434,7 +1402,7 @@ public class TapestryHelper {
 			float[] aWidths = {24f, 3f};
 			table.setWidths(aWidths);
 			document.add(table);		
-//			document.newPage();			
+		
 			//Advance Directives/Care plan
 			table = new PdfPTable(2);
 			table.setWidthPercentage(100);
@@ -1838,49 +1806,9 @@ public class TapestryHelper {
 			sb.append("\n");
 			cell = new PdfPCell(new Phrase(sb.toString(), mFont));
 			cell.setBorderWidthTop(0);
-			table.addCell(cell);
-			
-		///	
-//			table = new PdfPTable(2);
-//			table.setWidthPercentage(100);
-//			cell = new PdfPCell(new Phrase("GOALS", bMediumFont));
-//			cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
-//			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-//			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);	
-//			cell.setColspan(2);
-//			table.addCell(cell);
-//			
-//			cell = new PdfPCell(new Phrase("Of the list of both life and health goals we just went through, can you pick 3 that you would like to focus on in the next 6 months?", sbFont));
-//			cell.setColspan(2);
-//			table.addCell(cell);
-//						
-//			List<String> gList = report.getPatientGoals();
-//			if (gList != null && gList.size() > 0)
-//			{
-//				String goal;
-//				for (int i = 1; i < gList.size(); i++)
-//				{
-//					goal = report.getPatientGoals().get(i);
-//					if (goal != null)
-//					{
-//						cell = new PdfPCell(new Phrase(String.valueOf(i), sFont));
-//						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-//						cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-//						table.addCell(cell);
-//				
-//						cell = new PdfPCell(new Phrase(goal, sFont));
-//						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);				
-//						table.addCell(cell);
-//					}
-//				}
-//			}
-//
-//			cell = new PdfPCell(new Phrase(" "));
-//			table.addCell(cell); 
-//			
-//			table.setWidths(cWidths);
+			table.addCell(cell);	
 			document.add(table);			
-			//
+		
 			//Tapestry Questions
 			table = new PdfPTable(2);
 			table.setWidthPercentage(100);
@@ -2292,7 +2220,7 @@ public class TapestryHelper {
    		}
 		return qMap;
 	}
-	
+	/*
 	public static HL7Report generateHL7Report(Patient p, Appointment a, SurveyManager surveyManager){		
 		HL7Report report = new HL7Report();		
 		ScoresInReport scores = new ScoresInReport();
@@ -2572,7 +2500,7 @@ public class TapestryHelper {
 		report.setVolunteerInformations(volunteerInfos);		
 		
 		return report;
-	}
+	}*/
 	
 	public static List<DisplayedSurveyResult> detailedResult(List<DisplayedSurveyResult> completedDisplayedResults)
 	{

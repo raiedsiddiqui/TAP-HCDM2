@@ -349,18 +349,22 @@ public class CalculationManager {
 	}
 	
 	public static List<String> getPatientGoals(List<String> qList){
-		List<String> goals = new ArrayList<String>();
+		List<String> goals = new ArrayList<String>();		
+		goals.add(qList.get(0));
+	//	separate 4th question by '<br>' to a list
+		goals.addAll(Arrays.asList(qList.get(3).split("<br>")));
 		
-		goals.add("Goal 1 - " + getGoalMsg(qList.get(4)));
-		goals.add("Goal 2 - " + getGoalMsg(qList.get(5)));
-		goals.add("Goal 3 - " + getGoalMsg(qList.get(6)));
-		
-		StringBuffer sb = new StringBuffer();
-		sb.append("Goal I Am MOST Willing To Work On Over The Next 6 Months: ");
-		sb.append("Goal ");
-		sb.append(qList.get(7));
-		goals.add(sb.toString());
-		
+		//remove 'GOAL 1/2/3' from answer of 4th Question
+		String answer;
+		for (int i = 1; i<goals.size(); i++)
+		{
+			answer = goals.get(i);
+			if (answer.startsWith("GOAL"))
+				answer = answer.substring(6);			
+			if (answer.startsWith(" Select Goal "))
+				answer = "n/a";						
+			goals.set(i, answer);
+		}		
 		return goals;
 	}
 	
@@ -370,22 +374,22 @@ public class CalculationManager {
 		return new ArrayList<String>(Arrays.asList(qList.get(index).split("-------<br>")));
 	}
 	
-	public static String getPatientGoalsMsg(int iAnswer, List<String> qList)
-	{
-		String msg="";
-				
-		switch (iAnswer) {
-			case 1: msg = getGoalMsg(qList.get(4));
-					break;
-			case 2: msg = getGoalMsg(qList.get(5));
-					break;
-			case 3: msg = getGoalMsg(qList.get(6));
-					break;				
-			default:break;
-		}	
-		
-		return msg;
-	}
+//	public static String getPatientGoalsMsg(int iAnswer, List<String> qList)
+//	{
+//		String msg="";
+//				
+//		switch (iAnswer) {
+//			case 1: msg = getGoalMsg(qList.get(4));
+//					break;
+//			case 2: msg = getGoalMsg(qList.get(5));
+//					break;
+//			case 3: msg = getGoalMsg(qList.get(6));
+//					break;				
+//			default:break;
+//		}	
+//		
+//		return msg;
+//	}
 	
 	public static List<String> setPatientGoalsMsg(String answer, List<String> goals)
 	{
@@ -400,15 +404,18 @@ public class CalculationManager {
 		return goals;
 	}
 	
-	private static String getGoalMsg(String msg)
-	{
-		int index = msg.indexOf("<br>");
-		
-		if (index != 0)
-			msg = msg.substring(0, index);
-		
-		return msg;
-	}
+//	private static String getGoalMsg(String msg)
+//	{
+//		int index = msg.indexOf("<br>");
+//		
+//		if (index != 0)
+//			msg = msg.substring(0, index);
+//		
+//		msg = msg.substring(6);
+//		if (msg.equals(""))
+//			msg = "n/a";
+//		return msg;
+//	}
 	
 	private static StringBuffer getModificationInfo(StringBuffer sb, String bAnswer){
 		if("1".equals(bAnswer))

@@ -147,20 +147,21 @@
 				<div class="row form-group">
 					<div class="col-md-6">
 						<label>Site: </label>
-						<select name="site" form="newUser" class="form-control">
-										<option value="DFM" selected >DFM</option>
-										<option value="UBC" >UBC</option>							
-										<option value="Mcgill"  >Mcgill</option>
+						<select name="site" id="site" form="newUser" class="form-control">
+							<option value=""></option>
+							<c:forEach items="${sites}" var="s">
+								<option value="${s.siteId}">${s.name}</option>
+							</c:forEach>
 						</select>
 					</div>	
-						<div class="col-md-6">
-							<label>Organization:</label>									
-							<select name="organization" form="newUser" class="form-control">
-								<c:forEach items="${organizations}" var="o">
-									<option value="${o.organizationId}">${o.name}</option>
-								</c:forEach>
-							</select>
-						</div>
+					<div class="col-md-6">
+						<label>Organization:</label>									
+						<select name="organization" form="newUser" class="form-control">
+							<c:forEach items="${organizations}" var="o">
+								<option value="${o.organizationId}">${o.name}</option>
+							</c:forEach>
+						</select>
+					</div>
 				</div>
 				<label><h4>User Role</h4></label>
 				<div class="row form-group">						

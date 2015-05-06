@@ -359,7 +359,7 @@ public class DoSurveyAction
 
 		//if survey list not in the session, retrieve from server
 		if (userSurveys == null)
-		{
+		{System.out.println("no null ===");
 			userSurveys = new TapestrySurveyMap(getSurveyResultsList(surveyResults, surveyTemplates));
 			request.getSession().setAttribute("session_survey_list", userSurveys);
 		}
