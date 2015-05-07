@@ -196,6 +196,15 @@ public class TapestryController{
 			organizations = volunteerManager.getAllOrganizations();
 			session.setAttribute("organizations", organizations);
 		}
+		
+		User user = TapestryHelper.getLoggedInUser(request);
+		
+		if ("ROLE_ADMIN".equalsIgnoreCase(user.getRole()))//for central admin
+		{
+			List<Site> sites = TapestryHelper.getSites(request, organizationManager);		
+			model.addAttribute("sites", sites);
+		}
+		
 		return "admin/manage_users";
 	}
 	
@@ -2303,7 +2312,7 @@ public class TapestryController{
    		
 		SurveyResult surveyResult = surveyManager.getSurveyResultByID(id);
 		SurveyTemplate surveyTemplate = surveyManager.getSurveyTemplateByID(surveyResult.getSurveyID());
-		
+				
 		//all survey results stored in map		
 		TapestrySurveyMap userSurveys = DoSurveyAction.getSurveyMapAndStoreInSession(request, surveyResults, surveyTemplates);			
 		TapestryPHRSurvey currentSurvey = userSurveys.getSurvey(Integer.toString(id));
