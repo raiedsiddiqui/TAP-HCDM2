@@ -217,6 +217,7 @@
 			<th width="250"> Date Started</th>		
 			<th width="250">Last Edited</th>
 			<th>Completed Status</th>
+			<th>Results</th>
 		</tr>
 		<c:forEach items="${surveys}" var="s">
 		<tr >
@@ -224,6 +225,16 @@
 			<td>${s.startDate}</td>
 			<td>${s.editDate}</td>
 			<td>${s.strCompleted}</td>
+			<td>
+				<c:choose>
+					<c:when test="${s.completed}">
+					<a href="<c:url value="/view_survey_results/${s.resultID}"/>" class="btn btn-success">View Results</a>
+					</c:when>
+					<c:otherwise>
+					<a href="#" class="btn btn-success disabled">View Results</a>
+					</c:otherwise>
+				</c:choose>
+			</td>
 		</tr>
 		</c:forEach>
 	</table>
