@@ -179,6 +179,12 @@ public class SurveyManagerImpl implements SurveyManager {
 	public int countSurveyTemplate() {
 		return surveyTemplateDao.countSurveyTemplate();
 	}
+	
+	@Override
+	public int countSurveyTemplateBySite(int site) {
+		return surveyTemplateDao.countSurveyTemplateBySite(site);
+	}
+
 
 	@Override
 	public void archiveSurveyTemplate(SurveyTemplate st, String deletedBy) {

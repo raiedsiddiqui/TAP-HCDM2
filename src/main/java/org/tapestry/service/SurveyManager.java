@@ -76,12 +76,20 @@ public interface SurveyManager {
 	 */
 	@Transactional
 	public void deleteSurveyTemplate(int id);
+	
 	/**
 	 * Count how many survey template 
 	 * @return number of survey template
 	 */
 	@Transactional
 	public int countSurveyTemplate();
+	
+	/**
+	 * Count how many survey template by site
+	 * @return number of survey template of a site
+	 */
+	@Transactional
+	public int countSurveyTemplateBySite(int site);
 	
 	/**
 	* a List of Survey results for patient whose id is patientId

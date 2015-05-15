@@ -944,7 +944,7 @@ public class TapestryHelper {
 		HttpSession session = request.getSession();		
 		List<SurveyTemplate> surveyTemplateList;
 		if (session.getAttribute("survey_template_list") == null)
-		{			
+		{			System.out.println("session list is empty...");
 			if (request.isUserInRole("ROLE_ADMIN"))//central admin 
 				surveyTemplateList = surveyManager.getSurveyTemplatesWithCanDelete(0);
 			else //local admin/site admin

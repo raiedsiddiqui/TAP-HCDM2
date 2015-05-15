@@ -38,6 +38,14 @@ public interface OrganizationManager {
 	public Clinic getClinicById(int clinicId);
 	
 	/**
+	 * 
+	 * @param clinicId
+	 * @return a site id
+	 */
+	@Transactional
+	public int getSiteByClinic(int clinicId);
+	
+	/**
 	 * add a new clinic
 	 * @param clinic
 	 */

@@ -1113,6 +1113,13 @@ public class TapestryController{
 		List<SurveyResult> surveys = surveyManager.getSurveysByPatientID(id);
 		model.addAttribute("surveys", surveys);
 		
+		int site = organizationManager.getSiteByClinic(patient.getClinic());
+		int totalSurveys = surveyManager.countSurveyTemplateBySite(site);
+		int totalCompletedSurveys = surveyManager.countCompletedSurveys(id);
+		
+		if (totalSurveys == totalCompletedSurveys)
+			model.addAttribute("showReport", true);
+		
 		HttpSession session = request.getSession();				
  		if (session.getAttribute("unread_messages") != null)
 			model.addAttribute("unread", session.getAttribute("unread_messages"));				
@@ -1891,8 +1898,8 @@ public class TapestryController{
 	public String manageSurvey(@RequestParam(value="failed", required=false) String failed, Boolean deleteFailed, 
 			ModelMap model, HttpServletRequest request){
 		HttpSession session = request.getSession();
-		List<SurveyTemplate>  surveyTemplateList = TapestryHelper.getSurveyTemplates(request, surveyManager);		
-		
+		List<SurveyTemplate>  surveyTemplateList = TapestryHelper.getSurveyTemplates(request, surveyManager);	
+				
 		model.addAttribute("survey_templates", surveyTemplateList);
 		
 		if (deleteFailed != null)
@@ -2261,30 +2268,29 @@ public class TapestryController{
 	
 	@RequestMapping(value="open_survey/{resultID}", method=RequestMethod.GET)
 	public String openSurvey(@PathVariable("resultID") int id, HttpServletRequest request) 
-	{		
-		HttpSession session = request.getSession();
-		User u = (User)session.getAttribute("loggedInUser");	
-		String name = u.getName();
-		
-		SurveyResult surveyResult = surveyManager.getSurveyResultByID(id);
-		Patient p = patientManager.getPatientByID(surveyResult.getPatientID());
-		
-		if(surveyResult.getStartDate() == null) {
-			surveyManager.updateStartDate(id);
-		}
-		
-		//user logs
-		StringBuffer sb  = new StringBuffer();
-		sb.append(name);
-		sb.append(" opened survey ");
-		sb.append(surveyResult.getSurveyTitle());
-		sb.append(" for patient ");
-		if(p.getPreferredName() != null && p.getPreferredName() != "")
-			sb.append(p.getPreferredName());
-		else 
-			sb.append(p.getDisplayName());
-	
-		userManager.addUserLog(sb.toString(), u);
+	{		//move logging down to /show_survey/{resultID}
+//		HttpSession session = request.getSession();
+//		User u = (User)session.getAttribute("loggedInUser");	
+//		String name = u.getName();		
+//		SurveyResult surveyResult = surveyManager.getSurveyResultByID(id);
+//		Patient p = patientManager.getPatientByID(surveyResult.getPatientID());
+//		
+//		if(surveyResult.getStartDate() == null) {
+//			surveyManager.updateStartDate(id);
+//		}
+//		
+//		//user logs
+//		StringBuffer sb  = new StringBuffer();
+//		sb.append(name);
+//		sb.append(" opened survey ");
+//		sb.append(surveyResult.getSurveyTitle());
+//		sb.append(" for patient ");
+//		if(p.getPreferredName() != null && p.getPreferredName() != "")
+//			sb.append(p.getPreferredName());
+//		else 
+//			sb.append(p.getDisplayName());
+//	
+//		userManager.addUserLog(sb.toString(), u);
 		
 		return "redirect:/show_survey/" + id;
 	}
@@ -2298,7 +2304,9 @@ public class TapestryController{
 		
 		HttpSession session = request.getSession();
 		User u = (User)session.getAttribute("loggedInUser");
+		String name = u.getName();		
 		int siteId = u.getSite();
+		
    		if (request.isUserInRole("ROLE_ADMIN"))//central admin 
    		{
 			surveyResults = surveyManager.getAllSurveyResults();
@@ -2310,8 +2318,22 @@ public class TapestryController{
    			surveyTemplates = surveyManager.getSurveyTemplatesBySite(siteId);
    		} 
    		
-		SurveyResult surveyResult = surveyManager.getSurveyResultByID(id);
-		SurveyTemplate surveyTemplate = surveyManager.getSurveyTemplateByID(surveyResult.getSurveyID());
+		SurveyResult surveyResult = surveyManager.getSurveyResultByID(id);		
+		SurveyTemplate surveyTemplate = surveyManager.getSurveyTemplateByID(surveyResult.getSurveyID());	
+		
+		//user logs
+		Patient p = patientManager.getPatientByID(surveyResult.getPatientID());
+		StringBuffer sb  = new StringBuffer();
+		sb.append(name);
+		sb.append(" opened survey ");
+		sb.append(surveyResult.getSurveyTitle());
+		sb.append(" for patient ");
+		if(p.getPreferredName() != null && p.getPreferredName() != "")
+			sb.append(p.getPreferredName());
+		else 
+			sb.append(p.getDisplayName());
+			
+		userManager.addUserLog(sb.toString(), u);
 				
 		//all survey results stored in map		
 		TapestrySurveyMap userSurveys = DoSurveyAction.getSurveyMapAndStoreInSession(request, surveyResults, surveyTemplates);			

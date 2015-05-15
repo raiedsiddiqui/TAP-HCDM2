@@ -220,7 +220,7 @@ public class VolunteerController {
 	//create a new volunteer and save in the table of volunteers and users in the DB
 	@RequestMapping(value="/add_volunteer", method=RequestMethod.POST)
 	public String addVolunteer(SecurityContextHolderAwareRequestWrapper request, ModelMap model)
-	{				
+	{
 		String username = request.getParameter("username").trim();
 		List<String> uList = volunteerManager.getAllExistUsernames();
 		
@@ -289,7 +289,8 @@ public class VolunteerController {
 				user.setPassword(volunteer.getPassword());
 				user.setEmail(volunteer.getEmail());
 				user.setOrganization(volunteer.getOrganizationId());		
-
+				user.setSite(loggedInUser.getSite());
+				
 				success = userManager.createUser(user);			
 				
 //				sb = new StringBuffer();
@@ -527,8 +528,7 @@ public class VolunteerController {
 	@RequestMapping(value="/authenticatePHRAjax")
 	@ResponseBody
 	public String authenticate111PHR(SecurityContextHolderAwareRequestWrapper request){		
-		System.out.println("in response body....");
-		
+				
 		User user = TapestryHelper.getLoggedInUser(request, userManager);
    		int volId = TapestryHelper.getLoggedInVolunteerId(request);
    		int organizationId = user.getOrganization();

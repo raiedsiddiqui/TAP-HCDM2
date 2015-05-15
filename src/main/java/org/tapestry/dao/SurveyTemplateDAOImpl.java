@@ -40,7 +40,7 @@ public class SurveyTemplateDAOImpl extends JdbcDaoSupport implements SurveyTempl
 	}
 	
 	@Override
-	public List<SurveyTemplate> getSurveyTemplatesBySite(int siteId) {
+	public List<SurveyTemplate> getSurveyTemplatesBySite(int siteId) {		
 		String sql = "SELECT * FROM surveys WHERE site=? ORDER BY priority DESC";
 		List<SurveyTemplate> surveyTemplates = getJdbcTemplate().query(sql,new Object[]{siteId}, new SurveyTemplateMapper());
 		

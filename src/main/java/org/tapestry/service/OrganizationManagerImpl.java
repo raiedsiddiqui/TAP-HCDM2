@@ -35,6 +35,12 @@ public class OrganizationManagerImpl implements OrganizationManager {
 	public Clinic getClinicById(int clinicId) {
 		return clinicDao.getClinicById(clinicId);
 	}
+	
+
+	@Override
+	public int getSiteByClinic(int clinicId) {		
+		return clinicDao.getSiteByClinic(clinicId);
+	}
 
 	@Override
 	public void addClinic(Clinic clinic) {
@@ -79,5 +85,6 @@ public class OrganizationManagerImpl implements OrganizationManager {
 	public void deleteSite(int siteId) {
 		siteDao.deleteSite(siteId);		
 	}
+
 
 }

@@ -30,6 +30,13 @@ public interface ClinicDAO {
 	
 	/**
 	 * 
+	 * @param clinicId
+	 * @return siteId
+	 */
+	public int getSiteByClinic(int clinicId);
+	
+	/**
+	 * 
 	 * @param clinic
 	 */
 	public void addClinic(Clinic clinic);

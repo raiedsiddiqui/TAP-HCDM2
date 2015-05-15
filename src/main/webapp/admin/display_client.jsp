@@ -89,92 +89,7 @@
 				</td>
 			</tr>
 		</table>
- <!-- 
-<h2>Availability</h2>
-
-	<table width="100%" border="1">
-		<tr>
-			<td width ="200" valign="top">
-				<table>
-					<tr><th>Monday</th></tr>
-					<c:choose>
-						<c:when test="${fn:contains(monAvailability, 'non')}">
-							<tr><td>N/A</td></tr>		
-						</c:when>
-						<c:otherwise >
-						    <c:forEach items="${monAvailability}" var="moA">	
-						    	<tr><td align="center">${moA}</td></tr>		
-						    </c:forEach>							
-						</c:otherwise>
-					</c:choose>						
-				</table>
-			</td>
-			<td width ="200" valign="top">
-				<table>
-					<tr><th>Tuesday</th></tr>
-					<c:choose>
-						<c:when test="${fn:contains(tueAvailability, 'non') }">
-							<tr><td>N/A</td></tr>		
-						</c:when>
-						<c:otherwise >
-						    <c:forEach items="${tueAvailability}" var="tuA">	
-						    	<tr><td align="center">${tuA}</td></tr>		
-						    </c:forEach>							
-						</c:otherwise>
-					</c:choose>
-				</table>
-			</td>
-			<td width ="200" valign="top">
-				<table>
-					<tr><th>Wednesday</th></tr>
-					<c:choose>
-						<c:when test="${fn:contains(wedAvailability, 'non') }">
-							<tr><td>N/A</td></tr>		
-						</c:when>
-						<c:otherwise >
-						    <c:forEach items="${wedAvailability}" var="weA">	
-						    	<tr><td align="center">${weA}</td></tr>		
-						    </c:forEach>							
-						</c:otherwise>
-					</c:choose>
-				</table>
-			</td>
-			<td width ="200" valign="top">
-				<table>
-					<tr><th>Thursday</th></tr>
-					<c:choose>
-						<c:when test="${fn:contains(thuAvailability, 'non') }">
-							<tr><td>N/A</td></tr>		
-						</c:when>
-						<c:otherwise >
-						    <c:forEach items="${thuAvailability}" var="thA">	
-						    	<tr><td align="center">${thA}</td></tr>		
-						    </c:forEach>							
-						</c:otherwise>
-					</c:choose>
-				</table>
-			</td>
-			<td width ="200" valign="top">
-			
-				<table>
-					<tr><th>Friday</th></tr>		
-					<c:choose>
-						<c:when test="${fn:contains(friAvailability, 'non')}">
-							<tr><td>N/A</td></tr>		
-						</c:when>
-						<c:otherwise >
-						    <c:forEach items="${friAvailability}" var="frA">	
-						    	<tr><td align="center">${frA}</td></tr>		
-						    </c:forEach>							
-						</c:otherwise>
-					</c:choose>
-				</table>
-			</td>
-		
-		</tr>
-		
-	</table>
- -->
+ 
 	<h2>Upcoming Visits</h2>
 	<table  class="table table-striped" width="970" border="1">
 		<tr>			
@@ -201,8 +116,9 @@
 		<tr >
 			<td>${cVistits.appointmentID}</td>	
 			<td>${cVistits.date}</td>			
-			<td>${cVistits.volunteer},&nbsp &nbsp ${cVistits.partner}</td>	
-			<c:if test="${cVistits.completed}">
+			<td>${cVistits.volunteer},&nbsp &nbsp ${cVistits.partner}</td>		
+			
+			<c:if test="${showReport}">
 				<td><a href="<c:url value="/download_report/${patient.patientID}?appointmentId=${cVistits.appointmentID}"/>">DOWNLOAD</a> </td>
 				<td><a href="<c:url value="/generate_report_hl7/${patient.patientID}?appointmentId=${cVistits.appointmentID}"/>">DOWNLOAD</a> </td>
 			</c:if>
