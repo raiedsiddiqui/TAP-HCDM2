@@ -1117,7 +1117,7 @@ public class TapestryController{
 		int totalSurveys = surveyManager.countSurveyTemplateBySite(site);
 		int totalCompletedSurveys = surveyManager.countCompletedSurveys(id);
 		
-		if (totalSurveys == totalCompletedSurveys)
+		if ((totalSurveys-1) == totalCompletedSurveys)//as added 3 month follow up survey, not used in report
 			model.addAttribute("showReport", true);
 		
 		HttpSession session = request.getSession();				
