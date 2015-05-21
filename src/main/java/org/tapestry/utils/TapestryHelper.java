@@ -944,7 +944,7 @@ public class TapestryHelper {
 		HttpSession session = request.getSession();		
 		List<SurveyTemplate> surveyTemplateList;
 		if (session.getAttribute("survey_template_list") == null)
-		{			System.out.println("session list is empty...");
+		{			
 			if (request.isUserInRole("ROLE_ADMIN"))//central admin 
 				surveyTemplateList = surveyManager.getSurveyTemplatesWithCanDelete(0);
 			else //local admin/site admin
@@ -1014,10 +1014,10 @@ public class TapestryHelper {
 	            	
 				//set today as startDate
 				sr.setStartDate(startDate);	            	
-				//if requested survey that's already done
-				if (specificSurveys.size() < template.getMaxInstances() && 
-						!isExistInSurveyResultList(surveyResults,st.getSurveyID(), patientIds[i]))
-				{		    		
+				//if requested survey that's already done--removed if condition check, since a survey can be re-assign to a patient
+//				if (specificSurveys.size() < template.getMaxInstances() && 
+//						!isExistInSurveyResultList(surveyResults,st.getSurveyID(), patientIds[i]))
+//				{		    	
 					TapestryPHRSurvey blankSurvey = template;
 					blankSurvey.setQuestions(new ArrayList<SurveyQuestion>());// make blank survey
 					sr.setResults(SurveyAction.updateSurveyResult(blankSurvey));
@@ -1026,7 +1026,8 @@ public class TapestryHelper {
 					blankSurvey.setDocumentId(documentId);
 					surveys.addSurvey(blankSurvey);
 					specificSurveys = surveys.getSurveyListById(Integer.toString(st.getSurveyID())); //reload
-		    	}
+	//	    	}
+				
 			}   			
 		}
    	}

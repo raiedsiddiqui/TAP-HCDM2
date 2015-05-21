@@ -199,16 +199,18 @@ public class VolunteerController {
 		//get all activities
 		List<Activity> activities = volunteerManager.getActivitiesForVolunteer(id);	
 		if (activities != null && activities.size() > 0)
+		{
 			model.addAttribute("showActivityLogs", true);
-		else
 			model.addAttribute("activityLogs", activities);
+		}
 		
 		//get all messages		
 		List<Message> messages = messageManager.getAllMessagesForRecipient(TapestryHelper.getLoggedInUser(request).getUserID());
 		if (messages != null && messages.size() > 0)
+		{
 			model.addAttribute("showMessage", true);
-		else
-			model.addAttribute("messages", messages);		
+			model.addAttribute("messages", messages);	
+		}
 		
 		HttpSession  session = request.getSession();
 		if (session.getAttribute("unread_messages") != null)

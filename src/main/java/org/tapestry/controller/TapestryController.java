@@ -1154,16 +1154,13 @@ public class TapestryController{
 			patient = TapestryHelper.getPatientWithFullInfos(patient);	
 		report.setPatient(patient);
 		
-		//Plan and Key Observations
+		// Key Observations
 		String keyObservation = appointmentManager.getKeyObservationByAppointmentId(appointmentId);
-//		String plan = appointmentManager.getPlanByAppointmentId(appointmentId);
-		
 		report.setPatient(patient);
-		appointment.setKeyObservation(keyObservation);
-//		appointment.setPlans(plan);
-				
+		appointment.setKeyObservation(keyObservation);				
 		report.setAppointment(appointment);
 		
+		//set user
 		User loginUser = TapestryHelper.getLoggedInUser(request);		
 		report.setUser(loginUser);
 		
@@ -1180,33 +1177,34 @@ public class TapestryController{
 		SurveyResult goals = new SurveyResult();		
 		
 		for(SurveyResult survey: surveyResultList){			
-			String title = survey.getSurveyTitle();
-			
-			if (title.equalsIgnoreCase("1. Daily Life Activities"))//Daily life activity survey
+			String title = survey.getSurveyTitle();				
+			//added second condition survey.getResultId == 0, for each survey, a patient could have multiple survey result
+			// only the first time is used for report
+			if (title.equalsIgnoreCase("1. Daily Life Activities") && (dailyLifeActivitySurvey.getResultID()==0))//Daily life activity survey
 				dailyLifeActivitySurvey = survey;
 			
-			if (title.equalsIgnoreCase("Nutrition"))//Nutrition
+			if (title.equalsIgnoreCase("Nutrition") && (nutritionSurvey.getResultID()==0))//Nutrition
 				nutritionSurvey = survey;
 			
-			if (title.equalsIgnoreCase("Physical Activity"))//RAPA survey
+			if (title.equalsIgnoreCase("Physical Activity") && (rAPASurvey.getResultID()==0))//RAPA survey
 				rAPASurvey = survey;
 			
-			if (title.equalsIgnoreCase("Mobility"))//Mobility survey
+			if (title.equalsIgnoreCase("Mobility") && (mobilitySurvey.getResultID()==0))//Mobility survey
 				mobilitySurvey = survey;
 			
-			if (title.equalsIgnoreCase("4. Social Life")) //Social Life(Duke Index of Social Support)
+			if (title.equalsIgnoreCase("4. Social Life") && (socialLifeSurvey.getResultID()==0)) //Social Life(Duke Index of Social Support)
 				socialLifeSurvey = survey;
 			
-			if (title.equalsIgnoreCase("General Health")) //General Health(Edmonton Frail Scale)
+			if (title.equalsIgnoreCase("General Health") && (generalHealthySurvey.getResultID()==0)) //General Health(Edmonton Frail Scale)
 				generalHealthySurvey = survey;
 			
-			if (title.equalsIgnoreCase("Memory")) //Memory Survey
+			if (title.equalsIgnoreCase("Memory") && (memorySurvey.getResultID()==0)) //Memory Survey
 				memorySurvey = survey;
 			
-			if (title.equalsIgnoreCase("Advance Directives")) //Care Plan/Advanced_Directive survey
+			if (title.equalsIgnoreCase("Advance Directives") && (carePlanSurvey.getResultID()==0)) //Care Plan/Advanced_Directive survey
 				carePlanSurvey = survey;
 			
-			if (title.equalsIgnoreCase("2. Goals"))
+			if (title.equalsIgnoreCase("2. Goals") && (goals.getResultID()==0))
 				goals = survey;	
 		}
 		
@@ -1229,14 +1227,12 @@ public class TapestryController{
    			xml = new String(carePlanSurvey.getResults(), "UTF-8");
    		} catch (Exception e) {
    			xml = "";
-	   	}
- 
+	   	} 
    		mSurvey = ResultParser.getResults(xml);
-   		qList.addAll(TapestryHelper.getQuestionList(mSurvey)); 
-   		
+   		qList.addAll(TapestryHelper.getQuestionList(mSurvey));    		
    		report.setAdditionalInfos(qList);
    		
-   		//daily activity -- tapestry questions
+   		//daily activity -- tapestry questions   		
    		try{
    			xml = new String(dailyLifeActivitySurvey.getResults(), "UTF-8");
    		} catch (Exception e) {
@@ -1246,10 +1242,15 @@ public class TapestryController{
    		qList = TapestryHelper.getQuestionList(ResultParser.getResults(xml));
    		//last question in Daily life activity survey is about falling stuff
    		List<String> lAlert = new ArrayList<String>();
-   		String fallingQA = qList.get(qList.size() -1);
-   		if (fallingQA.startsWith("yes")||fallingQA.startsWith("Yes"))
-   			lAlert.add(AlertsInReport.DAILY_ACTIVITY_ALERT);  
-   		
+   		int size = qList.size();
+   		if (size ==7) //No for fall question 
+   			qList.set(6, "No"); //translate
+   		else
+   		{
+   			qList.set(6, "Yes" + ". " + qList.get(7));
+   			qList.remove(7);
+   			lAlert.add(AlertsInReport.DAILY_ACTIVITY_ALERT); //set alert      			
+   		}   		
    		//combine Q2 and Q3
    		StringBuffer sb = new StringBuffer();
    		sb.append(qList.get(1));
@@ -1272,15 +1273,6 @@ public class TapestryController{
 		//get score info for Summary of tapestry tools
 		if ((qList != null)&&(qList.size()>10))
 		{
-//			if ("1".equals(qList.get(0))) 
-//				scores.setClockDrawingTest("No errors");
-//			else if ("2".equals(qList.get(0))) 
-//				scores.setClockDrawingTest("Minor spacing errors");
-//			else if ("3".equals(qList.get(0))) 
-//				scores.setClockDrawingTest("Other errors");
-//			else 
-//				scores.setClockDrawingTest("Not done");
-			
 			if ("1".equals(qList.get(10))) 
 				scores.setTimeUpGoTest("1 (0-10s)");
 			else if ("2".equals(qList.get(10))) 
@@ -1325,8 +1317,7 @@ public class TapestryController{
 			
 			int networkScore = CalculationManager.getSocialSupportNetworkScore(qList.subList(7, socialSupportSize));			
 	   		scores.setSocialNetwork(networkScore);
-		}
-				   		   		
+		}				   		   		
 		//Nutrition Alerts   		
 		try{
 			xml = new String(nutritionSurvey.getResults(), "UTF-8");
@@ -1351,15 +1342,13 @@ public class TapestryController{
 				report.setAlerts(lAlert);
 			else
 				report.setAlerts(null);
-		}
-				
+		}				
 		//RAPA Alert
 		try{
 			xml = new String(rAPASurvey.getResults(), "UTF-8");
 		} catch (Exception e) {
 			xml = "";
-		}
-				
+		}				
 		qList = new ArrayList<String>();   		
 		qList = TapestryHelper.getQuestionList(ResultParser.getResults(xml));  		
 
@@ -1379,10 +1368,8 @@ public class TapestryController{
 			xml = new String(mobilitySurvey.getResults(), "UTF-8");
 		} catch (Exception e) {
 			xml = "";
-		}				
-		
-		Map<String, String> qMap = TapestryHelper.getQuestionMap(ResultParser.getResults(xml));  
-		   		   		
+		}			
+		Map<String, String> qMap = TapestryHelper.getQuestionMap(ResultParser.getResults(xml));  		   		   		
 		lAlert = AlertManager.getMobilityAlerts(qMap, lAlert);    		
 		
 		//summary tools for Mobility
@@ -1407,16 +1394,14 @@ public class TapestryController{
    		}   	   		
    		//get answer list
 		qList = new ArrayList<String>();
-		qList = TapestryHelper.getQuestionList(ResultParser.getResults(xml));   
+		qList = TapestryHelper.getQuestionList(ResultParser.getResults(xml));   		
 		
-		List<String> gAS = new ArrayList<String>();
 		if ((qList != null) && (qList.size()>0))
 		{					
 			report.setPatientGoals(CalculationManager.getPatientGoals(qList));
 			report.setLifeGoals(CalculationManager.getLifeOrHealthGoals(qList, 1));
 			report.setHealthGoals(CalculationManager.getLifeOrHealthGoals(qList, 2));
 		}
-			
 		//get volunteer information
 		List<String> volunteerInfos = new ArrayList<String>();
 		volunteerInfos.add(appointment.getVolunteer());
@@ -1493,17 +1478,14 @@ public class TapestryController{
 		
 		report.setPatient(patient);
 		
-		//Plan and Key Observations
+		//Key Observations
 		String keyObservation = appointmentManager.getKeyObservationByAppointmentId(appointmentId);
-//		String plan = appointmentManager.getPlanByAppointmentId(appointmentId);
 		appointment.setKeyObservation(keyObservation);
-//		appointment.setPlans(plan);
-
 		report.setAppointment(appointment);
 
-		//Survey---  goals setting
+		//Survey---  
 		List<SurveyResult> surveyResultList = surveyManager.getCompletedSurveysByPatientID(id);
-
+	
 		SurveyResult dailyLifeActivitySurvey = new SurveyResult();	
 		SurveyResult nutritionSurvey = new SurveyResult();
 		SurveyResult rAPASurvey = new SurveyResult();
@@ -1512,36 +1494,38 @@ public class TapestryController{
 		SurveyResult generalHealthySurvey = new SurveyResult();
 		SurveyResult memorySurvey = new SurveyResult();
 		SurveyResult carePlanSurvey = new SurveyResult();
-		SurveyResult goals = new SurveyResult();		
+		SurveyResult goals = new SurveyResult();	
 		
 		for(SurveyResult survey: surveyResultList){			
 			String title = survey.getSurveyTitle();
-					            
-			if (title.equalsIgnoreCase("1. Daily Life Activities"))//Daily life activity survey
+					
+			//added second condition survey.getResultId == 0, for each survey, a patient could have multiple survey result
+			// only the first time is used for report
+			if (title.equalsIgnoreCase("1. Daily Life Activities") && (dailyLifeActivitySurvey.getResultID()==0))//Daily life activity survey
 				dailyLifeActivitySurvey = survey;
 			
-			if (title.equalsIgnoreCase("Nutrition"))//Nutrition
+			if (title.equalsIgnoreCase("Nutrition") && (nutritionSurvey.getResultID()==0))//Nutrition
 				nutritionSurvey = survey;
 			
-			if (title.equalsIgnoreCase("Physical Activity"))//RAPA survey
+			if (title.equalsIgnoreCase("Physical Activity") && (rAPASurvey.getResultID()==0))//RAPA survey
 				rAPASurvey = survey;
 			
-			if (title.equalsIgnoreCase("Mobility"))//Mobility survey
+			if (title.equalsIgnoreCase("Mobility") && (mobilitySurvey.getResultID()==0))//Mobility survey
 				mobilitySurvey = survey;
 			
-			if (title.equalsIgnoreCase("4. Social Life")) //Social Life(Duke Index of Social Support)
+			if (title.equalsIgnoreCase("4. Social Life") && (socialLifeSurvey.getResultID()==0)) //Social Life(Duke Index of Social Support)
 				socialLifeSurvey = survey;
 			
-			if (title.equalsIgnoreCase("General Health")) //General Health(Edmonton Frail Scale)
+			if (title.equalsIgnoreCase("General Health") && (generalHealthySurvey.getResultID()==0)) //General Health(Edmonton Frail Scale)
 				generalHealthySurvey = survey;
 			
-			if (title.equalsIgnoreCase("Memory")) //Memory Survey
+			if (title.equalsIgnoreCase("Memory") && (memorySurvey.getResultID()==0)) //Memory Survey
 				memorySurvey = survey;
 			
-			if (title.equalsIgnoreCase("Advance Directives")) //Care Plan/Advanced_Directive survey
+			if (title.equalsIgnoreCase("Advance Directives") && (carePlanSurvey.getResultID()==0)) //Care Plan/Advanced_Directive survey
 				carePlanSurvey = survey;
 			
-			if (title.equalsIgnoreCase("2. Goals"))
+			if (title.equalsIgnoreCase("2. Goals") && (goals.getResultID()==0))
 				goals = survey;	
 		}
 		
@@ -1583,8 +1567,7 @@ public class TapestryController{
    			sMap = TapestryHelper.getSurveyContentMapForMemorySurvey(displayQuestionTextList, qList);
    			 
    			report.setMemory(sMap);   		
-   		}
-   	   		
+   		}   	   		
    		//Care Plan/Advanced_Directive
    		try{
    			xml = new String(carePlanSurvey.getResults(), "UTF-8");
@@ -1602,18 +1585,15 @@ public class TapestryController{
    	   	if ((questionTextList != null)&&(questionTextList.size() > 0))
    	   	{
    	   		for (int i = 1; i <= 3; i++)
-   	   			displayQuestionTextList.add(TapestryHelper.removeObserverNotes(questionTextList.get(i)));
-	   	   		
+   	   			displayQuestionTextList.add(TapestryHelper.removeObserverNotes(questionTextList.get(i)));	   	   		
 	   	   	displayQuestionTextList = TapestryHelper.removeRedundantFromQuestionText(displayQuestionTextList, "of 3");	
 	   	   		
 	   	   	//get answer list   	   	  	   	
-	   	   	qList = TapestryHelper.getQuestionList(mCarePlanSurvey);
-	   	   		
-	   	   	sMap = TapestryHelper.getSurveyContentMapForMemorySurvey(displayQuestionTextList, qList);
-	   	   			   	   		
+	   	   	qList = TapestryHelper.getQuestionList(mCarePlanSurvey);	   	   		
+	   	   	sMap = TapestryHelper.getSurveyContentMapForMemorySurvey(displayQuestionTextList, qList);	   	   			   	   		
 	   	   	report.setCaringPlan(sMap);
    	   	}      
-   	
+   	   	
    		//Daily Life Activities---Tapestry Questions
    		try{
    			xml = new String(dailyLifeActivitySurvey.getResults(), "UTF-8");
@@ -1629,8 +1609,7 @@ public class TapestryController{
    		qList = TapestryHelper.getQuestionList(mDailyLifeActivitySurvey);
    		   	   		
    		//last question in Daily life activity survey is about falling stuff
-   		List<String> lAlert = new ArrayList<String>();
-   		
+   		List<String> lAlert = new ArrayList<String>();   		
    		int size = qList.size();
    		
    		if (size ==7) //No for fall question 
@@ -1645,8 +1624,7 @@ public class TapestryController{
    			lAlert.add(AlertsInReport.DAILY_ACTIVITY_ALERT); //set alert   			
    			questionTextList.remove(9);
    			questionTextList.remove(8);
-   		}
-   		   		
+   		}   		   		
    		//combine Q2 and Q3 answer
    		StringBuffer sb = new StringBuffer();
    		sb.append(qList.get(1));
@@ -1656,8 +1634,7 @@ public class TapestryController{
    		qList.remove(2);
    		   		
    		sMap = new TreeMap<String, String>();
-   		sMap = TapestryHelper.getSurveyContentMapForDailyLife(questionTextList, qList);
-   		
+   		sMap = TapestryHelper.getSurveyContentMapForDailyLife(questionTextList, qList);   		
    		report.setDailyActivities(sMap);   		
    		
  		//General Healthy Alert
@@ -1674,16 +1651,7 @@ public class TapestryController{
 		
 		//get score info for Summary of tapestry tools
 		if ((qList != null)&&(qList.size()>10))
-		{
-//			if ("1".equals(qList.get(0))) 
-//				scores.setClockDrawingTest("No errors");
-//			else if ("2".equals(qList.get(0))) 
-//				scores.setClockDrawingTest("Minor spacing errors");
-//			else if ("3".equals(qList.get(0))) 
-//				scores.setClockDrawingTest("Other errors");
-//			else 
-//				scores.setClockDrawingTest("Not done");
-			
+		{		
 			if ("1".equals(qList.get(10))) 
 				scores.setTimeUpGoTest("1 (0-10s)");
 			else if ("2".equals(qList.get(10))) 
@@ -1695,9 +1663,7 @@ public class TapestryController{
 			else 
 				scores.setTimeUpGoTest("5 (Patient is unwilling)");
 		}		
-		
 		int generalHealthyScore = CalculationManager.getGeneralHealthyScaleScore(qList);		
-		
 		lAlert = AlertManager.getGeneralHealthyAlerts(generalHealthyScore, lAlert, qList);
 		
 		if (generalHealthyScore < 5)
@@ -1731,15 +1697,13 @@ public class TapestryController{
 			
 			int networkScore = CalculationManager.getSocialSupportNetworkScore(qList.subList(7, socialSupportSize));
 	   		scores.setSocialNetwork(networkScore);
-		}
-		  		   		
+		}		  		   		
    		//Nutrition Alerts   		
    		try{
    			xml = new String(nutritionSurvey.getResults(), "UTF-8");
    		} catch (Exception e) {
    			xml = "";
-   		}
-   		
+   		}   		
    		LinkedHashMap<String, String> mNutritionSurvey = ResultParser.getResults(xml);
    		qList = new ArrayList<String>();   		
    		//get answer list
@@ -2047,7 +2011,7 @@ public class TapestryController{
    		if (!Utils.isNullOrEmpty(hPatient))
    		{      			
    			if(request.getParameter("assignSurvey") != null)//assign selected surveys to selected patients
-   	   		{   
+   	   		{  
    				if (surveyTemplateIds != null && surveyTemplateIds.length > 0){
 
    					TapestryHelper.addSurveyTemplate(surveyTemplateIds,sTemplates, selectSurveyTemplats);     					
@@ -2065,7 +2029,7 @@ public class TapestryController{
    	   		}
    		}
    		else//user select SurveyManagement/Assign Survey
-   		{ 		
+   		{ 	
    			List<Patient> patients = TapestryHelper.getPatients(request, patientManager); 
 	   		if (request.getParameter("searchPatient") != null && 
 	   				request.getParameter("searchPatientName") !=null )//search patient by name
@@ -2163,10 +2127,12 @@ public class TapestryController{
             //set today as startDate
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");		        	
             sr.setStartDate(sdf.format(new Date()));
+              
             
-          //if requested survey that's already done
-    		if (specificSurveys.size() < template.getMaxInstances())
-    		{
+          //if requested survey that's already done---removed this condition check, since a survey can be re-assign to a patient
+//    		if (specificSurveys.size() < template.getMaxInstances() 
+//    				&& !TapestryHelper.isExistInSurveyResultList(surveyResults, surveyId, Integer.parseInt(patients[i])))
+//    		{
     			TapestryPHRSurvey blankSurvey = (TapestryPHRSurvey)template;
     			blankSurvey.setQuestions(new ArrayList<SurveyQuestion>());// make blank survey
     			sr.setResults(SurveyAction.updateSurveyResult(blankSurvey));
@@ -2174,9 +2140,9 @@ public class TapestryController{
     			blankSurvey.setDocumentId(documentId);
     			surveys.addSurvey(blankSurvey);
     			specificSurveys = surveys.getSurveyListById(Integer.toString(surveyId)); //reload
-    		}
-    		else
-    			return "redirect:/manage_surveys";
+//    		}
+//    		else
+//    			return "redirect:/manage_surveys";
 		}
 		return "redirect:/manage_surveys";
 	}
