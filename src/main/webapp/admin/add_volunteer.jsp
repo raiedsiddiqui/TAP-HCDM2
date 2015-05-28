@@ -176,26 +176,26 @@
 								</div>
 								<div class="col-md-4">
 									<label>Total VLC Score(.35):</label>
-									<input type="text" id="totalVLCScore" name="totalVLCScore" class="form-control" onchange="checkNumericInput(this.id);calctotalscore();" required/>									
+									<input type="text" id="totalVLCScore" name="totalVLCScore" class="form-control" onchange="checkNumericInput(this.id);calctotalscore();" value="0" required/>									
 								</div>
 								<div class="col-md-4">
 									<label>Number years of experience(.1):</label>
-									<input type="text" id="numberYearsOfExperience" name="numberYearsOfExperience" class="form-control" onchange="checkNumericInput(this.id);calctotalscore();" required/>									
+									<input type="text" id="numberYearsOfExperience" name="numberYearsOfExperience" class="form-control" onchange="checkNumericInput(this.id);calctotalscore();" value="0" required/>									
 								</div>								
 							</div>
 							
 							<div class="row form-group">
 								<div class="col-md-4">
 									<label>Volunteer availability(hours/month)(.2):</label>
-									<input type="text" id="availabilityPerMonthe" name="availabilityPerMonthe"  class="form-control" onchange="checkNumericInput(this.id);calctotalscore();" required/>									
+									<input type="text" id="availabilityPerMonthe" name="availabilityPerMonthe"  class="form-control" onchange="checkNumericInput(this.id);calctotalscore();" value="0" required/>									
 								</div>
 								<div class="col-md-4">
 									<label>Technology skills score(.25):</label>
-									<input type="text" id="technologySkillsScore" name="technologySkillsScore" class="form-control" onchange="checkNumericInput(this.id);calctotalscore();" required/>									
+									<input type="text" id="technologySkillsScore" name="technologySkillsScore" class="form-control" onchange="checkNumericInput(this.id);calctotalscore();" value="0" required/>									
 								</div>
 								<div class="col-md-4">
 									<label>Perception of older adults score(.2):</label>
-									<input type="text" id="perceptionOfOlderAdultScore" name="perceptionOfOlderAdultScore" class="form-control" onchange="checkNumericInput(this.id);calctotalscore();" required/>									
+									<input type="text" id="perceptionOfOlderAdultScore" name="perceptionOfOlderAdultScore" class="form-control" onchange="checkNumericInput(this.id);calctotalscore();" value="0" required/>									
 								</div>	
 
 								<script type="text/javascript">
@@ -285,7 +285,7 @@
 							<div class="row form-group">
 								<div class="col-md-4">
 									<label>VLC ID</label>
-									<input type="text" id="vlcId" name="vlcId" class="form-control" required/>									
+									<input type="text" id="vlcId" name="vlcId" class="form-control" value="0"required/>									
 								</div>	
 								<div class="col-md-4">
 									<label>Total Calculated Score</label>
