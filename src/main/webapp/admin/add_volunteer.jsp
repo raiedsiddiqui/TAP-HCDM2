@@ -284,14 +284,6 @@
 							</div>
 							<div class="row form-group">
 								<div class="col-md-4">
-									<label>Organization:</label>									
-									<select name="organization" form="add_volunteer" class="form-control">
-										<c:forEach items="${organizations}" var="o">
-											<option value="${o.organizationId}">${o.name}</option>
-										</c:forEach>
-									</select>
-								</div>
-								<div class="col-md-4">
 									<label>VLC ID</label>
 									<input type="text" id="vlcId" name="vlcId" class="form-control" required/>									
 								</div>	
@@ -300,6 +292,25 @@
 									<input id="totalcalculated" class="form-control" disabled> </span>								
 								</div>	
 							</div>
+							<div class="row form-group">
+								<div class="col-md-4">
+									<label>Site:</label>									
+									<select name="site" form="add_volunteer" class="form-control">
+										<c:forEach items="${sites}" var="s">
+											<option value="${s.siteId}">${s.name}</option>
+										</c:forEach>
+									</select>
+								</div>
+								<div class="col-md-4">
+									<label>Organization:</label>									
+									<select name="organization" form="add_volunteer" class="form-control">
+										<c:forEach items="${organizations}" var="o">
+											<option value="${o.organizationId}">${o.name}</option>
+										</c:forEach>
+									</select>
+								</div>
+							</div>
+							
 
 
 						<h2 class="pagetitleadmin">User Account </h2>

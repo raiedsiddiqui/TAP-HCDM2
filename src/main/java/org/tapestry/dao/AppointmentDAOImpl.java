@@ -159,8 +159,8 @@ public class AppointmentDAOImpl extends JdbcDaoSupport implements AppointmentDAO
 				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, p.firstname AS p_firstname, "
 				+ "p.lastname AS p_lastname, v1.organization FROM appointments AS a INNER JOIN volunteers "
 				+ "AS v1 ON a.volunteer=v1.volunteer_ID INNER JOIN volunteers AS v2 ON a.partner=v2.volunteer_ID "
-				+ "INNER JOIN patients AS p ON a.patient=p.patient_ID WHERE a.patient=? AND a.date_time>=CURDATE() "
-				+ "AND a.completed=1 ORDER BY a.date_time DESC";
+				+ "INNER JOIN patients AS p ON a.patient=p.patient_ID WHERE a.patient=? AND a.status='Approved' AND a.completed=1 "
+				+ "ORDER BY a.date_time DESC";
 		
 		return getJdbcTemplate().query(sql, new Object[]{patientId}, new AppointmentMapper());
 	}

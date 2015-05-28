@@ -3131,15 +3131,22 @@ public class TapestryHelper {
 	}
 	
 	// ================= Appointment ====================//
-	public static boolean isFirstVisit(int patientId, AppointmentManager appointmentManager){
+	public static boolean hasVisit(int patientId, AppointmentManager appointmentManager){
 		boolean isFirst = true;
-		List<Appointment> appointments = appointmentManager.getAllApprovedAppointmentsForPatient(patientId);	
+		List<Appointment> appointments = appointmentManager.getAllApprovedAppointmentsForPatient(patientId);
 		
 		if ((appointments != null)&& (appointments.size()>0))
-			isFirst = false;
-		
+			isFirst = false;		
 		return isFirst;
+	}
+	
+	public static boolean isFirstVisit(int appointmentId, AppointmentManager appointmentManager){
+		boolean isFirst = false;
+		Appointment appointment = appointmentManager.getAppointmentById(appointmentId);
 		
+		if (appointment.getType() == 0)
+			isFirst = true;
+		return isFirst;
 	}
 
 	//======================test===================================//
@@ -3184,6 +3191,7 @@ public class TapestryHelper {
 		List<DisplayedSurveyResult> displayedResults;
 		StringBuffer sb;
 		String[] goalsArray;
+		
 	
 		for (int i = 0; i < patients.size(); i++)
 		{
@@ -3212,32 +3220,35 @@ public class TapestryHelper {
 			   		xml = "";
 			   	}
 				res = ResultParser.getResults(xml);
-				displayedResults = ResultParser.getDisplayedSurveyResults(res);		
-			   		
-				rData.setdSS1_role_TO(displayedResults.get(0).getQuestionAnswer());
-				rData.setdSS2_under_TO(displayedResults.get(1).getQuestionAnswer());
-				rData.setdSS3_useful_TO(displayedResults.get(2).getQuestionAnswer());
-				rData.setdSS4_listen_TO(displayedResults.get(3).getQuestionAnswer());
-				rData.setdSS5_happen_TO(displayedResults.get(4).getQuestionAnswer());
-				rData.setdSS6_talk_TO(displayedResults.get(5).getQuestionAnswer());
-				rData.setdSS7_satisfied_TO(displayedResults.get(6).getQuestionAnswer());
-				rData.setdSS8_nofam_TO(displayedResults.get(7).getQuestionAnswer());		   		
-				rData.setdSS9_timesnotliving_TO(displayedResults.get(8).getQuestionAnswer());
-				rData.setdSS10_timesphone_TO(displayedResults.get(9).getQuestionAnswer());	
+				displayedResults = ResultParser.getDisplayedSurveyResults(res);	
 				
-				if (displayedResults.size() == 11)
-					rData.setdSS11_timesclubs_TO(displayedResults.get(10).getQuestionAnswer());
-			   		
-				for (int j=0; j<displayedResults.size(); j++)
+				if (!displayedResults.isEmpty())
 				{
-					observerNote = displayedResults.get(j).getObserverNotes();
-					if (!Utils.isNullOrEmpty(observerNote))
+					rData.setdSS1_role_TO(displayedResults.get(0).getQuestionAnswer());
+					rData.setdSS2_under_TO(displayedResults.get(1).getQuestionAnswer());
+					rData.setdSS3_useful_TO(displayedResults.get(2).getQuestionAnswer());
+					rData.setdSS4_listen_TO(displayedResults.get(3).getQuestionAnswer());
+					rData.setdSS5_happen_TO(displayedResults.get(4).getQuestionAnswer());
+					rData.setdSS6_talk_TO(displayedResults.get(5).getQuestionAnswer());
+					rData.setdSS7_satisfied_TO(displayedResults.get(6).getQuestionAnswer());
+					rData.setdSS8_nofam_TO(displayedResults.get(7).getQuestionAnswer());		   		
+					rData.setdSS9_timesnotliving_TO(displayedResults.get(8).getQuestionAnswer());
+					rData.setdSS10_timesphone_TO(displayedResults.get(9).getQuestionAnswer());	
+					size = displayedResults.size();
+					if (size == 11)
+						rData.setdSS11_timesclubs_TO(displayedResults.get(10).getQuestionAnswer());
+				   		
+					for (int j=0; j<size; j++)
 					{
-						sb.append(displayedResults.get(j).getObserverNotes());			
-						sb.append("\n");
-			   		}
-			   	}
-				rData.setdSS_notes_TO(sb.toString());					
+						observerNote = displayedResults.get(j).getObserverNotes();
+						if (!Utils.isNullOrEmpty(observerNote))
+						{
+							sb.append(displayedResults.get(j).getObserverNotes());			
+							sb.append("\n");
+				   		}
+				   	}
+					rData.setdSS_notes_TO(sb.toString());
+				}									
 			}		
 			//EQ5D
 			try{
@@ -3258,24 +3269,28 @@ public class TapestryHelper {
 			   	}
 				res = ResultParser.getResults(xml);
 				displayedResults = ResultParser.getDisplayedSurveyResults(res);		
-				rData.seteQ5D1_Mobility_TO(displayedResults.get(0).getQuestionAnswer());
-				rData.seteQ5D2_2Selfcare_TO(displayedResults.get(1).getQuestionAnswer());
-				rData.seteQ5D3_Usualact_TO(displayedResults.get(2).getQuestionAnswer());
-				rData.seteQ5D4_Pain_TO(displayedResults.get(3).getQuestionAnswer());
-				rData.seteQ5D5_Anxdep_TO(displayedResults.get(4).getQuestionAnswer());
-				rData.seteQ5D6_Healthstate_TO(displayedResults.get(5).getQuestionAnswer());				
 				
-				for (int j=0; j<displayedResults.size()-1; j++)
+				if (!displayedResults.isEmpty())
 				{
-					observerNote = displayedResults.get(j).getObserverNotes();
-					if (!Utils.isNullOrEmpty(observerNote))
+					rData.seteQ5D1_Mobility_TO(displayedResults.get(0).getQuestionAnswer());
+					rData.seteQ5D2_2Selfcare_TO(displayedResults.get(1).getQuestionAnswer());
+					rData.seteQ5D3_Usualact_TO(displayedResults.get(2).getQuestionAnswer());
+					rData.seteQ5D4_Pain_TO(displayedResults.get(3).getQuestionAnswer());
+					rData.seteQ5D5_Anxdep_TO(displayedResults.get(4).getQuestionAnswer());
+					rData.seteQ5D6_Healthstate_TO(displayedResults.get(5).getQuestionAnswer());				
+					
+					for (int j=0; j<displayedResults.size()-1; j++)
 					{
-						sb.append(displayedResults.get(j).getObserverNotes());
-						sb.append("\n");
-			   		}
-			   	}
-				rData.seteQ5D5_notes_TO(sb.toString());
-				rData.seteQ5D6_Healthstate_notes_TO(displayedResults.get(5).getObserverNotes());				
+						observerNote = displayedResults.get(j).getObserverNotes();
+						if (!Utils.isNullOrEmpty(observerNote))
+						{
+							sb.append(displayedResults.get(j).getObserverNotes());
+							sb.append("\n");
+				   		}
+				   	}
+					rData.seteQ5D5_notes_TO(sb.toString());
+					rData.seteQ5D6_Healthstate_notes_TO(displayedResults.get(5).getObserverNotes());	
+				}
 			}
 			//Goals
 			try{
@@ -3296,52 +3311,55 @@ public class TapestryHelper {
 			   	}
 				res = ResultParser.getResults(xml);
 				displayedResults = ResultParser.getDisplayedSurveyResults(res);		
-		
-				rData.setGoals1Matter_TO(displayedResults.get(0).getQuestionAnswer());
-				rData.setGoals2Life_TO(displayedResults.get(1).getQuestionAnswer());
-				rData.setGoals3Health_TO(displayedResults.get(2).getQuestionAnswer());
-				rData.setGoals4List_TO(displayedResults.get(3).getQuestionAnswer());
-												
-				goalsArray = displayedResults.get(4).getQuestionAnswer().split("<br>");
-				size = goalsArray.length;
-				if (size == 3)
-				{
-					rData.setGoals5FirstSpecific_TO(goalsArray[0]);
-					rData.setGoals6FirstBaseline_TO(goalsArray[1]);
-					rData.setGoals7FirstTaget_TO(goalsArray[2]);
-				}				
-							
-				goalsArray = displayedResults.get(5).getQuestionAnswer().split("<br>");
-				size = goalsArray.length;
-				if (size == 3)
-				{
-					rData.setGoals5SecondSpecific_TO(goalsArray[0]);
-					rData.setGoals6SecondBaseline_TO(goalsArray[1]);
-					rData.setGoals7SecondTaget_TO(goalsArray[2]);
-				}
 				
-				goalsArray = displayedResults.get(6).getQuestionAnswer().split("<br>");
-				size = goalsArray.length;
-				if (size == 3)
+				if (!displayedResults.isEmpty())
 				{
-					rData.setGoals5ThirdSpecific_TO(goalsArray[0]);
-					rData.setGoals6ThirdBaseline_TO(goalsArray[1]);	
-					rData.setGoals7ThirdTaget_TO(goalsArray[2]);
-				}				
-				rData.setGoals8pPriority_TO(displayedResults.get(7).getQuestionAnswer());
-				
-				for (int j=0; j<displayedResults.size(); j++)
-				{
-					observerNote = displayedResults.get(j).getObserverNotes();
-					if (!Utils.isNullOrEmpty(observerNote))
+					rData.setGoals1Matter_TO(displayedResults.get(0).getQuestionAnswer());
+					rData.setGoals2Life_TO(displayedResults.get(1).getQuestionAnswer());
+					rData.setGoals3Health_TO(displayedResults.get(2).getQuestionAnswer());
+					rData.setGoals4List_TO(displayedResults.get(3).getQuestionAnswer());
+													
+					goalsArray = displayedResults.get(4).getQuestionAnswer().split("<br>");
+					size = goalsArray.length;
+					if (size == 3)
 					{
-						sb.append(displayedResults.get(j).getObserverNotes());
-						sb.append("\n");
-			   		}
-			   	}
-				rData.setGoalsDiscussion_notes_TO(sb.toString());			
-			}			
-			researchDatas.add(rData);
+						rData.setGoals5FirstSpecific_TO(goalsArray[0]);
+						rData.setGoals6FirstBaseline_TO(goalsArray[1]);
+						rData.setGoals7FirstTaget_TO(goalsArray[2]);
+					}				
+								
+					goalsArray = displayedResults.get(5).getQuestionAnswer().split("<br>");
+					size = goalsArray.length;
+					if (size == 3)
+					{
+						rData.setGoals5SecondSpecific_TO(goalsArray[0]);
+						rData.setGoals6SecondBaseline_TO(goalsArray[1]);
+						rData.setGoals7SecondTaget_TO(goalsArray[2]);
+					}
+					
+					goalsArray = displayedResults.get(6).getQuestionAnswer().split("<br>");
+					size = goalsArray.length;
+					if (size == 3)
+					{
+						rData.setGoals5ThirdSpecific_TO(goalsArray[0]);
+						rData.setGoals6ThirdBaseline_TO(goalsArray[1]);	
+						rData.setGoals7ThirdTaget_TO(goalsArray[2]);
+					}				
+					rData.setGoals8pPriority_TO(displayedResults.get(7).getQuestionAnswer());
+					
+					for (int j=0; j<displayedResults.size(); j++)
+					{
+						observerNote = displayedResults.get(j).getObserverNotes();
+						if (!Utils.isNullOrEmpty(observerNote))
+						{
+							sb.append(displayedResults.get(j).getObserverNotes());
+							sb.append("\n");
+				   		}
+				   	}
+					rData.setGoalsDiscussion_notes_TO(sb.toString());			
+				}			
+				researchDatas.add(rData);
+			}
 		}		
 		return researchDatas;
 	}	
@@ -3357,10 +3375,8 @@ public class TapestryHelper {
 		{
 			sites = organizationManager.getAllSites();
 			session.setAttribute("sites", sites);
-		}
-		
+		}		
 		return sites;
-
 	}
 
 }

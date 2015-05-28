@@ -182,6 +182,7 @@ public class TapestryController{
 		HttpSession session = request.getSession();
 		
 		List<User> userList = userManager.getAllUsers();
+		
 		model.addAttribute("users", userList);
 //		model.addAttribute("active", userDao.countActiveUsers());
 //		model.addAttribute("total", userDao.countAllUsers());
@@ -241,7 +242,8 @@ public class TapestryController{
 		u.setName(sb.toString());
 
 		u.setUsername(request.getParameter("username").trim());
-		u.setRole(request.getParameter("role"));		
+		String role = request.getParameter("role");
+		u.setRole(role);		
 		u.setOrganization(Integer.valueOf(request.getParameter("organization")));
 		
 		ShaPasswordEncoder enc = new ShaPasswordEncoder();
@@ -250,7 +252,10 @@ public class TapestryController{
 		u.setPassword(hashedPassword);
 		u.setEmail(request.getParameter("email").trim());
 		u.setPhoneNumber(request.getParameter("phonenumber"));
-		u.setSite(Integer.parseInt(request.getParameter("site")));		
+		if (role.equals("ROLE_ADMIN"))
+			u.setSite(0);
+		else
+			u.setSite(Integer.parseInt(request.getParameter("site")));		
 		
 		if (userManager.createUser(u))
 		{
@@ -1605,6 +1610,9 @@ public class TapestryController{
    		questionTextList = new ArrayList<String>();
    		questionTextList = ResultParser.getSurveyQuestions(xml);   
    		
+   		for (int n =0; n<questionTextList.size(); n++)
+   			System.out.println("n = "+ n + "  == "+ questionTextList.get(n));
+   		
    		qList = new ArrayList<String>();
    		qList = TapestryHelper.getQuestionList(mDailyLifeActivitySurvey);
    		   	   		
@@ -2185,31 +2193,7 @@ public class TapestryController{
    	@RequestMapping(value="/delete_survey_template/{surveyID}", method=RequestMethod.GET)
    	public String deleteSurveyTemplate(@PathVariable("surveyID") int id, ModelMap model, 
    			SecurityContextHolderAwareRequestWrapper request)
-   	{   		
-//   		List<SurveyResult> surveyResults = surveyManager.getAllSurveyResultsBySurveyId(id);   		
-//   		if(surveyResults.isEmpty())
-//   		{	
-//   			SurveyTemplate st = surveyManager.getSurveyTemplateByID(id);
-//   			surveyManager.deleteSurveyTemplate(id);
-//   			//archieve the record
-//   			User loggedInUser = TapestryHelper.getLoggedInUser(request);
-//   			// get a java.util.Date from the Calendar instance.   			
-//   		//	java.util.Date now = Calendar.getInstance().getTime();   	 
-//   			// 3) a java current time (now) instance
-//   		//	java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(now.getTime());
-//   			surveyManager.archiveSurveyTemplate(st, loggedInUser.getName());
-//   			//user logs   			
-//   			StringBuffer sb  = new StringBuffer();
-//   			sb.append(loggedInUser.getName());
-//   			sb.append(" deleted survey template # ");
-//   			sb.append(id);   			   		
-//   			userManager.addUserLog(sb.toString(), loggedInUser);
-//   			
-//   			return "redirect:/manage_survey";
-//   		//	return "redirect:/manage_survey_templates";
-//   		} 
-//   		else 
-//   			return "redirect:/manage_survey_templates?failed=true";   		
+   	{ 	
    		SurveyTemplate st = surveyManager.getSurveyTemplateByID(id);
 		surveyManager.deleteSurveyTemplate(id);
 		
@@ -2219,7 +2203,7 @@ public class TapestryController{
 		session.setAttribute("survey_template_list", TapestryHelper.getSurveyTemplates(request, surveyManager));
 		session.setAttribute("surveyTemplateMessage", "D");
 		
-		//archieve the record
+		//archive the record
 		User loggedInUser = TapestryHelper.getLoggedInUser(request);
 		surveyManager.archiveSurveyTemplate(st, loggedInUser.getName());
 		//user logs   			
@@ -2235,29 +2219,6 @@ public class TapestryController{
 	@RequestMapping(value="open_survey/{resultID}", method=RequestMethod.GET)
 	public String openSurvey(@PathVariable("resultID") int id, HttpServletRequest request) 
 	{		//move logging down to /show_survey/{resultID}
-//		HttpSession session = request.getSession();
-//		User u = (User)session.getAttribute("loggedInUser");	
-//		String name = u.getName();		
-//		SurveyResult surveyResult = surveyManager.getSurveyResultByID(id);
-//		Patient p = patientManager.getPatientByID(surveyResult.getPatientID());
-//		
-//		if(surveyResult.getStartDate() == null) {
-//			surveyManager.updateStartDate(id);
-//		}
-//		
-//		//user logs
-//		StringBuffer sb  = new StringBuffer();
-//		sb.append(name);
-//		sb.append(" opened survey ");
-//		sb.append(surveyResult.getSurveyTitle());
-//		sb.append(" for patient ");
-//		if(p.getPreferredName() != null && p.getPreferredName() != "")
-//			sb.append(p.getPreferredName());
-//		else 
-//			sb.append(p.getDisplayName());
-//	
-//		userManager.addUserLog(sb.toString(), u);
-		
 		return "redirect:/show_survey/" + id;
 	}
    	

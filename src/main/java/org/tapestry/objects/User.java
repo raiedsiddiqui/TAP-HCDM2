@@ -20,6 +20,8 @@ public class User {
 	private int site;
 	private String phoneNumber;
 	private int organization; //for user role as volunteer and volunteer coordinator(site admin)
+	private String siteName;
+	private String organizationName;
 
 	public String getFirstName() {
 		return firstName;
@@ -167,4 +169,21 @@ public class User {
 		this.organization = organization;
 	}
 
+	public String getSiteName() {
+		return siteName;
+	}
+
+	public void setSiteName(String siteName) {
+		this.siteName = siteName;
+	}
+
+	public String getOrganizationName() {
+		return organizationName;
+	}
+
+	public void setOrganizationName(String organizationName) {
+		this.organizationName = organizationName;
+	}
+
+	
 }

@@ -157,8 +157,10 @@ public class UserDAOImpl extends JdbcDaoSupport implements UserDAO {
 	*/
 	@Override
 	public List<User> getAllUsers() {
-		String sql = "SELECT * FROM users";		
-		return getJdbcTemplate().query(sql, new UserMapper());
+		String sql = "SELECT u.*, s.site_name AS site_name, o.name AS organization_name "
+				+ "FROM users As u INNER JOIN sites AS s ON u.site = s.site_ID INNER JOIN organizations AS o "
+				+ "ON u.organization = o.organization_ID;";		
+		return getJdbcTemplate().query(sql, new FullUserMapper());
 	}
 	
 	@Override
@@ -261,7 +263,8 @@ public class UserDAOImpl extends JdbcDaoSupport implements UserDAO {
 	}
 	
 	class UserMapper implements RowMapper<User> {
-		public User mapRow(ResultSet rs, int rowNum) throws SQLException{
+		public User mapRow(ResultSet rs, int rowNum) throws SQLException
+		{
 			User u = new User();
 			u.setName(rs.getString("name"));
 			u.setUserID(rs.getInt("user_ID"));
@@ -271,7 +274,7 @@ public class UserDAOImpl extends JdbcDaoSupport implements UserDAO {
 			u.setPassword(rs.getString("password"));
 			u.setOrganization(rs.getInt("organization"));
 			u.setSite(rs.getInt("site"));
-			
+								
 			if (!Utils.isNullOrEmpty(rs.getString("phone_number")))
 				u.setPhoneNumber(rs.getString("phone_number"));
 			
@@ -282,5 +285,30 @@ public class UserDAOImpl extends JdbcDaoSupport implements UserDAO {
 			return u;
 		}
 	}
+		
+	class FullUserMapper implements RowMapper<User> {
+			public User mapRow(ResultSet rs, int rowNum) throws SQLException{
+				User u = new User();
+				u.setName(rs.getString("name"));
+				u.setUserID(rs.getInt("user_ID"));
+				u.setRole(rs.getString("role"));
+				u.setUsername(rs.getString("username"));
+				u.setEmail(rs.getString("email"));
+				u.setPassword(rs.getString("password"));
+				u.setOrganization(rs.getInt("organization"));
+				u.setSite(rs.getInt("site"));
+				u.setOrganizationName(rs.getString("organization_name"));
+				u.setSiteName(rs.getString("site_name"));
+				
+				if (!Utils.isNullOrEmpty(rs.getString("phone_number")))
+					u.setPhoneNumber(rs.getString("phone_number"));
+				
+				if (rs.getString("enabled").equals("1"))
+					u.setEnabled(true);
+				else
+					u.setEnabled(false);
+				return u;
+			}
+		}
 
 }

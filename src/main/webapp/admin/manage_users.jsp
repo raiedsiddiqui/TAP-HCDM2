@@ -12,6 +12,16 @@
 		function showAddUser(){
 			document.getElementById("addUserDiv").style.display="block";
 		}
+		
+		function disable() {
+			document.getElementById("site").value = "";
+		    document.getElementById("site").disabled=true;
+		}
+		
+		function enable() {
+		    document.getElementById("site").disabled=false;
+		}
+		
 	</script>
 
 	<style type="text/css">
@@ -57,6 +67,7 @@
 					<th>Username</th>
 					<th>Role</th>
 					<th>Site</th>
+					<th>Organization</th>
 					<th>Phone Number</th>
 					<th>Enable/Disable</th>
 					<th>Change password</th>
@@ -77,7 +88,8 @@
 						<c:if test="${u.role eq 'ROLE_RESEARCHER'}">Researcher</c:if>
 						<c:if test="${u.role eq 'ROLE_CLINICIAN'}">Clinician</c:if>
 					</td>
-					<td>${u.site}</td>
+					<td>${u.siteName}</td>
+					<td>${u.organizationName}</td>
 					<td>${u.phoneNumber}</td>
 					<td>
 						<c:if test="${u.enabled eq 'true'}"><a href="<c:url value="/disable_user/${u.userID}"/>" class="btn btn-danger">Click to disable</a></c:if>
@@ -165,10 +177,10 @@
 				</div>
 				<label><h4>User Role</h4></label>
 				<div class="row form-group">						
-						<input type="radio" name="role" value="ROLE_ADMIN">Central Admin</input> <br/>
-						<input type="radio" name="role" value="ROLE_LOCAL_ADMIN" >Local Admin</input> <br/>
-						<input type="radio" name="role" value="ROLE_CLINICIAN" >Clinician</input> <br/>
-						<input type="radio" name="role" value="ROLE_RESEARCHER" checked>Researcher</input> <br/>
+						<input type="radio" name="role" onclick="disable()" value="ROLE_ADMIN">Central Admin</input> <br/>
+						<input type="radio" name="role" onclick="enable()" value="ROLE_LOCAL_ADMIN" >Local Admin</input> <br/>
+						<input type="radio" name="role" onclick="enable()" value="ROLE_CLINICIAN" >Clinician</input> <br/>
+						<input type="radio" name="role" onclick="enable()" value="ROLE_RESEARCHER" checked>Researcher</input> <br/>
 				</div>
 						
 			</form>

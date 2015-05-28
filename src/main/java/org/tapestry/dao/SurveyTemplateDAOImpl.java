@@ -87,8 +87,8 @@ public class SurveyTemplateDAOImpl extends JdbcDaoSupport implements SurveyTempl
 	
 	@Override
 	public int countSurveyTemplateBySite(int site) {
-		String sql = "SELECT COUNT(*) as c FROM surveys WHERE site=?";
-		return getJdbcTemplate().queryForInt(sql, new Object[] {site});
+		String sql = "SELECT COUNT(*) as c FROM surveys WHERE site=? OR site=? ";
+		return getJdbcTemplate().queryForInt(sql, new Object[] {site, 0});
 	}
 	
 	class SurveyTemplateMapper implements RowMapper<SurveyTemplate> {
