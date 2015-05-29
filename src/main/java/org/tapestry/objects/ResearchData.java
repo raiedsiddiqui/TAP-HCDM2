@@ -39,7 +39,7 @@ public class ResearchData {
 	private String goals5ThirdSpecific_TO;
 	private String goals6ThirdBaseline_TO;
 	private String goals7ThirdTaget_TO;
-	private String goals8pPriority_TO;
+	private String goals8Priority_TO;
 	private String goalsDiscussion_notes_TO;
 	
 	public ResearchData(){
@@ -250,11 +250,11 @@ public class ResearchData {
 	public void setGoals7ThirdTaget_TO(String goals7ThirdTaget_TO) {
 		this.goals7ThirdTaget_TO = goals7ThirdTaget_TO;
 	}
-	public String getGoals8pPriority_TO() {
-		return goals8pPriority_TO;
+	public String getGoals8Priority_TO() {
+		return goals8Priority_TO;
 	}
-	public void setGoals8pPriority_TO(String goals8pPriority_TO) {
-		this.goals8pPriority_TO = goals8pPriority_TO;
+	public void setGoals8Priority_TO(String goals8pPriority_TO) {
+		this.goals8Priority_TO = goals8pPriority_TO;
 	}
 	public String getGoalsDiscussion_notes_TO() {
 		return goalsDiscussion_notes_TO;

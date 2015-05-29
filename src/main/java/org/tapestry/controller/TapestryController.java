@@ -1853,13 +1853,23 @@ public class TapestryController{
 	public String manageSurveyTemplates(@RequestParam(value="failed", required=false) Boolean deleteFailed, 
 			SecurityContextHolderAwareRequestWrapper request, ModelMap model)
 	{
+		List<Site> sites = new ArrayList<Site>();
+		User logginUser = TapestryHelper.getLoggedInUser(request);
 		List<SurveyTemplate> surveyTemplateList = TapestryHelper.getSurveyTemplates(request, surveyManager);
 		model.addAttribute("survey_templates", surveyTemplateList);
 		if (deleteFailed != null)
 			model.addAttribute("failed", deleteFailed);
 		
-		HttpSession session = request.getSession();
+		if (request.isUserInRole("ROLE_ADMIN"))
+			sites = organizationManager.getAllSites();
+		else
+		{
+			int siteId = logginUser.getSite();
+			sites.add(organizationManager.getSiteById(siteId));
+		}
+		model.addAttribute("sites", sites);
 		
+		HttpSession session = request.getSession();		
 		if (session.getAttribute("unread_messages") != null)
 			model.addAttribute("unread", session.getAttribute("unread_messages"));		
 		
@@ -2603,7 +2613,7 @@ public class TapestryController{
         		r.getGoals3Health_TO(), r.getGoals4List_TO(), r.getGoals5FirstSpecific_TO(), r.getGoals6FirstBaseline_TO(), 
         		r.getGoals7FirstTaget_TO(), r.getGoals5SecondSpecific_TO(), r.getGoals6SecondBaseline_TO(), 
         		r.getGoals7SecondTaget_TO(), r.getGoals5ThirdSpecific_TO(), r.getGoals6ThirdBaseline_TO(), 
-        		r.getGoals7ThirdTaget_TO(), r.getGoals8pPriority_TO(), r.getGoalsDiscussion_notes_TO()});
+        		r.getGoals7ThirdTaget_TO(), r.getGoals8Priority_TO(), r.getGoalsDiscussion_notes_TO()});
         }          
         //Iterate over data and write to sheet
         Set<Integer> keyset = data.keySet();
