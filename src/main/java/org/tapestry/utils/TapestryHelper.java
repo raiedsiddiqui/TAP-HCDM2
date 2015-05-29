@@ -3149,7 +3149,7 @@ public class TapestryHelper {
 		return isFirst;
 	}
 
-	//======================test===================================//
+	//======================Research Data Download===================================//
 	public static boolean hasSurveyResultByPatient(int patientId, SurveyManager surveyManager)
 	{
 		boolean hasResult = false;
@@ -3344,8 +3344,10 @@ public class TapestryHelper {
 						rData.setGoals5ThirdSpecific_TO(goalsArray[0]);
 						rData.setGoals6ThirdBaseline_TO(goalsArray[1]);	
 						rData.setGoals7ThirdTaget_TO(goalsArray[2]);
-					}				
-					rData.setGoals8pPriority_TO(displayedResults.get(7).getQuestionAnswer());
+					}			
+					
+					if (displayedResults.size() == 8)
+						rData.setGoals8Priority_TO(displayedResults.get(7).getQuestionAnswer());
 					
 					for (int j=0; j<displayedResults.size(); j++)
 					{
