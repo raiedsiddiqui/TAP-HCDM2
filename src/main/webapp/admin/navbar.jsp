@@ -33,7 +33,7 @@
 			</li>
 			<li <c:if test="${pageContext.request.requestURI.contains('manage_appointments')}">class="active"</c:if>><a href="<c:url value="/manage_appointments"/>"><span class="glyphicon glyphicon-time"></span> Appointments</a></li>
 
-			<li <c:if test="${pageContext.request.requestURI.contains('manage_surveys')}">class="active"</c:if>><a href="<c:url value="/manage_surveys"/>">Survey</a></li>
+			<!-- <li <c:if test="${pageContext.request.requestURI.contains('manage_surveys')}">class="active"</c:if>><a href="<c:url value="/manage_surveys"/>">Survey</a></li> -->
 
 			<li <c:if test="${pageContext.request.requestURI.contains('view_activity_admin')}">class="active"</c:if>><a href="<c:url value="/view_activity_admin"/>"><span class="glyphicon glyphicon-pencil"> Activity Log</a></li>
 			
