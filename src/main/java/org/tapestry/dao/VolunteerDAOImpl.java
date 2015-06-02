@@ -111,7 +111,7 @@ public class VolunteerDAOImpl extends JdbcDaoSupport implements VolunteerDAO {
 		String sql = "UPDATE volunteers SET firstname=?,lastname=?, username=?, street=?,"
 				+ "email=?, experience_level=?, city=?, province=?, home_phone=?, cell_phone=?,"
 				+ "postal_code=?, country=?, emergency_contact=?, emergency_phone=?, appartment=?, "
-				+ "notes=?, availability=?, street_number=?, password=?, organization=?, gender=?, "
+				+ "notes=?, availability=?, street_number=?, organization=?, gender=?, "
 				+ "total_vlc_score=?, number_years_experience=?, availability_per_month=?, "
 				+ "technology_skills_score=?, perception_older_adult_score=?, vlc_ID=? WHERE volunteer_ID=?";
 		
@@ -119,7 +119,7 @@ public class VolunteerDAOImpl extends JdbcDaoSupport implements VolunteerDAO {
 				v.getEmail(), v.getExperienceLevel(), v.getCity(), v.getProvince(), v.getHomePhone(),
 				v.getCellPhone(), v.getPostalCode(), v.getCountry(), v.getEmergencyContact(), 
 				v.getEmergencyPhone(), v.getAptNumber(), v.getNotes(), v.getAvailability(), v.getStreetNumber(), 				
-				v.getPassword(), v.getOrganizationId(), v.getGender(), v.getTotalVLCScore(), v.getNumYearsOfExperience(),
+				v.getOrganizationId(), v.getGender(), v.getTotalVLCScore(), v.getNumYearsOfExperience(),
 				v.getAvailabilityPerMonth(), v.getTechnologySkillsScore(), v.getPerceptionOfOlderAdultsScore(),
 				v.getvLCID(), v.getVolunteerId());		
 	}

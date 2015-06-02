@@ -65,6 +65,7 @@
 					<th>Description</th>
 					<th>Type</th>
 					<th>Priority</th>
+					<th>Site</th>
 					<th>Date Added</th>
 					<th>Download</th>
 					<th>Remove</th>
@@ -72,9 +73,10 @@
 				<c:forEach items="${survey_templates}" var="st">
 				<tr>					
 					<td><a href="<c:url value="/modify_surveyTemplate/${st.surveyID}"/>">${st.title}</a></td>
-					<td>${st.description}</td>
+					<td width="200">${st.description}</td>
 					<td>${st.type}</td>
 					<td>${st.priority}</td>
+					<td>${st.siteName}</td>
 					<td>${st.createdDate }</td>
 					<td><a href="<c:url value="/download_survey_template/${st.surveyID}"/>">Download</a></td>
 					<c:if test="${st.showDelete}">
@@ -112,6 +114,12 @@
 						<option value="${loop.index}">${loop.index}</option>
 						</c:forEach>
 					</select>
+					<label>Site:</label>									
+					<select name="site" form="uploadSurveyForm" class="form-control">
+						<c:forEach items="${sites}" var="s">
+							<option value="${s.siteId}">${s.name}</option>
+						</c:forEach>
+					</select>					
 					<label>File:</label>
 					<input type="hidden" name="MAX_FILE_SIZE" value="2000000">
 					<input type="file" accept="text/*" name="file" required/>

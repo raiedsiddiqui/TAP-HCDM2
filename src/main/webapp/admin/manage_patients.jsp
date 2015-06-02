@@ -6,7 +6,7 @@
 <head>
 	<title>Tapestry Admin</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
-
+	<script src="${pageContext.request.contextPath}/resources/js/jquery-2.0.3.min.js"></script>
 	<style type="text/css">
 		.row-fluid{
 			margin:10px;

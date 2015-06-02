@@ -416,8 +416,8 @@ public class VolunteerController {
 		
 		//set encoded password for security
 		ShaPasswordEncoder enc = new ShaPasswordEncoder();
-		String hashedPassword = enc.encodePassword(request.getParameter("password"), null);		
-		volunteer.setPassword(hashedPassword);
+//		String hashedPassword = enc.encodePassword(request.getParameter("password"), null);		
+//		volunteer.setPassword(hashedPassword);
 		volunteer.setEmail(request.getParameter("email"));	
 		volunteer.setExperienceLevel((request.getParameter("level")));	
 		volunteer.setStreet(request.getParameter("street"));
@@ -527,7 +527,8 @@ public class VolunteerController {
 	
 	@RequestMapping(value="/volunteerList.html")
 	@ResponseBody
-	public List<Volunteer> getVolunteerByOrganization(@RequestParam(value="volunteerId") int vId){		
+	public List<Volunteer> getVolunteerByOrganization(@RequestParam(value="volunteerId") int vId)
+	{
 		Volunteer volunteer = volunteerManager.getVolunteerById(vId);	
 		List<Volunteer> vl = volunteerManager.getAllVolunteersByOrganization(volunteer.getOrganizationId());
 		

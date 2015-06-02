@@ -115,6 +115,13 @@ public interface SurveyResultDAO {
 	public int countCompletedSurveys(int patientId);
 	
 	/**
+	 * Count number of uncompleted survey result for a patient
+	 * @param patientId 
+	 * @return number of completed survey result 
+	 */
+	public int countUnCompletedSurveys(int patientId);
+	
+	/**
 	 * Count number of survey result for a survey template
 	 * @param surveyTemplateId 
 	 * @return number of survey results 

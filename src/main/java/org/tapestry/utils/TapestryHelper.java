@@ -438,8 +438,8 @@ public class TapestryHelper {
 		user.setEmail(volunteer.getEmail());
 		userManager.modifyUser(user);
 		
-		//update password
-		userManager.setPasswordForUser(user.getUserID(), volunteer.getPassword());		
+		//update password 
+//		userManager.setPasswordForUser(user.getUserID(), volunteer.getPassword());		removed changing password from this page
 	}
 	/**
 	 * retrieve all volunteers who has availability set up 

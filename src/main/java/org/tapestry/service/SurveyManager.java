@@ -210,6 +210,14 @@ public interface SurveyManager {
 	public int countCompletedSurveys(int patientId);
 	
 	/**
+	 * Count number of uncompleted survey result for a patient
+	 * @param patientId 
+	 * @return number of completed survey result 
+	 */
+	@Transactional
+	public int countUnCompletedSurveys(int patientId);
+	
+	/**
 	 * 
 	 * @param surveyId
 	 * @param patientId

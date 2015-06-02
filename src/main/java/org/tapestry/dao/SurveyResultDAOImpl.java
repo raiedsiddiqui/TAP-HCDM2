@@ -178,7 +178,13 @@ public class SurveyResultDAOImpl extends JdbcDaoSupport implements SurveyResultD
 	public int countCompletedSurveys(int patientId) {
 		String sql = "SELECT COUNT(Distinct survey_ID) as c FROM survey_results WHERE (patient_ID=?) AND (completed=1)";
 		return getJdbcTemplate().queryForInt(sql, new Object[]{patientId});
-	}	
+	}		
+
+	@Override
+	public int countUnCompletedSurveys(int patientId) {
+		String sql = "SELECT COUNT(Distinct survey_ID) as c FROM survey_results WHERE (patient_ID=?) AND (completed=0)";
+		return getJdbcTemplate().queryForInt(sql, new Object[]{patientId});
+	}
 	
 	public boolean hasCompleteSurvey(int surveyId, int patientId){
 		boolean hasCompleted = false;		

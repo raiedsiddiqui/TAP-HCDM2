@@ -966,6 +966,7 @@ public class TapestryController{
 					String completedSurvey, @RequestParam(value="aborted", required=false) String inProgressSurvey, 
 					@RequestParam(value="appointmentId", required=false) Integer appointmentId, 
 					@RequestParam(value="showAuthenticationMsg", required=false) boolean showAuthenticationMsg,
+					@RequestParam(value="goalsMsg", required=false) boolean goalsMsg,
 					SecurityContextHolderAwareRequestWrapper request, ModelMap model)
 	{	
 		Patient patient = patientManager.getPatientByID(id);
@@ -995,6 +996,8 @@ public class TapestryController{
 		List<SurveyResult> incompleteSurveyResultList = surveyManager.getIncompleteSurveysByPatientID(id);
 		Collections.sort(completedSurveyResultList);
 		Collections.sort(incompleteSurveyResultList);
+		
+	//	Collections.
 		//get display survey result for displaying question text and answer
 		String xml;
 		LinkedHashMap<String, String> res;
@@ -1015,9 +1018,12 @@ public class TapestryController{
 		//translate answers with full detailed information
 		completedDisplayedResults = TapestryHelper.detailedResult(completedDisplayedResults);
 
-//		List<SurveyTemplate> surveyList = surveyManager.getAllSurveyTemplates();		
+		List<Patient> patientsForUser = patientManager.getPatientsForVolunteer(volunteerId);	
 		
-		List<Patient> patientsForUser = patientManager.getPatientsForVolunteer(volunteerId);						
+		if (appointmentId == null)
+		{
+			appointmentId = TapestryHelper.getAppointmentId(request);
+		}
 		Appointment appointment = appointmentManager.getAppointmentById(appointmentId);
 		
 		model.addAttribute("appointment", appointment);
@@ -1025,9 +1031,12 @@ public class TapestryController{
 		model.addAttribute("completedSurveys", completedSurveyResultList);
 		model.addAttribute("inProgressSurveys", incompleteSurveyResultList);
 		model.addAttribute("displayResults", completedDisplayedResults);
+		
 //		model.addAttribute("surveys", surveyList);
 		if (showAuthenticationMsg)
 			model.addAttribute("showAuthenticationMsg", true);
+		if (goalsMsg)
+			model.addAttribute("goalsMsg", goalsMsg);
 //		ArrayList<Picture> pics = pictureDao.getPicturesForPatient(id);
 //		model.addAttribute("pictures", pics);
 		
@@ -2182,7 +2191,10 @@ public class TapestryController{
 		int p = Integer.parseInt(request.getParameter("priority"));
 		st.setPriority(p);
 		st.setContents(multipartFile.getBytes());
-		st.setSite(loggedInUser.getSite());
+		if (request.isUserInRole("ROLE_ADMIN"))
+			st.setSite(Integer.parseInt(request.getParameter("site")));
+		else
+			st.setSite(loggedInUser.getSite());
 		surveyManager.uploadSurveyTemplate(st);
 		
 		session.setAttribute("surveyTemplateMessage", "C");
@@ -2197,7 +2209,6 @@ public class TapestryController{
 		userManager.addUserLog(sb.toString(), loggedInUser);
 		
 		return "redirect:/manage_survey";
-		//return "redirect:/manage_survey_templates";
 	}
  	
    	@RequestMapping(value="/delete_survey_template/{surveyID}", method=RequestMethod.GET)
@@ -2238,7 +2249,7 @@ public class TapestryController{
    		ModelAndView redirectAction = null;
    		List<SurveyResult> surveyResults;
 		List<SurveyTemplate> surveyTemplates;
-		
+					
 		HttpSession session = request.getSession();
 		User u = (User)session.getAttribute("loggedInUser");
 		String name = u.getName();		
@@ -2256,10 +2267,11 @@ public class TapestryController{
    		} 
    		
 		SurveyResult surveyResult = surveyManager.getSurveyResultByID(id);		
-		SurveyTemplate surveyTemplate = surveyManager.getSurveyTemplateByID(surveyResult.getSurveyID());	
+		SurveyTemplate surveyTemplate = surveyManager.getSurveyTemplateByID(surveyResult.getSurveyID());
 		
 		//user logs
-		Patient p = patientManager.getPatientByID(surveyResult.getPatientID());
+		int patientId = surveyResult.getPatientID();
+		Patient p = patientManager.getPatientByID(patientId);
 		StringBuffer sb  = new StringBuffer();
 		sb.append(name);
 		sb.append(" opened survey ");
@@ -2270,7 +2282,7 @@ public class TapestryController{
 		else 
 			sb.append(p.getDisplayName());
 			
-		userManager.addUserLog(sb.toString(), u);
+		userManager.addUserLog(sb.toString(), u);		
 				
 		//all survey results stored in map		
 		TapestrySurveyMap userSurveys = DoSurveyAction.getSurveyMapAndStoreInSession(request, surveyResults, surveyTemplates);			
@@ -2290,11 +2302,18 @@ public class TapestryController{
 			System.out.println("Something bad happened");
 		}
 		
-   		if (request.isUserInRole("ROLE_USER") && redirectAction.getViewName() == "failed"){
-   			redirectAction.setViewName("redirect:/");
-   		} else if (request.isUserInRole("ROLE_ADMIN") && redirectAction.getViewName() == "failed") {
+		//goals survey must be done on the last
+		if (surveyTemplate.getTitle().equals("2. Goals"))
+		{			
+			if (surveyManager.countUnCompletedSurveys(patientId)!= 1)
+				redirectAction.setViewName("redirect:/patient/" + p.getPatientID() + "?goalsMsg=" + true);
+		}
+				
+   		if (request.isUserInRole("ROLE_USER") && redirectAction.getViewName() == "failed")
+   			redirectAction.setViewName("redirect:/");	
+   		else if (request.isUserInRole("ROLE_ADMIN") && redirectAction.getViewName() == "failed")    			
    			redirectAction.setViewName("redirect:/manage_surveys");
-   		}
+   		
    		return redirectAction;
    	}
    	  
@@ -2378,9 +2397,11 @@ public class TapestryController{
    			return "redirect:/manage_surveys";
    		} else {
    			if (isComplete) {
-   				return "redirect:/patient/" + currentPatient.getPatientID() + "?complete=" + surveyResult.getSurveyTitle() + "&appointmentId=" + appointment.getAppointmentID();
+   				return "redirect:/patient/" + currentPatient.getPatientID() + "?complete=" + surveyResult.getSurveyTitle() 
+   						+ "&appointmentId=" + appointment.getAppointmentID();
    			} else {
-   				return "redirect:/patient/" + currentPatient.getPatientID() + "?aborted=" + surveyResult.getSurveyTitle() + "&appointmentId=" + appointment.getAppointmentID();
+   				return "redirect:/patient/" + currentPatient.getPatientID() + "?aborted=" + surveyResult.getSurveyTitle() 
+   						+ "&appointmentId=" + appointment.getAppointmentID();
    			}
    		}
 	}

@@ -122,7 +122,7 @@
 						<option value="${loop.index}">${loop.index}</option>
 						</c:forEach>
 					</select>
-					<label>File:</label>
+					
 					<input type="hidden" name="MAX_FILE_SIZE" value="2000000">
 					<input type="file" accept="text/*" name="file" required/>
 				</fieldset>

@@ -27,13 +27,15 @@ public class SurveyTemplateDAOImpl extends JdbcDaoSupport implements SurveyTempl
 
 	@Override
 	public SurveyTemplate getSurveyTemplateByID(int id) {
-		String sql = "SELECT * FROM surveys WHERE survey_ID=?";
+		String sql = "SELECT sur.*, st.site_name AS site_name FROM surveys AS sur INNER JOIN sites AS st "
+				+ "ON sur.site = st.site_ID WHERE survey_ID=?";
 		return getJdbcTemplate().queryForObject(sql, new Object[]{id}, new SurveyTemplateMapper());
 	}
 
 	@Override
 	public List<SurveyTemplate> getAllSurveyTemplates() {
-		String sql = "SELECT * FROM surveys ORDER BY priority DESC";
+		String sql = "SELECT sur.*, st.site_name AS site_name FROM surveys AS sur INNER JOIN sites AS st "
+				+ "ON sur.site = st.site_ID ORDER BY priority DESC";
 		List<SurveyTemplate> surveyTemplates = getJdbcTemplate().query(sql, new SurveyTemplateMapper());
 		
 		return surveyTemplates;
@@ -41,7 +43,8 @@ public class SurveyTemplateDAOImpl extends JdbcDaoSupport implements SurveyTempl
 	
 	@Override
 	public List<SurveyTemplate> getSurveyTemplatesBySite(int siteId) {		
-		String sql = "SELECT * FROM surveys WHERE site=? ORDER BY priority DESC";
+		String sql = "SELECT sur.*, st.site_name AS site_name FROM surveys AS sur INNER JOIN sites AS st "
+				+ "ON sur.site = st.site_ID WHERE site=? ORDER BY priority DESC";
 		List<SurveyTemplate> surveyTemplates = getJdbcTemplate().query(sql,new Object[]{siteId}, new SurveyTemplateMapper());
 		
 		return surveyTemplates;
@@ -49,7 +52,8 @@ public class SurveyTemplateDAOImpl extends JdbcDaoSupport implements SurveyTempl
 
 	@Override
 	public List<SurveyTemplate> getSurveyTemplatesByPartialTitle(String partialTitle) {
-		String sql = "SELECT * FROM surveys WHERE UPPER(title) LIKE UPPER('%" + partialTitle + "%')";
+		String sql = "SELECT sur.*, st.site_name AS site_name FROM surveys AS sur INNER JOIN sites AS st "
+				+ "ON sur.site = st.site_ID WHERE UPPER(title) LIKE UPPER('%" + partialTitle + "%')";
 		List<SurveyTemplate> surveyTemplates = getJdbcTemplate().query(sql, new SurveyTemplateMapper());
 		
 		return surveyTemplates;
@@ -102,6 +106,7 @@ public class SurveyTemplateDAOImpl extends JdbcDaoSupport implements SurveyTempl
             st.setPriority(rs.getInt("priority"));
             st.setDescription(rs.getString("description"));
             st.setSite(rs.getInt("site"));
+            st.setSiteName(rs.getString("site_name"));
             
             //format date, remove time
             String date = rs.getString("last_modified");

@@ -94,6 +94,12 @@ public class SurveyManagerImpl implements SurveyManager {
 	public int countCompletedSurveys(int patientId) {
 		return surveyResultDao.countCompletedSurveys(patientId);
 	}
+	
+	@Override
+	public int countUnCompletedSurveys(int patientId) {
+		// TODO Auto-generated method stub
+		return surveyResultDao.countUnCompletedSurveys(patientId);
+	}
 
 	@Override
 	public boolean hasCompleteSurvey(int surveyId, int patientId){
@@ -195,6 +201,5 @@ public class SurveyManagerImpl implements SurveyManager {
 	public void archiveSurveyResult(SurveyResult sr, String patient, String deletedBy) {
 		surveyResultDao.archiveSurveyResult(sr, patient, deletedBy);
 	}
-
 
 }

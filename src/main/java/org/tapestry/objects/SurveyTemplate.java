@@ -17,13 +17,15 @@ public class SurveyTemplate {
 	private String createdDate;
 	private boolean showDelete;
 	private int site;
+	private String siteName;
 
 	public SurveyTemplate(){
 		//Default constructor
 	}
 	
 	public static SurveyTemplate getTransfer(SurveyTemplate surveyTemplate){
-		if (surveyTemplate == null) return(null);
+		if (surveyTemplate == null) 
+			return(null);
 
 		SurveyTemplate surveyTemplateTransfer = new SurveyTemplate();
 
@@ -31,6 +33,10 @@ public class SurveyTemplate {
 		surveyTemplateTransfer.setSurveyID(surveyTemplate.getSurveyID());
 		surveyTemplateTransfer.setTitle(surveyTemplate.getTitle());
 		surveyTemplateTransfer.setType(surveyTemplate.getType());
+		surveyTemplateTransfer.setSite(surveyTemplate.getSite());
+		surveyTemplateTransfer.setDescription(surveyTemplate.getDescription());
+		surveyTemplateTransfer.setCreatedDate(surveyTemplate.getCreatedDate());
+		surveyTemplateTransfer.setSiteName(surveyTemplate.getSiteName());
 
 		return(surveyTemplateTransfer);
 	}
@@ -144,4 +150,14 @@ public class SurveyTemplate {
 	public void setSite(int site) {
 		this.site = site;
 	}
+
+	public String getSiteName() {
+		return siteName;
+	}
+
+	public void setSiteName(String siteName) {
+		this.siteName = siteName;
+	}
+	
+	
 }

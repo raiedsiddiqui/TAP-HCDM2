@@ -43,6 +43,15 @@
 				return false;
 		}
 		
+		function goalsPrompt()
+		{
+			var x = confirm("Goals app should be last survey, have you finished other surveys?");
+			if (x)
+				return true;
+			else
+				return false;
+		}
+		
 	</script>
 	
 </head>
@@ -52,9 +61,11 @@
 	<div id="displayAuthenticationDiv" class ="alert alert-info" style="display:none">
 		<spring:message code="message_authenticatePHR"/>
 	</div>
-
 	<c:if test="${not empty showAuthenticationMsg}">
 			<div class ="alert alert-info"><spring:message code="message_authenticatePHR"/></div>
+	</c:if>	
+	<c:if test="${not empty goalsMsg}">		
+			<div class ="alert alert-info"><spring:message code="message_goalsMsg"/></div>
 	</c:if>
 	
 	<div class="container">
@@ -130,9 +141,24 @@
 	      	<div class="row">
 	        <c:forEach items="${inProgressSurveys}" var="ips">
 	        		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
-					<a href="<c:url value="/open_survey/${ips.resultID}"/>" class="surveybtn btn">
+	        		<c:choose>
+					      <c:when test="${ips.surveyTitle=='2. Goals'}">
+					      	<a href="<c:url value="/open_survey/${ips.resultID}"/>" Onclick="return goalsPrompt()" class="surveybtn btn">
+								${ips.surveyTitle}<br/>
+								<span class="surveydesc">${ips.description}</span>
+							</a>	
+					      </c:when>
+							
+					      <c:otherwise>					      
+					      	<a href="<c:url value="/open_survey/${ips.resultID}"/>" class="surveybtn btn">
+								${ips.surveyTitle}<br/>
+								<span class="surveydesc">${ips.description}</span>
+							</a>
+					      </c:otherwise>
+					</c:choose>
+				<!--  	<a href="<c:url value="/open_survey/${ips.resultID}"/>" class="surveybtn btn">
 						${ips.surveyTitle}<br/>
-						<span class="surveydesc">${ips.description}</span>
+						<span class="surveydesc">${ips.description}</span>-->
 					</a>
 					</div>
 			</c:forEach>
