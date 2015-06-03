@@ -38,6 +38,7 @@ import org.tapestry.utils.Utils;
 import org.tapestry.myoscar.utils.ClientManager;
 import org.tapestry.objects.Appointment;
 import org.tapestry.objects.Availability;
+import org.tapestry.objects.Clinic;
 import org.tapestry.objects.DisplayedSurveyResult;
 import org.tapestry.objects.HL7Report;
 import org.tapestry.objects.Message;
@@ -1114,7 +1115,8 @@ public class TapestryHelper {
    	 * @param patientManager
    	 */
 	public static void loadPatientsAndVolunteers(ModelMap model, VolunteerManager volunteerManager,
-			PatientManager patientManager, SecurityContextHolderAwareRequestWrapper request ){
+			PatientManager patientManager, OrganizationManager organizationManager, 
+			SecurityContextHolderAwareRequestWrapper request ){
 		User user = getLoggedInUser(request);
 		List<Volunteer> volunteers;
 		List<Patient> patientList;
@@ -1129,7 +1131,15 @@ public class TapestryHelper {
 		{// For local Admin/VC
 			volunteers = volunteerManager.getAllVolunteersByOrganization(organizationId);			
 			patientList = patientManager.getPatientsBySite(user.getSite());			
-		}
+		}		
+		//clinic
+		List<Clinic> clinics;
+		if (request.isUserInRole("ROLE_ADMIN"))//central admin
+			clinics = organizationManager.getAllClinics();
+		else
+			clinics = organizationManager.getClinicsBySite(user.getSite());
+		
+		model.addAttribute("clinics", clinics);
 	
 		model.addAttribute("volunteers", volunteers);	  
         model.addAttribute("patients", patientList);

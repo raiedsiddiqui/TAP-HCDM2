@@ -708,7 +708,7 @@ public class TapestryController{
 			int unreadMessages = messageManager.countUnreadMessagesForRecipient(loggedInUser.getUserID());
 			model.addAttribute("unread", unreadMessages);
 		}	
-		TapestryHelper.loadPatientsAndVolunteers(model, volunteerManager, patientManager, request);
+		TapestryHelper.loadPatientsAndVolunteers(model, volunteerManager, patientManager, organizationManager, request);
 		//clinic
 		List<Clinic> clinics;
 		if (request.isUserInRole("ROLE_ADMIN"))//central admin
@@ -765,7 +765,7 @@ public class TapestryController{
 		if (vId1 == vId2)
 		{
 			model.addAttribute("sameVolunteer",true);
-			TapestryHelper.loadPatientsAndVolunteers(model, volunteerManager, patientManager, request);
+			TapestryHelper.loadPatientsAndVolunteers(model, volunteerManager, patientManager,  organizationManager,request);
 			
 			return "admin/manage_patients";
 		}
@@ -848,14 +848,14 @@ public class TapestryController{
 		    			return "redirect:/manage_patients";
 			}
 	   		model.addAttribute("createPatientSuccessfully",true);
-	   		TapestryHelper.loadPatientsAndVolunteers(model, volunteerManager, patientManager, request);
+	   		TapestryHelper.loadPatientsAndVolunteers(model, volunteerManager, patientManager,  organizationManager,request);
 	   		
 	        return "admin/manage_patients";
 		}
 		else
 		{			
 			model.addAttribute("misMatchedVolunteer",true);
-			TapestryHelper.loadPatientsAndVolunteers(model, volunteerManager, patientManager, request);
+			TapestryHelper.loadPatientsAndVolunteers(model, volunteerManager, patientManager,  organizationManager,request);
 			
 			return "admin/manage_patients";
 		}
@@ -938,7 +938,7 @@ public class TapestryController{
 		if (session.getAttribute("unread_messages") != null)		
 			model.addAttribute("unread", session.getAttribute("unread_messages"));
 		
-		TapestryHelper.loadPatientsAndVolunteers(model, volunteerManager, patientManager, request);
+		TapestryHelper.loadPatientsAndVolunteers(model, volunteerManager, patientManager,  organizationManager,request);
         
 		return "/admin/manage_patients";
 	}
