@@ -3175,7 +3175,7 @@ public class TapestryHelper {
 				hasResult = true;
 			else
 			{
-				surveyId = surveyManager.getSurveyIdByTitle("EQ5D");
+				surveyId = surveyManager.getSurveyIdByTitle("3. Quality of Life");
 				
 				if (surveyManager.hasCompleteSurvey(surveyId, patientId))
 					hasResult = true;
