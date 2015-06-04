@@ -3262,7 +3262,7 @@ public class TapestryHelper {
 			}		
 			//EQ5D
 			try{
-				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "EQ5D");
+				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "3. Quality of Life");
 			}catch (Exception e) {
 				System.out.println("throws exception on EQ5D=== patient id == " + patientId);
 				sr = null;
