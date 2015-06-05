@@ -633,16 +633,16 @@ public class TapestryController{
 		
 		if (request.isUserInRole("ROLE_ADMIN"))
 		{
-			logs = userManager.getUserLogs((page - 1) * 20, 20);
+			logs = userManager.getUserLogs((page - 1) * 100, 100);
 			count = userManager.count();
 		}
 		else
 		{
-			logs = userManager.getUserLogsPageByGroup((page - 1) * 20, 20, organizationId);			
+			logs = userManager.getUserLogsPageByGroup((page - 1) * 100, 100, organizationId);			
 			count = userManager.countEntriesByGroup(organizationId);
 		}
 				
-		model.addAttribute("numPages", count / 20 + 1);
+		model.addAttribute("numPages", count / 100 + 1);
 		model.addAttribute("logs", logs);
 		
 		TapestryHelper.setUnreadMessage(request, model, messageManager);
