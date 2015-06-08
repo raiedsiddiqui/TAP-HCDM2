@@ -27,6 +27,7 @@
 	<tr>
 		<td colspan="2">
 			<h2>${patient.displayName}<a href="<c:url value="/edit_patient/${patient.patientID}"/>">Edit</a></h2>
+			<a class="btn btn-warning" href="#">Disable Patient Profile</a>
 		</td>		
 	</tr>
 	<tr>
@@ -133,6 +134,7 @@
 			<th width="250"> Date Started</th>		
 			<th width="250">Last Edited</th>
 			<th>Completed Status</th>
+			<th>Delete</th>
 			<th>Results</th>
 		</tr>
 		<c:forEach items="${surveys}" var="s">
@@ -142,6 +144,7 @@
 			<td>${s.startDate}</td>
 			<td>${s.editDate}</td>
 			<td>${s.strCompleted}</td>
+			<td><a href="<c:url value="/delete_survey/${s.resultID}"/>" class="btn btn-danger">Remove</a></td>
 			<td>
 				<c:choose>
 					<c:when test="${s.completed}">

@@ -307,7 +307,7 @@ public class TapestryController{
 		User loggedInUser = TapestryHelper.getLoggedInUser(request, userManager);
 		StringBuffer sb = new StringBuffer();
 		sb.append(loggedInUser.getName());
-		sb.append(" disable ");
+		sb.append(" disabled ");
 		sb.append(u.getName());
 		userManager.addUserLog(sb.toString(), loggedInUser);		
 		
