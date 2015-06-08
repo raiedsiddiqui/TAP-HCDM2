@@ -1905,7 +1905,16 @@ public class VolunteerController {
 		sb.append(patientId);				
 		userManager.addUserLog(sb.toString(), loggedInUser);
 		
-		return "redirect:/";	
+		Appointment appointment = appointmentManager.getAppointmentById(appointmentId);
+		HttpSession  session = request.getSession();
+		if (session.getAttribute("unread_messages") != null)
+			model.addAttribute("unread", session.getAttribute("unread_messages"));
+		
+		Patient patient = patientManager.getPatientByID(appointment.getPatientID());
+		model.addAttribute("appointment", appointment);
+		model.addAttribute("patient", patient);
+		return "/volunteer/visit_complete";
+	
 	}
 	
 	@RequestMapping(value="/open_plan/{appointmentId}", method=RequestMethod.GET)
