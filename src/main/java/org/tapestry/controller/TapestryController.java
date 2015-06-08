@@ -2443,7 +2443,7 @@ public class TapestryController{
 		sb.append(id);
 		userManager.addUserLog(sb.toString(), loggedInUser);
    		
-   		return "redirect:/manage_surveys";
+   		return "redirect:/display_client/" + sr.getPatientID();
    	}
    	
    	@RequestMapping(value="/view_survey_results/{resultID}", method=RequestMethod.GET)
