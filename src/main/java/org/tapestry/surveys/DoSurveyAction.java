@@ -238,7 +238,7 @@ public class DoSurveyAction
 							m.addObject("templateSurvey", templateSurvey);
 							m.addObject("questionid", questionId);
 							m.addObject("resultid", documentId);
-							m.addObject("message", "SURVEY FINISHED - Please click END SURVEY");
+							m.addObject("message", "SURVEY FINISHED - Please click SUBMIT");
 							m.addObject("hideObservernote", false);
 							m.setViewName("/surveys/show_survey");
 							return m;
