@@ -178,7 +178,7 @@
 						</select>
 					</div>	
 					<div class="col-md-6">
-						<label>Username in MyOscar:</label>
+						<label>Username in PHR:</label>
 						<input type="text" name="username_myoscar" class="form-control" required/>
 					</div>
 					<div class="col-md-6">
@@ -194,7 +194,7 @@
 						<input type="text" name="mrp_lastname" class="form-control" required/>
 					</div>						
 				</div>		
-					<label>MyOscar verified? </label>
+					<label>PHR verified? </label>
 					<input type="radio" name="myoscar_verified" value="1" />Yes
 					<input type="radio" name="myoscar_verified" value="0" checked/>No
 					<br/>

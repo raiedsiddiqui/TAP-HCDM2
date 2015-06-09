@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Tapestry Volunteer Appointment MyOscar Authentication</title>
+<title>Tapestry Volunteer Appointment PHR Authentication</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <%@include file="volunteer_head.jsp" %>
 
@@ -31,7 +31,7 @@
 				</c:choose>
 				</a>
 			</li>			
-			<li><a href="">	<b>Authenticate MyOscar</b>	</a> </li>
+			<li><a href="">	<b>Authenticate PHR</b>	</a> </li>
 		</ul>
 
 	</div>

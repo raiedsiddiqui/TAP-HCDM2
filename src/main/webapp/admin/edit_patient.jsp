@@ -108,7 +108,7 @@
 				</div>
 				<div class="row form-group">	
 					<div class="col-md-6">
-						<label>MyOscar verified? </label>
+						<label>PHR verified? </label>
 						<input type="radio" name="myoscar_verified" value="1" <c:if test="${patient.myoscarVerified eq 1}">checked</c:if>/>Yes
 						<input type="radio" name="myoscar_verified" value="0" <c:if test="${patient.myoscarVerified eq 0}">checked</c:if>/>No
 					</div>

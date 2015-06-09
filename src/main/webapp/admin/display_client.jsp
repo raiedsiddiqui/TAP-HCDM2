@@ -18,7 +18,9 @@
 <body>
 <div class="content">
 <%@include file="navbar.jsp" %>
-
+<!-- for redirecting purposes -->
+<input type ="hidden" value="${patient}" name = "patient" />
+<!-- for redirecting purposes -->
 <div class="row-fluid">
 
 <div><h4><a href="<c:url value="/view_clients_admin"/>" >Client ></a> ${patient.displayName}</h4></div>
@@ -58,7 +60,7 @@
 			<label>&nbsp Email :</label>&nbsp${patient.email}
 		</td>
 		<td>
-			<label>&nbsp MyOscar Verified :</label>&nbsp${patient.myOscarAuthentication}
+			<label>&nbsp PHR Verified :</label>&nbsp${patient.myOscarAuthentication}
 	</tr>
 	
 </table>
