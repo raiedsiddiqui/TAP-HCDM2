@@ -125,4 +125,53 @@ public class SurveyTemplateDAOImpl extends JdbcDaoSupport implements SurveyTempl
 		
 	}
 
+	@Override
+	public List<SurveyTemplate> getAllVolunteerSurveyTemplates() {
+		String sql = "SELECT * FROM volunteer_surveys ORDER BY priority DESC";
+		List<SurveyTemplate> surveyTemplates = getJdbcTemplate().query(sql, new VolunteerSurveyTemplateMapper());
+		
+		return surveyTemplates;
+	}
+	
+	@Override
+	public void uploadVolunteerSurveyTemplate(SurveyTemplate st) {
+		String sql = "INSERT INTO volunteer_surveys (title, type, contents, priority, description) values (?,?,?,?,?)";
+		getJdbcTemplate().update(sql, st.getTitle(), st.getType(), st.getContents(), st.getPriority(), st.getDescription());
+		
+	}
+
+	@Override
+	public List<SurveyTemplate> getVolunteerSurveyTemplatesByPartialTitle(String partialTitle) {
+		String sql = "SELECT * FROM volunteer_surveys WHERE UPPER(title) LIKE UPPER('%" + partialTitle + "%')";		
+		return getJdbcTemplate().query(sql, new VolunteerSurveyTemplateMapper());
+	}
+	
+	class VolunteerSurveyTemplateMapper implements RowMapper<SurveyTemplate> {
+		public SurveyTemplate mapRow(ResultSet rs, int rowNum) throws SQLException{
+			SurveyTemplate st = new SurveyTemplate();
+		
+			st.setSurveyID(rs.getInt("survey_ID"));
+            st.setTitle(rs.getString("title"));
+            st.setType(rs.getString("type"));
+            st.setContents(rs.getBytes("contents"));
+            st.setPriority(rs.getInt("priority"));
+            st.setDescription(rs.getString("description"));
+                                  
+            //format date, remove time
+            String date = rs.getString("last_modified");
+            date = date.substring(0, 10);
+            st.setCreatedDate(date);
+			return st;
+		}
+	}
+
+	@Override
+	public void updateVolunteerSurveyTemplate(SurveyTemplate st) {
+		String sql = "UPDATE volunteer_surveys SET title=?, description=? WHERE survey_ID=?";
+		getJdbcTemplate().update(sql, st.getTitle(), st.getDescription(), st.getSurveyID());	
+		
+	}
+
+
+
 }

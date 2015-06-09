@@ -226,7 +226,7 @@ public class Hl7Utils {
 		orderObservation = message.getRESPONSE().getORDER_OBSERVATION(12);
 		fillOBR(13,orderObservation, "TAPESTRY QUESTIONS", patientId, orbDate, logginUser);
 		fillOBX(orderObservation, "TPQ1", "TAPESTRY QUESTION1", message, qList.get(0), "1");
-		fillOBX(orderObservation, "TPQ2", "TAPESTRY QUESTION1", message, qList.get(1), "2");
+		fillOBX(orderObservation, "TPQ2", "TAPESTRY QUESTION2", message, qList.get(1), "2");
 		fillOBX(orderObservation, "TPQ3", "TAPESTRY QUESTION3", message, qList.get(2), "3");
 		fillOBX(orderObservation, "TPQ4", "TAPESTRY QUESTION4", message, qList.get(3), "4");
 		fillOBX(orderObservation, "TPQ5", "TAPESTRY QUESTION5", message, qList.get(4), "5");

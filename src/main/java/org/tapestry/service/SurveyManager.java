@@ -41,6 +41,7 @@ public interface SurveyManager {
 	 */
 	@Transactional
 	public List<SurveyTemplate> getSurveyTemplatesWithCanDelete(int siteId);
+	
 	/**
 	 * A list of Survey template which title contains partialTitle
 	 * @param partialTitle
@@ -239,5 +240,34 @@ public interface SurveyManager {
 	 */
 	@Transactional
 	public void archiveSurveyResult(SurveyResult sr, String patient,String deletedBy);
+	
+	/**
+	 * A list of Volunteer Survey template for UBC
+	 * @return a list of SurveyTemplate objects
+	 */
+	@Transactional
+	public List<SurveyTemplate> getAllVolunteerSurveyTemplates();
+	
+	/**
+	 * Uploads a survey template to the database
+	 * @param st
+	 */
+	@Transactional
+	public void uploadVolunteerSurveyTemplate(SurveyTemplate st);
+	
+	/**
+	 * A list of volunteer Survey template which title contains partialTitle
+	 * @param partialTitle
+	 * @return a list of SurveyTemplate objects
+	 */
+	@Transactional
+	public List<SurveyTemplate> getVolunteerSurveyTemplatesByPartialTitle(String partialTitle);
+	
+	/**
+	 * Modify a volunteer survey template on title and description fields
+	 * @param st
+	 */
+	@Transactional
+	public void updateVolunteerSurveyTemplate(SurveyTemplate st);
 
 }

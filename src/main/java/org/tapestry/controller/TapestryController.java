@@ -633,16 +633,16 @@ public class TapestryController{
 		
 		if (request.isUserInRole("ROLE_ADMIN"))
 		{
-			logs = userManager.getUserLogs((page - 1) * 20, 20);
+			logs = userManager.getUserLogs((page - 1) * 100, 100);
 			count = userManager.count();
 		}
 		else
 		{
-			logs = userManager.getUserLogsPageByGroup((page - 1) * 20, 20, organizationId);			
+			logs = userManager.getUserLogsPageByGroup((page - 1) * 100, 100, organizationId);			
 			count = userManager.countEntriesByGroup(organizationId);
 		}
 				
-		model.addAttribute("numPages", count / 20 + 1);
+		model.addAttribute("numPages", count / 100 + 1);
 		model.addAttribute("logs", logs);
 		
 		TapestryHelper.setUnreadMessage(request, model, messageManager);
@@ -2501,18 +2501,29 @@ public class TapestryController{
 	@RequestMapping(value="/edit_surveyTemplate/{surveyID}", method=RequestMethod.POST)
    	public String editSurveyTemplate(@PathVariable("surveyID") int id, HttpServletRequest request)
 	{		
+		List<SurveyTemplate> surveyTemplates;
+		HttpSession session = request.getSession();
+		User loggedInUser = (User)session.getAttribute("loggedInUser");
+						
 		SurveyTemplate st = new SurveyTemplate();
 		st.setSurveyID(id);
-		st.setTitle(request.getParameter("title"));
+		st.setTitle(request.getParameter("title"));		
 		st.setDescription(request.getParameter("description"));		
-		surveyManager.updateSurveyTemplate(st);
 		
-		HttpSession session = request.getSession();
+		if (loggedInUser.getSite() == 3)//for temporary UBC
+		{
+			surveyManager.updateVolunteerSurveyTemplate(st);
+			surveyTemplates = surveyManager.getAllVolunteerSurveyTemplates();
+		}
+		else
+		{
+			surveyManager.updateSurveyTemplate(st);
+			surveyTemplates = TapestryHelper.getSurveyTemplates(request, surveyManager);
+		}
+		
 		//update survey template in the session
 		session.removeAttribute("survey_template_list");
-//		session.setAttribute("survey_template_list", TapestryHelper.getSurveyTemplates(request, surveyManager));
-		List<SurveyTemplate> surveyTemplates = TapestryHelper.getSurveyTemplates(request, surveyManager);
-		User loggedInUser = (User)session.getAttribute("loggedInUser");
+
 		session.setAttribute("survey_template_list", surveyTemplates);
 		session.setAttribute("surveyTemplateMessage", "U");
 		
@@ -2522,7 +2533,10 @@ public class TapestryController{
 		sb.append(id);
 		userManager.addUserLog(sb.toString(), loggedInUser);
 		
-		return "redirect:/manage_survey";
+		if (loggedInUser.getSite() == 3)//for temporary UBC
+			return "/manage_volunteer_survey";
+		else
+			return "redirect:/manage_survey";
 	}
 	
    	@RequestMapping(value="/export_csv/{resultID}", method=RequestMethod.GET)
@@ -2802,4 +2816,94 @@ public class TapestryController{
 		
 		return "/admin/manage_clinics";
    	}
+	
+	//============================== UBC =====================================
+	@RequestMapping(value="/manage_volunteer_survey", method=RequestMethod.GET)
+	public String manageVolunteerSurveyTemplates(@RequestParam(value="failed", required=false) Boolean deleteFailed, 
+			SecurityContextHolderAwareRequestWrapper request, ModelMap model)
+	{			
+		List<SurveyTemplate> surveyTemplateList = surveyManager.getAllVolunteerSurveyTemplates();
+		model.addAttribute("survey_templates", surveyTemplateList);
+		if (deleteFailed != null)
+			model.addAttribute("failed", deleteFailed);		
+			
+		HttpSession session = request.getSession();		
+		if (session.getAttribute("unread_messages") != null)
+			model.addAttribute("unread", session.getAttribute("unread_messages"));		
+		
+		return "admin/ubc/manage_volunteerSurvey";
+	}
+	
+	@RequestMapping(value = "/upload_volunteer_survey_template", method=RequestMethod.POST)
+	public String addVolunteerSurveyTemplate(HttpServletRequest request) throws Exception
+	{
+		HttpSession session = request.getSession();
+		User loggedInUser = (User)session.getAttribute("loggedInUser");
+		
+   		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+   		MultipartFile multipartFile = multipartRequest.getFile("file");
+   		
+		//Add a new survey template
+		SurveyTemplate st = new SurveyTemplate();
+		st.setTitle(request.getParameter("title"));
+		st.setType(request.getParameter("type"));
+		st.setDescription(request.getParameter("desc"));
+		int p = Integer.parseInt(request.getParameter("priority"));
+		st.setPriority(p); 
+		st.setContents(multipartFile.getBytes());
+		
+		surveyManager.uploadVolunteerSurveyTemplate(st);
+		
+		session.setAttribute("surveyTemplateMessage", "C");
+		//update survey template in the session
+		session.removeAttribute("survey_template_list");
+		session.setAttribute("survey_template_list", TapestryHelper.getSurveyTemplates(request, surveyManager));
+				
+		StringBuffer sb = new StringBuffer();
+		sb.append(loggedInUser.getName());
+		sb.append(" has uploaded volunteer survey template ");
+		sb.append(request.getParameter("title"));
+		userManager.addUserLog(sb.toString(), loggedInUser);
+		
+		return "redirect:/manage_volunteer_survey";
+	}
+	
+	@RequestMapping(value="/search_volunteer_survey", method=RequestMethod.POST)
+	public String searchVolunteerSurvey(@RequestParam(value="failed", required=false) Boolean failed, ModelMap model, 
+			SecurityContextHolderAwareRequestWrapper request)
+	{		
+		String title = request.getParameter("searchTitle");		
+		List<SurveyTemplate>  surveyTemplateList = surveyManager.getVolunteerSurveyTemplatesByPartialTitle(title);
+		
+		model.addAttribute("survey_templates", surveyTemplateList);
+	
+		if(failed != null) {
+			model.addAttribute("failed", true);
+		}		 
+		
+		model.addAttribute("searchTitle", title);
+		HttpSession session = request.getSession();
+		if (session.getAttribute("unread_messages") != null)
+			model.addAttribute("unread", session.getAttribute("unread_messages"));
+		
+		return "admin/manage_survey";
+	}
+	
+	@RequestMapping(value="/modify_volunteerSurveyTemplate/{surveyID}", method=RequestMethod.GET)
+   	public String modifyVolunteerSurveyTemplate(@PathVariable("surveyID") int id, HttpServletRequest request, ModelMap model)
+	{   		
+	
+		List<SurveyTemplate> surveyTemplates = surveyManager.getAllVolunteerSurveyTemplates();
+				
+		for (SurveyTemplate st: surveyTemplates)
+		{
+			if (id == st.getSurveyID())
+			{
+				model.addAttribute("surveyTemplate", st);
+				break;
+			}
+		}
+		
+		return "/admin/edit_survey_template";
+	}
 }

@@ -96,8 +96,7 @@ public class SurveyManagerImpl implements SurveyManager {
 	}
 	
 	@Override
-	public int countUnCompletedSurveys(int patientId) {
-		// TODO Auto-generated method stub
+	public int countUnCompletedSurveys(int patientId) {	
 		return surveyResultDao.countUnCompletedSurveys(patientId);
 	}
 
@@ -200,6 +199,28 @@ public class SurveyManagerImpl implements SurveyManager {
 	@Override
 	public void archiveSurveyResult(SurveyResult sr, String patient, String deletedBy) {
 		surveyResultDao.archiveSurveyResult(sr, patient, deletedBy);
+	}
+
+	@Override
+	public List<SurveyTemplate> getAllVolunteerSurveyTemplates() {		
+		return surveyTemplateDao.getAllVolunteerSurveyTemplates();
+	}
+
+		@Override
+	public void uploadVolunteerSurveyTemplate(SurveyTemplate st) {
+		surveyTemplateDao.uploadVolunteerSurveyTemplate(st);
+		
+	}
+
+	@Override
+	public List<SurveyTemplate> getVolunteerSurveyTemplatesByPartialTitle(String partialTitle) {		
+		return surveyTemplateDao.getVolunteerSurveyTemplatesByPartialTitle(partialTitle);
+	}
+
+	@Override
+	public void updateVolunteerSurveyTemplate(SurveyTemplate st) {
+		surveyTemplateDao.updateVolunteerSurveyTemplate(st);
+		
 	}
 
 }

@@ -1914,8 +1914,7 @@ public class VolunteerController {
 		model.addAttribute("appointment", appointment);
 		model.addAttribute("patient", patient);
 		return "/volunteer/visit_complete";
-		
-	//	return "redirect:/";	
+	
 	}
 	
 	@RequestMapping(value="/open_plan/{appointmentId}", method=RequestMethod.GET)

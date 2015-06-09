@@ -361,4 +361,27 @@ CREATE TABLE IF NOT EXISTS organizations_archive (
 	PRIMARY KEY (id)	
 );
 
+CREATE TABLE IF NOT EXISTS volunteer_surveys (
+	survey_ID TINYINT UNSIGNED NOT NULL AUTO_INCREMENT, /*Using UNSIGNED TINYINT allows 255 surveys*/
+	title VARCHAR(50),
+	type VARCHAR(255),
+	contents MEDIUMBLOB,
+	last_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, /*Automatically updates when record changed*/
+    priority TINYINT(1), /*Between 0-9*/
+    description TEXT,
+    
+	PRIMARY KEY (survey_ID)
+);
+
+CREATE TABLE IF NOT EXISTS volunteer_survey_results (
+	result_ID SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT, /*Using UNSIGNED SMALLINT allows for 65,535 results*/
+	volunteer_survey_ID SMALLINT UNSIGNED NOT NULL, /*Same as survey_ID field in surveys*/
+	volunteer_ID SMALLINT UNSIGNED NOT NULL, /*Same as patient_ID in patients*/
+	completed BOOLEAN NOT NULL DEFAULT 0, /*The completion status of the survey (0=incomplete)*/
+	startDate DATETIME, /*Automatically assigns the startDate when the survey is assigned*/
+	editDate TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP, /*editDate represents the last edit date*/
+	data MEDIUMBLOB, /*The survey data*/
+	PRIMARY KEY (result_ID)
+);
+
 COMMIT;

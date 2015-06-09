@@ -78,4 +78,31 @@ public interface SurveyTemplateDAO {
 	 * @param st
 	 */
 	public void archiveSurveyTemplate(SurveyTemplate st, String deletedBy);
+	
+	//=================== UBC ===============
+	/**
+	 * A list of Volunteer Survey template for UBC
+	 * @return a list of SurveyTemplate objects
+	 */
+	public List<SurveyTemplate> getAllVolunteerSurveyTemplates();
+	
+	/**
+	 * Uploads a survey template to the database
+	 * @param st
+	 */
+	public void uploadVolunteerSurveyTemplate(SurveyTemplate st);
+	
+	/**
+	 * A list of Volunteer Survey template which title contains partialTitle
+	 * @param partialTitle
+	 * @return a list of SurveyTemplate objects
+	 */
+	public List<SurveyTemplate> getVolunteerSurveyTemplatesByPartialTitle(String partialTitle);
+	
+	/**
+	 * Modify a survey template on title and description fields
+	 * @param st
+	 */
+	public void updateVolunteerSurveyTemplate(SurveyTemplate st);
+	
 }
