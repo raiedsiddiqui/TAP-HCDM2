@@ -95,6 +95,21 @@
 			width:100%;
 			text-align: center;
 		} 
+
+		#survendmessage {
+			font-size: 24px;
+			text-align: center;
+			color:black;
+			background-color:rgba(165, 158, 156, 0.31);
+		} 
+		#saveclose2 {
+			float:left;
+			font-size:30px;
+			height:70px;
+			color:white;
+			background-color:#6BB040;
+			width:90%;
+		}
 	</style>
 	
 	<script type="text/javascript">
@@ -136,14 +151,15 @@
 <div class="content">
 	<% if (!message.equals("")) { %>
     	<div id="survendmessage"class="alert alert-warning notificationMessage"><%=message%></div>
-	<div>	
-		<input id="saveclose2" style="float:left;font-size:30px;height:70px;color:white;background-color:#BF1F82;" type="button" value="<%if (!survey.isComplete()) {%>SUBMIT<%}%>" onclick="document.location='<c:url value="/save_survey/"/><%=documentId%>?survey_completed=<%=completed%>'">
-   </div>
-
+	<div class="row">
+		<div class="col-md-10 col-md-offset-1">	
+			<input id="saveclose2" style="" type="button" value="<%if (!survey.isComplete()) {%>SUBMIT<%}%>" onclick="document.location='<c:url value="/save_survey/"/><%=documentId%>?survey_completed=<%=completed%>'">
+   		</div>
+	</div>
    	<script type="text/javascript">
 		window.onload=function changeLink() {
 			var str = document.getElementById("survendmessage").textContent;
-	    	var n = str.indexOf("END");
+	    	var n = str.indexOf("SUBMIT");
 	    	if (n > 0) {
 	    		document.getElementById('surveybackground').style.display="none";
 	    		document.getElementById('qtext').style.display="none";
