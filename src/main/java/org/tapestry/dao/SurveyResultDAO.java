@@ -185,4 +185,17 @@ public interface SurveyResultDAO {
 	 */
 	public SurveyResult getVolunteerSurveyResultByID(int id);
 	
+	/**
+	 * Upload survey results
+	 * @param id The ID of the survey result
+	 * @param data The survey results
+	 */
+	public void updateVolunteerSurveyResults(int id, byte[] data);
+	
+	/**
+	 * Mark a survey as completed
+	 * @param id
+	 */
+	public void markAsCompleteForVolunteerSurvey(int id);
+	
 }

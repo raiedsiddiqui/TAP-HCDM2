@@ -246,7 +246,7 @@ public class SurveyResultDAOImpl extends JdbcDaoSupport implements SurveyResultD
 	@Override
 	public List<SurveyResult> getAllVolunteerSurveyResults() {
 		String sql = "SELECT vsr.*, vs.title, vs.description, v.firstname, v.lastname FROM volunteer_survey_results AS vsr"
-				+ " INNER JOIN surveys AS vs ON vsr.volunteer_survey_ID = vs.survey_ID INNER JOIN volunteers AS v"
+				+ " INNER JOIN volunteer_surveys AS vs ON vsr.volunteer_survey_ID = vs.survey_ID INNER JOIN volunteers AS v"
 				+ " ON vsr.volunteer_ID=v.volunteer_ID ORDER BY vsr.startDate ";
 		List<SurveyResult> results = getJdbcTemplate().query(sql, new VolunteerSurveyResultMapper());
 		
@@ -328,6 +328,19 @@ public class SurveyResultDAOImpl extends JdbcDaoSupport implements SurveyResultD
 	            
 			return sr;
 		}
+	}
+
+	@Override
+	public void updateVolunteerSurveyResults(int id, byte[] data) {
+		String sql = "UPDATE volunteer_survey_results SET data=?, editDate=now() WHERE result_ID=?";
+		getJdbcTemplate().update(sql, data,id);		
+	}
+
+	@Override
+	public void markAsCompleteForVolunteerSurvey(int id) {
+		String sql = "UPDATE volunteer_survey_results SET completed=1 WHERE result_ID=?";
+		getJdbcTemplate().update(sql, id);
+		
 	}
 
 }

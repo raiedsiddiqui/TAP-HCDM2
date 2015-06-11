@@ -31,10 +31,16 @@ import org.springframework.security.web.servletapi.SecurityContextHolderAwareReq
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
 import org.survey_component.actions.SurveyAction;
+import org.survey_component.data.PHRSurvey;
+import org.survey_component.data.SurveyException;
 import org.survey_component.data.SurveyQuestion;
+import org.survey_component.data.answer.SurveyAnswer;
+import org.survey_component.data.answer.SurveyAnswerFactory;
+import org.survey_component.source.SurveyParseException;
 import org.tapestry.utils.Utils;
-//import org.tapestry.utils.MisUtils.ReportHeader;
+//import org.apache.commons.lang.StringUtils;
 import org.tapestry.myoscar.utils.ClientManager;
 import org.tapestry.objects.Appointment;
 import org.tapestry.objects.Availability;
@@ -563,7 +569,7 @@ public class TapestryHelper {
 	
 		//convert arrayList to string for matching data type in DB
 		if (availability != null)
-			strAvailableTime=StringUtils.collectionToCommaDelimitedString(availability);	
+			strAvailableTime= StringUtils.collectionToCommaDelimitedString(availability);	
 		
 		return strAvailableTime;
 	}
@@ -1234,27 +1240,281 @@ public class TapestryHelper {
 		return(results);
 	}
 	
-//	public static List<TapestryPHRSurvey> getVolunteerSurveyResultsList(List<SurveyResult> surveyResults, List<SurveyTemplate> surveyTemplates)
-//	{
-//		List<TapestryPHRSurvey> results = new ArrayList<TapestryPHRSurvey>();
-//
-//		for (SurveyResult tempResult : surveyResults)
-//		{
-//			try
-//			{
-//				tempResult.processMumpsResults(tempResult);
-//				TapestryPHRSurvey temp = SurveyActionMumps.toPhrSurvey(surveyTemplates, tempResult);
-//				results.add(temp);
-//			}
-//			catch (Exception e)
-//			{
-//				System.out.println("Error" + e);
-//			}
-//		}
-//
-//		return(results);
-//	}
+	public static ModelAndView execute(HttpServletRequest request, String documentId, TapestryPHRSurvey currentSurvey, PHRSurvey templateSurvey) throws Exception
+	{
+		ModelAndView m = new ModelAndView();
+		final String questionId = request.getParameter("questionid");
+		String direction = request.getParameter("direction");		
+		String observerNotes = request.getParameter("observernote");	
+		
+		if (direction == null)
+			direction = "forward";
 
+		if (documentId == null)
+		{
+			m.setViewName("failed");
+			return m;
+		}
+
+		String[] answerStrs = request.getParameterValues("answer");
+		
+		String nextQuestionId = questionId;
+		//if requested survey does not exist
+		if (currentSurvey == null)
+		{
+			m.setViewName("failed");
+			return m;
+		}
+				
+		boolean saved = false;
+
+		//if starting/continuing survey, clear session
+		if (questionId == null)
+		{		
+			//if just starting/continuing(from before) the survey, direct to last question
+			String lastQuestionId;
+
+			if (currentSurvey.getQuestions().size() == 0)
+			{
+				boolean moreQuestions = addNextQuestion(null, currentSurvey, templateSurvey);
+				if (!moreQuestions)
+				{
+					m.setViewName("failed");
+					return m;
+				}
+			}
+
+			if (currentSurvey.isComplete())
+			{ //if complete show first question				
+				lastQuestionId = currentSurvey.getQuestions().get(0).getId();				
+				m.addObject("hideObservernote", true);
+			}
+			else
+			{ //if not complete show next question
+				lastQuestionId = currentSurvey.getQuestions().get(currentSurvey.getQuestions().size() - 1).getId();
+				//logic for displaying Observer Notes button
+				if (isFirstQuestionId(lastQuestionId, '0'))
+					m.addObject("hideObservernote", true);
+				else
+					m.addObject("hideObservernote", false);				
+			}		
+			m.addObject("survey", currentSurvey);
+			m.addObject("templateSurvey", templateSurvey);
+			m.addObject("questionid", lastQuestionId);
+			m.addObject("resultid", documentId);
+			
+			m.setViewName("/volunteer/ubc/show_volunteerSurvey");
+			
+			return m;
+		}//end of questionId == null;
+
+		String errMsg = null;
+
+		//if continuing survey (just submitted an answer)
+		if (questionId != null && direction.equalsIgnoreCase("forward"))
+		{				
+			if (currentSurvey.getQuestionById(questionId).getQuestionType().equals(SurveyQuestion.ANSWER_CHECK) && answerStrs == null)
+				answerStrs = new String[0];
+			
+			if (answerStrs != null && (currentSurvey.getQuestionById(questionId).getQuestionType().equals(SurveyQuestion.ANSWER_CHECK) || !answerStrs[0].equals("")))
+			{						
+				SurveyQuestion question = currentSurvey.getQuestionById(questionId);					
+				String questionText = question.getQuestionText();
+				
+				//append observernote to question text
+				if (!Utils.isNullOrEmpty(questionText))
+				{
+					String separator = "/observernote/ ";
+					StringBuffer sb = new StringBuffer();
+					sb.append(questionText);
+					sb.append(separator);
+					sb.append(observerNotes);
+					
+					questionText = sb.toString();
+					question.setQuestionText(questionText);
+				}				
+				ArrayList<SurveyAnswer> answers = convertToSurveyAnswers(answerStrs, question);		
+				
+				boolean goodAnswerFormat = true;
+				if (answers == null)
+					goodAnswerFormat = false;
+				
+				//check each answer for validation					
+				if (goodAnswerFormat && question.validateAnswers(answers))	
+				{
+					boolean moreQuestions;
+					//see if the user went back (if current question the last question in user's question profile)
+					if (!currentSurvey.getQuestions().get(currentSurvey.getQuestions().size() - 1).equals(question))
+					{
+						ArrayList<SurveyAnswer> existingAnswers = currentSurvey.getQuestionById(questionId).getAnswers();
+						//if user hit back, and then forward, and answer wasn't changed
+						if (org.apache.commons.lang.StringUtils.join(answerStrs, ", ").equals(org.apache.commons.lang.StringUtils.join(existingAnswers, ", ")) || currentSurvey.isComplete())
+							moreQuestions = true;
+						else
+						{
+							ArrayList<SurveyQuestion> tempquestions = new ArrayList<SurveyQuestion>(); //Create a temp array list to transfer answered questions
+
+							//remove all future answers								
+							//clear all questions following it
+							int currentSurveySize = currentSurvey.getQuestions().size(); //stores number of questions
+							int currentQuestionIndex = currentSurvey.getQuestions().indexOf(question); //gets the current question index
+																					
+							for (int i = currentQuestionIndex +1; i < currentSurveySize; i++)
+							{
+								tempquestions.add(currentSurvey.getQuestions().get(currentQuestionIndex +1));
+								currentSurvey.getQuestions().remove(currentQuestionIndex + 1);  //goes through quesitons list and removes each question after it
+							}							
+							//save answers modified/input by user into question
+							question.setAnswers(answers);								
+							saved = true;
+							//add new question
+							moreQuestions = addNextQuestion(questionId, currentSurvey, templateSurvey);
+
+							//check if old index and new index contain same questions in the same list
+							int sizeofcurrentquestionslist = currentSurvey.getQuestions().size(); //Size of new getQuestions aftre removing future questions
+
+							if (currentSurvey.getQuestions().get(sizeofcurrentquestionslist-1).getId().equals(tempquestions.get(0).getId()))
+							{
+								currentSurvey.getQuestions().remove(sizeofcurrentquestionslist-1);
+								for (int y=0;y<tempquestions.size();y++) 
+									currentSurvey.getQuestions().add(tempquestions.get(y));
+								moreQuestions = addNextQuestion(questionId, currentSurvey, templateSurvey);
+							}								
+								//if same then replace temp list with new list
+								//if not then add the one new item.
+						}
+						//if user didn't go back, and requesting the next question
+					}
+					else
+					{
+						question.setAnswers(answers);
+						saved = true;
+						moreQuestions = addNextQuestion(questionId, currentSurvey, templateSurvey);						
+					}
+					//finished survey
+					if (!moreQuestions)
+					{
+						if (!currentSurvey.isComplete()){							
+							SurveyAction.updateSurveyResult(currentSurvey);
+							
+							m.addObject("survey_completed", true);
+							m.addObject("survey", currentSurvey);
+							m.addObject("templateSurvey", templateSurvey);
+							m.addObject("questionid", questionId);
+							m.addObject("resultid", documentId);
+							m.addObject("message", "SURVEY FINISHED - Please click SUBMIT");
+							m.addObject("hideObservernote", false);
+							m.setViewName("/volunteer/ubc/show_volunteerSurvey");
+							return m;
+						} 
+						else {									
+							m.addObject("survey", currentSurvey);
+							m.addObject("templateSurvey", templateSurvey);
+							m.addObject("questionid", questionId);
+							m.addObject("resultid", documentId);
+							m.addObject("message", "End of Survey");
+							m.addObject("hideObservernote", false);
+							m.setViewName("/volunteer/ubc/show_volunteerSurvey");
+							return m;
+						}
+					}
+					int questionIndex = currentSurvey.getQuestionIndexbyId(questionId);
+					nextQuestionId = currentSurvey.getQuestions().get(questionIndex + 1).getId();
+				
+
+					//save to indivo
+					if (saved && questionIndex % 4 == 0 && !currentSurvey.isComplete()) 
+						SurveyAction.updateSurveyResult(currentSurvey);
+
+					//if answer fails validation
+				}// end of validation answers
+				else {						
+					m.addObject("survey", currentSurvey);
+					m.addObject("templateSurvey", templateSurvey);
+					m.addObject("questionid", questionId);
+					m.addObject("resultid", documentId);
+					
+					if (question.getRestriction() != null && question.getRestriction().getInstruction() != null)
+						m.addObject("message", question.getRestriction().getInstruction());
+					m.addObject("hideObservernote", false);
+					m.setViewName("/volunteer/ubc/show_volunteerSurvey");
+					return m;
+				}
+				//if answer not specified, and hit forward
+			}
+			else 
+				errMsg = "You must supply an answer";
+		}//end of forward action
+		else if (direction.equalsIgnoreCase("backward"))
+		{
+			int questionIndex = currentSurvey.getQuestionIndexbyId(questionId);
+			if (questionIndex > 0) 
+				nextQuestionId = currentSurvey.getQuestions().get(questionIndex - 1).getId();
+		}
+		
+		//backward to the description page(before the first qustion)
+		if ((questionId != null) && ("backward".equals(direction)) && (isFirstQuestionId(questionId, '0')))
+			m.addObject("hideObservernote", true);
+		else
+			m.addObject("hideObservernote", false);
+		
+		m.addObject("survey", currentSurvey);
+		m.addObject("templateSurvey", templateSurvey);
+		m.addObject("questionid", nextQuestionId);
+		m.addObject("resultid", documentId);
+		if (errMsg != null) m.addObject("message", errMsg);	
+
+		m.setViewName("/volunteer/ubc/show_volunteerSurvey");
+		return m;
+	}
+	
+	private static boolean isFirstQuestionId(String str, char c){
+		boolean isFirst = false;
+		int length = str.length();
+		
+		//'1' is only digital in string for backward direction, and '0' for forward direction
+		if ((str.charAt(length - 1) == c) && Character.isLetter(str.charAt(length - 2)))
+			isFirst = true;
+		
+		return isFirst;
+	}
+
+	private static boolean addNextQuestion(String currentQuestionId, TapestryPHRSurvey currentSurvey, PHRSurvey templateSurvey) throws SurveyException
+	{
+		SurveyQuestion nextQuestion;
+		if (currentQuestionId == null)
+		{
+			if (templateSurvey.getQuestions().size() == 0) return false;
+			nextQuestion = templateSurvey.getQuestions().get(0);
+		}
+		else
+		{
+			String nextQuestionId = currentSurvey.getNextQuestionId(currentQuestionId);
+			if (nextQuestionId == null) return false;		
+			
+			nextQuestion = templateSurvey.getQuestionById(nextQuestionId);
+
+		}
+		currentSurvey.getQuestions().add(nextQuestion);
+		return true;
+	}
+
+	private static ArrayList<SurveyAnswer> convertToSurveyAnswers(String[] answers, SurveyQuestion question) throws SurveyParseException
+	{
+		ArrayList<SurveyAnswer> surveyAnswers = new ArrayList<SurveyAnswer>();
+		SurveyAnswerFactory answerFactory = new SurveyAnswerFactory();
+		SurveyAnswer answerObj;
+		for (String answer : answers)
+		{
+			answerObj = answerFactory.getSurveyAnswer(question.getQuestionType(), answer);			
+			
+			if (answerObj == null) 
+				return null;				
+			else
+				surveyAnswers.add(answerObj);		
+		}
+		return surveyAnswers;
+	}
 	
 	// ===================== Mis =================================//
    	/**

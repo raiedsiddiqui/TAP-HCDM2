@@ -254,4 +254,16 @@ public class SurveyManagerImpl implements SurveyManager {
 		return surveyResultDao.getVolunteerSurveyResultByID(id);
 	}
 
+	@Override
+	public void updateVolunteerSurveyResults(int id, byte[] data) {
+		surveyResultDao.updateVolunteerSurveyResults(id, data);
+		
+	}
+
+	@Override
+	public void markAsCompleteForVolunteerSurvey(int id) {
+		surveyResultDao.markAsCompleteForVolunteerSurvey(id);
+		
+	}
+
 }

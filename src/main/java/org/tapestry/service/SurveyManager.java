@@ -316,5 +316,20 @@ public interface SurveyManager {
 	 */
 	@Transactional
 	public SurveyResult getVolunteerSurveyResultByID(int id);
+	
+	/**
+	 * Upload survey results
+	 * @param id The ID of the survey result
+	 * @param data The survey results
+	 */
+	@Transactional
+	public void updateVolunteerSurveyResults(int id, byte[] data);
+	
+	/**
+	 * Mark a survey as completed
+	 * @param id
+	 */
+	@Transactional
+	public void markAsCompleteForVolunteerSurvey(int id);
 
 }

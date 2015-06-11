@@ -47,7 +47,6 @@ import org.survey_component.data.SurveyQuestion;
 import org.tapestry.utils.TapestryHelper;
 import org.tapestry.utils.Utils;
 import org.tapestry.hl7.Hl7Utils;
-
 import org.tapestry.objects.Appointment;
 import org.tapestry.objects.Clinic;
 import org.tapestry.objects.DisplayedSurveyResult;
@@ -129,13 +128,19 @@ public class TapestryController{
 	
 	@RequestMapping(value="/loginsuccess", method=RequestMethod.GET)
 	public String loginSuccess(SecurityContextHolderAwareRequestWrapper request)
-	{			
-		User u = TapestryHelper.getLoggedInUser(request, userManager);
+	{
+		HttpSession session = request.getSession();				
+		User loggedInUser = null;
+		String name = request.getUserPrincipal().getName();	
+		if (name != null){			
+			loggedInUser = userManager.getUserByUsername(name);								
+			session.setAttribute("loggedInUser", loggedInUser);	
+		}
 		
 		StringBuffer sb = new StringBuffer();
-		sb.append(u.getName());
+		sb.append(loggedInUser.getName());
 		sb.append(" logged in");		
-		userManager.addUserLog(sb.toString(), u);
+		userManager.addUserLog(sb.toString(), loggedInUser);
 		
 		return "redirect:/";
 	}
@@ -3070,33 +3075,26 @@ public class TapestryController{
    		ModelAndView redirectAction = null;
    		List<SurveyResult> volunteerSurveyResults;
 		List<SurveyTemplate> volunteerSurveyTemplates;
-					
-		HttpSession session = request.getSession();
-		User u = (User)session.getAttribute("loggedInUser");
-		
-		int siteId = u.getSite();
 		
 		TapestrySurveyMap userSurveys = TapestryHelper.getVolunteerSurveyMap(request);
 		
 		if (userSurveys == null)
 		{
-			volunteerSurveyResults = surveyManager.getAllSurveyResultsBySite(siteId);	
-   			volunteerSurveyTemplates = surveyManager.getSurveyTemplatesBySite(siteId);
-			
+			volunteerSurveyResults = surveyManager.getAllVolunteerSurveyResults();	
+   			volunteerSurveyTemplates = surveyManager.getAllVolunteerSurveyTemplates();
+   						
 			userSurveys = TapestryHelper.storeVolunteerSurveyMapInSession(request, volunteerSurveyResults, volunteerSurveyTemplates);
 		}
    		
 		SurveyResult surveyResult = surveyManager.getVolunteerSurveyResultByID(id);		
 		SurveyTemplate surveyTemplate = surveyManager.getVolunteerSurveyTemplateByID(surveyResult.getSurveyID());
-		TapestryPHRSurvey currentSurvey = userSurveys.getSurvey(Integer.toString(id));
-		
-		System.out.println("userSurveys size=== "+ userSurveys.size());
-				
+		TapestryPHRSurvey currentSurvey = userSurveys.getSurvey(Integer.toString(id));		
+	
 		try {
 			SurveyFactory surveyFactory = new SurveyFactory();
 			PHRSurvey templateSurvey = surveyFactory.getSurveyTemplate(surveyTemplate);	
 			
-			redirectAction = DoSurveyAction.execute(request, Integer.toString(id), currentSurvey, templateSurvey);
+			redirectAction = TapestryHelper.execute(request, Integer.toString(id), currentSurvey, templateSurvey);
 		} catch (Exception e) {
 			System.out.println("Error: " + e);
 			e.printStackTrace();
@@ -3111,4 +3109,28 @@ public class TapestryController{
    
    		return redirectAction;
    	}
+   	
+  	@RequestMapping(value="/save_volunteerSurvey/{resultID}", method=RequestMethod.GET)
+   	public String saveVolunteerSurveyAndExit(@PathVariable("resultID") int id, HttpServletRequest request) throws Exception
+	{
+   		boolean isComplete = Boolean.parseBoolean(request.getParameter("survey_completed"));   		
+		//For activity logging purposes	
+		TapestrySurveyMap surveys = TapestryHelper.getVolunteerSurveyMap(request);		
+		PHRSurvey currentSurvey = surveys.getSurvey(Integer.toString(id));
+		
+		byte[] data = null;
+		try {
+			data = SurveyAction.updateSurveyResult(currentSurvey);	
+			surveyManager.updateVolunteerSurveyResults(id, data);
+		} catch (Exception e) {
+			System.out.println("Failed to convert PHRSurvey into a byte array");
+			e.printStackTrace();
+		}
+		
+		if (isComplete) {
+			currentSurvey.setComplete(true);			
+			surveyManager.markAsCompleteForVolunteerSurvey(id);			
+		}
+		return "redirect:/view_mySurveys";
+	}
 }
