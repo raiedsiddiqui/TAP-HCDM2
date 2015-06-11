@@ -2352,7 +2352,7 @@ public class TapestryController{
 		
 		SurveyResult surveyResult = surveyManager.getSurveyResultByID(id);
 		Patient currentPatient = patientManager.getPatientByID(surveyResult.getPatientID());
-		Appointment appointment = appointmentManager.getAppointmentByMostRecentIncomplete(currentPatient.getPatientID());
+	
 		
 		StringBuffer sb;
 		if (isComplete) {
@@ -2403,8 +2403,10 @@ public class TapestryController{
 		}
 		
 		if (request.isUserInRole("ROLE_ADMIN")){
-   			return "redirect:/manage_surveys";
+   			return "redirect:/display_client/"+surveyResult.getPatientID();
    		} else {
+   			Appointment appointment = appointmentManager.getAppointmentByMostRecentIncomplete(currentPatient.getPatientID());
+   			
    			if (isComplete) {
    				return "redirect:/patient/" + currentPatient.getPatientID() + "?complete=" + surveyResult.getSurveyTitle() 
    						+ "&appointmentId=" + appointment.getAppointmentID();

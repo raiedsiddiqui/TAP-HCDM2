@@ -74,6 +74,42 @@
 			text-transform: uppercase;
 
 		}
+		input[type="radio"] {
+			display: none;
+		}
+		input[type="radio"]+label{
+			font-weight: bold; 
+			color:black;
+			background-color:rgba(94, 93, 97, 0.17);
+			/* border: 1px solid black; */
+			padding:10px 10px 10px 10px;
+			width:100%;
+			text-align: center;
+		} 
+		input[type="radio"]:checked+label{
+			font-weight: bold; 
+			color:white;
+			background-color:#d69604;
+			/*border: 1px solid black;*/
+			padding:10px 10px 10px 10px;
+			width:100%;
+			text-align: center;
+		} 
+
+		#survendmessage {
+			font-size: 24px;
+			text-align: center;
+			color:black;
+			background-color:rgba(165, 158, 156, 0.31);
+		} 
+		#saveclose2 {
+			float:left;
+			font-size:30px;
+			height:70px;
+			color:white;
+			background-color:#6BB040;
+			width:90%;
+		}
 	</style>
 	
 	<script type="text/javascript">
@@ -107,11 +143,36 @@
      				<a class="brand" href="<c:url value="/"/>">Home</a>
 				</div>
 			</div>
-		</div>	 -->	
+		</div>	 -->
+	<div class="col-md-9" style="height:63px;">
+		<input id="saveclose" type="button" value="<%if (!survey.isComplete()) {%>Save & <%}%>Exit" onclick="document.location='<c:url value="/save_survey/"/><%=documentId%>?survey_completed=<%=completed%>'">
+    </div>	
 </div>
-	<div class="content">
-		
+<div class="content">
+	<% if (!message.equals("")) { %>
+    	<div id="survendmessage"class="alert alert-warning notificationMessage"><%=message%></div>
+	<div class="row">
+		<div class="col-md-10 col-md-offset-1">	
+			<input id="saveclose2" style="" type="button" value="<%if (!survey.isComplete()) {%>SUBMIT<%}%>" onclick="document.location='<c:url value="/save_survey/"/><%=documentId%>?survey_completed=<%=completed%>'">
+   		</div>
 	</div>
+   	<script type="text/javascript">
+		window.onload=function changeLink() {
+			var str = document.getElementById("survendmessage").textContent;
+	    	var n = str.indexOf("SUBMIT");
+	    	if (n > 0) {
+	    		document.getElementById('surveybackground').style.display="none";
+	    		document.getElementById('qtext').style.display="none";
+	    		document.getElementById('saveclose').style.display="none";
+	    	}
+
+	    	else {
+	    		document.getElementById('saveclose2').style.display="none";
+	    	}
+		}
+    </script>
+    <% } %>
+</div>
 		<div class="row-fluid">
 			<div class="squestion">
     			<div id="squestion2" > <!-- style="float: left;" -->
@@ -126,9 +187,9 @@
             					<b>${surveyTitle}</b><br/>
 									${description}
             				</div>
-            				<div class="col-md-6 pull-right">
+            				<!-- <div class="col-md-6 pull-right">
             					<input id="saveclose" type="button" value="<%if (!survey.isComplete()) {%>End <%}%>Survey" onclick="document.location='<c:url value="/save_survey/"/><%=documentId%>?survey_completed=<%=completed%>'">
-            				</div>
+            				</div> -->
             			</div>
             			
             			<input type="hidden" name="documentid" value="<%=documentId%>">
@@ -169,10 +230,7 @@
             		</div>
 
             		<br/>
-            		<div id="surveybackground" class="animated fadeIn">
-                		<% if (!message.equals("")) { %>
-                		<div class="alert alert-warning notificationMessage"><%=message%></div>
-                		<% } %>
+            		<div id="surveybackground" class="animated fadeIn">	
                 		<!-- Answer:  -->
                 
                 		<%
@@ -226,9 +284,15 @@
                   				boolean selected = question.getAnswers().contains(new SurveyAnswerString(choice.getAnswerValue()));
                    			%>
                    				
-                   					<div class="col-md-6">
+                   			<!--	<div class="col-md-6">
                    						<input type="radio" name="answer" class="answerChoice" value="<%=choice.getAnswerValue()%>" <%if (selected) out.print("checked");%><%if (survey.isComplete()) {%> readonly<%}%>> <%=choice.getAnswerText()%><br/>
+                  					</div> -->
+
+                  					<div class="col-md-6">
+                   						<input id="<%=choice.getAnswerValue()%>" type="radio" name="answer" class="answerChoice" value="<%=choice.getAnswerValue()%>" <%if (selected) out.print("checked");%><%if (survey.isComplete()) {%> readonly<%}%> />
+  										<label for="<%=choice.getAnswerValue()%>"><%=choice.getAnswerText()%></label><br/>
                   					</div>
+
                   		<%}%>
                 		</div>
                 		<%} else {%>
@@ -296,5 +360,6 @@
 		    </div>
 		</div>
 	</div>
+
 </body>
 </html>
