@@ -138,13 +138,13 @@
 					<div class="pname">
 						<a href="<c:url value="/patient/${aa.patientID}?appointmentId=${aa.appointmentID}"/>">
 							<div class="row cbutton">
-								<div class="col-sm-6 col-xs-5">
+								<div class="col-sm-6 col-xs-12">
 									${aa.patient}
 								</div>
-								<div class="col-sm-5 col-xs-5">
+								<div class="col-sm-5 col-xs-12">
 									${aa.date}
 								</div>
-								<div class="col-sm-1 col-xs-2">
+								<div class="col-sm-1 col-xs-12">
 									${aa.time}
 								</div>
 							</div>

@@ -10,9 +10,11 @@
 
     <style type="text/css">
     body {
-      background-color: #4A307A
+      background-color: #444;
+      padding-right: 0px;
+      padding-left: 0px;
     }
-      #footer {
+/*      #footer {
         position: absolute;
         bottom: 0;
         background-color: #444;
@@ -20,7 +22,7 @@
         padding: 30px;
         height:100px;
         border-top: 5px solid white;
-        }
+        }*/
         
         #content {
           background-color: #4A307A;
@@ -65,6 +67,29 @@
           text-align: center;
         }
 
+        /*Mobile Phone Custom CSS*/
+        @media only screen and (min-device-width : 320px) and (max-device-width : 568px) and (orientation : portrait) { 
+          .form-horizontal {
+            width:100%;
+          }
+
+          .smallicon {
+            padding: 21px 4px 26px 10px;
+          }
+
+          #logininput {
+            font-size: 15px;
+          }
+          #loginbtn {
+            height: 50px;
+            width:100%;
+          }
+          h2 {
+            font-size: 20px;
+          }
+
+         }
+
     </style>
  	</head>
  	<body>
@@ -78,7 +103,6 @@
  -->
     </div>
   </div>
-</div>
 
 
     <div id="content">
@@ -87,15 +111,15 @@
         <img id="logofhs" src="${pageContext.request.contextPath}/resources/images/fhs.png"/>
         <img id="logodeg" src="${pageContext.request.contextPath}/resources/images/degroote.png"/>-->
    			<div class="row">
-          
-
-	    		<div class="col-md-12">
+          <div class="col-md-12">
 					 <c:if test="${not empty error}">
 					<div class="alert alert-danger">Login failed <br /> Caused :
-							${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}</div>
+							${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}
+          </div>
 					</c:if>
 					<c:if test="${not empty usernameChanged}">
-					<div class="alert alert-info">Your username has changed. Please log in again using the new credentials.</div>
+					<div class="alert alert-info">Your username has changed. Please log in again using the new credentials.
+          </div>
 					</c:if>
         </div>
       </div>
@@ -128,12 +152,18 @@
         </div>
         <br>
 
-        <div class="row-fluid">
+        <div class="row">
           <div class="col-md-12">
           <input id="loginbtn" type="submit" value="LOGIN" style="margin-bottom:10px;"></input>
           </div>
         </div>
       </form>
+  </div>
+  <div class="row" id="footer">
+    <div class="col-md-12">
+        <img id="logofhs" src="${pageContext.request.contextPath}/resources/images/fhswhite.png"/>
+        <img id="logodeg" src="${pageContext.request.contextPath}/resources/images/degrootewhite.png"/>
+    </div>
   </div>
 </div>
 
@@ -164,12 +194,6 @@
        						</div>
       					</form>
      				</div> -->
-          <div id="footer">
-            <div class="col-md-12">
-                <img id="logofhs" src="${pageContext.request.contextPath}/resources/images/fhswhite.png"/>
-                <img id="logodeg" src="${pageContext.request.contextPath}/resources/images/degrootewhite.png"/>
-            </div>
-   			</div>
-
+          
  	</body>
 </html>
