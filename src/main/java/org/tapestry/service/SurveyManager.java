@@ -269,5 +269,52 @@ public interface SurveyManager {
 	 */
 	@Transactional
 	public void updateVolunteerSurveyTemplate(SurveyTemplate st);
+	
+	/**
+	 * Ordered by title ascending
+	 * @return a list of SurveyResult objects
+	 */
+	@Transactional
+	public List<SurveyResult> getAllVolunteerSurveyResults();
+	
+	/**
+	 * Uploads a survey template to the database
+	 * @param st
+	 */
+	@Transactional
+	public String assignVolunteerSurvey(SurveyResult sr);
+	
+	/**
+	* a List of completed volunteer Survey results for a volunteer 
+	* @param volunteerId
+	* @return A List of SurveyResult objects
+	*/
+	@Transactional
+	public List<SurveyResult> getCompletedVolunteerSurveys(int volunteerId);
+	
+	/**
+	* a List of completed volunteer Survey results for a volunteer 
+	* @param volunteerId
+	* @return A List of SurveyResult objects
+	*/
+	@Transactional
+	public List<SurveyResult> getIncompleteVolunteerSurveys(int volunteerId);
+	
+	/**
+	* Returns the survey template with the given ID
+	* @param id The ID of the survey template to find
+	* @return A SurveyTemplate object representing the result
+	*/
+	@Transactional
+	public SurveyTemplate getVolunteerSurveyTemplateByID(int id);
+	
+	/**
+	 * 
+	 * A object of SurveyResult which result_Id is id
+	 * @param id
+	 * @return an object of SurveyResult
+	 */
+	@Transactional
+	public SurveyResult getVolunteerSurveyResultByID(int id);
 
 }

@@ -105,4 +105,11 @@ public interface SurveyTemplateDAO {
 	 */
 	public void updateVolunteerSurveyTemplate(SurveyTemplate st);
 	
+	/**
+	* Returns the survey template with the given ID
+	* @param id The ID of the survey template to find
+	* @return A SurveyTemplate object representing the result
+	*/
+	public SurveyTemplate getVolunteerSurveyTemplateByID(int id);
+	
 }

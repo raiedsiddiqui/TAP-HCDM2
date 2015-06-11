@@ -2016,7 +2016,7 @@ public class TapestryController{
 		return "/admin/assign_survey";
 	} 
    	
-   	@RequestMapping(value="/assign_selectedsurvey", method=RequestMethod.POST)
+   	@RequestMapping(value="/assign_selectedSurvey", method=RequestMethod.POST)
 	public String assignSurvey(SecurityContextHolderAwareRequestWrapper request, ModelMap model) 
 			throws JAXBException, DatatypeConfigurationException, Exception
 	{      		
@@ -2036,7 +2036,7 @@ public class TapestryController{
    		String hPatient = request.getParameter("patient");   	
    	   		
    		if (!Utils.isNullOrEmpty(hPatient))
-   		{      			
+   		{      		
    			if(request.getParameter("assignSurvey") != null)//assign selected surveys to selected patients
    	   		{  
    				if (surveyTemplateIds != null && surveyTemplateIds.length > 0){
@@ -2056,11 +2056,13 @@ public class TapestryController{
    	   		}
    		}
    		else//user select SurveyManagement/Assign Survey
-   		{ 	
+   		{ 	System.out.println("/assign_selectedsurvey...2");
    			List<Patient> patients = TapestryHelper.getPatients(request, patientManager); 
+   			System.out.println("=== " + request.getParameter("searchPatient"));
+   	   		System.out.println("=== " + request.getParameter("searchPatientName"));
 	   		if (request.getParameter("searchPatient") != null && 
 	   				request.getParameter("searchPatientName") !=null )//search patient by name
-	   		{
+	   		{System.out.println("/assign_selectedsurvey...3");
 	   			String name = request.getParameter("searchPatientName");   			
 	   			
 	   			patients = patientManager.getPatientsByPartialName(name);			
@@ -2068,7 +2070,7 @@ public class TapestryController{
 	   			
 	   		}
 	   		else if(request.getParameter("assignSurvey") != null)//assign selected surveys to selected patients
-	   		{    	   		
+	   		{    	   		System.out.println("/assign_selectedsurvey...4");
 	   	   		String[] selectedPatientIds = request.getParameterValues("patientId");
 	   	   		String assignToAll = request.getParameter("assignAllClinets");	   	   		   	   		
 	   	   		
@@ -2242,7 +2244,7 @@ public class TapestryController{
 	{		//move logging down to /show_survey/{resultID}
 		return "redirect:/show_survey/" + id;
 	}
-   	
+	
    	@RequestMapping(value="/show_survey/{resultID}", method=RequestMethod.GET)
    	public ModelAndView showSurvey(@PathVariable("resultID") int id, HttpServletRequest request)
    	{   	   		
@@ -2255,16 +2257,23 @@ public class TapestryController{
 		String name = u.getName();		
 		int siteId = u.getSite();
 		
-   		if (request.isUserInRole("ROLE_ADMIN"))//central admin 
-   		{
-			surveyResults = surveyManager.getAllSurveyResults();
-			surveyTemplates = surveyManager.getAllSurveyTemplates();
-   		}
-   		else //local admin/site admin
-   		{
-   			surveyResults = surveyManager.getAllSurveyResultsBySite(siteId);	
-   			surveyTemplates = surveyManager.getSurveyTemplatesBySite(siteId);
-   		} 
+		TapestrySurveyMap userSurveys = TapestryHelper.getSurveyMap(request);
+		
+		if (userSurveys == null)
+		{
+			if (request.isUserInRole("ROLE_ADMIN"))//central admin 
+	   		{
+				surveyResults = surveyManager.getAllSurveyResults();
+				surveyTemplates = surveyManager.getAllSurveyTemplates();
+	   		}
+	   		else //local admin/site admin
+	   		{
+	   			surveyResults = surveyManager.getAllSurveyResultsBySite(siteId);	
+	   			surveyTemplates = surveyManager.getSurveyTemplatesBySite(siteId);
+	   		} 
+			
+			userSurveys = TapestryHelper.storeSurveyMapInSession(request, surveyResults, surveyTemplates);
+		}
    		
 		SurveyResult surveyResult = surveyManager.getSurveyResultByID(id);		
 		SurveyTemplate surveyTemplate = surveyManager.getSurveyTemplateByID(surveyResult.getSurveyID());
@@ -2285,9 +2294,9 @@ public class TapestryController{
 		userManager.addUserLog(sb.toString(), u);		
 				
 		//all survey results stored in map		
-		TapestrySurveyMap userSurveys = DoSurveyAction.getSurveyMapAndStoreInSession(request, surveyResults, surveyTemplates);			
+//		TapestrySurveyMap userSurveys = DoSurveyAction.getSurveyMapAndStoreInSession(request, surveyResults, surveyTemplates);			
 		TapestryPHRSurvey currentSurvey = userSurveys.getSurvey(Integer.toString(id));
-				
+		System.out.println("currentSurvey === "+ currentSurvey);
 		try {
 			SurveyFactory surveyFactory = new SurveyFactory();
 			PHRSurvey templateSurvey = surveyFactory.getSurveyTemplate(surveyTemplate);	
@@ -2534,7 +2543,7 @@ public class TapestryController{
 		userManager.addUserLog(sb.toString(), loggedInUser);
 		
 		if (loggedInUser.getSite() == 3)//for temporary UBC
-			return "/manage_volunteer_survey";
+			return "redirect:/manage_volunteer_survey";
 		else
 			return "redirect:/manage_survey";
 	}
@@ -2902,8 +2911,202 @@ public class TapestryController{
 				model.addAttribute("surveyTemplate", st);
 				break;
 			}
-		}
-		
+		}		
 		return "/admin/edit_survey_template";
 	}
+	
+ 	@RequestMapping(value="/assign_volunteerSurvey", method=RequestMethod.GET)
+	public String getSurveyForVolunteer( SecurityContextHolderAwareRequestWrapper request, 	ModelMap model)
+   	{ 
+   		List<SurveyTemplate> surveyTemplates = surveyManager.getAllVolunteerSurveyTemplates();	
+   		
+   		if (surveyTemplates == null)
+				return "redirect:/manage_volunteer_survey?failed=true";
+   		
+   		User loginUser = TapestryHelper.getLoggedInUser(request);   		  		
+   		List<Volunteer> volunteers = volunteerManager.getAllVolunteersByOrganization(loginUser.getOrganization());
+   		
+   		model.addAttribute("volunteers", volunteers);
+   		model.addAttribute("surveyTemplates", surveyTemplates);   		
+
+   		HttpSession session = request.getSession();
+		if (session.getAttribute("unread_messages") != null)
+			model.addAttribute("unread", session.getAttribute("unread_messages"));
+   		
+		return "/admin/ubc/assign_volunteerSurvey";
+	} 
+ 	
+   	@RequestMapping(value="/assign_volunteerSurvey", method=RequestMethod.POST)
+	public String assignVolunteerSurvey(SecurityContextHolderAwareRequestWrapper request, ModelMap model) 
+			throws JAXBException, DatatypeConfigurationException, Exception
+	{   
+   		List<SurveyTemplate> sTemplates = surveyManager.getAllVolunteerSurveyTemplates();	    	
+   		ArrayList<SurveyTemplate> selectSurveyTemplats = new ArrayList<SurveyTemplate>();
+   		User loginUser = TapestryHelper.getLoggedInUser(request);   		
+   		String[] surveyTemplateIds = request.getParameterValues("volunteerSurveyTemplates"); 
+   		int[] volunteerIds;   	   		
+   		List<Volunteer> volunteers = volunteerManager.getAllVolunteersByOrganization(loginUser.getOrganization());
+   	
+   		if (request.getParameter("searchVolunteer") != null && request.getParameter("searchVolunteerName") !=null )
+   		{//search volunteer by name
+   			String name = request.getParameter("searchVolunteerName");   		   			
+   			volunteers = volunteerManager.getVolunteersByName(name);			
+   			model.addAttribute("searchPatientName", name);	 	   			
+	   	}
+   		else if(request.getParameter("assignSurvey") != null)//assign selected surveys to selected patients
+   		{    System.out.println("/assign_volunteerSurvey...assign");	   		
+   			String[] selectedVolunteerIds = request.getParameterValues("volunteerId");
+   			String assignToAll = request.getParameter("assignAllVolunteers");	   	   		   	   		
+	   	   		
+   			//get survey template list 
+   			if (surveyTemplateIds != null && surveyTemplateIds.length > 0)
+   			{
+   				TapestryHelper.addSurveyTemplate(surveyTemplateIds,sTemplates, selectSurveyTemplats);   
+   				StringBuffer sb = new StringBuffer();
+   				sb.append(loginUser.getName());
+   				sb.append(" has assigned surveys to patients");
+   				String logDes = sb.toString();
+   				
+   				if ("true".equalsIgnoreCase(assignToAll))
+   				{//for assign to all volunteers   			
+   					Volunteer volunteer;   			
+		   	   		volunteerIds = new int[volunteers.size()];
+		   	   			
+		   	   		for(int i = 0; i < volunteers.size(); i++)
+		   	   		{
+		   	   			volunteer = new Volunteer();
+		   	   			volunteer = volunteers.get(i);
+		   	   			volunteerIds[i] = volunteer.getVolunteerId();
+		   	   		}		   	   			
+		   	   		TapestryHelper.assignSurveysToVolunteer(selectSurveyTemplats, volunteerIds, request, model, surveyManager);		
+		   	   		userManager.addUserLog(logDes, loginUser);
+   				}
+   				else
+   	   	   		{//for selected patients, convert String[] to int[]   			
+   	   	   			if (selectedVolunteerIds == null || selectedVolunteerIds.length == 0)
+   	   	   				model.addAttribute("no_volunteer_selected", true);
+   	   	   			else
+   	   	   			{
+   	   	   				int[] iSelectedVolunteerIds = new int[selectedVolunteerIds.length];
+   	   	   	   			for (int j = 0; j < selectedVolunteerIds.length; j++){
+   	   	   	   				iSelectedVolunteerIds[j] = Integer.parseInt(selectedVolunteerIds[j]);
+   	   	   				}
+   	   	   	   			TapestryHelper.assignSurveysToVolunteer(selectSurveyTemplats, iSelectedVolunteerIds, request, model, surveyManager);
+   	   	   	   			userManager.addUserLog(logDes, loginUser);
+   	   	   			}   			
+   	   	   		} 		 
+   			}
+   			else//no survey template has been selected
+   				model.addAttribute("no_survey_selected", true);
+   		}
+   		model.addAttribute("surveyTemplates", sTemplates);
+   		model.addAttribute("volunteers", volunteers);
+   		
+   		HttpSession session = request.getSession();
+		if (session.getAttribute("unread_messages") != null)
+			model.addAttribute("unread", session.getAttribute("unread_messages"));
+		
+		return "admin/ubc/assign_volunteerSurvey";
+	}
+   	
+   	@RequestMapping(value="/view_mySurveys", method=RequestMethod.GET)
+	public String viewMySurveys(SecurityContextHolderAwareRequestWrapper request, ModelMap model)
+	{	
+   		//Find the name of the current user
+		User loginUser = TapestryHelper.getLoggedInUser(request);
+		HttpSession session = request.getSession();
+		
+		int volunteerId = TapestryHelper.getLoggedInVolunteerId(request);
+		
+		if (session.getAttribute("unread_messages") != null)
+			model.addAttribute("unread", session.getAttribute("unread_messages"));		
+
+		List<SurveyResult> completedSurveyResultList = surveyManager.getCompletedVolunteerSurveys(volunteerId);
+		List<SurveyResult> incompleteSurveyResultList = surveyManager.getIncompleteVolunteerSurveys(volunteerId);
+		Collections.sort(completedSurveyResultList);
+		Collections.sort(incompleteSurveyResultList);
+		
+		//get display survey result for displaying question text and answer
+		String xml;
+		LinkedHashMap<String, String> res;
+		List<DisplayedSurveyResult> displayedResults;
+		List<DisplayedSurveyResult> completedDisplayedResults = new ArrayList<DisplayedSurveyResult>();
+	
+		if (completedSurveyResultList.size() > 0)
+		{
+			for (SurveyResult sr: completedSurveyResultList)
+			{
+		   		try{
+		   			xml = new String(sr.getResults(), "UTF-8");
+		   		} catch (Exception e) {
+		   			xml = "";
+		   		}
+		   		res = ResultParser.getResults(xml);
+		   		displayedResults = ResultParser.getDisplayedSurveyResults(res);
+		   		completedDisplayedResults.addAll(displayedResults);
+			}
+		}
+		//translate answers with full detailed information
+		completedDisplayedResults = TapestryHelper.detailedResult(completedDisplayedResults);
+		model.addAttribute("completedVolunteerSurveys", completedSurveyResultList);
+		model.addAttribute("inProgressVolunteerSurveys", incompleteSurveyResultList);
+		model.addAttribute("displayResults", completedDisplayedResults);
+		model.addAttribute("volunteerName", loginUser.getName());
+				
+		return "volunteer/ubc/view_mySurveys";
+	}
+   	
+	@RequestMapping(value="/open_volunteerSurvey/{resultID}", method=RequestMethod.GET)
+	public String openVolunteerSurvey(@PathVariable("resultID") int id, HttpServletRequest request) 
+	{		//move logging down to /show_survey/{resultID}
+		return "redirect:/show_volunteerSurvey/" + id;
+	}
+	
+   	@RequestMapping(value="/show_volunteerSurvey/{resultID}", method=RequestMethod.GET)
+   	public ModelAndView showVolunteerSurvey(@PathVariable("resultID") int id, HttpServletRequest request)
+   	{   	   		
+   		ModelAndView redirectAction = null;
+   		List<SurveyResult> volunteerSurveyResults;
+		List<SurveyTemplate> volunteerSurveyTemplates;
+					
+		HttpSession session = request.getSession();
+		User u = (User)session.getAttribute("loggedInUser");
+		
+		int siteId = u.getSite();
+		
+		TapestrySurveyMap userSurveys = TapestryHelper.getVolunteerSurveyMap(request);
+		
+		if (userSurveys == null)
+		{
+			volunteerSurveyResults = surveyManager.getAllSurveyResultsBySite(siteId);	
+   			volunteerSurveyTemplates = surveyManager.getSurveyTemplatesBySite(siteId);
+			
+			userSurveys = TapestryHelper.storeVolunteerSurveyMapInSession(request, volunteerSurveyResults, volunteerSurveyTemplates);
+		}
+   		
+		SurveyResult surveyResult = surveyManager.getVolunteerSurveyResultByID(id);		
+		SurveyTemplate surveyTemplate = surveyManager.getVolunteerSurveyTemplateByID(surveyResult.getSurveyID());
+		TapestryPHRSurvey currentSurvey = userSurveys.getSurvey(Integer.toString(id));
+		
+		System.out.println("userSurveys size=== "+ userSurveys.size());
+				
+		try {
+			SurveyFactory surveyFactory = new SurveyFactory();
+			PHRSurvey templateSurvey = surveyFactory.getSurveyTemplate(surveyTemplate);	
+			
+			redirectAction = DoSurveyAction.execute(request, Integer.toString(id), currentSurvey, templateSurvey);
+		} catch (Exception e) {
+			System.out.println("Error: " + e);
+			e.printStackTrace();
+		}
+		
+		if (redirectAction == null){ //Assuming we've completed the survey
+			System.out.println("Something bad happened");
+		}
+				
+   		if (request.isUserInRole("ROLE_USER") && redirectAction.getViewName() == "failed")
+   			redirectAction.setViewName("redirect:/");	
+   
+   		return redirectAction;
+   	}
 }

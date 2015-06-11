@@ -48,8 +48,8 @@
 					</div>		
 				</td>
 				<td class="right">
-					<a href="<c:url value="/go_assign_survey/0"/>"  class="btn btn-primary"> Assign Survey</a>
-					<a href="#addSurvey" data-toggle="modal" class="btn btn-primary">Add Survey</a>
+					<a href="<c:url value="/assign_volunteerSurvey"/>"  class="btn btn-primary"> Assign Survey</a>
+					<a href="#addVolunteerSurvey" data-toggle="modal" class="btn btn-primary">Add Survey</a>
 				</td>
 			</tr>
 		</table>
@@ -77,11 +77,10 @@
 					<td>${st.createdDate }</td>	
 				</tr>
 				</c:forEach>
-			</table>
-		<!-- <a href="#addSurvey" data-toggle="modal" class="btn btn-primary">Add new</a> -->
+			</table>		
 		</div>
 
-<div class="modal fade" id="addSurvey" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="addVolunteerSurvey" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">

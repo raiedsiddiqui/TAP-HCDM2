@@ -33,7 +33,9 @@ public class SurveyResult implements Comparable<SurveyResult> {
 	private String description;
 	private ArrayList<QuestionAnswerPair> questionAnswerPairs;
 	private String strCompleted;
-
+	private int volunteerID;
+	private String volunteerName;
+	
 	public SurveyResult(){
 		//Default constructor
 	}
@@ -250,4 +252,21 @@ public class SurveyResult implements Comparable<SurveyResult> {
 	public void setStrCompleted(String strCompleted) {
 		this.strCompleted = strCompleted;
 	}
+	
+	public int getVolunteerID() {
+		return volunteerID;
+	}
+
+	public void setVolunteerID(int volunteerID) {
+		this.volunteerID = volunteerID;
+	}
+
+	public String getVolunteerName() {
+		return volunteerName;
+	}
+
+	public void setVolunteerName(String volunteerName) {
+		this.volunteerName = volunteerName;
+	}
+
 }

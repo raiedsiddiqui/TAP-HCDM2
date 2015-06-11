@@ -59,6 +59,7 @@
 
 				<li <c:if test="${pageContext.request.requestURI.contains('manage_clinics')}">class="active"</c:if>><a href="<c:url value="/manage_clinics"/>">Clinics</a></li>
 				
+		<!--		<li <c:if test="${pageContext.request.requestURI.contains('manage_volunteer_survey')}">class="active"</c:if>><a href="<c:url value="/manage_volunteer_survey"/>">Add/Edit Volunteer Survey </a></li> -->
 			
 
 	          </ul>

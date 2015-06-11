@@ -149,4 +149,40 @@ public interface SurveyResultDAO {
 	 * @param sr
 	 */
 	public void archiveSurveyResult(SurveyResult sr, String patient, String deletedBy);
+	
+	//============= UBC ================
+	/**
+	 * Ordered by title ascending
+	 * @return a list of SurveyResult objects
+	 */
+	public List<SurveyResult> getAllVolunteerSurveyResults();
+	
+	/**
+	 * Uploads a volunteer survey template to the database
+	 * @param st
+	 */
+	public String assignVolunteerSurvey(SurveyResult sr);
+	
+	/**
+	* a List of completed Survey results for patient whose id is patientId
+	* @param volunteerId
+	* @return A List of SurveyResult objects
+	*/
+	public List<SurveyResult> getCompletedVolunteerSurveys(int volunteerId);	
+	
+	/**
+	* a List of uncompleted Survey results for patient whose id is patientId
+	* @param volunteerId
+	* @return A List of SurveyResult objects
+	*/
+	public List<SurveyResult> getIncompleteVolunteerSurveys(int volunteerId);
+	
+	/**
+	 * 
+	 * A object of SurveyResult which result_Id is id
+	 * @param id
+	 * @return an object of SurveyResult
+	 */
+	public SurveyResult getVolunteerSurveyResultByID(int id);
+	
 }

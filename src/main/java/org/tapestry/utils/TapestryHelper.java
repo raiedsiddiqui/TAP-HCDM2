@@ -63,6 +63,7 @@ import org.tapestry.service.UserManager;
 import org.tapestry.service.VolunteerManager;
 import org.tapestry.surveys.DoSurveyAction;
 import org.tapestry.surveys.ResultParser;
+import org.tapestry.surveys.SurveyActionMumps;
 import org.tapestry.surveys.SurveyFactory;
 import org.tapestry.surveys.TapestryPHRSurvey;
 import org.tapestry.surveys.TapestrySurveyMap;
@@ -1073,6 +1074,84 @@ public class TapestryHelper {
   			System.out.println("something wrong with assingn survey to client === " + e.getMessage());
   		} 
    	}
+   	
+   	
+   	/**
+   	 * Assign selected surveys to selected clients
+   	 * @param surveyTemplates
+   	 * @param patientIds
+   	 * @param request
+   	 * @param surveyManager
+   	 * @throws JAXBException
+   	 * @throws DatatypeConfigurationException
+   	 * @throws Exception
+   	 */
+   	public static void assignSurveysToVolunteer(List<SurveyTemplate> surveyTemplates, int[] volunteerIds, 
+   			SecurityContextHolderAwareRequestWrapper request, SurveyManager surveyManager) 
+   					throws JAXBException, DatatypeConfigurationException, Exception{
+		
+		List<SurveyResult> surveyResults = surveyManager.getAllVolunteerSurveyResults();
+		
+   		TapestrySurveyMap surveys = DoSurveyAction.getSurveyMapAndStoreInSession(request, surveyResults, surveyTemplates);
+   		SurveyResult sr;
+   		
+   		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+   		String startDate = sdf.format(new Date());   
+ 	
+//   		List<TapestryPHRSurvey> specificSurveys;
+   		for(SurveyTemplate st: surveyTemplates) 
+   		{
+			List<TapestryPHRSurvey> specificSurveys = surveys.getSurveyListById(Integer.toString(st.getSurveyID()));
+			
+			SurveyFactory surveyFactory = new SurveyFactory();
+			TapestryPHRSurvey template = surveyFactory.getSurveyTemplate(st);
+			sr = new SurveyResult();
+				
+			for (int i = 0; i < volunteerIds.length; i++)
+			{
+				sr.setVolunteerID(volunteerIds[i]);
+				sr.setSurveyID(st.getSurveyID());
+	            	
+				//set today as startDate
+				sr.setStartDate(startDate);	            	
+			    	
+				TapestryPHRSurvey blankSurvey = template;
+				blankSurvey.setQuestions(new ArrayList<SurveyQuestion>());// make blank survey
+				sr.setResults(SurveyAction.updateSurveyResult(blankSurvey));
+				String documentId = surveyManager.assignVolunteerSurvey(sr);
+					
+				blankSurvey.setDocumentId(documentId);
+				surveys.addSurvey(blankSurvey);
+				specificSurveys = surveys.getSurveyListById(Integer.toString(st.getSurveyID())); //reload				
+			}   			
+		}
+   	}
+   	////
+  	/**
+   	 * 
+   	 * @param selectSurveyTemplats
+   	 * @param volunteerIds
+   	 * @param request
+   	 * @param model
+   	 * @param surveyManager
+   	 * @throws JAXBException
+   	 * @throws DatatypeConfigurationException
+   	 * @throws Exception
+   	 */
+   	public static void assignSurveysToVolunteer(List<SurveyTemplate> selectSurveyTemplats, int[] volunteerIds,
+   			SecurityContextHolderAwareRequestWrapper request,ModelMap model, SurveyManager surveyManager) 
+   					throws JAXBException, DatatypeConfigurationException, Exception{
+   		try
+   		{   				
+   			assignSurveysToVolunteer(selectSurveyTemplats, volunteerIds, request, surveyManager);
+   			model.addAttribute("successful", true);
+  		}catch (Exception e){
+  			System.out.println("something wrong with assingn survey to volunteer === " + e.getMessage());
+  		} 
+   	}
+   	
+   	
+   	////
    	/**
    	 * check if all surveys have been finished
    	 * @param patientId
@@ -1105,6 +1184,76 @@ public class TapestryHelper {
 	    
 	    return questionText;
 	}
+   	
+   	public static TapestrySurveyMap getSurveyMap(HttpServletRequest request)
+	{
+		TapestrySurveyMap userSurveys = (TapestrySurveyMap) request.getSession().getAttribute("session_survey_list");
+		return(userSurveys);
+	}
+   	
+   	public static TapestrySurveyMap getVolunteerSurveyMap(HttpServletRequest request)
+	{
+		TapestrySurveyMap userSurveys = (TapestrySurveyMap) request.getSession().getAttribute("session_volunteer_survey_list");
+		return(userSurveys);
+	}
+   	
+   	public static TapestrySurveyMap storeSurveyMapInSession(HttpServletRequest request, List<SurveyResult> surveyResults, List<SurveyTemplate> surveyTemplates)
+	{
+		TapestrySurveyMap userSurveys = new TapestrySurveyMap(getSurveyResultsList(surveyResults, surveyTemplates));
+		request.getSession().setAttribute("session_survey_list", userSurveys);
+		
+		return userSurveys;
+	}
+   	
+   	public static TapestrySurveyMap storeVolunteerSurveyMapInSession(HttpServletRequest request, List<SurveyResult> surveyResults, List<SurveyTemplate> surveyTemplates)
+	{
+		TapestrySurveyMap userSurveys = new TapestrySurveyMap(getSurveyResultsList(surveyResults, surveyTemplates));
+		request.getSession().setAttribute("session_volunteer_survey_list", userSurveys);
+		
+		return userSurveys;
+	}
+   	
+	public static List<TapestryPHRSurvey> getSurveyResultsList(List<SurveyResult> surveyResults, List<SurveyTemplate> surveyTemplates)
+	{
+		List<TapestryPHRSurvey> results = new ArrayList<TapestryPHRSurvey>();
+
+		for (SurveyResult tempResult : surveyResults)
+		{
+			try
+			{
+				tempResult.processMumpsResults(tempResult);
+				TapestryPHRSurvey temp = SurveyActionMumps.toPhrSurvey(surveyTemplates, tempResult);
+				results.add(temp);
+			}
+			catch (Exception e)
+			{
+				System.out.println("Error" + e);
+			}
+		}
+
+		return(results);
+	}
+	
+//	public static List<TapestryPHRSurvey> getVolunteerSurveyResultsList(List<SurveyResult> surveyResults, List<SurveyTemplate> surveyTemplates)
+//	{
+//		List<TapestryPHRSurvey> results = new ArrayList<TapestryPHRSurvey>();
+//
+//		for (SurveyResult tempResult : surveyResults)
+//		{
+//			try
+//			{
+//				tempResult.processMumpsResults(tempResult);
+//				TapestryPHRSurvey temp = SurveyActionMumps.toPhrSurvey(surveyTemplates, tempResult);
+//				results.add(temp);
+//			}
+//			catch (Exception e)
+//			{
+//				System.out.println("Error" + e);
+//			}
+//		}
+//
+//		return(results);
+//	}
 
 	
 	// ===================== Mis =================================//

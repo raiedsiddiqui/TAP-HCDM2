@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.tapestry.dao.SurveyResultDAO;
 import org.tapestry.dao.SurveyTemplateDAO;
 import org.tapestry.objects.SurveyResult;
@@ -221,6 +222,36 @@ public class SurveyManagerImpl implements SurveyManager {
 	public void updateVolunteerSurveyTemplate(SurveyTemplate st) {
 		surveyTemplateDao.updateVolunteerSurveyTemplate(st);
 		
+	}
+
+	@Override
+	public List<SurveyResult> getAllVolunteerSurveyResults() {
+		return surveyResultDao.getAllVolunteerSurveyResults();
+	}
+	
+	@Override
+	public String assignVolunteerSurvey(SurveyResult sr){
+		return surveyResultDao.assignVolunteerSurvey(sr);
+	}
+
+	@Override
+	public List<SurveyResult> getCompletedVolunteerSurveys(int volunteerId) {
+		return surveyResultDao.getCompletedVolunteerSurveys(volunteerId);
+	}
+
+	@Override
+	public List<SurveyResult> getIncompleteVolunteerSurveys(int volunteerId) {
+		return surveyResultDao.getIncompleteVolunteerSurveys(volunteerId);
+	}
+
+	@Override
+	public SurveyTemplate getVolunteerSurveyTemplateByID(int id) {		
+		return surveyTemplateDao.getVolunteerSurveyTemplateByID(id);
+	}
+
+	@Override
+	public SurveyResult getVolunteerSurveyResultByID(int id) {
+		return surveyResultDao.getVolunteerSurveyResultByID(id);
 	}
 
 }

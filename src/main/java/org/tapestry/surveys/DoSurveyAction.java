@@ -367,6 +367,8 @@ public class DoSurveyAction
 		return(userSurveys);
 	}
 	
+	
+	
 	public static TapestrySurveyMap getSurveyMap(HttpServletRequest request) {
 		TapestrySurveyMap userSurveys = (TapestrySurveyMap) request.getSession().getAttribute("session_survey_list");
 		return userSurveys;

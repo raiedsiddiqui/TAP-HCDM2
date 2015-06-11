@@ -243,4 +243,91 @@ public class SurveyResultDAOImpl extends JdbcDaoSupport implements SurveyResultD
 				, deletedBy);
 	}
 
+	@Override
+	public List<SurveyResult> getAllVolunteerSurveyResults() {
+		String sql = "SELECT vsr.*, vs.title, vs.description, v.firstname, v.lastname FROM volunteer_survey_results AS vsr"
+				+ " INNER JOIN surveys AS vs ON vsr.volunteer_survey_ID = vs.survey_ID INNER JOIN volunteers AS v"
+				+ " ON vsr.volunteer_ID=v.volunteer_ID ORDER BY vsr.startDate ";
+		List<SurveyResult> results = getJdbcTemplate().query(sql, new VolunteerSurveyResultMapper());
+		
+		return results;
+	}
+	
+	@Override
+	public String assignVolunteerSurvey(final SurveyResult sr) {						
+		final String sql = "INSERT INTO volunteer_survey_results (volunteer_ID, volunteer_survey_ID, data, startDate) values (?,?,?,?)";
+    	KeyHolder keyHolder = new GeneratedKeyHolder();
+    	getJdbcTemplate().update(
+    	    new PreparedStatementCreator() {
+    	        public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+    	            PreparedStatement pst =
+    	                con.prepareStatement(sql, new String[] {"id"});
+    	            pst.setInt(1, sr.getVolunteerID());
+    	            pst.setInt(2, sr.getSurveyID());
+    	            pst.setBytes(3, sr.getResults());
+    	            pst.setString(4, sr.getStartDate());
+    	            
+    	            return pst;
+    	        }
+    	    },
+    	    keyHolder);
+    	return String.valueOf((Long)keyHolder.getKey());
+	}
+	
+	@Override
+	public List<SurveyResult> getCompletedVolunteerSurveys(int volunteerId) {
+		String sql = "SELECT vsr.*, vs.title, vs.description, v.firstname, v.lastname FROM volunteer_survey_results AS vsr "
+				+ "INNER JOIN volunteer_surveys AS vs ON vsr.volunteer_survey_ID = vs.survey_ID INNER JOIN volunteers AS v "
+				+ "ON vsr.volunteer_ID=v.volunteer_ID WHERE vsr.volunteer_ID=? AND vsr.completed = 1 ORDER BY vsr.startDate ";
+		List<SurveyResult> results = getJdbcTemplate().query(sql, new Object[]{volunteerId}, new VolunteerSurveyResultMapper());
+		
+		return results;
+	}
+
+	@Override
+	public List<SurveyResult> getIncompleteVolunteerSurveys(int volunteerId) {
+		String sql = "SELECT vsr.*, vs.title, vs.description, v.firstname, v.lastname FROM volunteer_survey_results AS vsr "
+				+ "INNER JOIN volunteer_surveys AS vs ON vsr.volunteer_survey_ID = vs.survey_ID INNER JOIN volunteers AS v "
+				+ "ON vsr.volunteer_ID=v.volunteer_ID WHERE vsr.volunteer_ID=? AND vsr.completed = 0 ORDER BY vsr.startDate ";
+		List<SurveyResult> results = getJdbcTemplate().query(sql, new Object[]{volunteerId}, new VolunteerSurveyResultMapper());
+		
+		return results;
+	}
+	
+	@Override
+	public SurveyResult getVolunteerSurveyResultByID(int resultId) {
+		String sql = "SELECT vsr.*, vs.title, vs.description, v.firstname, v.lastname FROM volunteer_survey_results AS vsr "
+				+ "INNER JOIN volunteer_surveys AS vs ON vsr.volunteer_survey_ID = vs.survey_ID INNER JOIN volunteers AS v"
+				+ " ON vsr.volunteer_ID=v.volunteer_ID WHERE vsr.result_ID=? "
+				+ " ORDER BY vsr.startDate ";
+		
+		return getJdbcTemplate().queryForObject(sql, new Object[]{resultId}, new VolunteerSurveyResultMapper());
+	}
+	
+	class VolunteerSurveyResultMapper implements RowMapper<SurveyResult> {
+		public SurveyResult mapRow(ResultSet rs, int rowNum) throws SQLException{
+			SurveyResult sr = new SurveyResult();
+			
+			sr.setResultID(rs.getInt("result_ID"));
+			sr.setSurveyID(rs.getInt("volunteer_survey_ID"));
+			sr.setSurveyTitle(rs.getString("title"));
+			sr.setDescription(rs.getString("description"));
+			sr.setVolunteerID(rs.getInt("volunteer_ID"));
+			sr.setVolunteerName(rs.getString("firstname") + " " + rs.getString("lastname"));
+						
+			boolean completed = rs.getBoolean("completed");
+   			sr.setCompleted(completed);
+   			if (completed)
+   				sr.setStrCompleted("COMPLETED");
+   			else
+   				sr.setStrCompleted("INCOMPLETED"); 
+	     
+   			sr.setStartDate(rs.getString("startDate"));            
+   			sr.setEditDate(rs.getString("editDate"));
+   			sr.setResults(rs.getBytes("data"));
+	            
+			return sr;
+		}
+	}
+
 }
