@@ -5,9 +5,9 @@ img {
 
 }
 #logo {
-	width: 250px !important;
-	float: left;
-	margin-top: -8px
+	width: 230px !important;
+	/*float: left;*/
+	margin-top: -5px
 }
 
 #logofam {
@@ -35,6 +35,7 @@ img {
 #logininput {
 	height: 70px;
 	width: 55%;
+	min-width: 240px;
 	font-size: 25px;
 	font-family: 'Open Sans', serif;
 	-webkit-tap-highlight-color: rgba(0,0,0,0); 
@@ -105,7 +106,7 @@ Lanscape CSS ENDS*/
 }
 .cbutton {
 	width: 100%;
-	height: 40px;
+	/*height: 40px;*/
 	text-align: left;
 	/* padding-left: 20px; */
 	padding-right: 20px;
@@ -134,12 +135,11 @@ Lanscape CSS ENDS*/
 }
 
 #footer {
-	position: absolute;
-	bottom: 0;
 	background-color: #444;
 	width: 100%;
 	padding: 30px;
-	height:100px;
+	height:inherit;
+	margin-top:5%;
 }
 
 .squestion {
@@ -538,6 +538,7 @@ div.bootstrap-datetimepicker-widget.dropdown-menu.pull-right {
 	font-weight: 600;
 }
 
+
 .nav>li>a:hover
 {
 	color:black;
@@ -551,7 +552,7 @@ div.bootstrap-datetimepicker-widget.dropdown-menu.pull-right {
 		font-size: 14px !important;
 		/*border-left: 1px solid white;*/
 		font-family: 'Open Sans', 'sans-serif';
-		color: white !important;
+		color: white;
 	}
 
 	.navbar .brand {
@@ -702,7 +703,7 @@ div.bootstrap-datetimepicker-widget.dropdown-menu.pull-right {
 		font-size: 20px !important;
 		/*border-left: 1px solid white;*/
 		font-family: 'Open Sans', 'sans-serif';
-		color: white !important;
+		color: white;
 		font-weight: 300;
 	}
 
@@ -720,14 +721,14 @@ div.bootstrap-datetimepicker-widget.dropdown-menu.pull-right {
 		border-right: 5px solid white;
 		}
 
-	#footer {
+	/*#footer {
 		position: absolute;
 		bottom: 0;
 		background-color: #444;
 		width: 100%;
 		padding: 30px;
 		height:100px;	
-	}
+	}*/
 
 	#headerholder {
 	/*	border-bottom: 2px solid lightgray;
