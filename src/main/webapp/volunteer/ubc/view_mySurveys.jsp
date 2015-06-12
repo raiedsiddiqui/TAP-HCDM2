@@ -67,7 +67,17 @@
 			<div class="panel-heading" role="tab" id="headingOne">
       			<h4 class="panel-title">
       				<a class="surveybtnc btn accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse${csr.surveyID}">
-      					${csr.surveyTitle}
+      					<div class="row cbutton">
+								<div class="col-sm-6 col-xs-12">
+									${csr.surveyTitle}
+								</div>
+								<div class="col-sm-6 col-xs-12">
+								</div>
+								<div class="col-sm-1 col-xs-12">
+									${csr.editDate }
+								</div>
+							</div>
+      					                           
       				</a>
       			</h4>
       		</div>

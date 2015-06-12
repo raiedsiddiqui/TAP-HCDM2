@@ -251,6 +251,38 @@
 		</tr>
 		</c:forEach>
 	</table>
+	
+	<h2>Surveys </h2><h3><a href="<c:url value="/download_volunteerSurveyReport/${volunteer.volunteerId}?name=${volunteer.displayName}"/>">Download Report</a> </h3>
+	<table  class="table table-striped" width="970" border="1">
+		<tr>
+			<th width="200">Assigned Surveys</th>
+			<th width="250"> Date Started</th>		
+			<th width="250">Last Edited</th>
+			<th>Completed Status</th>
+			<!--  th>Delete</th>  -->
+			<th>Results</th>
+		</tr>
+		<c:forEach items="${surveys}" var="s">
+		<tr >
+			
+			<td><a href="<c:url value="/show_volunteerSurvey/${s.resultID}"/>">${s.surveyTitle}</a></td>
+			<td>${s.startDate}</td>
+			<td>${s.editDate}</td>
+			<td>${s.strCompleted}</td>
+			<!--  td><a href="<c:url value="/delete_volunteerSurvey/${s.resultID}"/>" class="btn btn-danger">Remove</a></td> -->
+			<td>
+				<c:choose>
+					<c:when test="${s.completed}">
+					<a href="<c:url value="/view_volunteer_survey_results/${s.resultID}"/>" class="btn btn-success">View Results</a>
+					</c:when>
+					<c:otherwise>
+					<a href="#" class="btn btn-success disabled">View Results</a>
+					</c:otherwise>
+				</c:choose>
+			</td>
+		</tr>
+		</c:forEach>
+	</table>
 
 <hr>
 

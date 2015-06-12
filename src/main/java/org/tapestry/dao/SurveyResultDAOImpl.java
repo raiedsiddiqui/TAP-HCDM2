@@ -228,8 +228,10 @@ public class SurveyResultDAOImpl extends JdbcDaoSupport implements SurveyResultD
    			else
    				sr.setStrCompleted("INCOMPLETED"); 
 	     
-   			sr.setStartDate(rs.getString("startDate"));            
-   			sr.setEditDate(rs.getString("editDate"));
+   			sr.setStartDate(rs.getString("startDate"));   
+   			String editDate = rs.getString("editDate");
+   			if (editDate != null)
+   				sr.setEditDate(editDate.substring(0, 10));
    			sr.setResults(rs.getBytes("data"));
 	            
 			return sr;
@@ -304,6 +306,30 @@ public class SurveyResultDAOImpl extends JdbcDaoSupport implements SurveyResultD
 		return getJdbcTemplate().queryForObject(sql, new Object[]{resultId}, new VolunteerSurveyResultMapper());
 	}
 	
+
+	@Override
+	public void updateVolunteerSurveyResults(int id, byte[] data) {
+		String sql = "UPDATE volunteer_survey_results SET data=?, editDate=now() WHERE result_ID=?";
+		getJdbcTemplate().update(sql, data,id);		
+	}
+
+	@Override
+	public void markAsCompleteForVolunteerSurvey(int id) {
+		String sql = "UPDATE volunteer_survey_results SET completed=1 WHERE result_ID=?";
+		getJdbcTemplate().update(sql, id);
+		
+	}
+
+	@Override
+	public List<SurveyResult> getVolunteerSurveyResultsById(int volunteerId) {
+		String sql = "SELECT vsr.*, vs.title, vs.description, v.firstname, v.lastname FROM volunteer_survey_results AS vsr"
+				+ " INNER JOIN volunteer_surveys AS vs ON vsr.volunteer_survey_ID = vs.survey_ID INNER JOIN volunteers AS v"
+				+ " ON vsr.volunteer_ID=v.volunteer_ID WHERE vsr.volunteer_ID=? ORDER BY vsr.startDate ";
+		List<SurveyResult> results = getJdbcTemplate().query(sql, new Object[]{volunteerId}, new VolunteerSurveyResultMapper());
+		
+		return results;
+	}
+	
 	class VolunteerSurveyResultMapper implements RowMapper<SurveyResult> {
 		public SurveyResult mapRow(ResultSet rs, int rowNum) throws SQLException{
 			SurveyResult sr = new SurveyResult();
@@ -323,24 +349,14 @@ public class SurveyResultDAOImpl extends JdbcDaoSupport implements SurveyResultD
    				sr.setStrCompleted("INCOMPLETED"); 
 	     
    			sr.setStartDate(rs.getString("startDate"));            
-   			sr.setEditDate(rs.getString("editDate"));
+   			String editDate = rs.getString("editDate");
+   			if (editDate != null)
+   				sr.setEditDate(editDate.substring(0, 10));
    			sr.setResults(rs.getBytes("data"));
 	            
 			return sr;
 		}
 	}
 
-	@Override
-	public void updateVolunteerSurveyResults(int id, byte[] data) {
-		String sql = "UPDATE volunteer_survey_results SET data=?, editDate=now() WHERE result_ID=?";
-		getJdbcTemplate().update(sql, data,id);		
-	}
-
-	@Override
-	public void markAsCompleteForVolunteerSurvey(int id) {
-		String sql = "UPDATE volunteer_survey_results SET completed=1 WHERE result_ID=?";
-		getJdbcTemplate().update(sql, id);
-		
-	}
 
 }

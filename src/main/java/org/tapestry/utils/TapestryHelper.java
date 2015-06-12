@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -3798,6 +3799,146 @@ public class TapestryHelper {
 			session.setAttribute("sites", sites);
 		}		
 		return sites;
+	}
+	
+	public static void generateVolunteerSurveyReport(int volunteerId, SurveyManager surveyManager, 
+			HttpServletResponse response, String name )
+	{	
+		String xml;
+		List<String> qList;
+   		List<String> questionTextList;
+   		LinkedHashMap<String, String> mSurvey;
+		Map<String, String> surveyResultMap = new LinkedHashMap<String, String>();
+		//Survey---  		
+		List<SurveyResult> surveyResultList = surveyManager.getCompletedVolunteerSurveys(volunteerId);
+		SurveyResult sr;
+		String qText;
+		for (int i = 0; i < surveyResultList.size(); i++)
+		{
+			sr = new SurveyResult();
+			sr = surveyResultList.get(i);
+			String title = sr.getSurveyTitle();
+			surveyResultMap.put("SurveyTitle " + (i+1), title);
+			try{
+	   			xml = new String(sr.getResults(), "UTF-8");
+	   		} catch (Exception e) {
+	   			xml = "";
+	   		}
+			mSurvey = ResultParser.getResults(xml);
+			qList = new ArrayList<String>();
+			qList = TapestryHelper.getQuestionList(mSurvey);
+	   		questionTextList = new ArrayList<String>();	   		
+	   		questionTextList = ResultParser.getSurveyQuestions(xml);  
+	   		
+	   		questionTextList.remove(0);
+	   			   		
+	   		int qSize = questionTextList.size();
+	   		for (int j=0; j<qSize; j++)
+	   		{
+	   			qText = questionTextList.get(j);
+	   			if (qText.contains("Press NEXT to save"))
+	   			{
+	   				questionTextList.remove(j);
+	   				break;
+	   			}
+	   			qText = removeObserverNotes(qText);
+	   			
+//	   			if (qText.startsWith("Question "))
+//	   				qText = qText.substring(16);
+	   			questionTextList.set(j,qText);
+	 
+	   		}
+	   		qSize = questionTextList.size();
+	   		if (qSize == qList.size())
+	   		{
+	   			for (int m=0; m<qSize; m++)
+		   		{
+	   				surveyResultMap.put(questionTextList.get(m), qList.get(m));
+		   		}
+	   		}
+	   		else
+	   			System.out.println("Please check survey result, number of question text is not match with answer");	
+		}
+		
+		buildVolunteerPDFReport(surveyResultMap, response, name);
+	}
+	
+	public static void buildVolunteerPDFReport(Map report, HttpServletResponse response, String volunteerName){		
+		
+		int ind = volunteerName.indexOf("(");
+		if (ind > 0)
+			volunteerName = volunteerName.substring(0,ind);
+		
+		String orignalFileName= volunteerName +"_vReport.pdf";
+		String key, value;
+		try {
+			Document document = new Document();
+			document.setPageSize(PageSize.A4);
+			document.setMargins(36, 36, 60, 36);
+			document.setMarginMirroring(true);
+			response.setHeader("Content-Disposition", "outline;filename=\"" +orignalFileName+ "\"");
+			PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
+			//Font setup		
+			Font mFont = new Font(Font.FontFamily.HELVETICA, 12);		
+			Font blFont = new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD);	
+			//white font			
+			Font wbLargeFont = new Font(Font.FontFamily.HELVETICA  , 20, Font.BOLD);
+			wbLargeFont.setColor(BaseColor.WHITE);
+			Font wMediumFont = new Font(Font.FontFamily.HELVETICA , 16, Font.BOLD);
+			wMediumFont.setColor(BaseColor.WHITE);
+			
+			document.open(); 
+			//Volunteer info
+			PdfPTable table = new PdfPTable(2);
+			table.setWidthPercentage(100);
+			table.setWidths(new float[]{1f, 2f});
+			
+			PdfPCell cell = new PdfPCell(new Phrase("TAPESTRY VOLUNTEER REPORT: " + volunteerName, blFont));	
+			cell.setPadding(5);
+			cell.setColspan(2);
+			table.addCell(cell);
+			
+			document.add(table);	
+			
+	   		Iterator iterator = report.entrySet().iterator();
+	   		while (iterator.hasNext()) {
+	   			Map.Entry mapEntry = (Map.Entry) iterator.next();
+	   			
+	   			key = mapEntry.getKey().toString();
+	   			value = mapEntry.getValue().toString();
+	   			
+	   			table = new PdfPTable(2);
+	   			table.setWidthPercentage(100);
+	   			if (key.startsWith("SurveyTitle "))
+	   			{
+	   				cell = new PdfPCell(new Phrase(value, wbLargeFont));
+	   				cell.setBackgroundColor(BaseColor.BLACK);	   
+	   				cell.setColspan(2);
+	   				cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+	   				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);	
+	   				cell.setPaddingBottom(5);
+		   			table.addCell(cell);
+	   			}
+	   			else
+	   			{
+	   				cell = new PdfPCell(new Phrase(key, mFont));		            	
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setPaddingBottom(5);
+					table.addCell(cell);	            	
+		            	
+					cell = new PdfPCell(new Phrase(value, mFont));
+					cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setPaddingBottom(5);
+					table.addCell(cell); 
+	   			}		 
+	   			document.add(table);
+	   		}
+			document.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}			
 	}
 
 }

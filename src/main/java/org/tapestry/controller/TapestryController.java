@@ -1623,10 +1623,7 @@ public class TapestryController{
    		LinkedHashMap<String, String> mDailyLifeActivitySurvey = ResultParser.getResults(xml);
    		questionTextList = new ArrayList<String>();
    		questionTextList = ResultParser.getSurveyQuestions(xml);   
-   		
-   		for (int n =0; n<questionTextList.size(); n++)
-   			System.out.println("n = "+ n + "  == "+ questionTextList.get(n));
-   		
+   	   		
    		qList = new ArrayList<String>();
    		qList = TapestryHelper.getQuestionList(mDailyLifeActivitySurvey);
    		   	   		
@@ -2301,7 +2298,7 @@ public class TapestryController{
 		//all survey results stored in map		
 //		TapestrySurveyMap userSurveys = DoSurveyAction.getSurveyMapAndStoreInSession(request, surveyResults, surveyTemplates);			
 		TapestryPHRSurvey currentSurvey = userSurveys.getSurvey(Integer.toString(id));
-		System.out.println("currentSurvey === "+ currentSurvey);
+		
 		try {
 			SurveyFactory surveyFactory = new SurveyFactory();
 			PHRSurvey templateSurvey = surveyFactory.getSurveyTemplate(surveyTemplate);	
@@ -3133,4 +3130,89 @@ public class TapestryController{
 		}
 		return "redirect:/view_mySurveys";
 	}
+  	
+   	@RequestMapping(value="/view_volunteer_survey_results/{resultID}", method=RequestMethod.GET)
+   	public String viewVolunteerSurveyResults(@PathVariable("resultID") int id, HttpServletRequest request, ModelMap model)
+   	{
+   		SurveyResult r = surveyManager.getVolunteerSurveyResultByID(id); 		
+   		
+   		String xml;
+   		try{
+   			xml = new String(r.getResults(), "UTF-8");
+   		} catch (Exception e) {
+   			xml = "";
+   		}
+   		
+   		LinkedHashMap<String, String> res = ResultParser.getResults(xml);
+   		List<DisplayedSurveyResult> displayedResults = ResultParser.getDisplayedSurveyResults(res);
+   		
+   		displayedResults = TapestryHelper.detailedResult(displayedResults);
+
+   		model.addAttribute("results", displayedResults);
+   		model.addAttribute("id", id);
+   		HttpSession session = request.getSession();
+		if (session.getAttribute("unread_messages") != null)
+			model.addAttribute("unread", session.getAttribute("unread_messages"));
+		
+		//add logs
+   		User loggedInUser = (User)session.getAttribute("loggedInUser");
+		StringBuffer sb = new StringBuffer();
+		sb.append(loggedInUser.getName());
+		sb.append(" has viewed volunteer survey : ");
+		sb.append(r.getSurveyTitle());
+		userManager.addUserLog(sb.toString(), loggedInUser);
+   		
+   		return "/admin/view_survey_results";
+   	}
+   	
+   	@RequestMapping(value="/delete_volunteerSurvey/{resultID}", method=RequestMethod.GET)
+   	public String deleteVolunteerSurvey(@PathVariable("resultID") int id, HttpServletRequest request)
+   	{
+   		SurveyResult sr = surveyManager.getSurveyResultByID(id);   		
+   		surveyManager.deleteSurvey(id);
+   		
+   		List<SurveyResult> surveyResults;
+   		List<SurveyTemplate> surveyTemplates;
+   		HttpSession session = request.getSession();
+		User loggedInUser = (User)session.getAttribute("loggedInUser");	
+		int siteId = loggedInUser.getSite();
+		if (loggedInUser.getRole().equals("ROLE_ADMIN"))//central admin 
+   		{
+			surveyResults = surveyManager.getAllSurveyResults();
+			surveyTemplates = surveyManager.getAllSurveyTemplates();
+   		}
+   		else //local admin/site admin
+   		{
+   			surveyResults = surveyManager.getAllSurveyResultsBySite(siteId);	
+   			surveyTemplates = surveyManager.getSurveyTemplatesBySite(siteId);
+   		} 		
+   		DoSurveyAction.getSurveyMapAndStoreInSession(request, surveyResults, surveyTemplates);
+   		
+   		//archive the deleted survey result
+   		Patient patient = patientManager.getPatientByID(sr.getPatientID());
+   		StringBuffer sb = new StringBuffer();
+   		sb.append(patient.getFirstName());
+   		sb.append(" ");
+   		sb.append(patient.getLastName());   		
+   		surveyManager.archiveSurveyResult(sr, sb.toString(), loggedInUser.getName());
+   		//add logs
+		sb = new StringBuffer();
+		sb.append(loggedInUser.getName());
+		sb.append(" has deleted survey result # ");
+		sb.append(id);
+		userManager.addUserLog(sb.toString(), loggedInUser);
+   		
+   		return "redirect:/display_client/" + sr.getPatientID();
+   	}
+   	
+	@RequestMapping(value="/download_volunteerSurveyReport/{volunteerId}", method=RequestMethod.GET)
+   	public String downloadVolunteerSurveyReport(@PathVariable("volunteerId") int id, @RequestParam(value="name", required=false) String name, 
+   			HttpServletRequest request, HttpServletResponse response)
+   	{
+		TapestryHelper.generateVolunteerSurveyReport(id, surveyManager, response, name);
+		
+//		return "redirect:/display_volunteer/"+ id;
+		return null;
+   	
+   	}
 }

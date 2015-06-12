@@ -266,4 +266,9 @@ public class SurveyManagerImpl implements SurveyManager {
 		
 	}
 
+	@Override
+	public List<SurveyResult> getVolunteerSurveyResultsById(int volunteerId) {		
+		return surveyResultDao.getVolunteerSurveyResultsById(volunteerId);
+	}
+
 }

@@ -32,6 +32,7 @@ import org.tapestry.objects.Message;
 import org.tapestry.objects.Narrative;
 import org.tapestry.objects.Patient;
 import org.tapestry.objects.Site;
+import org.tapestry.objects.SurveyResult;
 import org.tapestry.objects.SurveyTemplate;
 import org.tapestry.objects.User;
 import org.tapestry.objects.Volunteer;
@@ -210,6 +211,9 @@ public class VolunteerController {
 		appointments = new ArrayList<Appointment>();		
 		appointments = appointmentManager.getAllUpcomingAppointmentsForVolunteer(id);
 		model.addAttribute("upcomingVisits", appointments);
+		
+		List<SurveyResult> surveys = surveyManager.getVolunteerSurveyResultsById(id);
+		model.addAttribute("surveys", surveys);
 		
 		//get all activities
 		List<Activity> activities = volunteerManager.getActivitiesForVolunteer(id);	

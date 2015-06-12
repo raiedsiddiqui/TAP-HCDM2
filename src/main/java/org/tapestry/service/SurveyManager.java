@@ -331,5 +331,13 @@ public interface SurveyManager {
 	 */
 	@Transactional
 	public void markAsCompleteForVolunteerSurvey(int id);
+	
+	/**
+	 * 
+	 * @param volunteerId
+	 * @return
+	 */
+	@Transactional
+	public List<SurveyResult> getVolunteerSurveyResultsById(int volunteerId);
 
 }

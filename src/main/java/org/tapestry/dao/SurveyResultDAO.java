@@ -158,6 +158,12 @@ public interface SurveyResultDAO {
 	public List<SurveyResult> getAllVolunteerSurveyResults();
 	
 	/**
+	 * Ordered by title ascending
+	 * @return a list of SurveyResult objects
+	 */
+	public List<SurveyResult> getVolunteerSurveyResultsById(int volunteerId);
+	
+	/**
 	 * Uploads a volunteer survey template to the database
 	 * @param st
 	 */
