@@ -3007,7 +3007,7 @@ public class TapestryHelper {
 	{
 		String fullDesAnswer="";
 		if (answer.equals(""))
-			return 	"";
+			return 	"No data";
 		
 		int ind = Integer.valueOf(answer);
 		
