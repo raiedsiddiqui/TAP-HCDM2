@@ -3006,6 +3006,9 @@ public class TapestryHelper {
 	private static String getFullDescriptionForMobility(String questionId, String answer)
 	{
 		String fullDesAnswer="";
+		if (answer.equals(""))
+			return 	"";
+		
 		int ind = Integer.valueOf(answer);
 		
 		if (questionId.equals("a2a") || questionId.equals("a3a") || questionId.equals("a4a"))
@@ -3256,12 +3259,12 @@ public class TapestryHelper {
 		    			fullDesAnswer = "Almost everyday";
 		    		break;	
             case 5: if (answer.equals("1"))
-	    			fullDesAnswer = "I eat most foods";
-	    		else if(answer.equals("2"))
-	    			fullDesAnswer = "I limit some foods and I am managing fine";
-	    		else if(answer.equals("3"))
-	    			fullDesAnswer = "I limit some foods and I am finding it difficult to manage";	    		
-	    		break;
+		    			fullDesAnswer = "I eat most foods";
+		    		else if(answer.equals("2"))
+		    			fullDesAnswer = "I limit some foods and I am managing fine";
+		    		else if(answer.equals("3"))
+		    			fullDesAnswer = "I limit some foods and I am finding it difficult to manage";	    		
+		    		break;
             case 6:if (answer.equals("1"))
 		    			fullDesAnswer = "Very good";
 		    		else if(answer.equals("2"))
@@ -3272,99 +3275,99 @@ public class TapestryHelper {
 		    			fullDesAnswer = "Poor";
 		    		break;	
            case 7:if (answer.equals("1"))
-	    			fullDesAnswer = "Five or more";
-	    		else if(answer.equals("2"))
-	    			fullDesAnswer = "Four";
-	    		else if(answer.equals("3"))
-	    			fullDesAnswer = "Three";
-	    		else if(answer.equals("4"))
-	    			fullDesAnswer = "Two";
-	    		else
-	    			fullDesAnswer = "Less than two";
-	    		break;	
+		    			fullDesAnswer = "Five or more";
+		    		else if(answer.equals("2"))
+		    			fullDesAnswer = "Four";
+		    		else if(answer.equals("3"))
+		    			fullDesAnswer = "Three";
+		    		else if(answer.equals("4"))
+		    			fullDesAnswer = "Two";
+		    		else
+		    			fullDesAnswer = "Less than two";
+		    		break;	
             case 8:if (answer.equals("1"))
-	    			fullDesAnswer = "Two or more times a day";
-	    		else if(answer.equals("2"))
-	    			fullDesAnswer = "One to two times a day";
-	    		else if(answer.equals("3"))
-	    			fullDesAnswer = "Once a day";		    		
-	    		else
-	    			fullDesAnswer = "Less than once a day";
-	    		break;
+		    			fullDesAnswer = "Two or more times a day";
+		    		else if(answer.equals("2"))
+		    			fullDesAnswer = "One to two times a day";
+		    		else if(answer.equals("3"))
+		    			fullDesAnswer = "Once a day";		    		
+		    		else
+		    			fullDesAnswer = "Less than once a day";
+		    		break;
             case 9:if (answer.equals("1"))
-	    			fullDesAnswer = "Three or more times a day";
-	    		else if(answer.equals("2"))
-	    			fullDesAnswer = "Two to three times a day";
-	    		else if(answer.equals("3"))
-	    			fullDesAnswer = "One to two times a day";
-	    		else if(answer.equals("4"))
-	    			fullDesAnswer = "Usually once a day";
-	    		else
-	    			fullDesAnswer = "Less than once a day";
-	    		break;
+		    			fullDesAnswer = "Three or more times a day";
+		    		else if(answer.equals("2"))
+		    			fullDesAnswer = "Two to three times a day";
+		    		else if(answer.equals("3"))
+		    			fullDesAnswer = "One to two times a day";
+		    		else if(answer.equals("4"))
+		    			fullDesAnswer = "Usually once a day";
+		    		else
+		    			fullDesAnswer = "Less than once a day";
+		    		break;
             case 10:if (answer.equals("1"))
-	    			fullDesAnswer = "Eight or more cups";
-	    		else if(answer.equals("2"))
-	    			fullDesAnswer = "Five to seven cups";
-	    		else if(answer.equals("3"))
-	    			fullDesAnswer = "Three to four cups";
-	    		else if(answer.equals("4"))
-	    			fullDesAnswer = "About two cups";
-	    		else
-	    			fullDesAnswer = "Less than two cups";
-	    		break;
+		    			fullDesAnswer = "Eight or more cups";
+		    		else if(answer.equals("2"))
+		    			fullDesAnswer = "Five to seven cups";
+		    		else if(answer.equals("3"))
+		    			fullDesAnswer = "Three to four cups";
+		    		else if(answer.equals("4"))
+		    			fullDesAnswer = "About two cups";
+		    		else
+		    			fullDesAnswer = "Less than two cups";
+		    		break;
             case 11: case 12:if (answer.equals("1"))
-	    			fullDesAnswer = "Never";
-	    		else if(answer.equals("2"))
-	    			fullDesAnswer = "Rarely";
-	    		else if(answer.equals("3"))
-	    			fullDesAnswer = "Sometimes";		    		
-	    		else
-	    			fullDesAnswer = "Often or always";
-	    		break;
+		    			fullDesAnswer = "Never";
+		    		else if(answer.equals("2"))
+		    			fullDesAnswer = "Rarely";
+		    		else if(answer.equals("3"))
+		    			fullDesAnswer = "Sometimes";		    		
+		    		else
+		    			fullDesAnswer = "Often or always";
+		    		break;
             case 13:if (answer.equals("1"))
-	    			fullDesAnswer = "Never or rarely";    		
-	    		else if(answer.equals("2"))
-	    			fullDesAnswer = "Sometimes";		    		
-	    		else
-	    			fullDesAnswer = "Often or always";
-	    		break;
+		    			fullDesAnswer = "Never or rarely";    		
+		    		else if(answer.equals("2"))
+		    			fullDesAnswer = "Sometimes";		    		
+		    		else
+		    			fullDesAnswer = "Often or always";
+		    		break;
             case 14: if (answer.equals("1"))
-	    			fullDesAnswer = "Never or rarely";
-	    		else if(answer.equals("2"))
-	    			fullDesAnswer = "Sometimes";
-	    		else if(answer.equals("3"))
-	    			fullDesAnswer = "Often";		    		
-	    		else
-	    			fullDesAnswer = "Almost always";
-	    		break;
+		    			fullDesAnswer = "Never or rarely";
+		    		else if(answer.equals("2"))
+		    			fullDesAnswer = "Sometimes";
+		    		else if(answer.equals("3"))
+		    			fullDesAnswer = "Often";		    		
+		    		else
+		    			fullDesAnswer = "Almost always";
+		    		break;
             case 15: if (answer.equals("1"))
-	    			fullDesAnswer = "I do";
-	    		else if(answer.equals("2"))
-	    			fullDesAnswer = "I share my cooking with someone else";
-	    		else
-	    			fullDesAnswer = "Someone else cooks most of my meals";
-	    		break;
+		    			fullDesAnswer = "I do";
+		    		else if(answer.equals("2"))
+		    			fullDesAnswer = "I share my cooking with someone else";
+		    		else
+		    			fullDesAnswer = "Someone else cooks most of my meals";
+		    		break;
             case 16:if (answer.equals("1"))
-	    			fullDesAnswer = "I enjoy cooking most of my meals";
-	    		else if(answer.equals("2"))
-	    			fullDesAnswer = "I sometimes find cooking a chore";
-	    		else if(answer.equals("3"))
-	    			fullDesAnswer = "I usually find cooking a chore";
-	    		else if(answer.equals("4"))
-	    			fullDesAnswer = "I'm satisfied with the quality of food prepared by others";
-	    		else
-	    			fullDesAnswer = "I'm not satisfied with the quality of food prepared by others";
-	    		break;
+		    			fullDesAnswer = "I enjoy cooking most of my meals";
+		    		else if(answer.equals("2"))
+		    			fullDesAnswer = "I sometimes find cooking a chore";
+		    		else if(answer.equals("3"))
+		    			fullDesAnswer = "I usually find cooking a chore";
+		    		else if(answer.equals("4"))
+		    			fullDesAnswer = "I'm satisfied with the quality of food prepared by others";
+		    		else
+		    			fullDesAnswer = "I'm not satisfied with the quality of food prepared by others";
+		    		break;
             case 17: if (answer.equals("1"))
-	    			fullDesAnswer = "Never or rarely";
-	    		else if(answer.equals("2"))
-	    			fullDesAnswer = "Sometimes";
-	    		else if(answer.equals("3"))
-	    			fullDesAnswer = "Often";		    		
-	    		else
-	    			fullDesAnswer = "Always";
-	    		break;
+		    			fullDesAnswer = "Never or rarely";
+		    		else if(answer.equals("2"))
+		    			fullDesAnswer = "Sometimes";
+		    		else if(answer.equals("3"))
+		    			fullDesAnswer = "Often";		    		
+		    		else
+		    			fullDesAnswer = "Always";
+		    		break;
         }
 		
 		return fullDesAnswer;

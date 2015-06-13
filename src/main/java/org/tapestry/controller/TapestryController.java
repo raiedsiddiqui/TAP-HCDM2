@@ -1135,7 +1135,7 @@ public class TapestryController{
 		int site = organizationManager.getSiteByClinic(patient.getClinic());
 		int totalSurveys = surveyManager.countSurveyTemplateBySite(site);
 		int totalCompletedSurveys = surveyManager.countCompletedSurveys(id);
-		
+						
 		if ((totalSurveys-1) == totalCompletedSurveys)//as added 3 month follow up survey, not used in report
 			model.addAttribute("showReport", true);
 		
