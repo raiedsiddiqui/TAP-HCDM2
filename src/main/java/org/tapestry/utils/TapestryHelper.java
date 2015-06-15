@@ -2688,7 +2688,7 @@ public class TapestryHelper {
 			if (title.equalsIgnoreCase("Advance Directives")) //Care Plan/Advanced_Directive survey
 				carePlanSurvey = survey;
 			
-			if (title.equalsIgnoreCase("2. Goals"))
+			if (title.equalsIgnoreCase("Goals"))
 				goals = survey;	
 		}
 		
@@ -3582,7 +3582,7 @@ public class TapestryHelper {
 			hasResult = true;
 		else
 		{
-			surveyId = surveyManager.getSurveyIdByTitle("2. Goals");
+			surveyId = surveyManager.getSurveyIdByTitle("Goals");
 			
 			if (surveyManager.hasCompleteSurvey(surveyId, patientId))
 				hasResult = true;
@@ -3717,7 +3717,7 @@ public class TapestryHelper {
 			}
 			//Goals
 			try{
-				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "2. Goals");
+				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "Goals");
 			}catch (Exception e) {
 				System.out.println("throws exception on Goals === patient id == " + patientId);
 				sr = null;

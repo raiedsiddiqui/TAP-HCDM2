@@ -725,6 +725,32 @@ public class TapestryController{
 
 		return "admin/manage_patients";
 	}
+
+	//===================== ADD CLIENT  =============================//
+   	@RequestMapping(value="/add_client", method=RequestMethod.GET)
+	public String addClient(ModelMap model, SecurityContextHolderAwareRequestWrapper request)
+   	{   		
+   		User loggedInUser = TapestryHelper.getLoggedInUser(request);
+   		HttpSession session = request.getSession();
+   		if (session.getAttribute("unread_messages") != null)
+			model.addAttribute("unread", session.getAttribute("unread_messages"));
+		else
+		{
+			int unreadMessages = messageManager.countUnreadMessagesForRecipient(loggedInUser.getUserID());
+			model.addAttribute("unread", unreadMessages);
+		}	
+		TapestryHelper.loadPatientsAndVolunteers(model, volunteerManager, patientManager, organizationManager, request);
+		//clinic
+		List<Clinic> clinics;
+		if (request.isUserInRole("ROLE_ADMIN"))//central admin
+			clinics = organizationManager.getAllClinics();
+		else
+			clinics = organizationManager.getClinicsBySite(loggedInUser.getSite());
+		
+		model.addAttribute("clinics", clinics);
+
+		return "admin/add_client";
+	}
    	
    	@RequestMapping(value="/search_patient", method=RequestMethod.POST)
    	public String searchPatientByVolunteer(ModelMap model, SecurityContextHolderAwareRequestWrapper request)
@@ -1066,13 +1092,14 @@ public class TapestryController{
 	@RequestMapping(value="/view_clients_admin", method=RequestMethod.GET)
 	public String viewPatientsFromAdmin(SecurityContextHolderAwareRequestWrapper request, ModelMap model)
 	{
+		User loggedInUser = TapestryHelper.getLoggedInUser(request);
 		HttpSession session = request.getSession();
 		List<Patient> patients = TapestryHelper.getAllPatientsWithFullInfos(patientManager, request);		
 		model.addAttribute("patients", patients);
 		
 		if (session.getAttribute("unread_messages") != null)
 			model.addAttribute("unread", session.getAttribute("unread_messages"));
-		
+	
 		return "/admin/view_clients";
 	}
 	
@@ -1223,7 +1250,7 @@ public class TapestryController{
 			if (title.equalsIgnoreCase("Advance Directives") && (carePlanSurvey.getResultID()==0)) //Care Plan/Advanced_Directive survey
 				carePlanSurvey = survey;
 			
-			if (title.equalsIgnoreCase("2. Goals") && (goals.getResultID()==0))
+			if (title.equalsIgnoreCase("Goals") && (goals.getResultID()==0))
 				goals = survey;	
 		}
 		
@@ -1544,7 +1571,7 @@ public class TapestryController{
 			if (title.equalsIgnoreCase("Advance Directives") && (carePlanSurvey.getResultID()==0)) //Care Plan/Advanced_Directive survey
 				carePlanSurvey = survey;
 			
-			if (title.equalsIgnoreCase("2. Goals") && (goals.getResultID()==0))
+			if (title.equalsIgnoreCase("Goals") && (goals.getResultID()==0))
 				goals = survey;	
 		}
 		
@@ -2314,7 +2341,7 @@ public class TapestryController{
 		}
 		
 		//goals survey must be done on the last
-		if (surveyTemplate.getTitle().equals("2. Goals"))
+		if (surveyTemplate.getTitle().equals("Goals"))
 		{			
 			if (surveyManager.countUnCompletedSurveys(patientId)!= 1)
 				redirectAction.setViewName("redirect:/patient/" + p.getPatientID() + "?goalsMsg=" + true);

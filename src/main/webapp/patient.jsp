@@ -142,7 +142,7 @@
 	        <c:forEach items="${inProgressSurveys}" var="ips">
 	        		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
 	        		<c:choose>
-					      <c:when test="${ips.surveyTitle=='2. Goals'}">
+					      <c:when test="${ips.surveyTitle=='Goals'}">
 					      	<a href="<c:url value="/open_survey/${ips.resultID}"/>" Onclick="return goalsPrompt()" class="surveybtn btn">
 								${ips.surveyTitle}<br/>
 								<span class="surveydesc">${ips.description}</span>

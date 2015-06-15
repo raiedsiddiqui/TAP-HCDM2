@@ -1,11 +1,15 @@
-<div class="content">	
+<div class="content">
 	<h3 class="pagetitle">Book Appointment <span class="pagedesc">Select the client name, date and time of the visit to book their next appointment</span></h3>
 	<div>
 		 <form id="book-appointment-form" method="post" action="<c:url value="/book_appointment"/>">
 			<h4>With patient:</h4>
-			<select id="selectpatient" name="patient" form="book-appointment-form" class="form-control">
+		<!-- search <input type="text" id="realtxt"/> -->
+			<select id="selectpatient" name="patient" form="book-appointment-form" class="searchable form-control">
+			<option disabled selected> -- select an client -- </option>
 				<c:forEach items="${patients}" var="p">
-				<option value="${p.patientID}">${p.firstName} ${p.lastName}</option>
+					
+						<option value="${p.patientID}">${p.firstName} ${p.lastName}</option>
+					
 				</c:forEach>
 			</select><br />
 			
@@ -62,5 +66,78 @@
 	    // hiddenSuffix: '__suffix'
 	})
 
+// document.getElementById('realtxt').onkeyup = searchSel;
+// function searchSel() 
+//     {
+//       var input = document.getElementById('realtxt').value.toLowerCase();
+       
+//           len = input.length;
+//           output = document.getElementById('selectpatient').options;
+//       for(var i=0; i<output.length; i++)
+//           if (output[i].text.toLowerCase().indexOf(input) != -1 ){
+//           output[i].selected = true;
+//               break;
+//           }
+//       if (input == '')
+//         output[0].selected = true;
+//     }
+
+//     $(document).ready(function () {
+	
+// 	//$('.searchable option').wrap('<span id="filterspan"/>');
+    
+//     (function ($) {
+//     	//When a keyup occurs, run this function
+//         $('#realtxt').keyup(function () {
+
+//         	//Get the value from the input field and save it as regexp
+//             var rex = new RegExp($(this).val(), 'i');
+            
+//             //hide adds a display:none to each option item
+//             //$('.searchable option').detach();
+            
+//             //Goes through the option list and returns the typed in value and if it is, it will show that value (display:inline)
+//             $('.searchable option').filter(function () {
+//             	//tests to see if the reg exp is true and if it is, returns the text value
+            	
+//             	if (rex.test($(this).text())) {
+//             		//$(this).prop('disabled', false);
+//             		$(this).show();
+//             	}
+
+//             	else {
+//             		$(this).hide();
+// 					//$(this).prop('disabled', true);
+
+//        	    		//$('#filterspan').hide();
+//             		//$(this).unwrap();
+//             	}
+//                 //return rex.test($(this).text());	
+//             }) //.appendTo('.searchable');
+
+//         })
+
+//     }(jQuery));
+
+// });
 		
 	</script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  $("#selectpatient").select2();
+});
+</script>
+
+
+<html>
+<head>
+	<title></title>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+	<link href="http://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
+
+
+</head>
+</html>

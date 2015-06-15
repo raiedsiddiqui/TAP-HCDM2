@@ -158,14 +158,17 @@
 	</div>
    	<script type="text/javascript">
 		window.onload=function changeLink() {
+			//Get the Message that appears
 			var str = document.getElementById("survendmessage").textContent;
+			//Check if there is "Submit" in that message
 	    	var n = str.indexOf("SUBMIT");
+	    	//If "SUBMIT" is present, than hide the survey background, qtext and the default save and close button
 	    	if (n > 0) {
 	    		document.getElementById('surveybackground').style.display="none";
 	    		document.getElementById('qtext').style.display="none";
 	    		document.getElementById('saveclose').style.display="none";
 	    	}
-
+	    	//If NOT, then hide saveclose2
 	    	else {
 	    		document.getElementById('saveclose2').style.display="none";
 	    	}

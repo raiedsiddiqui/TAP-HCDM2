@@ -34,14 +34,21 @@
 	<div class="row-fluid">
 			<h2>Clients </h2>
 			<div class="row-fluid">
-				<form action="<c:url value="/view_clients_admin"/>" id="searchPatients" method="POST">
-					<fieldset>
-						<label>Name:</label>
-						<input type="text" name="searchName" form="searchPatients" value="${searchName}" required />
-						<input class="btn btn-primary" type="submit" value="Search" />
-					</fieldset>
-				</form>
+				<div class="col-md-10">
+					<form action="<c:url value="/view_clients_admin"/>" id="searchPatients" method="POST">
+						<fieldset>
+							<label>Name:</label>
+							<input type="text" name="searchName" form="searchPatients" value="${searchName}" required />
+							<input class="btn btn-primary" type="submit" value="Search" />
+						</fieldset>
+					</form>
+				</div>
+				<div class="col-md-2">
+					<a href="<c:url value="/add_client"/>" class="btn btn-primary" data-toggle="modal">Add New Client</a>
+				</div>
+
 			</div>
+
 			
 			<table class="table">
 				<tr>
@@ -54,6 +61,9 @@
 					<th>MRP</th>
 					<th>City</th>
 					<th>Phone Number</th>
+					<th>Volunteer1</th>
+					<th>Volunteer2</th>
+
 					
 				</tr>
 				
@@ -68,6 +78,8 @@
 						<td>${p.mrpFirstName} ${p.mrpLastName}</td>
 						<td>${p.city}</td>
 						<td>${p.homePhone}</td>
+						<td>${p.volunteerName}</td>
+	                    <td>${p.partnerName}</td>
 						
 					</tr>
 				</c:forEach>
@@ -75,5 +87,6 @@
 	</div>
 		
 </div>
+
 </body>
 </html>
