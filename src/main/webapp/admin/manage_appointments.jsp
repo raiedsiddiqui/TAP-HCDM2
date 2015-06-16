@@ -6,6 +6,7 @@
 	<title>Tapestry Admin</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
 
+
 <!-- 		<link href="${pageContext.request.contextPath}/resources/css/bootstrap-responsive.min.css" rel="stylesheet" />  
  	
  	<link href="${pageContext.request.contextPath}/resources/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />-->
@@ -152,7 +153,7 @@
 	</div> -->
 	<div class="bs-example bs-example-tabs">
     <ul id="myTab" class="nav nav-tabs">
-	      <li class="active"><a href="#home" data-toggle="tab">Upcoming Appointments</a></li>
+	      <li class="active"><a href="#home" data-toggle="tab">All Appointments</a></li>
 	      <li class=""><a href="#pastappointments" data-toggle="tab">Past Appointments</a></li>
 	      <li class=""><a href="#pendingapproval" data-toggle="tab">Pending Approval</a></li>
 	<!--       <li class="dropdown">
@@ -163,77 +164,61 @@
 	        </ul>
 	      </li> -->
 	    </ul>
-    <div id="myTabContent" class="tab-content">
-      <div class="tab-pane fade active in" id="home">
-        <div class="panel-group" id="accordian">
-        <c:forEach items="${patients}" var="p">
-				
-				<div class="panel panel-default">
-					<div class="panel-heading">
-				    	<h4 class="panel-title">
-				    		<a data-toggle="collapse" data-parent="#accordion" href="#collapse${p.firstName}${p.lastName}">
-				        	${p.firstName} ${p.lastName}</a>
-				      </h4>
-				    </div>
- 				    
- 				    <div id="collapse${p.firstName}${p.lastName}" class="panel-collapse collapse">		
- 				    	<div class="panel-body">		    	
-<!-- 					<div class="accordion-inner">
-				    		<div class="accordion-group"> -->
-				    			<c:forEach items="${appointments}" var="a">
-				    				<c:if test="${p.patientID == a.patientID}">
-				    					<c:if test="${a.completed != true }">
-				    						<a href="<c:url value="/delete_appointment/${a.appointmentID}"/>" class="btn btn-danger pull-right btn-sm">Delete</a>
-				    					</c:if>
-										<c:if test="${a.status != 'Declined' && a.status != 'Approved'}">
-											<a href="<c:url value="/decline_appointment/${a.appointmentID}"/>" class="btn btn-warning pull-right btn-sm">Decline</a>
-										</c:if>
-										<c:if test="${a.status == 'Awaiting Approval'}">
-											<a href="<c:url value="/approve_appointment/${a.appointmentID}"/>" class="btn btn-primary pull-right btn-sm">Approve</a>
-										</c:if>
-										<div class="panel">
-											<div class="panel-heading">
-				    							<h5 class="panel-title">
-									    			<a data-toggle="collapse" href="#collapse${a.appointmentID}">${a.date} ${a.time}   (${a.status})</a> </h5>
-									    	</div>
-									    
 
-									    <div id="collapse${a.appointmentID}" class="accordion-body collapse">
-				    						<div class="accordion-inner">
-				    							<c:if test="${a.completed}">
-					    							<c:choose>
-					    								<c:when test="${a.contactedAdmin}">
-					    									Volunteer contacted Ernie<br /><br />
-					    								</c:when>
-					    								<c:otherwise>
-					    									Volunteer did not contact Ernie<br /><br />
-					    								</c:otherwise>
-					    							</c:choose>
-					    							<c:if test="${not empty a.comments}">
-					    								Comments: ${a.comments} <br /><br />
-					    							</c:if>
-					    							Activites Completed:<br />
-					    							<c:forEach items="${activities}" var="act">
-					    								<c:if test="${a.appointmentID == act.appointment}">
-					    									<h2>${act.time}: ${act.description}</h2> <br />
-					    								</c:if>
-					    							</c:forEach>
-					    						</c:if>
-				    						</div>
-				    					</div>
-				    				</div>
-				    				</c:if>
-				    			</c:forEach>
-				    		</div>				    	
-				    </div>				
-				</div>
-			</c:forEach>
-      </div>
-  </div>
+
+    <div id="myTabContent" class="tab-content">
+    	<div class="tab-pane fade active in" id="home">
+    		<div class="input-group"> <span class="input-group-addon">Filter</span>
+				<input id="filter" type="text" class="form-control" placeholder="Type here...">
+			</div>
+      		<table id="myTable" class="table table-striped searchable">
+        		<tr>
+        			<th>Client</th>
+        			<th>Date</th>
+        			<th>Time</th>
+        			<th>Status</th>
+        			<th width=500>Comments</th>
+        			<!--<th>Activities</th>-->
+        		</tr>
+
+        		<c:forEach items="${appointments}" var="a">
+        			<!-- <c:forEach items="${patients}" var="p"> -->
+        				
+							<c:if test="${p.patientID == a.patientID}">	
+			        			<tr>
+				        			<td>
+				        				${p.firstName} ${p.lastName}</a>
+								    </td>
+							    	<td>	    				
+										${a.date}  				    				
+							    	</td>
+							    	<td>
+							    		${a.time}
+							    	</td>
+
+							    	<td>
+										${a.status}
+							    	</td>
+							    	<td>
+							    		<c:if test="${not empty a.comments}">
+					    					${a.comments}
+					    				</c:if>
+							    	</td>
+							    	<!--<td>
+							    		${act.time}: ${act.description}
+							    	</td>-->	
+							    </tr>
+					    </c:if>
+				     <!-- </c:forEach>-->
+				</c:forEach>
+        		
+        	</table>
+
+		</div>
 
 	<div class="tab-pane fade" id="pastappointments">
 	
-		<table>
+		<table class="table">
 			<tr>
 				<th width = "200"> Client</th>
 				<th width = "300"> Volunteers</th>
@@ -246,8 +231,8 @@
 					<td> ${pa.volunteer}, ${pa.partner}</td>
 					<td> ${pa.date}</td>					
 					<td>
-						<c:if test="${pa.completed eq true}">Completed</c:if>
-						<c:if test="${pa.completed eq false}">Incompleted</c:if>						
+						<c:if test="${pa.completed eq true}"><span style="color:green">Completed</span></c:if>
+						<c:if test="${pa.completed eq false}"><span style="color:red">Incompleted</span></c:if>						
 					</td>					
 				</tr>								
 			</c:forEach>
@@ -257,7 +242,7 @@
 
     <div class="tab-pane fade" id="pendingapproval">
 		<p> Appointments Pending Approval </p>
-		<table>
+		<table class="table">
 			<tr>
 				<th width = "200"> Client</th>
 				<th width = "300"> Volunteers</th>
@@ -418,5 +403,25 @@
 		
 	</script>-->
 
+	<script type="text/javascript">
+$(document).ready(function () {
+
+    (function ($) {
+
+        $('#filter').keyup(function () {
+
+            var rex = new RegExp($(this).val(), 'i');
+            $('.searchable tr').hide();
+            $('.searchable tr').filter(function () {
+                return rex.test($(this).text());
+            }).show();
+
+        })
+
+    }(jQuery));
+
+});
+
+	</script>
 </body>
 </html>
