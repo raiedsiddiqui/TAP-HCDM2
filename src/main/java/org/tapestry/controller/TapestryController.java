@@ -1916,7 +1916,7 @@ public class TapestryController{
 	
 	@RequestMapping(value="/manage_survey", method=RequestMethod.GET)
 	public String manageSurvey(@RequestParam(value="failed", required=false) String failed, Boolean deleteFailed, 
-			ModelMap model, HttpServletRequest request){
+			ModelMap model, SecurityContextHolderAwareRequestWrapper request){
 		HttpSession session = request.getSession();
 		List<SurveyTemplate>  surveyTemplateList = TapestryHelper.getSurveyTemplates(request, surveyManager);	
 				
@@ -1946,6 +1946,17 @@ public class TapestryController{
 				model.addAttribute("surveyTemplateDeleted", true);
 				session.removeAttribute("surveyTemplateMessage");
 			}			
+		}
+
+		//Get Uers
+		
+		//Get Site
+		User user = TapestryHelper.getLoggedInUser(request);
+		
+		if ("ROLE_ADMIN".equalsIgnoreCase(user.getRole()))//for central admin
+		{
+			List<Site> sites = TapestryHelper.getSites(request, organizationManager);		
+			model.addAttribute("sites", sites);
 		}
 		return "admin/manage_survey";
 	}	

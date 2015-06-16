@@ -115,7 +115,7 @@
 						</c:forEach>
 					</select>
 					<label>Site:</label>									
-					<select name="site" form="uploadSurveyForm" class="form-control">
+					<select name="site" id="site" form="uploadSurveyForm" class="form-control">
 						<c:forEach items="${sites}" var="s">
 							<option value="${s.siteId}">${s.name}</option>
 						</c:forEach>
