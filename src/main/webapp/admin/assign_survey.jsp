@@ -69,7 +69,7 @@
 			<div class ="alert alert-info"><spring:message code="message_assign_survey_successful"/></div>
 		</c:if>
 		<h2>Assign Survey</h2><br/>
-		<form id="assignSurveyForm" action="<c:url value="/assign_selectedsurvey"/>" method="post" >
+		<form id="assignSurveyForm" action="<c:url value="/assign_selectedSurvey"/>" method="post" >
 			<label>Select Survey : </label><br/>
 			<select multiple id="survey_template" name="surveyTemplates" class="form-control" style="max-width:50%;">
 				<c:forEach items="${surveyTemplates}" var="st">
