@@ -80,7 +80,7 @@ import org.tapestry.surveys.ResultParser;
 import org.tapestry.surveys.SurveyFactory;
 import org.tapestry.surveys.TapestryPHRSurvey;
 import org.tapestry.surveys.TapestrySurveyMap;
-
+import org.apache.commons.lang.StringUtils; 
 /**
 * Main controller class
 * This class is responsible for interpreting URLs and returning the appropriate pages.
@@ -700,7 +700,7 @@ public class TapestryController{
 		return "redirect:/patient/" + id;
 	}
 			
-	//===================== Client(patient)  =============================//
+	//===================== Client(patient) OLD_NEEDS TO BE REMOVED  =============================//
    	@RequestMapping(value="/manage_patients", method=RequestMethod.GET)
 	public String managePatients(ModelMap model, SecurityContextHolderAwareRequestWrapper request)
    	{   		
@@ -798,7 +798,7 @@ public class TapestryController{
 			model.addAttribute("sameVolunteer",true);
 			TapestryHelper.loadPatientsAndVolunteers(model, volunteerManager, patientManager,  organizationManager,request);
 			
-			return "admin/manage_patients";
+			return "admin/view_clients";
 		}
 		
 		Volunteer v1 = volunteerManager.getVolunteerById(vId1);
@@ -818,10 +818,13 @@ public class TapestryController{
 			p.setAlerts(request.getParameter("alerts"));
 			p.setClinic(Integer.parseInt(request.getParameter("clinic")));
 			p.setUserName(request.getParameter("username_myoscar"));
-			p.setMrp(Integer.parseInt(request.getParameter("mrp")));
+			//p.setMrp(Integer.parseInt(request.getParameter("mrp")));
+			//If the string is blank, save as 0;
+			p.setMrp(StringUtils.isNotBlank(request.getParameter("mrp")) ? Integer.parseInt(request.getParameter("mrp")) : 0);
 			p.setMrpFirstName(request.getParameter("mrp_firstname"));
 			p.setMrpLastName(request.getParameter("mrp_lastname"));
 			
+		
 			int newPatientID = patientManager.createPatient(p);		
 			
 			//add logs
@@ -876,19 +879,19 @@ public class TapestryController{
 		    			specificSurveys = surveys.getSurveyListById(Integer.toString(st.getSurveyID())); //reload
 		    		}
 		    		else
-		    			return "redirect:/manage_patients";
+		    			return "redirect:/view_clients";
 			}
 	   		model.addAttribute("createPatientSuccessfully",true);
 	   		TapestryHelper.loadPatientsAndVolunteers(model, volunteerManager, patientManager,  organizationManager,request);
 	   		
-	        return "admin/manage_patients";
+	        return "admin/view_clients";
 		}
 		else
 		{			
 			model.addAttribute("misMatchedVolunteer",true);
 			TapestryHelper.loadPatientsAndVolunteers(model, volunteerManager, patientManager,  organizationManager,request);
 			
-			return "admin/manage_patients";
+			return "admin/view_clients";
 		}
 	}
    	
@@ -971,7 +974,7 @@ public class TapestryController{
 		
 		TapestryHelper.loadPatientsAndVolunteers(model, volunteerManager, patientManager,  organizationManager,request);
         
-		return "/admin/manage_patients";
+		return "/admin/view_clients";
 	}
    	
    	@RequestMapping(value="/remove_patient/{patient_id}", method=RequestMethod.GET)

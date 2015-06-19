@@ -92,7 +92,7 @@
 				</div>
 				<div class="col-md-6">
 					<label>Volunteer1:</label>
-					<select name="volunteer1" id="volunteer1" form="newPatient" class="form-control">
+					<select name="volunteer1" id="volunteer1" form="newPatient" class="form-control" required>
 						<option value=""></option>
 						<c:forEach items="${volunteers}" var="v">
 							<option value="${v.volunteerId}">${v.displayName}</option>
@@ -101,25 +101,25 @@
 				</div>
 				<div class="col-md-6">
 					<label>Volunteer2:</label>
-					<select name="volunteer2" id="volunteer2" form="newPatient" class="form-control">
+					<select name="volunteer2" id="volunteer2" form="newPatient" class="form-control" required>
 						<option value=""></option>
 					</select>
 				</div>	
 				<div class="col-md-6">
 					<label>Username in PHR:</label>
-					<input type="text" name="username_myoscar" class="form-control" required/>
+					<input type="text" name="username_myoscar" class="form-control" />
 				</div>
 				<div class="col-md-6">
 					<label>MRP:</label>
-					<input type="text" id="mrp" name="mrp" class="form-control" onchange="checkNumericInput(this.id);" required/>
+					<input type="text" id="mrp" name="mrp" class="form-control" onchange="checkNumericInput(this.id);"/>
 				</div>		
 				<div class="col-md-6">
 					<label>MRP Firstname:</label>
-					<input type="text" name="mrp_firstname" class="form-control" required/>
+					<input type="text" name="mrp_firstname" class="form-control" />
 				</div>
 				<div class="col-md-6">
 					<label>MRP Lastname:</label>
-					<input type="text" name="mrp_lastname" class="form-control" required/>
+					<input type="text" name="mrp_lastname" class="form-control" />
 				</div>						
 			</div>		
 				<label>PHR verified? </label>
@@ -127,7 +127,7 @@
 				<input type="radio" name="myoscar_verified" value="0" checked/>No
 				<br/>
 				<label>Clinic:</label>
-				<select name="clinic" form="newPatient" class="form-control">					
+				<select name="clinic" form="newPatient" class="form-control" required>					
 					<option value=""></option>
 					<c:forEach items="${clinics}" var="c">
 						<option value="${c.clinicId}">${c.clinicName}</option>

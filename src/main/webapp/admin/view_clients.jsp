@@ -30,6 +30,21 @@
 		<c:if test="${not empty noSearchName}">
 			<div class ="alert alert-info"><spring:message code="message_noSearchName"/></div>
 		</c:if>
+		<c:if test="${not empty misMatchedVolunteer}">			
+			<div class="alert alert-danger"><spring:message code="message_volunteers_misMatchedVolunteer"/></div>
+		</c:if>	
+		<c:if test="${not empty sameVolunteer}">			
+			<div class="alert alert-danger"><spring:message code="message_volunteers_sameVolunteer"/></div>
+		</c:if>	
+		<c:if test="${not empty updatePatientSuccessfully}">			
+			<div class="alert alert-info"><spring:message code="message_patient_updateSuccessful"/></div>
+		</c:if>	
+		<c:if test="${not empty createPatientSuccessfully}">			
+			<div class="alert alert-success"><spring:message code="message_patient_createSuccessful"/></div>
+		</c:if>
+		<c:if test="${not empty emptyPatients}">
+					<div class ="alert alert-info"><spring:message code="message_emptyPatients"/></div>
+				</c:if>
 		
 	<div class="row-fluid">
 			<h2>Clients </h2>
