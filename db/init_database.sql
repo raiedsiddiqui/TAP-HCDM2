@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS survey_app;
-USE survey_app;
+CREATE DATABASE IF NOT EXISTS tapestry_db;
+USE tapestry_db;
 
 CREATE TABLE IF NOT EXISTS users (
 	user_ID INT UNSIGNED NOT NULL AUTO_INCREMENT, /*Using UNSIGNED TINYINT allows for 255 users*/
@@ -154,7 +154,7 @@ CREATE TABLE IF NOT EXISTS volunteers (
 	number_years_experience DECIMAL(6,2),
 	availability_per_month DECIMAL(6,2),
 	technology_skills_score DECIMAL(6,2),
-	perception_older_adult_score VDECIMAL(6,2),
+	perception_older_adult_score DECIMAL(6,2),
 	vlc_ID MEDIUMINT UNSIGNED NOT NULL,
 	
 	PRIMARY KEY (volunteer_ID)	
@@ -165,7 +165,7 @@ CREATE TABLE IF NOT EXISTS organizations (
 	name VARCHAR(255) NOT NULL,
 	primary_contact VARCHAR(255) NOT NULL,
 	primary_phone VARCHAR(20),
-	secondary_contact VARCHAR(255);
+	secondary_contact VARCHAR(255),
 	secondary_phone VARCHAR(20),
 	street_number VARCHAR(20),
 	street VARCHAR(100),
@@ -226,7 +226,7 @@ CREATE TABLE IF NOT EXISTS narratives_archive (
 	updated_narrative_ID MEDIUMINT UNSIGNED NOT NULL,
     title VARCHAR(50) NOT NULL,
     contents TEXT,
-    last_edit TIMESTAMP ,  
+    last_edit TIMESTAMP DEFAULT 0 ,  
     volunteer_ID SMALLINT UNSIGNED NOT NULL,
     patient_ID SMALLINT UNSIGNED NOT NULL,
     appointment_ID SMALLINT UNSIGNED NOT NULL,
@@ -269,8 +269,8 @@ CREATE TABLE IF NOT EXISTS survey_results_archive (
 CREATE TABLE IF NOT EXISTS activities_archive (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	deleted_event_ID INT UNSIGNED NOT NULL , /*Using UNSIGNED INT allows for 4,294,967,295 events, which should be enough*/
-	start_time TIMESTAMP NOT NULL,
-	end_time TIMESTAMP NOT NULL,
+	start_time TIMESTAMP NOT NULL DEFAULT 0,
+	end_time TIMESTAMP NOT NULL DEFAULT 0,
 	volunteer VARCHAR(255) NOT NULL,	
 	description TEXT,
 	organization VARCHAR(255) NOT NULL,

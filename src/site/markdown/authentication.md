@@ -7,7 +7,7 @@ Page access rules are defined in WEB-INF/spring-security.xml
 
 Database
 --------
-Users are defined in the survey_app.users table. This table contains the following fields:
+Users are defined in the tapestry_db.users table. This table contains the following fields:
 * id: integer, primary key
 * name: the full name of the user
 * username: the username used for logging in

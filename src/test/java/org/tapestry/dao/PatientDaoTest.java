@@ -13,7 +13,7 @@ import org.tapestry.objects.Patient;
 */
 public class PatientDaoTest{
 
-	private final String DB = "jdbc:mysql://localhost/survey_app";
+	private final String DB = "jdbc:mysql://localhost/tapestry_db";
 	private final String UN = "root";
 	private final String PW = "root";
 
