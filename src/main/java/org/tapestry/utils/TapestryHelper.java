@@ -3003,13 +3003,10 @@ public class TapestryHelper {
 		return completedDisplayedResults;
 	}
 	
-	private static String getFullDescriptionForMobility(String questionId, String answer)
+	private static String getFullDesc(String questionId, String answer)
 	{
-		String fullDesAnswer="";
-		if (answer.equals(""))
-			return 	"No data";
-		
-		int ind = Integer.valueOf(answer);
+		String fullDesAnswer="";		
+		int ind = Integer.valueOf(answer.replaceAll("\\s+",""));
 		
 		if (questionId.equals("a2a") || questionId.equals("a3a") || questionId.equals("a4a"))
 		{
@@ -3080,7 +3077,32 @@ public class TapestryHelper {
 			 			break;
 			 }
 		}
-		return fullDesAnswer;
+		return fullDesAnswer;		
+	}
+	
+	private static String getFullDescriptionForMobility(String questionId, String answer)
+	{		
+		String[] ansList;		
+		StringBuffer sb;
+		
+		if (answer.equals(""))
+			return 	"No data";
+		
+		if (answer.contains(","))
+		{
+			sb = new StringBuffer();
+			ansList = answer.split(",");
+			for (int i = 0; i < ansList.length; i++)
+			{
+				sb.append(getFullDesc(questionId, ansList[i]));
+				sb.append("<br/>");
+			}
+			
+			return sb.toString();			
+		}
+		else
+			return getFullDesc(questionId, answer);		
+
 	}
 	
 	private static String getFullDescriptionForGeneralHealth(int ind, String answer)

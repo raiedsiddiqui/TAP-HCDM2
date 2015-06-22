@@ -1095,7 +1095,7 @@ public class TapestryController{
 	@RequestMapping(value="/view_clients_admin", method=RequestMethod.GET)
 	public String viewPatientsFromAdmin(SecurityContextHolderAwareRequestWrapper request, ModelMap model)
 	{
-		User loggedInUser = TapestryHelper.getLoggedInUser(request);
+//		User loggedInUser = TapestryHelper.getLoggedInUser(request);
 		HttpSession session = request.getSession();
 		List<Patient> patients = TapestryHelper.getAllPatientsWithFullInfos(patientManager, request);		
 		model.addAttribute("patients", patients);
