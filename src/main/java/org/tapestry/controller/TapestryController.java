@@ -1097,7 +1097,16 @@ public class TapestryController{
 	{
 //		User loggedInUser = TapestryHelper.getLoggedInUser(request);
 		HttpSession session = request.getSession();
-		List<Patient> patients = TapestryHelper.getAllPatientsWithFullInfos(patientManager, request);		
+		List<Patient> patients = TapestryHelper.getAllPatientsWithFullInfos(patientManager, request);	
+		/////
+//		List<Patient> patients;
+//		User user = TapestryHelper.getLoggedInUser(request);
+//		if ("ROLE_ADMIN".equalsIgnoreCase(user.getRole()))
+//			patients = patientManager.getAllPatients();	//For central Admin		
+//		else
+//			patients = patientManager.getPatientsBySite(user.getSite());
+		
+		/////
 		model.addAttribute("patients", patients);
 		
 		if (session.getAttribute("unread_messages") != null)
@@ -1134,6 +1143,16 @@ public class TapestryController{
 	{
 		Patient patient = new Patient();
 		List<Patient> patients  = TapestryHelper.getAllPatientsWithFullInfos(patientManager, request);
+		/////
+//		List<Patient> patients;
+//		User user = TapestryHelper.getLoggedInUser(request);
+//		if ("ROLE_ADMIN".equalsIgnoreCase(user.getRole()))
+//			patients = patientManager.getAllPatients();	//For central Admin		
+//		else
+//			patients = patientManager.getPatientsBySite(user.getSite());
+//		
+		/////
+		  
 		for (Patient p: patients)
 		{
 			if (id == p.getPatientID())
@@ -1443,7 +1462,9 @@ public class TapestryController{
    		}   	   		
    		//get answer list
 		qList = new ArrayList<String>();
-		qList = TapestryHelper.getQuestionList(ResultParser.getResults(xml));   		
+		qList = TapestryHelper.getQuestionList(ResultParser.getResults(xml));   	
+		
+		System.out.println("goal list size === " + qList.size());
 		
 		if ((qList != null) && (qList.size()>0))
 		{					
@@ -2547,8 +2568,7 @@ public class TapestryController{
 				model.addAttribute("surveyTemplate", st);
 				break;
 			}
-		}
-		
+		}		
 		return "/admin/edit_survey_template";
 	}
    	
@@ -3250,9 +3270,16 @@ public class TapestryController{
    	public String downloadVolunteerSurveyReport(@PathVariable("volunteerId") int id, @RequestParam(value="name", required=false) String name, 
    			HttpServletRequest request, HttpServletResponse response)
    	{
-		TapestryHelper.generateVolunteerSurveyReport(id, surveyManager, response, name);
-		
-//		return "redirect:/display_volunteer/"+ id;
+		TapestryHelper.generateVolunteerSurveyReport(id, surveyManager, response, name);		
+		return null;
+   	
+   	}
+	
+	@RequestMapping(value="/download_clientSurveyReport/{patientId}", method=RequestMethod.GET)
+   	public String downloadClinetSurveyReport(@PathVariable("patientId") int id, @RequestParam(value="name", required=false) String name, 
+   			HttpServletRequest request, HttpServletResponse response)
+   	{		
+		TapestryHelper.generateClientSurveyReport(id, surveyManager, response, name);		
 		return null;
    	
    	}

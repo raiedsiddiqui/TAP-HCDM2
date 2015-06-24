@@ -2629,299 +2629,13 @@ public class TapestryHelper {
 		    	
 		    	if (index > 0)
 		    		question = question.substring(index + 8);//length of /answer/ is 8
-   		    	
-//   		    	index = question.indexOf("/observernote/");
-//   		    	
-//   		    	if (index > 0)
-//   		    		question = question.substring(0, index);
-   		    	
+  		    	
    		    	if (!question.equals("-"))
    		    		qMap.put(key, question);    	
    		    }
    		}
 		return qMap;
 	}
-	/*
-	public static HL7Report generateHL7Report(Patient p, Appointment a, SurveyManager surveyManager){		
-		HL7Report report = new HL7Report();		
-		ScoresInReport scores = new ScoresInReport();
-		    	
-		report.setPatient(p);
-		report.setAppointment(a);
-		
-		//Survey---  goals setting
-		List<SurveyResult> surveyResultList = surveyManager.getCompletedSurveysByPatientID(p.getPatientID());
-		SurveyResult dailyLifeActivitySurvey = new SurveyResult();	
-		SurveyResult nutritionSurvey = new SurveyResult();
-		SurveyResult rAPASurvey = new SurveyResult();
-		SurveyResult mobilitySurvey = new SurveyResult();
-		SurveyResult socialLifeSurvey = new SurveyResult();
-		SurveyResult generalHealthySurvey = new SurveyResult();
-		SurveyResult memorySurvey = new SurveyResult();
-		SurveyResult carePlanSurvey = new SurveyResult();
-		SurveyResult goals = new SurveyResult();		
-		
-		for(SurveyResult survey: surveyResultList){			
-			String title = survey.getSurveyTitle();
-
-			if (title.equalsIgnoreCase("1. Daily Life Activities"))//Daily life activity survey
-				dailyLifeActivitySurvey = survey;
-			
-			if (title.equalsIgnoreCase("Nutrition"))//Nutrition
-				nutritionSurvey = survey;
-			
-			if (title.equalsIgnoreCase("Physical Activity"))//RAPA survey
-				rAPASurvey = survey;
-			
-			if (title.equalsIgnoreCase("Mobility"))//Mobility survey
-				mobilitySurvey = survey;
-			
-			if (title.equalsIgnoreCase("Social Life")) //Social Life(Duke Index of Social Support)
-				socialLifeSurvey = survey;
-			
-			if (title.equalsIgnoreCase("General Health")) //General Health(Edmonton Frail Scale)
-				generalHealthySurvey = survey;
-			
-			if (title.equalsIgnoreCase("Memory")) //Memory Survey
-				memorySurvey = survey;
-			
-			if (title.equalsIgnoreCase("Advance Directives")) //Care Plan/Advanced_Directive survey
-				carePlanSurvey = survey;
-			
-			if (title.equalsIgnoreCase("Goals"))
-				goals = survey;	
-		}
-		
-		String xml;
-		List<String> qList = new ArrayList<String>();
-   	   		   		
-   		//Additional Information
-  		//Memory
-   		try{
-   			xml = new String(memorySurvey.getResults(), "UTF-8");
-   		} catch (Exception e) {
-   			xml = "";
-   		}
-   		
-   		LinkedHashMap<String, String> mSurvey = ResultParser.getResults(xml);
-   		qList = TapestryHelper.getQuestionListForMemorySurvey(mSurvey);   
-   		
-   		//Care Plan/Advanced_Directive
-   		try{
-   			xml = new String(carePlanSurvey.getResults(), "UTF-8");
-   		} catch (Exception e) {
-   			xml = "";
-	   	}
- 
-   		mSurvey = ResultParser.getResults(xml);
-   		qList.addAll(TapestryHelper.getQuestionList(mSurvey)); 
-   		
-   		report.setAdditionalInfos(qList);
-   		
-   		//daily activity -- tapestry questions
-   		try{
-   			xml = new String(dailyLifeActivitySurvey.getResults(), "UTF-8");
-   		} catch (Exception e) {
-   			xml = "";
-   		}
-   		qList = new ArrayList<String>();   
-   		qList = TapestryHelper.getQuestionList(ResultParser.getResults(xml));
-   		//last question in Daily life activity survey is about falling stuff
-   		List<String> lAlert = new ArrayList<String>();
-   		String fallingQA = qList.get(qList.size() -1);
-   		if (fallingQA.startsWith("yes")||fallingQA.startsWith("Yes"))
-   			lAlert.add(AlertsInReport.DAILY_ACTIVITY_ALERT);  
-   		
-   		//combine Q2 and Q3
-   		StringBuffer sb = new StringBuffer();
-   		sb.append(qList.get(1));
-   		sb.append("; ");
-   		sb.append(qList.get(2));
-   		qList.set(1, sb.toString());
-   		qList.remove(2);
-   		report.setDailyActivities(qList);
-   		report.setDailyActivities(qList);
-   		
-   		//alerts   		
-   		try{
-   			xml = new String(generalHealthySurvey.getResults(), "UTF-8");
-   		} catch (Exception e) {
-   			xml = "";
-   		}	
-   		//get answer list
-   		qList = new ArrayList<String>();   
-		qList = TapestryHelper.getQuestionList(ResultParser.getResults(xml));
-		
-		//get score info for Summary of tapestry tools
-		if ((qList != null)&&(qList.size()>10))
-		{
-			if ("1".equals(qList.get(0))) 
-				scores.setClockDrawingTest("No errors");
-			else if ("2".equals(qList.get(0))) 
-				scores.setClockDrawingTest("Minor spacing errors");
-			else if ("3".equals(qList.get(0))) 
-				scores.setClockDrawingTest("Other errors");
-			else 
-				scores.setClockDrawingTest("Not done");
-			
-			if ("1".equals(qList.get(10))) 
-				scores.setTimeUpGoTest("1 (0-10s)");
-			else if ("2".equals(qList.get(10))) 
-				scores.setTimeUpGoTest("2 (11-20s)");
-			else if ("3".equals(qList.get(10))) 
-				scores.setTimeUpGoTest("3 (More than 20s)");
-			else if ("4".equals(qList.get(10))) 
-				scores.setTimeUpGoTest("4 (Patient required assistance)");
-			else 
-				scores.setTimeUpGoTest("5 (Patient is unwilling)");
-		}		
-		int generalHealthyScore = CalculationManager.getGeneralHealthyScaleScore(qList);
-		lAlert = AlertManager.getGeneralHealthyAlerts(generalHealthyScore, lAlert, qList);
-		
-		if (generalHealthyScore < 5)
-			scores.setEdmontonFrailScale(String.valueOf(generalHealthyScore) + " (Robust)");
-		else if (generalHealthyScore < 7)
-			scores.setEdmontonFrailScale(String.valueOf(generalHealthyScore) + " (Apparently Vulnerable)");
-		else
-			scores.setEdmontonFrailScale(String.valueOf(generalHealthyScore) + " (Frail)");		
-	
-		//Social Life Alert
-		try{
-   			xml = new String(socialLifeSurvey.getResults(), "UTF-8");
-   		} catch (Exception e) {
-   			xml = "";
-   		}		
-		qList = new ArrayList<String>();   		
-   		//get answer list
-		qList = TapestryHelper.getQuestionList(ResultParser.getResults(xml));
-		
-		int socialLifeScore = CalculationManager.getScoreByQuestionsList(qList);
-		lAlert = AlertManager.getSocialLifeAlerts(socialLifeScore, lAlert);
-		
-		//summary tools for social supports
-		if ((qList != null)&&(qList.size()>0))
-		{
-			int satisfactionScore = CalculationManager.getScoreByQuestionsList(qList.subList(0, 6));
-			scores.setSocialSatisfication(satisfactionScore);
-			int networkScore = CalculationManager.getScoreByQuestionsList(qList.subList(7, 10));
-			scores.setSocialNetwork(networkScore);
-		}
-		   		   		
-		//Nutrition Alerts   		
-		try{
-			xml = new String(nutritionSurvey.getResults(), "UTF-8");
-		} catch (Exception e) {
-			xml = "";
-		}		   		
-		qList = new ArrayList<String>();   		
-		qList = TapestryHelper.getQuestionList(ResultParser.getResults(xml));  
-		
-		//get scores for nutrition survey based on answer list
-		if ((qList != null)&&(qList.size()>0))
-		{
-			int nutritionScore = CalculationManager.getNutritionScore(qList);
-			scores.setNutritionScreen(nutritionScore);
-			
-			//high nutrition risk alert
-			Map<String, String> nAlert = new TreeMap<String, String>();
-			lAlert = AlertManager.getNutritionAlerts(nutritionScore, lAlert, qList);
-					
-			//set alerts in report bean
-			if (nAlert != null && nAlert.size()>0)	
-				report.setAlerts(lAlert);
-			else
-				report.setAlerts(null);
-		}
-				
-		//RAPA Alert
-		try{
-			xml = new String(rAPASurvey.getResults(), "UTF-8");
-		} catch (Exception e) {
-			xml = "";
-		}
-				
-		qList = new ArrayList<String>();   		
-		qList = TapestryHelper.getQuestionList(ResultParser.getResults(xml));  		
-
-		int rAPAScore = CalculationManager.getAScoreForRAPA(qList);
-		int sFPAScore = CalculationManager.getSFScoreForRAPA(qList);
-		String aerobicMsg = CalculationManager.getAerobicMsg(rAPAScore);
-		
-		if (rAPAScore < 6)
-			lAlert.add(AlertsInReport.PHYSICAL_ACTIVITY_ALERT);
-				
-		scores.setpAAerobic(rAPAScore);
-		scores.setpAStrengthAndFlexibility(sFPAScore);
-		scores.setAerobicMessage(aerobicMsg);
-						
-		//Mobility Alerts
-		try{
-			xml = new String(mobilitySurvey.getResults(), "UTF-8");
-		} catch (Exception e) {
-			xml = "";
-		}				
-		
-		Map<String, String> qMap = TapestryHelper.getQuestionMap(ResultParser.getResults(xml));  
-		   		   		
-		lAlert = AlertManager.getMobilityAlerts(qMap, lAlert);    		
-		
-		//summary tools for Mobility
-		scores = CalculationManager.getMobilityScore(qMap, scores);
-//		for (int i = 0; i < lAlert.size(); i++)
-//		{
-//			if (lAlert.get(i).contains("2.0"))
-//				scores.setMobilityWalking2(lAlert.get(i));
-//		   			
-//			if (lAlert.get(i).contains("0.5"))
-//				scores.setMobilityWalkingHalf(lAlert.get(i));
-//		   			
-//			if (lAlert.get(i).contains("climbing"))
-//				scores.setMobilityClimbing(lAlert.get(i));   			
-//		}
-		   		
-		String noLimitation = "No Limitation";   		
-		if (Utils.isNullOrEmpty(scores.getMobilityWalking2()))
-			scores.setMobilityWalking2(noLimitation);		   		
-		if (Utils.isNullOrEmpty(scores.getMobilityWalkingHalf()))
-			scores.setMobilityWalkingHalf(noLimitation);
-		   		
-		if (Utils.isNullOrEmpty(scores.getMobilityClimbing()))
-			scores.setMobilityClimbing(noLimitation);		   		
-		report.setScores(scores);
-		report.setAlerts(lAlert);
-		//end of alert
-		
-		//Patient Goals -- life goals, health goals
-		try{
-   			xml = new String(goals.getResults(), "UTF-8");
-   		} catch (Exception e) {
-   			xml = "";
-   		}   	   		
-   		//get answer list
-		qList = new ArrayList<String>();
-		qList = TapestryHelper.getQuestionList(ResultParser.getResults(xml));   
-		
-		List<String> gAS = new ArrayList<String>();
-		if ((qList != null) && (qList.size()>0))
-		{
-			// for the patient goals on the top of report from Q8
-			String patientGoals = CalculationManager.getPatientGoalsMsg(Integer.valueOf(qList.get(7)), qList);			
-			gAS.add(patientGoals);
-			// three goals above tapestry questions from Q3
-			CalculationManager.setPatientGoalsMsg(qList.get(2), gAS);			
-			report.setPatientGoals(gAS);
-		}
-				
-		//get volunteer information
-		List<String> volunteerInfos = new ArrayList<String>();
-		volunteerInfos.add(a.getVolunteer());
-		volunteerInfos.add(a.getPartner());
-		volunteerInfos.add(a.getComments());
-		
-		report.setVolunteerInformations(volunteerInfos);		
-		
-		return report;
-	}*/
 	
 	public static List<DisplayedSurveyResult> detailedResult(List<DisplayedSurveyResult> completedDisplayedResults)
 	{
@@ -3964,6 +3678,184 @@ public class TapestryHelper {
 			e.printStackTrace();
 			
 		}			
+	}
+	
+	public static void generateClientSurveyReport(int patientId, SurveyManager surveyManager, 
+			HttpServletResponse response, String name )
+	{	
+		String xml, qText;
+		List<String> qList;
+   		List<String> questionTextList;
+   		LinkedHashMap<String, String> mSurvey;
+		Map<String, String> surveyResultMap = new LinkedHashMap<String, String>();
+		int ind = 0;
+		//Survey---  		
+		List<SurveyResult> surveyResultList = surveyManager.getCompletedSurveysByPatientID(patientId);		
+		SurveyResult sr;
+		
+		for (int i = 0; i < surveyResultList.size(); i++)
+		{
+			sr = new SurveyResult();
+			sr = surveyResultList.get(i);
+			String title = sr.getSurveyTitle();
+			surveyResultMap.put("SurveyTitle " + (i+1), title);
+			try{
+	   			xml = new String(sr.getResults(), "UTF-8");
+	   		} catch (Exception e) {
+	   			xml = "";
+	   		}
+			mSurvey = ResultParser.getResults(xml);
+			qList = new ArrayList<String>();
+			qList = TapestryHelper.getQuestionList(mSurvey);
+	   		questionTextList = new ArrayList<String>();	   		
+	   		questionTextList = ResultParser.getSurveyQuestions(xml);  
+	   		
+	   		if (title.equalsIgnoreCase("2. Goals"))
+	   		{
+	   			for (int m = 0; m<questionTextList.size(); m++)
+		   		{
+		   			qText = questionTextList.get(m);
+		   			qText = removeString(qText, "<script");
+		   			qText = removeString(qText, "<span");
+		   			
+		   			questionTextList.set(m, qText);
+		   		}
+	   		}
+	   		
+	   		if (title.equals("EQ5D"))
+	   		{
+	   		//	String pattern = "<div\\s\\w\\d>";
+		   		for (int m = 0; m<questionTextList.size(); m++)
+		   		{
+		   			qText = questionTextList.get(m);
+		   			qText = removeString(qText, "<script");
+		   			qText = replaceString(qText, "<div id=\"eq5dheader\">");
+		   			qText = replaceString(qText, "<div id=\"eq5dtitle\" style=\"float:left\">");
+		   			qText = replaceString(qText, "</div>");
+				   			
+		   			questionTextList.set(m, qText);
+		   		}
+	   		}
+	   		questionTextList.remove(0);
+	   			   		
+	   		int qSize = questionTextList.size();
+	   		for (int j=0; j<qSize; j++)
+	   		{
+	   			qText = questionTextList.get(j);
+	   			if (qText.contains("Press NEXT to save"))
+	   			{
+	   				questionTextList.remove(j);
+	   				break;
+	   			}
+	   			qText = removeObserverNotes(qText);
+	   			
+//	   			if (qText.startsWith("Question "))
+//	   				qText = qText.substring(16);
+	   			questionTextList.set(j,qText);
+	 
+	   		}
+	   		qSize = questionTextList.size();
+	   		if (qSize == qList.size())
+	   		{
+	   			for (int m=0; m<qSize; m++)
+		   		{
+	   				surveyResultMap.put(questionTextList.get(m), qList.get(m));
+		   		}
+	   		}
+	   		else
+	   			System.out.println("Please check survey result, number of question text is not match with answer");	
+		}
+		
+		buildClinetPDFReport(surveyResultMap, response, name);
+	}
+	
+	public static void buildClinetPDFReport(Map report, HttpServletResponse response, String clientName)
+	{						
+		String orignalFileName= clientName +"_vReport.pdf";
+		String key, value;
+		try {
+			Document document = new Document();
+			document.setPageSize(PageSize.A4);
+			document.setMargins(36, 36, 60, 36);
+			document.setMarginMirroring(true);
+			response.setHeader("Content-Disposition", "outline;filename=\"" +orignalFileName+ "\"");
+			PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
+			//Font setup		
+			Font mFont = new Font(Font.FontFamily.HELVETICA, 12);		
+			Font blFont = new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD);	
+			//white font			
+			Font wbLargeFont = new Font(Font.FontFamily.HELVETICA  , 20, Font.BOLD);
+			wbLargeFont.setColor(BaseColor.WHITE);
+			Font wMediumFont = new Font(Font.FontFamily.HELVETICA , 16, Font.BOLD);
+			wMediumFont.setColor(BaseColor.WHITE);
+			
+			document.open(); 
+			//Volunteer info
+			PdfPTable table = new PdfPTable(2);
+			table.setWidthPercentage(100);
+			table.setWidths(new float[]{1f, 2f});
+			
+			PdfPCell cell = new PdfPCell(new Phrase("TAPESTRY CLIENT REPORT: " + clientName, blFont));	
+			cell.setPadding(5);
+			cell.setColspan(2);
+			table.addCell(cell);
+			
+			document.add(table);	
+			
+	   		Iterator iterator = report.entrySet().iterator();
+	   		while (iterator.hasNext()) {
+	   			Map.Entry mapEntry = (Map.Entry) iterator.next();
+	   			
+	   			key = mapEntry.getKey().toString();
+	   			value = mapEntry.getValue().toString();
+	   			
+	   			table = new PdfPTable(2);
+	   			table.setWidthPercentage(100);
+	   			if (key.startsWith("SurveyTitle "))
+	   			{
+	   				cell = new PdfPCell(new Phrase(value, wbLargeFont));
+	   				cell.setBackgroundColor(BaseColor.BLACK);	   
+	   				cell.setColspan(2);
+	   				cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+	   				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);	
+	   				cell.setPaddingBottom(5);
+		   			table.addCell(cell);
+	   			}
+	   			else
+	   			{
+	   				cell = new PdfPCell(new Phrase(key, mFont));		            	
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setPaddingBottom(5);
+					table.addCell(cell);	            	
+		            	
+					cell = new PdfPCell(new Phrase(value, mFont));
+					cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setPaddingBottom(5);
+					table.addCell(cell); 
+	   			}		 
+	   			document.add(table);
+	   		}
+			document.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}			
+	}
+	
+	public static String removeString(String strSource, String strBeRemoved){
+		int index = strSource.indexOf(strBeRemoved);
+		if (index != (-1))
+			strSource = strSource.substring(0, index); 
+		return strSource;
+	}
+	
+	public static String replaceString(String strSource, String strBeReplaced)
+	{		
+		if (strSource.indexOf(strBeReplaced) != (-1))
+			strSource = strSource.replaceAll(strBeReplaced, ""); 
+				
+		return strSource;
 	}
 
 }
