@@ -823,9 +823,12 @@ public class TapestryController{
 			p.setMrp(StringUtils.isNotBlank(request.getParameter("mrp")) ? Integer.parseInt(request.getParameter("mrp")) : 0);
 			p.setMrpFirstName(request.getParameter("mrp_firstname"));
 			p.setMrpLastName(request.getParameter("mrp_lastname"));
-			
-		
+					
 			int newPatientID = patientManager.createPatient(p);		
+			HttpSession session = request.getSession();
+			List<Patient> patients = (List<Patient>)session.getAttribute("allPatientWithFullInfos");
+			patients.add(p);
+			session.setAttribute("allPatientWithFullInfos", patients);
 			
 			//add logs
 			User loggedInUser = TapestryHelper.getLoggedInUser(request);
@@ -1848,6 +1851,17 @@ public class TapestryController{
 		//end of alert
 		
 		//set life goals, health goals and Patient Goals in the report
+		//===========================
+//		try{
+//   			xml = new String(sr.getResults(), "UTF-8");
+//   		} catch (Exception e) {
+//   			xml = "";
+//   		}
+//		mSurvey = ResultParser.getResults(xml);
+//		qList = new ArrayList<String>();
+//		qList = TapestryHelper.getQuestionList(mSurvey);
+		
+		//===================
 		try{
    			xml = new String(goals.getResults(), "UTF-8");
    		} catch (Exception e) {
@@ -1859,10 +1873,10 @@ public class TapestryController{
    		questionTextList = ResultParser.getSurveyQuestions(xml);
    	
    		//get answer list
-		qList = TapestryHelper.getQuestionList(mGoals);   		
-			
+		qList = TapestryHelper.getQuestionList(mGoals);   	
+							
 		if ((qList != null) && (qList.size()>0))
-		{					
+		{					System.out.println("wooohooo");
 			report.setPatientGoals(CalculationManager.getPatientGoals(qList));
 			report.setLifeGoals(CalculationManager.getLifeOrHealthGoals(qList, 1));
 			report.setHealthGoals(CalculationManager.getLifeOrHealthGoals(qList, 2));
@@ -2392,7 +2406,7 @@ public class TapestryController{
    	  
    	@RequestMapping(value="/save_survey/{resultID}", method=RequestMethod.GET)
    	public String saveAndExit(@PathVariable("resultID") int id, HttpServletRequest request) throws Exception
-	{
+	{System.out.println("save surva");
    		boolean isComplete = Boolean.parseBoolean(request.getParameter("survey_completed"));
    		List<SurveyResult> surveyResults ;
 		List<SurveyTemplate> surveyTemplates;
@@ -2402,12 +2416,12 @@ public class TapestryController{
 		User currentUser = (User)session.getAttribute("loggedInUser");	
 		int siteId = currentUser.getSite();
 		if (currentUser.getRole().equals("ROLE_ADMIN"))//central admin 
-   		{
+   		{System.out.println("admin...");
 			surveyResults = surveyManager.getAllSurveyResults();
 			surveyTemplates = surveyManager.getAllSurveyTemplates();
    		}
    		else //local admin/site admin
-   		{
+   		{System.out.println("local admin..." + siteId);
    			surveyResults = surveyManager.getAllSurveyResultsBySite(siteId);	
    			surveyTemplates = surveyManager.getSurveyTemplatesBySite(siteId);
    		} 

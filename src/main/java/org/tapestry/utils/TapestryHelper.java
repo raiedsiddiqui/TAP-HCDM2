@@ -1554,25 +1554,26 @@ public class TapestryHelper {
 		model.addAttribute("volunteers", volunteers);	  
         model.addAttribute("patients", patientList);
 	}
+
 	
 	/**
 	 * hard coded clinics in a map, when it grows, will store them in the DB.
 	 * @return
 	 */
-	public static Map<String, String> getClinics(){
-		Map<String, String> clinics = new HashMap<String, String>();
-		
-		clinics.put("1", "McMaster Family Practice");
-		clinics.put("2", "Stonechurch Family Health Center");
-		
-		return clinics;		
-	}
+//	public static Map<String, String> getClinics(){
+//		Map<String, String> clinics = new HashMap<String, String>();
+//		
+//		clinics.put("1", "McMaster Family Practice");
+//		clinics.put("2", "Stonechurch Family Health Center");
+//		
+//		return clinics;		
+//	}
 	
-	public static String getClinicName(String code){
-		Map<String, String> clinics = getClinics();
-		
-		return clinics.get(code);		
-	}
+//	public static String getClinicName(String code){
+//		Map<String, String> clinics = getClinics();
+//		
+//		return clinics.get(code);		
+//	}
 	
 	// =========================== report generator =========================//
 	/**
@@ -1719,6 +1720,7 @@ public class TapestryHelper {
 			table.addCell(cell);
 			
 			List<String> patientGoals = report.getPatientGoals();
+					
 			Phrase pp = new Phrase();
 			Chunk c = new Chunk("What Matters Most To Me: ", bmFont);			 
 			pp.add(c);
@@ -3598,17 +3600,13 @@ public class TapestryHelper {
 	   		else
 	   			System.out.println("Please check survey result, number of question text is not match with answer");	
 		}
-		
-		buildVolunteerPDFReport(surveyResultMap, response, name);
+		buildPDFReport(surveyResultMap, response, name);
+//		buildVolunteerPDFReport(surveyResultMap, response, name);
 	}
 	
-	public static void buildVolunteerPDFReport(Map report, HttpServletResponse response, String volunteerName){		
-		
-		int ind = volunteerName.indexOf("(");
-		if (ind > 0)
-			volunteerName = volunteerName.substring(0,ind);
-		
-		String orignalFileName= volunteerName +"_vReport.pdf";
+	public static void buildPDFReport(Map report, HttpServletResponse response, String displayName)
+	{				
+		String orignalFileName= displayName +"_report.pdf";
 		String key, value;
 		try {
 			Document document = new Document();
@@ -3632,7 +3630,7 @@ public class TapestryHelper {
 			table.setWidthPercentage(100);
 			table.setWidths(new float[]{1f, 2f});
 			
-			PdfPCell cell = new PdfPCell(new Phrase("TAPESTRY VOLUNTEER REPORT: " + volunteerName, blFont));	
+			PdfPCell cell = new PdfPCell(new Phrase("TAPESTRY REPORT: " + displayName, blFont));	
 			cell.setPadding(5);
 			cell.setColspan(2);
 			table.addCell(cell);
@@ -3675,9 +3673,8 @@ public class TapestryHelper {
 	   		}
 			document.close();
 		} catch (Exception e) {
-			e.printStackTrace();
-			
-		}			
+			e.printStackTrace();			
+		}				
 	}
 	
 	public static void generateClientSurveyReport(int patientId, SurveyManager surveyManager, 
@@ -3687,12 +3684,10 @@ public class TapestryHelper {
 		List<String> qList;
    		List<String> questionTextList;
    		LinkedHashMap<String, String> mSurvey;
-		Map<String, String> surveyResultMap = new LinkedHashMap<String, String>();
-		int ind = 0;
-		//Survey---  		
+		Map<String, String> surveyResultMap = new LinkedHashMap<String, String>(); 		
 		List<SurveyResult> surveyResultList = surveyManager.getCompletedSurveysByPatientID(patientId);		
 		SurveyResult sr;
-		
+				
 		for (int i = 0; i < surveyResultList.size(); i++)
 		{
 			sr = new SurveyResult();
@@ -3710,22 +3705,22 @@ public class TapestryHelper {
 	   		questionTextList = new ArrayList<String>();	   		
 	   		questionTextList = ResultParser.getSurveyQuestions(xml);  
 	   		
-	   		if (title.equalsIgnoreCase("2. Goals"))
+	   		if (title.equalsIgnoreCase("Goals"))
 	   		{
 	   			for (int m = 0; m<questionTextList.size(); m++)
 		   		{
 		   			qText = questionTextList.get(m);
 		   			qText = removeString(qText, "<script");
 		   			qText = removeString(qText, "<span");
+		   			qText = removeString(qText, "<!--");
 		   			
 		   			questionTextList.set(m, qText);
 		   		}
-	   		}
-	   		
+	   		}	   		
 	   		if (title.equals("EQ5D"))
 	   		{
-	   		//	String pattern = "<div\\s\\w\\d>";
-		   		for (int m = 0; m<questionTextList.size(); m++)
+	   			int size = questionTextList.size();
+	   			for (int m = 0; m < size; m++)
 		   		{
 		   			qText = questionTextList.get(m);
 		   			qText = removeString(qText, "<script");
@@ -3735,8 +3730,12 @@ public class TapestryHelper {
 				   			
 		   			questionTextList.set(m, qText);
 		   		}
+	   			questionTextList.set(size-2, "You Health Today");	   	
+	   			questionTextList.remove(size-1);
+	   					
 	   		}
-	   		questionTextList.remove(0);
+	   		else
+	   			questionTextList.remove(0);
 	   			   		
 	   		int qSize = questionTextList.size();
 	   		for (int j=0; j<qSize; j++)
@@ -3751,96 +3750,30 @@ public class TapestryHelper {
 	   			
 //	   			if (qText.startsWith("Question "))
 //	   				qText = qText.substring(16);
-	   			questionTextList.set(j,qText);
-	 
+	   			questionTextList.set(j,qText);	 
 	   		}
 	   		qSize = questionTextList.size();
 	   		if (qSize == qList.size())
 	   		{
-	   			for (int m=0; m<qSize; m++)
+	   			if (title.equalsIgnoreCase("2. Goals"))
 		   		{
-	   				surveyResultMap.put(questionTextList.get(m), qList.get(m));
+	   				String answer;
+	   				for (int j = 0; j < qList.size(); j++)
+	   				{
+	   					answer = qList.get(j);	
+	   					answer = removeString(answer, "-------");
+	   					answer = answer.replaceAll("goal\\d\\w", " ");
+	   					answer = answer.replaceAll("<br>", " \n ");
+	   					qList.set(j, answer);	   					
+	   				}
 		   		}
+	   			for (int m=0; m<qSize; m++)
+	   				surveyResultMap.put(questionTextList.get(m), qList.get(m));
 	   		}
 	   		else
 	   			System.out.println("Please check survey result, number of question text is not match with answer");	
-		}
-		
-		buildClinetPDFReport(surveyResultMap, response, name);
-	}
-	
-	public static void buildClinetPDFReport(Map report, HttpServletResponse response, String clientName)
-	{						
-		String orignalFileName= clientName +"_vReport.pdf";
-		String key, value;
-		try {
-			Document document = new Document();
-			document.setPageSize(PageSize.A4);
-			document.setMargins(36, 36, 60, 36);
-			document.setMarginMirroring(true);
-			response.setHeader("Content-Disposition", "outline;filename=\"" +orignalFileName+ "\"");
-			PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
-			//Font setup		
-			Font mFont = new Font(Font.FontFamily.HELVETICA, 12);		
-			Font blFont = new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD);	
-			//white font			
-			Font wbLargeFont = new Font(Font.FontFamily.HELVETICA  , 20, Font.BOLD);
-			wbLargeFont.setColor(BaseColor.WHITE);
-			Font wMediumFont = new Font(Font.FontFamily.HELVETICA , 16, Font.BOLD);
-			wMediumFont.setColor(BaseColor.WHITE);
-			
-			document.open(); 
-			//Volunteer info
-			PdfPTable table = new PdfPTable(2);
-			table.setWidthPercentage(100);
-			table.setWidths(new float[]{1f, 2f});
-			
-			PdfPCell cell = new PdfPCell(new Phrase("TAPESTRY CLIENT REPORT: " + clientName, blFont));	
-			cell.setPadding(5);
-			cell.setColspan(2);
-			table.addCell(cell);
-			
-			document.add(table);	
-			
-	   		Iterator iterator = report.entrySet().iterator();
-	   		while (iterator.hasNext()) {
-	   			Map.Entry mapEntry = (Map.Entry) iterator.next();
-	   			
-	   			key = mapEntry.getKey().toString();
-	   			value = mapEntry.getValue().toString();
-	   			
-	   			table = new PdfPTable(2);
-	   			table.setWidthPercentage(100);
-	   			if (key.startsWith("SurveyTitle "))
-	   			{
-	   				cell = new PdfPCell(new Phrase(value, wbLargeFont));
-	   				cell.setBackgroundColor(BaseColor.BLACK);	   
-	   				cell.setColspan(2);
-	   				cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-	   				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);	
-	   				cell.setPaddingBottom(5);
-		   			table.addCell(cell);
-	   			}
-	   			else
-	   			{
-	   				cell = new PdfPCell(new Phrase(key, mFont));		            	
-					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-					cell.setPaddingBottom(5);
-					table.addCell(cell);	            	
-		            	
-					cell = new PdfPCell(new Phrase(value, mFont));
-					cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-					cell.setPaddingBottom(5);
-					table.addCell(cell); 
-	   			}		 
-	   			document.add(table);
-	   		}
-			document.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-			
-		}			
+		}	
+		buildPDFReport(surveyResultMap, response, name);
 	}
 	
 	public static String removeString(String strSource, String strBeRemoved){
