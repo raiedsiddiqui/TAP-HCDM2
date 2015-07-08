@@ -50,6 +50,11 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"></meta>
 
 	<%@include file="/volunteer/volunteer_head.jsp" %>
+	<!-- Goals,EQ5D,Pain Survey script -->
+	<script src="${pageContext.request.contextPath}/resources/js/goals/goals.js"></script>
+	<script src="${pageContext.request.contextPath}/resources/js/eq5d/eq5d.js"></script>
+	<script src="${pageContext.request.contextPath}/resources/js/pain/pain.js"></script>
+
 	<style type="text/css">
 		.row-fluid{
 			margin:10px;
@@ -259,6 +264,7 @@
 							%>
 							
 	            			<%=questionText%>
+	            			<div id="externalsurveycode"></div>
             			</div>
             		</div>
 
