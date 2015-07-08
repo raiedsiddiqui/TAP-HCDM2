@@ -4,6 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/custom.css">
+
 </head>
 <%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page import="org.tapestry.surveys.DoSurveyAction"%>
@@ -54,7 +55,7 @@
 			margin:10px;
 		}
 		
-		input[type="radio"], input[type="checkbox"]{
+		input[type="radio"] {
 			height:50px;
 			width:50px;
 		}
@@ -96,6 +97,29 @@
 			text-align: center;
 		} 
 
+		input[type="checkbox"] {
+			/*display: none;*/
+		}
+		input[type="checkbox"]+label{
+			font-weight: bold; 
+			color:black;
+			/*background-color:rgba(94, 93, 97, 0.17);*/
+			/* border: 1px solid black; */
+			padding:5px 0px;
+			width:90%;
+			text-align: center;
+		} 
+
+		input[type="checkbox"]:checked+label{
+			font-weight: bold; 
+			color:#386ed6;
+			/*background-color:#386ed6;*/
+			/*border: 1px solid black;*/
+			padding:5px 0px;
+			width:90%;
+			text-align: center;
+		}
+
 		#survendmessage {
 			font-size: 24px;
 			text-align: center;
@@ -110,6 +134,16 @@
 			background-color:#6BB040;
 			width:90%;
 		}
+
+		.checkboxstyle {
+			position: relative;
+			background-color: #fff;
+			box-shadow: 0 1px 2px 0 rgba(34,36,38,.15);
+			margin-bottom: 10px;
+			padding-left: 1em;
+			border-radius: .28571429rem;
+			border: 1px solid rgba(34,36,38,.15);
+		}
 	</style>
 	
 	<script type="text/javascript">
@@ -119,6 +153,7 @@
 			}
 
 			$('#qtext').addClass('animated bounceOutLeft');
+
 		</script>
 	
 	
@@ -144,9 +179,15 @@
 				</div>
 			</div>
 		</div>	 -->
-	<div class="col-md-9" style="height:63px;">
-		<input id="saveclose" type="button" value="<%if (!survey.isComplete()) {%>Save & <%}%>Exit" onclick="document.location='<c:url value="/save_survey/"/><%=documentId%>?survey_completed=<%=completed%>'">
-    </div>	
+
+	<div class="row">
+		<div class="col-md-10">
+			<b>${surveyTitle}</b>
+		</div>
+		<div class="col-md-2" style="height:53px;">
+			<input class="btn" id="saveclose" type="button" value="<%if (!survey.isComplete()) {%>Save & <%}%>Exit" onclick="document.location='<c:url value="/save_survey/"/><%=documentId%>?survey_completed=<%=completed%>'">
+	    </div>	
+    </div>
 </div>
 <div class="content">
 	<% if (!message.equals("")) { %>
@@ -184,17 +225,6 @@
         			<form action="/tapestry/show_survey/<%=documentId%>" name="surveyQuestion" id="surveyform">
             			<input type="hidden" name="questionid" value="<%=question.getId()%>">
             			<input type="hidden" name="direction" value="forward">
-
-            			<div class="row"> 
-            				<div class="col-md-6 pull-left">
-            					<b>${surveyTitle}</b><br/>
-									${description}
-            				</div>
-            				<!-- <div class="col-md-6 pull-right">
-            					<input id="saveclose" type="button" value="<%if (!survey.isComplete()) {%>End <%}%>Survey" onclick="document.location='<c:url value="/save_survey/"/><%=documentId%>?survey_completed=<%=completed%>'">
-            				</div> -->
-            			</div>
-            			
             			<input type="hidden" name="documentid" value="<%=documentId%>">
             			<input type="hidden" name="observernote" value="" >
             			
@@ -265,13 +295,21 @@
                 		<%} else if (question.getQuestionType().equals(SurveyQuestion.ANSWER_CHECK)) { %>
                   		<ul>
                   			<div id="surveyquestion" class="row">
-                   					<div class="col-md-6">
+                   					<div>
                   			<%
                   				for (SurveyAnswerChoice choice: question.getChoices()) {
                   				boolean selected = question.getAnswers().contains(new SurveyAnswerString(choice.getAnswerValue()));
                    			%>
                    				
-                        				<li><input type="checkbox" name="answer" class="answerChoice" value="<%=choice.getAnswerValue()%>" <%if (selected) out.print("checked");%><%if (survey.isComplete()) {%> readonly<%}%>> <%=choice.getAnswerText()%></li>
+                        				<!-- OLD <li><input type="checkbox" name="answer" class="answerChoice" value="<%=choice.getAnswerValue()%>" <%if (selected) out.print("checked");%><%if (survey.isComplete()) {%> readonly<%}%>> <%=choice.getAnswerText()%></li> OLD -->
+
+                        			<div class="col-md-6">
+                        				<div class="checkboxstyle">
+                   							<input id="<%=choice.getAnswerValue()%>" type="checkbox" name="answer" class="answerChoice" value="<%=choice.getAnswerValue()%>" <%if (selected) out.print("checked");%><%if (survey.isComplete()) {%> readonly<%}%> />
+                   						
+  											<label for="<%=choice.getAnswerValue()%>"><%=choice.getAnswerText()%></label><br/>
+  										</div>
+                  					</div>
                         		
                   			
                   			<%}%>
