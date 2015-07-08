@@ -45,7 +45,7 @@
 		
 		function goalsPrompt()
 		{
-			var x = confirm("Goals app should be last survey, have you finished other surveys?");
+			var x = confirm("The Goals Survey should be completed last. Ensure there are no remaining surveys before proceeding.Tap [OK] to open the Goals survey. Tap [Cancel] to go back and complete another survey.");
 			if (x)
 				return true;
 			else

@@ -2390,11 +2390,11 @@ public class TapestryController{
 		}
 		
 		//goals survey must be done on the last
-		if (surveyTemplate.getTitle().equals("Goals"))
-		{			
-			if (surveyManager.countUnCompletedSurveys(patientId)!= 1)
-				redirectAction.setViewName("redirect:/patient/" + p.getPatientID() + "?goalsMsg=" + true);
-		}
+		// if (surveyTemplate.getTitle().equals("Goals"))
+		// {			
+		// 	if (surveyManager.countUnCompletedSurveys(patientId)!= 1)
+		// 		redirectAction.setViewName("redirect:/patient/" + p.getPatientID() + "?goalsMsg=" + true);
+		// }
 				
    		if (request.isUserInRole("ROLE_USER") && redirectAction.getViewName() == "failed")
    			redirectAction.setViewName("redirect:/");	
