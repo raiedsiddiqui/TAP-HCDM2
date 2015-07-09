@@ -74,6 +74,11 @@
  <%@include file="subNavi.jsp" %>
 </div>
 <div class="content">
+	<div class="row">
+		<div class="col-md-4" style="padding-top: 20px;">
+			<a class="lgbtn" href="<c:url value="/view_mySurveys"/>">MySurveys</a>
+		</div>
+	</div>
 	<h3 class="pagetitle">Password Change <span class="pagedesc"> Enter your old passowrd then enter your new password twice </span> </h3>
 	<c:if test="${not empty errors}">
 		<c:choose>
