@@ -24,6 +24,7 @@
 <body>
 	<div class="content">
 		<%@include file="navbar.jsp" %>
+
 		<c:if test="${not empty surveyTemplateCreated}">
 			<div class ="alert alert-info"><spring:message code="message_newSurveyTemplate"/></div>
 		</c:if>
@@ -33,7 +34,8 @@
 		<c:if test="${not empty surveyTemplateUpdated }">
 			<div class ="alert alert-info"><spring:message code="message_modifySurveyTemplate"/></div>
 		</c:if>			
-		<a href="<c:url value="/manage_survey"/>" >Survey Management</a> ><br/>
+		<a href="<c:url value="/manage_survey"/>">Client Survey Management</a><br/>
+		<p>You can add, delete and assign surveys to CLIENTS from this page.</p>
 		<table >
 			<tr>
 				<td>

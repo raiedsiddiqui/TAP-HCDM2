@@ -25,45 +25,54 @@
 
 <div><h4><a href="<c:url value="/view_clients_admin"/>" >Client ></a> ${patient.displayName}</h4></div>
 
-<table>
-	<tr>
-		<td colspan="2">
-			<h2>${patient.displayName}<a href="<c:url value="/edit_patient/${patient.patientID}"/>">Edit</a></h2>
-			<a class="btn btn-warning" href="#">Disable Patient Profile</a>
-		</td>		
-	</tr>
-	<tr>
-		<td>
-			<label>&nbsp Date of birth:</label>&nbsp ${patient.bod}
-		</td>
-		<td>
-			<label >&nbsp Gender:</label>&nbsp${patient.gender}
-		</td>
-	<tr>
-		<td>
-			<label >&nbsp Address :</label>&nbsp${patient.address}
-		</td>
-		<td>
-			<label>&nbsp MRP:</label>&nbsp${patient.mrpFirstName} &nbsp${patient.mrpLastName}
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<label>&nbsp Phone #:</label>&nbsp${patient.homePhone}
-		</td>
-		<td>
-			<label >&nbsp Clinic :</label>&nbsp${patient.clinicName}
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<label>&nbsp Email :</label>&nbsp${patient.email}
-		</td>
-		<td>
-			<label>&nbsp PHR Verified :</label>&nbsp${patient.myOscarAuthentication}
-	</tr>
-	
-</table>
+<div class="row">
+	<div class="col-md-10">
+		<h2>${patient.displayName}<a href="<c:url value="/edit_patient/${patient.patientID}"/>">Edit</a></h2>
+		<h5>Research ID: ${patient.researchID}</h5>
+	</div>
+	<div class="col-md-2">
+		<a class="btn btn-warning" href="#">Disable Patient Profile</a>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-4">
+		<label class="control-label">Date of birth:</label> ${patient.bod}
+	</div>
+
+	<div class="col-md-4">
+		<label class="control-label">Gender:</label> ${patient.gender}
+	</div>
+
+	<div class="col-md-4">
+		<label class="control-label">Address:</label> ${patient.address}
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-4">
+		<label class="control-label">MRP:</label> ${patient.mrpFirstName} &nbsp${patient.mrpLastName}
+	</div>
+
+	<div class="col-md-4">
+		<label class="control-label">Phone:</label> ${patient.homePhone}
+	</div>
+
+	<div class="col-md-4">
+		<label class="control-label">Clinic:</label> ${patient.clinicName}
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-4">
+		<label class="control-label">Email:</label> ${patient.email}
+	</div>
+
+	<div class="col-md-4">
+		<label class="control-label">PHR Verified:</label> ${patient.myOscarAuthentication}
+	</div>
+</div>
+
 
 		<table width="1020" class="table table-striped">
 			<tr>

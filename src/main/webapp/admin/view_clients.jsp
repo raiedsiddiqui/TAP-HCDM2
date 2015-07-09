@@ -70,13 +70,13 @@
 					<th>Client ID</th>
 					<th>Research ID</th>
 					<th>Name</th>
-					<th>DOB</th>
-					<th>Age</th>
+					<!-- <th>DOB</th>
+					<th>Age</th> -->
 					<th>Gender</th>
 					<th>Clinic</th>
 					<th>MRP</th>
-					<th>City</th>
-					<th>Phone Number</th>
+					<!-- <th>City</th>
+					<th>Phone Number</th> -->
 					<th>Volunteer1</th>
 					<th>Volunteer2</th>
 
@@ -88,13 +88,13 @@
 						<td>${p.patientID}</td>
 						<td>${p.researchID}</td>
 						<td><a href="<c:url value="/display_client/${p.patientID}"/>">${p.firstName} ${p.lastName}</a></td>						
-						<td>${p.bod}</td>
-						<td>${p.age}</td>
+						<!-- <td>${p.bod}</td>
+						<td>${p.age}</td> -->
 						<td>${p.gender}</td>
 						<td>${p.clinicName}</td>
 						<td>${p.mrpFirstName} ${p.mrpLastName}</td>
-						<td>${p.city}</td>
-						<td>${p.homePhone}</td>
+						<!-- <td>${p.city}</td>
+						<td>${p.homePhone}</td> -->
 						<td>${p.volunteerName}</td>
 	                    <td>${p.partnerName}</td>
 						

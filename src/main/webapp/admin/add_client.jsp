@@ -69,6 +69,12 @@
 		</div>
 		<div class="row">
 			<form id="newPatient" method="post" action="<c:url value="/add_patient"/>">
+			<div class="row">
+				<div class="col-md-6">
+					<label>Research ID:</label>
+					<input type="text" name="researchid" class="form-control" maxlength="10"/>
+				</div>	
+			</div>
 				<div class="row form-group">
 					<div class="col-md-6">
 					<label>First Name:</label>
@@ -120,11 +126,7 @@
 				<div class="col-md-6">
 					<label>MRP Lastname:</label>
 					<input type="text" name="mrp_lastname" class="form-control" />
-				</div>	
-				<div class="col-md-6">
-					<label>Research ID:</label>
-					<input type="text" name="researchid" class="form-control" />
-				</div>					
+				</div>				
 			</div>		
 				<label>PHR verified? </label>
 				<input type="radio" name="myoscar_verified" value="1" />Yes
