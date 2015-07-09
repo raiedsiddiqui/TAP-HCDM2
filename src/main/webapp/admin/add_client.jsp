@@ -120,7 +120,11 @@
 				<div class="col-md-6">
 					<label>MRP Lastname:</label>
 					<input type="text" name="mrp_lastname" class="form-control" />
-				</div>						
+				</div>	
+				<div class="col-md-6">
+					<label>Research ID:</label>
+					<input type="text" name="researchid" class="form-control" />
+				</div>					
 			</div>		
 				<label>PHR verified? </label>
 				<input type="radio" name="myoscar_verified" value="1" />Yes

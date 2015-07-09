@@ -823,7 +823,9 @@ public class TapestryController{
 			p.setMrp(StringUtils.isNotBlank(request.getParameter("mrp")) ? Integer.parseInt(request.getParameter("mrp")) : 0);
 			p.setMrpFirstName(request.getParameter("mrp_firstname"));
 			p.setMrpLastName(request.getParameter("mrp_lastname"));
-					
+			//Get Research ID from JSP and set it. 
+			p.setResearchID(request.getParameter("researchid"));
+			
 			int newPatientID = patientManager.createPatient(p);		
 			HttpSession session = request.getSession();
 			List<Patient> patients = (List<Patient>)session.getAttribute("allPatientWithFullInfos");
@@ -955,6 +957,7 @@ public class TapestryController{
 			p.setMrp(Integer.parseInt(request.getParameter("mrp")));
 			p.setMrpFirstName(request.getParameter("mrp_firstname"));
 			p.setMrpLastName(request.getParameter("mrp_lastname"));
+			p.setResearchID(request.getParameter("researchid"));
 			
 			patientManager.updatePatient(p);
 			model.addAttribute("updatePatientSuccessfully",true);

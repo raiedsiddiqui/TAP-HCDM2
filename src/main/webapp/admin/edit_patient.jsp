@@ -135,6 +135,13 @@
 						<input type="text" name="mrp_lastname" class="form-control" value="${patient.mrpLastName}" required/>
 					</div>		
 				</div>
+
+				<div class="row">
+					<div class="col-md-6">
+						<label>Research ID:</label>
+						<input type="text" name="researchid" class="form-control" value="${patient.researchID}" required />
+					</div>	
+				</div>
 				
 	<!--  			<label>Availability:</label><br/>
 				<%@include file="edit_availabilities.jsp" %> 

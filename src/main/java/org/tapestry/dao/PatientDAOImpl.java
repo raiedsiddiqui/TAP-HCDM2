@@ -100,8 +100,8 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 	public int createPatient(final Patient p) {	
 		 final String sql = "INSERT INTO patients (firstname, lastname, preferredname, volunteer,"
 					+ " gender, notes, volunteer2, alerts, myoscar_verified, clinic, username, mrp, "
-					+ "mrp_firstname, mrp_lastname) VALUES (?, ?, ?, ?, ?, ?, ?,"
-					+ " ?, ?, ?, ?, ?, ?, ?)";
+					+ "mrp_firstname, mrp_lastname, research_ID) VALUES (?, ?, ?, ?, ?, ?, ?,"
+					+ " ?, ?, ?, ?, ?, ?, ?, ?)";
 		  
 		 JdbcTemplate jdbcTemplate = getJdbcTemplate();  
 		 KeyHolder keyHolder = new GeneratedKeyHolder();  
@@ -124,6 +124,7 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 				 ps.setInt(12, p.getMrp());
 				 ps.setString(13,  p.getMrpFirstName());
 				 ps.setString(14, p.getMrpLastName());
+				 ps.setString(15, p.getResearchID());
 			        
 				 return ps;  
 			 }  
@@ -135,10 +136,10 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 	public void updatePatient(Patient p) {
 		String sql = "UPDATE patients SET firstname=?, lastname=?, preferredname=?, volunteer=?, "
 				+ "gender=?, notes=?, clinic=?, myoscar_verified=?, alerts=?, volunteer2=?, mrp=?, "
-				+ "mrp_firstname=?, mrp_lastname=? WHERE patient_ID=?";
+				+ "mrp_firstname=?, mrp_lastname=?, research_ID=? WHERE patient_ID=?";
 		getJdbcTemplate().update(sql, p.getFirstName(),  p.getLastName(), p.getPreferredName(), p.getVolunteer(), 
 				p.getGender(), p.getNotes(), p.getClinic(), p.getMyoscarVerified(), p.getAlerts(), p.getPartner(), 
-				p.getMrp(), p.getMrpFirstName(), p.getMrpLastName(), p.getPatientID());
+				p.getMrp(), p.getMrpFirstName(), p.getMrpLastName(), p.getResearchID(), p.getPatientID());
 
 	}
 	
@@ -206,6 +207,8 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 			patient.setMrp(rs.getInt("mrp"));
 			patient.setMrpFirstName(rs.getString("mrp_firstname"));
 			patient.setMrpLastName(rs.getString("mrp_lastname"));
+			patient.setResearchID(rs.getString("research_ID"));
+			
 			
 			String myOscarVerfied = rs.getString("myoscar_verified");
 			patient.setMyoscarVerified(myOscarVerfied);    

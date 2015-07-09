@@ -30,6 +30,7 @@ public class Patient{
 	private String streetAddress;
 	private String provice;
 	private String postalCode;
+	private String researchID;
 
 	public int getGroup() {
 		return group;
@@ -132,9 +133,15 @@ public class Patient{
 	public void setHomePhone(String homePhone) {
 		this.homePhone = homePhone;
 	}
-
 	
+	public String getResearchID() {
+		return researchID;
+	}
 
+	public void setResearchID(String researchID) {
+		this.researchID = researchID;
+	}
+	
 	//Accessors
 	/**
 	*@return The ID of the patient
