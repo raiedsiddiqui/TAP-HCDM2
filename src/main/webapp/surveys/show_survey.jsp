@@ -237,7 +237,7 @@
 					
             		
             		<div class="row">
-            			<div id="qtext" class="col-md-12 animated fadeIn">
+            			<div id="qtext" class="col-md-12">
 	           				<%
 	           					String questionText = question.getQuestionTextRenderKeys(survey);
 	            				//put enterspaces into the text, except if the <script tag is unclosed (allows javascript)
@@ -269,7 +269,7 @@
             		</div>
 
             		<br/>
-            		<div id="surveybackground" class="animated fadeIn">	
+            		<div id="surveybackground" class="">	
                 		<!-- Answer:  -->
                 
                 		<%
@@ -351,7 +351,7 @@
                 	<input id="saveclose" type="button" value="<%if (!survey.isComplete()) {%>Save and <%}%>Close" onclick="document.location='<c:url value="/save_survey/"/><%=documentId%>?survey_completed=<%=completed%>'">
                 	-->	
                 	<div id="answer-buttons">
-                		<div class="row animated fadeIn">
+                		<div class="row">
                 			<div class="col-md-4">
 	                			<input id="surveyback" class="tleft btn" type="button" value="Back" onclick="document.forms['surveyQuestion'].direction.value='backward'; document.forms['surveyQuestion'].submit();">
 	                		<div id="eq5dcopyright" style="float:left"></div>
