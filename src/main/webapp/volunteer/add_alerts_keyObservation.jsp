@@ -160,7 +160,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<input type="button" class="btn btn-primary pull-left" value="Cancel" onclick="javascript:history.go(-1)">
-				<button class="pull-right btn lgbtn" type="submit">Submit</button>
+				<button class="pull-right btn lgbtn" type="submit">Next</button>
 			</div>
 		</div>
 	</form>

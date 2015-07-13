@@ -33,7 +33,8 @@
 		<c:if test="${not empty surveyTemplateUpdated }">
 			<div class ="alert alert-info"><spring:message code="message_modifySurveyTemplate"/></div>
 		</c:if>			
-		<a href="<c:url value="/manage_volunteer_survey"/>" >Survey Management</a> ><br/>
+		<a href="<c:url value="/manage_volunteer_survey"/>">Volunteer Survey Management</a> <br/>
+		<p>This is where you add/edit and assign surveys to Volunteers</p>
 		<table >
 			<tr>
 				<td>

@@ -51,13 +51,13 @@
 
 				<li <c:if test="${pageContext.request.requestURI.contains('view_organizations')}">class="active"</c:if>><a href="<c:url value="/view_organizations"/>">Organizations <span class="glyphicon glyphicon-tower"></span></a></li>
 
-				<li <c:if test="${pageContext.request.requestURI.contains('manage_survey')}">class="active"</c:if>><a href="<c:url value="/manage_survey"/>">Add/Edit Survey </a></li>
+				<li <c:if test="${pageContext.request.requestURI.contains('manage_survey')}">class="active"</c:if>><a href="<c:url value="/manage_survey"/>">Manage Client Surveys </a></li>
 				
 				<li <c:if test="${pageContext.request.requestURI.contains('view_research_data')}">class="active"</c:if>><a href="<c:url value="/view_research_data"/>">Research Data Download</a></li>
 
 				<li <c:if test="${pageContext.request.requestURI.contains('manage_clinics')}">class="active"</c:if>><a href="<c:url value="/manage_clinics"/>">Clinics</a></li>
 				
-				<li <c:if test="${pageContext.request.requestURI.contains('manage_volunteer_survey')}">class="active"</c:if>><a href="<c:url value="/manage_volunteer_survey"/>">Add/Edit Volunteer Survey </a></li> 
+				<li <c:if test="${pageContext.request.requestURI.contains('manage_volunteer_survey')}">class="active"</c:if>><a href="<c:url value="/manage_volunteer_survey"/>">Manage Volunteer Surveys </a></li> 
 
 				<li <c:if test="${pageContext.request.requestURI.contains('view_activity_admin')}">class="active"</c:if>><a href="<c:url value="/view_activity_admin"/>">Activity Log <span class="glyphicon glyphicon-pencil"></a></li>
 			

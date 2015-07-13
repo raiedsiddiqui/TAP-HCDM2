@@ -64,6 +64,13 @@
 			<h2>Edit Patient</h2>
 		  	<form id="editPatient" method="post" action="<c:url value="/submit_edit_patient/${patient.patientID}"/>" >
 
+		  	<div class="row">
+					<div class="col-md-6">
+						<label>Research ID:</label>
+						<input type="text" name="researchid" class="form-control" value="${patient.researchID}" maxlength="10" required />
+					</div>	
+				</div>
+				
 				<div class="row form-group">
   					<div class="col-md-6">
 						<label>First Name:</label>
@@ -135,6 +142,8 @@
 						<input type="text" name="mrp_lastname" class="form-control" value="${patient.mrpLastName}" required/>
 					</div>		
 				</div>
+
+				
 				
 	<!--  			<label>Availability:</label><br/>
 				<%@include file="edit_availabilities.jsp" %> 
