@@ -51,7 +51,7 @@
 										<option value="17" <c:if test="${monFrom1 eq '7'}">selected</c:if>>11:00 AM</option>
 										<option value="18" <c:if test="${monFrom1 eq '8'}">selected</c:if>>11:30 AM</option>
 										<option value="19" <c:if test="${monFrom1 eq '9'}">selected</c:if>>12:00 PM</option>
-										<option value="110" <c:if test="${monFrom1 eq '10'}">selected</c:if>>12:30 AM</option>
+										<option value="110" <c:if test="${monFrom1 eq '10'}">selected</c:if>>12:30 PM</option>
 										<option value="111" <c:if test="${monFrom1 eq '11'}">selected</c:if>>13:00 PM</option>
 										<option value="112" <c:if test="${monFrom1 eq '12'}">selected</c:if>>13:30 PM</option>
 										<option value="113" <c:if test="${monFrom1 eq '13'}">selected</c:if>>14:00 PM</option>
@@ -74,7 +74,7 @@
 										<option value="17" <c:if test="${monTo1 eq '7'}">selected</c:if>>11:00 AM</option>
 										<option value="18" <c:if test="${monTo1 eq '8'}">selected</c:if>>11:30 AM</option>
 										<option value="19" <c:if test="${monTo1 eq '9'}">selected</c:if>>12:00 PM</option>
-										<option value="110" <c:if test="${monTo1 eq '10'}">selected</c:if>>12:30 AM</option>
+										<option value="110" <c:if test="${monTo1 eq '10'}">selected</c:if>>12:30 PM</option>
 										<option value="111" <c:if test="${monTo1 eq '11'}">selected</c:if>>13:00 PM</option>
 										<option value="112" <c:if test="${monTo1 eq '12'}">selected</c:if>>13:30 PM</option>
 										<option value="113" <c:if test="${monTo1 eq '13'}">selected</c:if>>14:00 PM</option>
@@ -98,7 +98,7 @@
 										<option value="17" <c:if test="${monFrom2 eq '7'}">selected</c:if>>11:00 AM</option>
 										<option value="18" <c:if test="${monFrom2 eq '8'}">selected</c:if>>11:30 AM</option>
 										<option value="19" <c:if test="${monFrom2 eq '9'}">selected</c:if>>12:00 PM</option>
-										<option value="110" <c:if test="${monFrom2 eq '10'}">selected</c:if>>12:30 AM</option>
+										<option value="110" <c:if test="${monFrom2 eq '10'}">selected</c:if>>12:30 PM</option>
 										<option value="111" <c:if test="${monFrom2 eq '11'}">selected</c:if>>13:00 PM</option>
 										<option value="112" <c:if test="${monFrom2 eq '12'}">selected</c:if>>13:30 PM</option>
 										<option value="113" <c:if test="${monFrom2 eq '13'}">selected</c:if>>14:00 PM</option>
@@ -121,7 +121,7 @@
 										<option value="17" <c:if test="${monTo2 eq '7'}">selected</c:if>>11:00 AM</option>
 										<option value="18" <c:if test="${monTo2 eq '8'}">selected</c:if>>11:30 AM</option>
 										<option value="19" <c:if test="${monTo2 eq '9'}">selected</c:if>>12:00 PM</option>
-										<option value="110" <c:if test="${monTo2 eq '10'}">selected</c:if>>12:30 AM</option>
+										<option value="110" <c:if test="${monTo2 eq '10'}">selected</c:if>>12:30 PM</option>
 										<option value="111" <c:if test="${monTo2 eq '11'}">selected</c:if>>13:00 PM</option>
 										<option value="112" <c:if test="${monTo2 eq '12'}">selected</c:if>>13:30 PM</option>
 										<option value="113" <c:if test="${monTo2 eq '13'}">selected</c:if>>14:00 PM</option>
@@ -179,7 +179,7 @@
 										<option value="27" <c:if test="${tueFrom1 eq '7'}">selected</c:if>>11:00 AM</option>
 										<option value="28" <c:if test="${tueFrom1 eq '8'}">selected</c:if>>11:30 AM</option>
 										<option value="29" <c:if test="${tueFrom1 eq '9'}">selected</c:if>>12:00 PM</option>
-										<option value="210" <c:if test="${tueFrom1 eq '10'}">selected</c:if>>12:30 AM</option>
+										<option value="210" <c:if test="${tueFrom1 eq '10'}">selected</c:if>>12:30 PM</option>
 										<option value="211" <c:if test="${tueFrom1 eq '11'}">selected</c:if>>13:00 PM</option>
 										<option value="212" <c:if test="${tueFrom1 eq '12'}">selected</c:if>>13:30 PM</option>
 										<option value="213" <c:if test="${tueFrom1 eq '13'}">selected</c:if>>14:00 PM</option>
@@ -202,7 +202,7 @@
 										<option value="27" <c:if test="${tueTo1 eq '7'}">selected</c:if>>11:00 AM</option>
 										<option value="28" <c:if test="${tueTo1 eq '8'}">selected</c:if>>11:30 AM</option>
 										<option value="29" <c:if test="${tueTo1 eq '9'}">selected</c:if>>12:00 PM</option>
-										<option value="210" <c:if test="${tueTo1 eq '10'}">selected</c:if>>12:30 AM</option>
+										<option value="210" <c:if test="${tueTo1 eq '10'}">selected</c:if>>12:30 PM</option>
 										<option value="211" <c:if test="${tueTo1 eq '11'}">selected</c:if>>13:00 PM</option>
 										<option value="212" <c:if test="${tueTo1 eq '12'}">selected</c:if>>13:30 PM</option>
 										<option value="213" <c:if test="${tueTo1 eq '13'}">selected</c:if>>14:00 PM</option>
@@ -226,7 +226,7 @@
 										<option value="27" <c:if test="${tueFrom2 eq '7'}">selected</c:if>>11:00 AM</option>
 										<option value="28" <c:if test="${tueFrom2 eq '8'}">selected</c:if>>11:30 AM</option>
 										<option value="29" <c:if test="${tueFrom2 eq '9'}">selected</c:if>>12:00 PM</option>
-										<option value="210" <c:if test="${tueFrom2 eq '10'}">selected</c:if>>12:30 AM</option>
+										<option value="210" <c:if test="${tueFrom2 eq '10'}">selected</c:if>>12:30 PM</option>
 										<option value="211" <c:if test="${tueFrom2 eq '11'}">selected</c:if>>13:00 PM</option>
 										<option value="212" <c:if test="${tueFrom2 eq '12'}">selected</c:if>>13:30 PM</option>
 										<option value="213" <c:if test="${tueFrom2 eq '13'}">selected</c:if>>14:00 PM</option>
@@ -249,7 +249,7 @@
 										<option value="27" <c:if test="${tueTo2 eq '7'}">selected</c:if>>11:00 AM</option>
 										<option value="28" <c:if test="${tueTo2 eq '8'}">selected</c:if>>11:30 AM</option>
 										<option value="29" <c:if test="${tueTo2 eq '9'}">selected</c:if>>12:00 PM</option>
-										<option value="210" <c:if test="${tueTo2 eq '10'}">selected</c:if>>12:30 AM</option>
+										<option value="210" <c:if test="${tueTo2 eq '10'}">selected</c:if>>12:30 PM</option>
 										<option value="211" <c:if test="${tueTo2 eq '11'}">selected</c:if>>13:00 PM</option>
 										<option value="212" <c:if test="${tueTo2 eq '12'}">selected</c:if>>13:30 PM</option>
 										<option value="213" <c:if test="${tueTo2 eq '13'}">selected</c:if>>14:00 PM</option>
@@ -307,7 +307,7 @@
 											<option value="37" <c:if test="${wedFrom1 eq '7'}">selected</c:if>>11:00 AM</option>
 											<option value="38" <c:if test="${wedFrom1 eq '8'}">selected</c:if>>11:30 AM</option>
 											<option value="39" <c:if test="${wedFrom1 eq '9'}">selected</c:if>>12:00 PM</option>
-											<option value="310" <c:if test="${wedFrom1 eq '10'}">selected</c:if>>12:30 AM</option>
+											<option value="310" <c:if test="${wedFrom1 eq '10'}">selected</c:if>>12:30 PM</option>
 											<option value="311" <c:if test="${wedFrom1 eq '11'}">selected</c:if>>13:00 PM</option>
 											<option value="312" <c:if test="${wedFrom1 eq '12'}">selected</c:if>>13:30 PM</option>
 											<option value="313" <c:if test="${wedFrom1 eq '13'}">selected</c:if>>14:00 PM</option>
@@ -330,7 +330,7 @@
 											<option value="37" <c:if test="${wedTo1 eq '7'}">selected</c:if>>11:00 AM</option>
 											<option value="38" <c:if test="${wedTo1 eq '8'}">selected</c:if>>11:30 AM</option>
 											<option value="39" <c:if test="${wedTo1 eq '9'}">selected</c:if>>12:00 PM</option>
-											<option value="310" <c:if test="${wedTo1 eq '10'}">selected</c:if>>12:30 AM</option>
+											<option value="310" <c:if test="${wedTo1 eq '10'}">selected</c:if>>12:30 PM</option>
 											<option value="311" <c:if test="${wedTo1 eq '11'}">selected</c:if>>13:00 PM</option>
 											<option value="312" <c:if test="${wedTo1 eq '12'}">selected</c:if>>13:30 PM</option>
 											<option value="313" <c:if test="${wedTo1 eq '13'}">selected</c:if>>14:00 PM</option>
@@ -354,7 +354,7 @@
 											<option value="37" <c:if test="${wedFrom2 eq '7'}">selected</c:if>>11:00 AM</option>
 											<option value="38" <c:if test="${wedFrom2 eq '8'}">selected</c:if>>11:30 AM</option>
 											<option value="39" <c:if test="${wedFrom2 eq '9'}">selected</c:if>>12:00 PM</option>
-											<option value="310" <c:if test="${wedFrom2 eq '10'}">selected</c:if>>12:30 AM</option>
+											<option value="310" <c:if test="${wedFrom2 eq '10'}">selected</c:if>>12:30 PM</option>
 											<option value="311" <c:if test="${wedFrom2 eq '11'}">selected</c:if>>13:00 PM</option>
 											<option value="312" <c:if test="${wedFrom2 eq '12'}">selected</c:if>>13:30 PM</option>
 											<option value="313" <c:if test="${wedFrom2 eq '13'}">selected</c:if>>14:00 PM</option>
@@ -377,7 +377,7 @@
 											<option value="37" <c:if test="${wedTo2 eq '7'}">selected</c:if>>11:00 AM</option>
 											<option value="38" <c:if test="${wedTo2 eq '8'}">selected</c:if>>11:30 AM</option>
 											<option value="39" <c:if test="${wedTo2 eq '9'}">selected</c:if>>12:00 PM</option>
-											<option value="310" <c:if test="${wedTo2 eq '10'}">selected</c:if>>12:30 AM</option>
+											<option value="310" <c:if test="${wedTo2 eq '10'}">selected</c:if>>12:30 PM</option>
 											<option value="311" <c:if test="${wedTo2 eq '11'}">selected</c:if>>13:00 PM</option>
 											<option value="312" <c:if test="${wedTo2 eq '12'}">selected</c:if>>13:30 PM</option>
 											<option value="313" <c:if test="${wedTo2 eq '13'}">selected</c:if>>14:00 PM</option>
@@ -435,7 +435,7 @@
 											<option value="47" <c:if test="${thuFrom1 eq '7'}">selected</c:if>>11:00 AM</option>
 											<option value="48" <c:if test="${thuFrom1 eq '8'}">selected</c:if>>11:30 AM</option>
 											<option value="49" <c:if test="${thuFrom1 eq '9'}">selected</c:if>>12:00 PM</option>
-											<option value="410" <c:if test="${thuFrom1 eq '10'}">selected</c:if>>12:30 AM</option>
+											<option value="410" <c:if test="${thuFrom1 eq '10'}">selected</c:if>>12:30 PM</option>
 											<option value="411" <c:if test="${thuFrom1 eq '11'}">selected</c:if>>13:00 PM</option>
 											<option value="412" <c:if test="${thuFrom1 eq '12'}">selected</c:if>>13:30 PM</option>
 											<option value="413" <c:if test="${thuFrom1 eq '13'}">selected</c:if>>14:00 PM</option>
@@ -458,7 +458,7 @@
 											<option value="47" <c:if test="${thuTo1 eq '7'}">selected</c:if>>11:00 AM</option>
 											<option value="48" <c:if test="${thuTo1 eq '8'}">selected</c:if>>11:30 AM</option>
 											<option value="49" <c:if test="${thuTo1 eq '9'}">selected</c:if>>12:00 PM</option>
-											<option value="410" <c:if test="${thuTo1 eq '10'}">selected</c:if>>12:30 AM</option>
+											<option value="410" <c:if test="${thuTo1 eq '10'}">selected</c:if>>12:30 PM</option>
 											<option value="411" <c:if test="${thuTo1 eq '11'}">selected</c:if>>13:00 PM</option>
 											<option value="412" <c:if test="${thuTo1 eq '12'}">selected</c:if>>13:30 PM</option>
 											<option value="413" <c:if test="${thuTo1 eq '13'}">selected</c:if>>14:00 PM</option>
@@ -482,7 +482,7 @@
 											<option value="47" <c:if test="${thuFrom2 eq '7'}">selected</c:if>>11:00 AM</option>
 											<option value="48" <c:if test="${thuFrom2 eq '8'}">selected</c:if>>11:30 AM</option>
 											<option value="49" <c:if test="${thuFrom2 eq '9'}">selected</c:if>>12:00 PM</option>
-											<option value="410" <c:if test="${thuFrom2 eq '10'}">selected</c:if>>12:30 AM</option>
+											<option value="410" <c:if test="${thuFrom2 eq '10'}">selected</c:if>>12:30 PM</option>
 											<option value="411" <c:if test="${thuFrom2 eq '11'}">selected</c:if>>13:00 PM</option>
 											<option value="412" <c:if test="${thuFrom2 eq '12'}">selected</c:if>>13:30 PM</option>
 											<option value="413" <c:if test="${thuFrom2 eq '13'}">selected</c:if>>14:00 PM</option>
@@ -505,7 +505,7 @@
 											<option value="47" <c:if test="${thuTo2 eq '7'}">selected</c:if>>11:00 AM</option>
 											<option value="48" <c:if test="${thuTo2 eq '8'}">selected</c:if>>11:30 AM</option>
 											<option value="49" <c:if test="${thuTo2 eq '9'}">selected</c:if>>12:00 PM</option>
-											<option value="410" <c:if test="${thuTo2 eq '10'}">selected</c:if>>12:30 AM</option>
+											<option value="410" <c:if test="${thuTo2 eq '10'}">selected</c:if>>12:30 PM</option>
 											<option value="411" <c:if test="${thuTo2 eq '11'}">selected</c:if>>13:00 PM</option>
 											<option value="412" <c:if test="${thuTo2 eq '12'}">selected</c:if>>13:30 PM</option>
 											<option value="413" <c:if test="${thuTo2 eq '13'}">selected</c:if>>14:00 PM</option>
@@ -563,7 +563,7 @@
 											<option value="57" <c:if test="${friFrom1 eq '7'}">selected</c:if>>11:00 AM</option>
 											<option value="58" <c:if test="${friFrom1 eq '8'}">selected</c:if>>11:30 AM</option>
 											<option value="59" <c:if test="${friFrom1 eq '9'}">selected</c:if>>12:00 PM</option>
-											<option value="510" <c:if test="${friFrom1 eq '10'}">selected</c:if>>12:30 AM</option>
+											<option value="510" <c:if test="${friFrom1 eq '10'}">selected</c:if>>12:30 PM</option>
 											<option value="511" <c:if test="${friFrom1 eq '11'}">selected</c:if>>13:00 PM</option>
 											<option value="512" <c:if test="${friFrom1 eq '12'}">selected</c:if>>13:30 PM</option>
 											<option value="513" <c:if test="${friFrom1 eq '13'}">selected</c:if>>14:00 PM</option>
@@ -586,7 +586,7 @@
 											<option value="57" <c:if test="${friTo1 eq '7'}">selected</c:if>>11:00 AM</option>
 											<option value="58" <c:if test="${friTo1 eq '8'}">selected</c:if>>11:30 AM</option>
 											<option value="59" <c:if test="${friTo1 eq '9'}">selected</c:if>>12:00 PM</option>
-											<option value="510" <c:if test="${friTo1 eq '10'}">selected</c:if>>12:30 AM</option>
+											<option value="510" <c:if test="${friTo1 eq '10'}">selected</c:if>>12:30 PM</option>
 											<option value="511" <c:if test="${friTo1 eq '11'}">selected</c:if>>13:00 PM</option>
 											<option value="512" <c:if test="${friTo1 eq '12'}">selected</c:if>>13:30 PM</option>
 											<option value="513" <c:if test="${friTo1 eq '13'}">selected</c:if>>14:00 PM</option>
@@ -610,7 +610,7 @@
 											<option value="57" <c:if test="${friFrom2 eq '7'}">selected</c:if>>11:00 AM</option>
 											<option value="58" <c:if test="${friFrom2 eq '8'}">selected</c:if>>11:30 AM</option>
 											<option value="59" <c:if test="${friFrom2 eq '9'}">selected</c:if>>12:00 PM</option>
-											<option value="510" <c:if test="${friFrom2 eq '10'}">selected</c:if>>12:30 AM</option>
+											<option value="510" <c:if test="${friFrom2 eq '10'}">selected</c:if>>12:30 PM</option>
 											<option value="511" <c:if test="${friFrom2 eq '11'}">selected</c:if>>13:00 PM</option>
 											<option value="512" <c:if test="${friFrom2 eq '12'}">selected</c:if>>13:30 PM</option>
 											<option value="513" <c:if test="${friFrom2 eq '13'}">selected</c:if>>14:00 PM</option>
@@ -633,7 +633,7 @@
 											<option value="57" <c:if test="${friTo2 eq '7'}">selected</c:if>>11:00 AM</option>
 											<option value="58" <c:if test="${friTo2 eq '8'}">selected</c:if>>11:30 AM</option>
 											<option value="59" <c:if test="${friTo2 eq '9'}">selected</c:if>>12:00 PM</option>
-											<option value="510" <c:if test="${friTo2 eq '10'}">selected</c:if>>12:30 AM</option>
+											<option value="510" <c:if test="${friTo2 eq '10'}">selected</c:if>>12:30 PM</option>
 											<option value="511" <c:if test="${friTo2 eq '11'}">selected</c:if>>13:00 PM</option>
 											<option value="512" <c:if test="${friTo2 eq '12'}">selected</c:if>>13:30 PM</option>
 											<option value="513" <c:if test="${friTo2 eq '13'}">selected</c:if>>14:00 PM</option>
