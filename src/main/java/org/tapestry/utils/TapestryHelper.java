@@ -949,15 +949,40 @@ public class TapestryHelper {
 	 * @param surveyManager
 	 * @return a list of survey template
 	 */
+	public static List<SurveyTemplate> getSurveyTemplatesWithCanDelete(HttpServletRequest request, SurveyManager surveyManager){
+		HttpSession session = request.getSession();		
+		List<SurveyTemplate> surveyTemplateList;
+		if (session.getAttribute("survey_template_withCanDelete_list") == null)
+		{			
+			if (request.isUserInRole("ROLE_ADMIN"))//central admin 
+				surveyTemplateList = surveyManager.getSurveyTemplatesWithCanDelete(0);
+			else //local admin/site admin
+				surveyTemplateList = surveyManager.getSurveyTemplatesWithCanDelete(getLoggedInUser(request).getSite());
+			//save in the session
+			if (surveyTemplateList != null && surveyTemplateList.size()>0)
+				session.setAttribute("survey_template_withCanDelete_list", surveyTemplateList);
+		}
+		else
+			surveyTemplateList = (List<SurveyTemplate>)session.getAttribute("survey_template_list");
+		
+		return surveyTemplateList;
+	}
+	
+	/**
+	 * 
+	 * @param request
+	 * @param surveyManager
+	 * @return a list of survey template
+	 */
 	public static List<SurveyTemplate> getSurveyTemplates(HttpServletRequest request, SurveyManager surveyManager){
 		HttpSession session = request.getSession();		
 		List<SurveyTemplate> surveyTemplateList;
 		if (session.getAttribute("survey_template_list") == null)
 		{			
 			if (request.isUserInRole("ROLE_ADMIN"))//central admin 
-				surveyTemplateList = surveyManager.getSurveyTemplatesWithCanDelete(0);
+				surveyTemplateList = surveyManager.getAllSurveyTemplates();
 			else //local admin/site admin
-				surveyTemplateList = surveyManager.getSurveyTemplatesWithCanDelete(getLoggedInUser(request).getSite());
+				surveyTemplateList = surveyManager.getSurveyTemplatesBySite(getLoggedInUser(request).getSite());
 			//save in the session
 			if (surveyTemplateList != null && surveyTemplateList.size()>0)
 				session.setAttribute("survey_template_list", surveyTemplateList);
@@ -967,6 +992,7 @@ public class TapestryHelper {
 		
 		return surveyTemplateList;
 	}
+	
 	/**
 	 * Check if survey result exist in DB
 	 * @param surveyResults
@@ -3755,7 +3781,7 @@ public class TapestryHelper {
 	   		qSize = questionTextList.size();
 	   		if (qSize == qList.size())
 	   		{
-	   			if (title.equalsIgnoreCase("2. Goals"))
+	   			if (title.equalsIgnoreCase("Goals"))
 		   		{
 	   				String answer;
 	   				for (int j = 0; j < qList.size(); j++)
@@ -3776,7 +3802,7 @@ public class TapestryHelper {
 		buildPDFReport(surveyResultMap, response, name);
 	}
 	
-	public static String removeString(String strSource, String strBeRemoved){
+	public static String removeString(String strSource, String strBeRemoved){		
 		int index = strSource.indexOf(strBeRemoved);
 		if (index != (-1))
 			strSource = strSource.substring(0, index); 

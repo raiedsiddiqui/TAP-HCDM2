@@ -129,9 +129,12 @@
 			</c:if>
 		</tr>
 		</c:forEach>
-	</table>
+	</table>	
+	<h2>Surveys <a href="<c:url value="/go_assign_survey/${patient.patientID}"/>">Assign Survey</a> </h2>
 	
-	<h2>Surveys <a href="<c:url value="/go_assign_survey/${patient.patientID}"/>">Assign Survey</a> </h2><a href="<c:url value="/download_clientSurveyReport/${patient.patientID}?name=${patient.displayName}"/>">Download Report</a>
+	<c:if test="${showReport}">
+		<a href="<c:url value="/download_clientSurveyReport/${patient.patientID}?name=${patient.displayName}"/>">Download Report</a>
+	</c:if>
 	<table  class="table table-striped" width="970" border="1">
 		<tr>
 			<th width="200">Assigned Surveys</th>

@@ -36,10 +36,12 @@ public class TapestrySurveyMap extends LinkedHashMap<String, TapestryPHRSurvey> 
 	{
 		Set<Entry<String, TapestryPHRSurvey>> entries = this.entrySet();
 		ArrayList<TapestryPHRSurvey> surveys = new ArrayList<TapestryPHRSurvey>();
+		
 		for (Entry<String, TapestryPHRSurvey> entry : entries)
 		{
 			TapestryPHRSurvey curSurvey = entry.getValue();
-			if (curSurvey.getSurveyId().equals(surveyId)) surveys.add(curSurvey);
+			if (curSurvey.getSurveyId().equals(surveyId)) 
+				surveys.add(curSurvey);
 		}
 		return surveys;
 	}

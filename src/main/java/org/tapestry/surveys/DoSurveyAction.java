@@ -142,7 +142,7 @@ public class DoSurveyAction
 
 		//if continuing survey (just submitted an answer)
 		if (questionId != null && direction.equalsIgnoreCase("forward"))
-		{				
+		{	
 			if (currentSurvey.getQuestionById(questionId).getQuestionType().equals(SurveyQuestion.ANSWER_CHECK) && answerStrs == null)
 				answerStrs = new String[0];
 			
@@ -367,7 +367,11 @@ public class DoSurveyAction
 		return(userSurveys);
 	}
 	
-	
+	public static void updateSurveyMapInSession(HttpServletRequest request, List<SurveyResult> surveyResults, List<SurveyTemplate> surveyTemplates)
+	{
+		TapestrySurveyMap userSurveys = new TapestrySurveyMap(getSurveyResultsList(surveyResults, surveyTemplates));
+		request.getSession().setAttribute("session_survey_list", userSurveys);		
+	}
 	
 	public static TapestrySurveyMap getSurveyMap(HttpServletRequest request) {
 		TapestrySurveyMap userSurveys = (TapestrySurveyMap) request.getSession().getAttribute("session_survey_list");

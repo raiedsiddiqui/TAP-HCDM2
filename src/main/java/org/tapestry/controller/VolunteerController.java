@@ -1125,10 +1125,10 @@ public class VolunteerController {
 
 			return "admin/index";
 		}
-		else if (request.isUserInRole("ROLE_CLINICIAN"))
-		{
-			return "redirect:/manage_surveys";
-		}
+//		else if (request.isUserInRole("ROLE_CLINICIAN"))
+//		{
+//			return "redirect:/manage_surveys";
+//		}
 		else
 		{ //This should not happen, but catch any unforseen behavior and logout			
 			return "redirect:/login";
