@@ -1,5 +1,9 @@
+/*CREATE DATABASE IF NOT EXISTS survey_app;
+USE survey_app;
+*/
 CREATE DATABASE IF NOT EXISTS tapestry_db;
 USE tapestry_db;
+
 
 CREATE TABLE IF NOT EXISTS users (
 	user_ID INT UNSIGNED NOT NULL AUTO_INCREMENT, /*Using UNSIGNED TINYINT allows for 255 users*/
@@ -32,7 +36,7 @@ CREATE TABLE IF NOT EXISTS patients (
 	mrp SMALLINT UNSIGNED NOT NULL, 
 	mrp_firstname VARCHAR(50) NOT NULL,
 	mrp_lastname VARCHAR(50) NOT NULL,
-	research_ID VARCHAR(10) NOT NULL,
+	research_ID VARCHAR(10) NOT NULL, 
 		
 	PRIMARY KEY (patient_ID)
 );
@@ -46,6 +50,7 @@ CREATE TABLE IF NOT EXISTS surveys (
     priority TINYINT(1), /*Between 0-9*/
     description TEXT,
     site MEDIUMINT UNSIGNED NOT NULL,
+    isDefault TINYINT(1) UNSIGNED NOT NULL,
 	PRIMARY KEY (survey_ID)
 );
 
