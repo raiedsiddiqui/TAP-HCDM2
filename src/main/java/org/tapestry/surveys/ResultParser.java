@@ -40,9 +40,8 @@ public class ResultParser {
 
                 NodeList questionTextList = question.getElementsByTagName("QuestionText");
                 if (questionTextList.getLength() > 0){
-                    Element questionText = (Element) questionTextList.item(0);
-                    qText = questionText.getTextContent().trim();
-                    
+                    Element questionText = (Element) questionTextList.item(0);                    
+                    qText = questionText.getTextContent().trim();                    
                     questionTexts.add(qText);
                 }                
             }

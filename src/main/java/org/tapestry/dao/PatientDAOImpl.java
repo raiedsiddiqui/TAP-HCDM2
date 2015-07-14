@@ -207,8 +207,7 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 			patient.setMrp(rs.getInt("mrp"));
 			patient.setMrpFirstName(rs.getString("mrp_firstname"));
 			patient.setMrpLastName(rs.getString("mrp_lastname"));
-			patient.setResearchID(rs.getString("research_ID"));
-			
+			patient.setResearchID(rs.getString("research_ID"));			
 			
 			String myOscarVerfied = rs.getString("myoscar_verified");
 			patient.setMyoscarVerified(myOscarVerfied);    

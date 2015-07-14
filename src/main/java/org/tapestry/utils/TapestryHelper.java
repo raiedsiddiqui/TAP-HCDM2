@@ -3760,7 +3760,7 @@ public class TapestryHelper {
 	   			questionTextList.remove(size-1);
 	   					
 	   		}
-	   		else
+	   		else 
 	   			questionTextList.remove(0);
 	   			   		
 	   		int qSize = questionTextList.size();
@@ -3777,6 +3777,19 @@ public class TapestryHelper {
 //	   			if (qText.startsWith("Question "))
 //	   				qText = qText.substring(16);
 	   			questionTextList.set(j,qText);	 
+	   		}
+	   		
+	   		
+	   		
+	   		if (sr.getSurveyTitle().equals("Goals on server"))
+	   		{
+	   			System.out.println("size of text === "+questionTextList.size() );
+		   		System.out.println("size of ans === "+qList.size() );
+	   			for (int n = 0; n<questionTextList.size(); n++)
+	   				System.out.println("text is === "+ questionTextList.get(n));
+	   			
+	   			for (int n = 0; n<qList.size(); n++)
+	   				System.out.println("answer is === "+ qList.get(n));
 	   		}
 	   		qSize = questionTextList.size();
 	   		if (qSize == qList.size())

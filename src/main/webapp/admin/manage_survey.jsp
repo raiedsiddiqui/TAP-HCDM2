@@ -110,6 +110,10 @@
 					<select name="type">
 						<option value="MUMPS">MUMPS</option>
 					</select>
+					<label>Default? </label>
+				<input type="radio" name="default_survey" value="1" />Yes
+				<input type="radio" name="default_survey" value="0" checked/>No
+				<br/>
 					<label>Priority: (Higher numbers will be above lower numbers on the patient page)</label>
 					<select name="priority">
 						<c:forEach begin="0" end="9" varStatus="loop">

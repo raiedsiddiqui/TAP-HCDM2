@@ -1189,18 +1189,18 @@ public class TapestryController{
 		
 		HttpSession session = request.getSession();
 		List<Patient> patients = new ArrayList<Patient>();
-		if (session.getAttribute("allPatientWithFullInfos") != null)
-		{
-			patients = (List<Patient>)session.getAttribute("allPatientWithFullInfos");
-			
-			for (Patient p: patients)
-			{
-				if (p.getPatientID() == id)
-					patient = p;
-			}	
-		}
-		else
-			patient = TapestryHelper.getPatientWithFullInfos(patient);	
+//		if (session.getAttribute("allPatientWithFullInfos") != null)
+//		{
+//			patients = (List<Patient>)session.getAttribute("allPatientWithFullInfos");
+//			
+//			for (Patient p: patients)
+//			{
+//				if (p.getPatientID() == id)
+//					patient = p;
+//			}	
+//		}
+//		else
+//			patient = TapestryHelper.getPatientWithFullInfos(patient);	
 		report.setPatient(patient);
 		
 		// Key Observations
@@ -2250,6 +2250,11 @@ public class TapestryController{
 			st.setSite(Integer.parseInt(request.getParameter("site")));
 		else
 			st.setSite(loggedInUser.getSite());
+		
+		if ("1".equals(request.getParameter("default_survey")))
+			st.setDefault(true);
+		else
+			st.setDefault(false);
 		surveyManager.uploadSurveyTemplate(st);
 		
 		session.setAttribute("surveyTemplateMessage", "C");

@@ -67,8 +67,8 @@ public class SurveyTemplateDAOImpl extends JdbcDaoSupport implements SurveyTempl
 
 	@Override
 	public void uploadSurveyTemplate(SurveyTemplate st) {
-		String sql = "INSERT INTO surveys (title, type, contents, priority, description, site) values (?,?,?,?,?,?)";
-		getJdbcTemplate().update(sql, st.getTitle(), st.getType(), st.getContents(), st.getPriority(), st.getDescription(), st.getSite());
+		String sql = "INSERT INTO surveys (title, type, contents, priority, description, site, isDefault) values (?,?,?,?,?,?,?)";
+		getJdbcTemplate().update(sql, st.getTitle(), st.getType(), st.getContents(), st.getPriority(), st.getDescription(), st.getSite(), st.isDefault());
 	}	
 
 	@Override
@@ -107,7 +107,7 @@ public class SurveyTemplateDAOImpl extends JdbcDaoSupport implements SurveyTempl
             st.setDescription(rs.getString("description"));
             st.setSite(rs.getInt("site"));
             st.setSiteName(rs.getString("site_name"));
-            
+            st.setDefault(rs.getBoolean("isDefault"));
             //format date, remove time
             String date = rs.getString("last_modified");
             date = date.substring(0, 10);
