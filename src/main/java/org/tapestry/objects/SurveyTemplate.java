@@ -18,7 +18,7 @@ public class SurveyTemplate {
 	private boolean showDelete;
 	private int site;
 	private String siteName;
-	private boolean isDefault;
+	private boolean defaultSurvey;
 
 	public SurveyTemplate(){
 		//Default constructor
@@ -38,7 +38,7 @@ public class SurveyTemplate {
 		surveyTemplateTransfer.setDescription(surveyTemplate.getDescription());
 		surveyTemplateTransfer.setCreatedDate(surveyTemplate.getCreatedDate());
 		surveyTemplateTransfer.setSiteName(surveyTemplate.getSiteName());
-		surveyTemplateTransfer.setDefault(surveyTemplate.isDefault());
+		surveyTemplateTransfer.setDefaultSurvey(surveyTemplate.isDefaultSurvey());
 
 		return(surveyTemplateTransfer);
 	}
@@ -161,12 +161,12 @@ public class SurveyTemplate {
 		this.siteName = siteName;
 	}
 	
-	public boolean isDefault() {
-		return isDefault;
+	public boolean isDefaultSurvey() {
+		return defaultSurvey;
 	}
 
-	public void setDefault(boolean isDefault) {
-		this.isDefault = isDefault;
+	public void setDefaultSurvey(boolean defaultSurvey) {
+		this.defaultSurvey = defaultSurvey;
 	}
 	
 }

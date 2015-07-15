@@ -71,6 +71,13 @@ public interface SurveyManager {
 	 */
 	@Transactional
 	public void updateSurveyTemplate(SurveyTemplate st);
+		
+	/**
+	 * Set survey templates as default
+	 * @param surveyTemplateIds
+	 */
+	@Transactional
+	public void setDefaultSurveyTemplate(String[] surveyTemplateIds);
 	/**
 	 * Delete a survey template from the database
 	 * @param id

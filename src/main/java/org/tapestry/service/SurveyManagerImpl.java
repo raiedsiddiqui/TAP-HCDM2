@@ -1,6 +1,7 @@
 package org.tapestry.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -173,9 +174,18 @@ public class SurveyManagerImpl implements SurveyManager {
 
 	@Override
 	public void updateSurveyTemplate(SurveyTemplate st) {
-		surveyTemplateDao.updateSurveyTemplate(st);
-		
+		surveyTemplateDao.updateSurveyTemplate(st);		
 	}
+	
+	@Override
+	public void setDefaultSurveyTemplate(String[] surveyTemplateIds) {
+		String stIds = Arrays.toString(surveyTemplateIds);
+		stIds = stIds.replace("[", "");
+		stIds = stIds.replace("]", "").trim();
+		
+		surveyTemplateDao.setDefaultSurveyTemplate(stIds);
+	}
+	
 	@Override
 	public void deleteSurveyTemplate(int id) {
 		surveyTemplateDao.deleteSurveyTemplate(id);

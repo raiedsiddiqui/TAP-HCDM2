@@ -68,7 +68,7 @@ public class SurveyTemplateDAOImpl extends JdbcDaoSupport implements SurveyTempl
 	@Override
 	public void uploadSurveyTemplate(SurveyTemplate st) {
 		String sql = "INSERT INTO surveys (title, type, contents, priority, description, site, isDefault) values (?,?,?,?,?,?,?)";
-		getJdbcTemplate().update(sql, st.getTitle(), st.getType(), st.getContents(), st.getPriority(), st.getDescription(), st.getSite(), st.isDefault());
+		getJdbcTemplate().update(sql, st.getTitle(), st.getType(), st.getContents(), st.getPriority(), st.getDescription(), st.getSite(), st.isDefaultSurvey());
 	}	
 
 	@Override
@@ -106,8 +106,8 @@ public class SurveyTemplateDAOImpl extends JdbcDaoSupport implements SurveyTempl
             st.setPriority(rs.getInt("priority"));
             st.setDescription(rs.getString("description"));
             st.setSite(rs.getInt("site"));
-            st.setSiteName(rs.getString("site_name"));
-            st.setDefault(rs.getBoolean("isDefault"));
+            st.setSiteName(rs.getString("site_name"));          
+            st.setDefaultSurvey(rs.getBoolean("isDefault"));
             //format date, remove time
             String date = rs.getString("last_modified");
             date = date.substring(0, 10);
@@ -176,6 +176,13 @@ public class SurveyTemplateDAOImpl extends JdbcDaoSupport implements SurveyTempl
 	public SurveyTemplate getVolunteerSurveyTemplateByID(int id) {
 		String sql = "SELECT * FROM volunteer_surveys WHERE survey_ID=?";
 		return getJdbcTemplate().queryForObject(sql, new Object[]{id}, new VolunteerSurveyTemplateMapper());
+	}
+
+	@Override
+	public void setDefaultSurveyTemplate(String surveyIds) {		
+		String sql = "UPDATE surveys SET isDefault='1' WHERE survey_ID IN (?)";
+		getJdbcTemplate().update(sql, surveyIds);
+		
 	}
 
 }
