@@ -888,7 +888,12 @@ public class TapestryController{
 		
 		model.addAttribute("patient", p);
 		
-		List<Volunteer> volunteers = volunteerManager.getAllVolunteers();			
+//		List<Volunteer> volunteers = volunteerManager.getAllVolunteers();	
+		List<Volunteer> volunteers;
+		if (request.isUserInRole("ROLE_ADMIN"))
+			volunteers = volunteerManager.getAllVolunteers();				
+		else	
+			volunteers = volunteerManager.getAllVolunteersByOrganization(TapestryHelper.getLoggedInUser(request).getOrganization());	
 		model.addAttribute("volunteers", volunteers);	
 		
 		HttpSession session = request.getSession();
@@ -2252,9 +2257,9 @@ public class TapestryController{
 			st.setSite(loggedInUser.getSite());
 		
 		if ("1".equals(request.getParameter("default_survey")))
-			st.setDefault(true);
+			st.setDefaultSurvey(true);
 		else
-			st.setDefault(false);
+			st.setDefaultSurvey(false);
 		surveyManager.uploadSurveyTemplate(st);
 		
 		session.setAttribute("surveyTemplateMessage", "C");
@@ -3262,5 +3267,25 @@ public class TapestryController{
    	{		
 		TapestryHelper.generateClientSurveyReport(id, surveyManager, response, name);		
 		return null;   	
+   	}
+	
+	@RequestMapping(value="/set_default_survey_templates", method=RequestMethod.GET)
+   	public String getDefaultSurveyTemplates(HttpServletRequest request, ModelMap model)
+   	{		
+		List<SurveyTemplate> surveyTemplates = TapestryHelper.getSurveyTemplates(request, surveyManager);	
+		
+		model.addAttribute("survey_templates", surveyTemplates);
+		return "/admin/default_survey_template";   	
+   	}
+	
+	@RequestMapping(value="/set_defaultSurveys", method=RequestMethod.POST)
+   	public String setDefaultSurveyTemplates(HttpServletRequest request, ModelMap model)
+   	{		
+		String[] surveyTemplateIds = request.getParameterValues("survey_template"); 
+				
+		surveyManager.setDefaultSurveyTemplate(surveyTemplateIds);
+		List<SurveyTemplate> surveyTemplates = TapestryHelper.getSurveyTemplates(request, surveyManager);	
+		model.addAttribute("survey_templates", surveyTemplates);
+		return "/admin/default_survey_template";   	
    	}
 }
