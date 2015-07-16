@@ -1,0 +1,51 @@
+Question 6 of 8 <br>
+Goal 2: <span class="GOAL2" style="color:#670520"> </span> <br>
+What specifically about <span class="GOAL2"> </span> would you like to work on over the next 6 months?
+<input id="goal2a" class="form-control" type="text" name="myInputs[]" onchange="combinefields()">
+
+What are you currently doing about <span class="GOAL2" style="color:#670520"> </span>? <br>
+OR Where are you at now with <span class="GOAL2" style="color:#670520"> </span>?
+
+Please be as specific as possible.
+<input id="goal2b" class="form-control" type="text" name="myInputs[]" onchange="combinefields()">
+
+What would be an ideal, yet possible, target for you in achieving this goal? That is, in six months, what specifically would be the biggest change you would want to see? 
+<input id="goal2c" class="form-control" type="text" name="myInputs[]" onchange="combinefields()">
+
+<script type="text/javascript" language="JavaScript">
+function combinefields() {
+	document.getElementById('answer').value="";
+	document.getElementById('answer').value = document.getElementById('answer').value + "goal2a" + document.getElementById('goal2a').value + '<br>' + "goal2b" + document.getElementById('goal2b').value + '<br>' + "goal2c" + document.getElementById('goal2c').value;
+
+	var selectedgoal2info = []
+	selectedgoal2info.push(document.getElementById('goal2a').value);
+	selectedgoal2info.push(document.getElementById('goal2b').value);
+	selectedgoal2info.push(document.getElementById('goal2c').value);
+
+	localStorage["selectedgoal2info"] = JSON.stringify(selectedgoal2info);
+
+	var selectedgoal2a = [];
+	selectedgoal2a.push(document.getElementById('goal2a').value);
+	localStorage["selectedgoal2a"] = JSON.stringify(selectedgoal2a);
+}
+
+function show() {
+	var goal2 = JSON.parse(localStorage["selectedgoal2"]); //localStorage.getItem('text');
+		var places = document.getElementsByClassName('GOAL2');
+	for (var i = 0; i < places.length; i ++){
+		places[i].innerHTML = goal2;
+	}
+
+	var localinfo = JSON.parse(localStorage["selectedgoal2info"])
+
+	document.getElementById("goal2a").value = localinfo[0];
+	document.getElementById("goal2b").value = localinfo[1];
+	document.getElementById("goal2c").value = localinfo[2];
+}
+
+$(document).ready(function(){
+	document.getElementById('answer').style.display="none";
+	//document.getElementById('observernote').style.display="none";
+	show();
+});
+</script>

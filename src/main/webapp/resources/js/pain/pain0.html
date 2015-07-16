@@ -1,0 +1,53 @@
+<div class="row">
+Please rate your pain on a scale of 1-10 using the visual scale.
+</div>
+<div class="row"><div class="col-md-6"><p class="healthtoday">
+PAIN
+<span id="score"> &nbsp;</span>
+</p></div>
+<div class="col-md-6">
+<div style="background: linear-gradient(to top, #FFFFFF 0%, #FF0000 100%);
+  background-repeat: no-repeat;
+  background-size: cover;
+  " id="awesome2" onchange="populate()">
+
+ <style>
+ 	  #awesome2 .ui-slider-handle:after {
+    content: "";
+    border: 6px solid transparent;
+    width: 0;
+    height: 0;
+    position: absolute;
+    bottom: -11px;
+    border-top-color: #434d5a; }
+ </style>
+
+</div></div></div>
+<link rel="stylesheet" type="text/css" href="../resources/css/eq5d/normalize.css"><link rel="stylesheet" type="text/css" href="../resources/css/eq5d/webflow.css"><link rel="stylesheet" type="text/css" href="../resources/css/eq5d/survey1234.webflow.css"><script src="../resources/js/eq5d/surveySave.js"></script>
+
+<!-- scale -->
+<link rel="stylesheet" type="text/css" href="../resources/css/eq5d/jquery-ui.css"><script src="../resources/js/eq5d/jquery-1.10.2.js"></script><script src="../resources/js/eq5d/jquery-ui.js"></script><script src="../resources/js/eq5d/jquery-ui-slider-pips.js"></script><link rel="stylesheet" type="text/css" href="../resources/css/eq5d/jquery-ui-slider-pips.css">
+
+<script type="text/javascript" language="JavaScript">
+$(function populate() {
+// first we need a slider to work with
+var $slider2 = $("#awesome2").slider({ max: 10, step: 0.1 , orientation: "vertical", change: function( event, ui ) {
+                $( "#score" ).html( ui.value );
+                $("#answer").html(ui.value);
+            }});
+
+// and then we can apply pips to it!
+$slider2.slider("pips", { rest: "label"}).slider("float")  });
+</script>
+
+<script type="text/javascript" language="JavaScript">
+$(document).ready(function(){
+
+document.getElementById('observernote').style.display="none"
+document.getElementById('answer').style.display="none"
+document.getElementById('answer-buttons').style.bottom="auto"
+document.getElementsByClassName('ui-slider-label').style.fontSize="15px"
+document.getElementById('qtext').style.height="800px"
+//document.getElementById('eq5dcopyright').innerHTML="&#169; 2010 EuroQol GroupEQ-5D &#8482"
+});
+</script>
