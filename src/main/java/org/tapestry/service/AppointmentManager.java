@@ -19,6 +19,13 @@ public interface AppointmentManager {
     public List<Appointment> getAllAppointments();
 	
 	/**
+     * @return all Upcoming appointments in a list
+     */
+	@Transactional
+    public List<Appointment> getAllUpcomingAppointments();
+	
+	
+	/**
      * @return all requested volunteer's appointments in a list 
      */
 	@Transactional
@@ -173,6 +180,16 @@ public interface AppointmentManager {
 	 */
 	@Transactional
 	public List<Appointment> getAppointmentsGroupByOrganization(int organizationId);
+
+	/**
+	 * Group Upcoming appointment by volunteer's organization
+	 * @param organizationId
+	 * @return
+	 */
+	@Transactional
+	public List<Appointment> getUpcomingAppointmentsGroupByOrganization(int organizationId);
+
+	
 	
 	/**
 	 * Group past appointment by volunteer's organization
@@ -278,4 +295,5 @@ public interface AppointmentManager {
      */
 	@Transactional
     public boolean addPlans(int id, String plan);
+
 }

@@ -1141,25 +1141,28 @@ public class VolunteerController {
    			SecurityContextHolderAwareRequestWrapper request, ModelMap model)
    	{
    		User user = TapestryHelper.getLoggedInUser(request, userManager);
-   		List<Appointment> allAppointments, allPastAppointments, allPendingAppointments;
+   		List<Appointment> allUpcomingAppointments, allPastAppointments, allPendingAppointments;
    		List<Patient> allPatients;
    		if ("ROLE_ADMIN".equalsIgnoreCase(user.getRole())){//For central Admin
-   			allAppointments = appointmentManager.getAllAppointments(); 
+   			allUpcomingAppointments = appointmentManager.getAllUpcomingAppointments(); 
    			allPatients = patientManager.getAllPatients(); 
    			allPastAppointments = appointmentManager.getAllPastAppointments();
    			allPendingAppointments = appointmentManager.getAllPendingAppointments();
+   		
+   			
    		}
-   		else{//For local Admin
+   		else {//For local Admin
    			int organizationId = user.getOrganization();   			
    			
-   			allPatients = patientManager.getPatientsBySite(user.getSite());   
-   			
-   			allAppointments = appointmentManager.getAppointmentsGroupByOrganization(organizationId);     			 			
+   			allUpcomingAppointments = appointmentManager.getUpcomingAppointmentsGroupByOrganization(organizationId);     			 			
    			allPastAppointments = appointmentManager.getPastAppointmentsGroupByOrganization(organizationId);
    			allPendingAppointments = appointmentManager.getPendingAppointmentsGroupByOrganization(organizationId);   			
+   			allPatients = patientManager.getPatientsBySite(user.getSite());
+   			
+   	
    		}   		
    
-   		model.addAttribute("appointments", allAppointments);
+		model.addAttribute("upcomingAppointments", allUpcomingAppointments);
    		model.addAttribute("pastAppointments", allPastAppointments);   		
    		model.addAttribute("pendingAppointments", allPendingAppointments);   		
    		model.addAttribute("patients", allPatients);

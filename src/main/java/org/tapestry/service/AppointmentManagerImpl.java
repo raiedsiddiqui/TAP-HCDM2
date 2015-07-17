@@ -19,6 +19,11 @@ public class AppointmentManagerImpl implements AppointmentManager {
 	public List<Appointment> getAllAppointments() {
 		return appointmentDao.getAllAppointments();
 	}
+	
+	@Override
+	public List<Appointment> getAllUpcomingAppointments() {
+		return appointmentDao.getAllUpcomingAppointments();
+	}
 
 	@Override
 	public List<Appointment> getAllPastAppointments() {
@@ -148,6 +153,11 @@ public class AppointmentManagerImpl implements AppointmentManager {
 	@Override
 	public List<Appointment> getAppointmentsGroupByOrganization(int organizationId) {
 		return appointmentDao.getAppointmentsGroupByOrganization(organizationId);
+	}
+	
+	@Override
+	public List<Appointment> getUpcomingAppointmentsGroupByOrganization(int organizationId) {
+		return appointmentDao.getUpcomingAppointmentsGroupByOrganization(organizationId);
 	}
 
 	@Override
