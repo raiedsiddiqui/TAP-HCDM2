@@ -73,6 +73,11 @@
 				return false;
 		}
 		
+		//Clear Local Storage - For Goals
+		$(document).ready(function(){
+			localStorage.clear();
+		});
+		
 	</script>
 	
 </head>
@@ -342,7 +347,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">
 			<c:choose>
 				<c:when test="${not empty patient.preferredName}">
@@ -369,7 +374,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">
         	If You Suspect ...
         </h4>

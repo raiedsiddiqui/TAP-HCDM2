@@ -176,6 +176,7 @@
         			<th>Client</th>
         			<th>Date</th>
         			<th>Time</th>
+        			<th>Volunteer Pair</th>
         			<th>Status</th>
         			<th width=500>Comments</th>
         			<!--<th>Activities</th>-->
@@ -196,6 +197,9 @@
 							    	</td>
 							    	<td>
 							    		${a.time}
+							    	</td>
+							    	<td>
+							    		${a.volunteer}, ${a.partner}
 							    	</td>
 
 							    	<td>
@@ -238,6 +242,7 @@
 				<th width = "200"> Client</th>
 				<th width = "300"> Volunteers</th>
 				<th width = "200"> Date</th>
+				<th width=500>Comments</th>
 				<th width = "200"> Status</th>				
 			</tr>
 			<c:forEach items="${pastAppointments}" var="pa">
@@ -246,7 +251,12 @@
 				<tr>
 					<td> <a href="<c:url value="/display_appointment/${pa.appointmentID}"/>">${p.firstName} ${p.lastName}</a></td>
 					<td> ${pa.volunteer}, ${pa.partner}</td>
-					<td> ${pa.date}</td>					
+					<td> ${pa.date}</td>
+					<td>
+			    		<c:if test="${not empty pa.comments}">
+	    					${pa.comments}
+	    				</c:if>
+					</td>					
 					<td>
 						<c:if test="${pa.completed eq true}"><span style="color:green">Completed</span></c:if>
 						<c:if test="${pa.completed eq false}"><span style="color:red">Incompleted</span></c:if>						
