@@ -27,6 +27,10 @@
 	.panel-heading {
 		padding: 0;
 	}
+
+	.surveybtn {
+			background-color:#1FA8CF;
+		}
 	</style>
 </head>
 <body>
@@ -34,10 +38,8 @@
 	
 	<div class="container">
 		<div id="myTest" ></div>
-	<div class="row">
-		<div class="col-md-7">
-			Hi ${volunteerName}, below you will find surveys that need to be completed by you
-		</div>		
+	<div class="row">	
+		<h3 class="pagetitle">My Surveys <span class="pagedesc">Hi ${volunteerName}, below you will find surveys that need to be completed by you</span></h3>	
 	</div>		
 
 	<div class="row-fluid">
@@ -59,7 +61,7 @@
 		</c:forEach>
 	</div>
  				
-<h4 class="pagetitle">Completed Surveys <span class="pagedesc"></span></h4>
+<h4 class="pagetitle" style="float:none">Completed Surveys <span class="pagedesc"></span></h4>
 
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 	<c:forEach items="${completedVolunteerSurveys}" var="csr">
@@ -67,17 +69,7 @@
 			<div class="panel-heading" role="tab" id="headingOne">
       			<h4 class="panel-title">
       				<a class="surveybtnc btn accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse${csr.surveyID}">
-      					<div class="row cbutton">
-								<div class="col-sm-6 col-xs-12">
-									${csr.surveyTitle}
-								</div>
-								<div class="col-sm-6 col-xs-12">
-								</div>
-								<div class="col-sm-1 col-xs-12">
-									${csr.editDate }
-								</div>
-							</div>
-      					                           
+      					${csr.surveyTitle} 
       				</a>
       			</h4>
       		</div>
