@@ -1,0 +1,90 @@
+<style>
+	.goalbox {
+		background-color: rgb(239, 236, 202);
+		padding-top: 0.5em;
+		padding-right: 0.5em;
+		padding-bottom: 0.5em;
+		padding-left: 0.5em;
+		margin-bottom: 0.3em;
+		border-radius: 0.2em;
+		text-align: left;
+	}
+
+	.questioneg {
+		font-size: .75em;
+	}
+	.addgoalbtn {
+		background-color: #FFD34E;
+		color: black;
+		border:none;
+		border-radius:5px;
+
+	}
+</style>
+     <div id="dynamicInput">
+     	<div class="goalbox">
+        	Goal 1<input id="goal1" class="form-control" type="text" name="myInputs[]" style="width:100%" onchange="combinefields()">
+     	</div>
+     </div>
+     <input class="addgoalbtn" type="button" value="Add new goal" onClick="addInput('dynamicInput');">	
+	<br>
+
+
+<script type="text/javascript" language="JavaScript">
+
+
+		
+
+		var counter = 1;
+		var limit = 5;
+		function addInput(divName){
+		     if (counter == limit)  {
+		          alert("You have reached the limit of adding " + counter + " inputs");
+		     }
+		     else {
+		          var newdiv = document.createElement('div');
+		          newdiv.className="goalbox animated bounceInDown";
+		          newdiv.innerHTML = "Goal " + (counter + 1) + "<input id='goal"+(counter + 1)+"'"+"class='form-control' type='text' style='width:100%' name='myInputs[]' onchange='combinefields()'>";
+		          document.getElementById(divName).appendChild(newdiv);
+		          counter++;
+		     }
+		}
+
+		function combinefields() {
+				document.getElementById("answer").value="";
+				var lifegoals = [];
+				for (var co=1;co<counter+1;co++) {
+					document.getElementById("answer").value = document.getElementById("answer").value + document.getElementById('goal' + co).value + " " + "-------" + "<br>";
+					lifegoals.push(document.getElementById('goal'+co).value);
+				}
+				
+				// Local Storage Custom Code
+                // var store = document.getElementById("answer").value;
+                // localStorage.setItem('text', store);
+                localStorage["lifegoals"] = JSON.stringify(lifegoals);
+
+		}
+		
+		
+		// window.onload=function changeLink() {
+		// 	document.getElementById('answer').style.display="none";
+		// 	document.getElementById('observernote').style.display="none";
+		// 	loadLocalStorage();	
+		// }
+		$(document).ready(function(){ 
+			document.getElementById('answer').style.display="none";
+			document.getElementById('observernote').style.display="none";
+			loadLocalStorage();
+			
+		});
+		
+		function loadLocalStorage(){
+			var lifeg = JSON.parse(localStorage["lifegoals"]);
+
+			document.getElementById('goal1').value=lifeg[0];
+			for (var i=1; i < lifeg.length; i++){
+				addInput('dynamicInput');
+				document.getElementById('goal'+(i+1)).value=lifeg[i];
+			}
+		}
+</script>

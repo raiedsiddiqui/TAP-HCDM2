@@ -39,6 +39,19 @@ public class AppointmentDAOImpl extends JdbcDaoSupport implements AppointmentDAO
 				
 		return getJdbcTemplate().query(sql, new AppointmentMapper());
 	}
+	
+	@Override
+	public List<Appointment> getAllUpcomingAppointments() {
+		String sql = "SELECT a.appointment_ID, a.volunteer, a.patient, DATE(a.date_time) AS appt_date,"
+    				+ "TIME(a.date_time) AS appt_time, a.comments, a.status, a.completed, a.contactedAdmin, "
+    				+ "a.partner, a.hasNarrative, a.type, v1.firstname AS v1_firstname, v1.lastname AS v1_lastname, "
+    				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, p.firstname AS p_firstname, "
+    				+ "p.lastname AS p_lastname, v1.organization FROM appointments AS a INNER JOIN volunteers "
+    				+ "AS v1 ON a.volunteer=v1.volunteer_ID INNER JOIN volunteers AS v2 ON a.partner=v2.volunteer_ID "
+    				+ "INNER JOIN patients AS p ON a.patient=p.patient_ID WHERE a.date_time>=CURDATE() ORDER BY a.date_time DESC";
+				
+		return getJdbcTemplate().query(sql, new AppointmentMapper());
+	}
 
 	@Override
 	public List<Appointment> getAllAppointmentsByVolunteer(int id) {
@@ -335,6 +348,20 @@ public class AppointmentDAOImpl extends JdbcDaoSupport implements AppointmentDAO
 	}
 	
 	@Override
+	public List<Appointment> getUpcomingAppointmentsGroupByOrganization(int organizationId) {
+		String sql = "SELECT a.appointment_ID, a.volunteer, a.patient, DATE(a.date_time) AS appt_date,"
+				+ "TIME(a.date_time) AS appt_time, a.comments, a.status, a.completed, a.contactedAdmin, "
+				+ "a.partner, a.hasNarrative, a.type, v1.firstname AS v1_firstname, v1.lastname AS v1_lastname, "
+				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, p.firstname AS p_firstname, "
+				+ "p.lastname AS p_lastname, v1.organization FROM appointments AS a INNER JOIN volunteers AS v1 "
+				+ "ON a.volunteer=v1.volunteer_ID INNER JOIN volunteers AS v2 ON a.partner=v2.volunteer_ID "
+				+ "INNER JOIN patients AS p ON a.patient=p.patient_ID WHERE (v1.organization = ? or v2.organization = ?) "
+				+ "AND a.date_time >= CURDATE() ORDER BY a.date_time DESC";
+								
+		return getJdbcTemplate().query(sql, new Object[]{organizationId, organizationId}, new AppointmentMapper());
+	}
+	
+	@Override
 	public List<Appointment> getPastAppointmentsGroupByOrganization(int organizationId) {
 		String sql = "SELECT a.appointment_ID, a.volunteer, a.patient, DATE(a.date_time) AS appt_date,"
 				+ "TIME(a.date_time) AS appt_time, a.comments, a.status, a.completed, a.contactedAdmin, "
@@ -342,7 +369,7 @@ public class AppointmentDAOImpl extends JdbcDaoSupport implements AppointmentDAO
 				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, p.firstname AS p_firstname, "
 				+ "p.lastname AS p_lastname, v1.organization FROM appointments AS a INNER JOIN volunteers AS v1 "
 				+ "ON a.volunteer=v1.volunteer_ID INNER JOIN volunteers AS v2 ON a.partner=v2.volunteer_ID "
-				+ "INNER JOIN patients AS p ON a.patient=p.patient_ID WHERE (v1.organization = ? or v2.organization = ?) AND p.enabled=1 "
+				+ "INNER JOIN patients AS p ON a.patient=p.patient_ID WHERE (v1.organization=? or v2.organization=?) AND p.enabled=1 "
 				+ "AND a.date_time < CURDATE() ORDER BY a.date_time DESC";
 				
 		return getJdbcTemplate().query(sql, new Object[]{organizationId, organizationId}, new AppointmentMapper());
@@ -356,9 +383,9 @@ public class AppointmentDAOImpl extends JdbcDaoSupport implements AppointmentDAO
 				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, p.firstname AS p_firstname, "
 				+ "p.lastname AS p_lastname, v1.organization FROM appointments AS a INNER JOIN volunteers AS v1 "
 				+ "ON a.volunteer=v1.volunteer_ID INNER JOIN volunteers AS v2 ON a.partner=v2.volunteer_ID "
-				+ "INNER JOIN patients AS p ON a.patient=p.patient_ID WHERE v1.organization = ? or v2.organization = ? "
+				+ "INNER JOIN patients AS p ON a.patient=p.patient_ID WHERE (v1.organization = ? or v2.organization = ?) "
 				+ "AND a.date_time>=CURDATE() AND a.completed=0 AND a.status='Awaiting Approval' AND p.enabled=1 ORDER BY a.date_time DESC";
-				
+							
 		return getJdbcTemplate().query(sql, new Object[]{organizationId, organizationId}, new AppointmentMapper());
 	}
 

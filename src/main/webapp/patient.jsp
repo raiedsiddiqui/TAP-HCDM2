@@ -23,6 +23,9 @@
 		
 	.pagetitle {
 		margin-left: -30px;
+		float:left;
+		width:auto;
+		
 	}
 
 	.visitcompletebox {
@@ -31,6 +34,24 @@
 	}
 	.panel-heading {
 		padding: 0;
+	}
+	#elderabuse, #crisislines, #selfharm {
+		color:red;
+	}
+
+	#SOSbtn {
+		float:left;
+		background-color:#B33A3A;
+		margin-top:14px;
+		margin-left:10px;
+	}
+
+	#alertsbox {
+		float:left;
+		background-color:#B33A3A;
+		margin-top:14px;
+		margin-left:10px;
+		padding:9px 11px 9px 11px;
 	}
 	</style>
 	<script type="text/javascript">
@@ -51,6 +72,11 @@
 			else
 				return false;
 		}
+		
+		//Clear Local Storage - For Goals
+		$(document).ready(function(){
+			localStorage.clear();
+		});
 		
 	</script>
 	
@@ -82,11 +108,16 @@
 					</c:otherwise>
 				</c:choose>
 			</c:if>
+			<a id="SOSbtn" href="#modalSOS" role="button" class="lgbtn" data-toggle="modal">SOS</a>
+
+			<c:if test="${not empty patient.notes}">
+				<a id="alertsbox" href="#modalNotes" class="btn btn-large btn-inverse lgbtn" role="button" data-toggle="modal"><i class="icon-info-sign icon-white"></i></a>
+			</c:if>
+
+			
 		</div>
 		<div class="col-md-5">
-			<c:if test="${not empty patient.notes}">
-				<a href="#modalNotes" class="btn btn-large btn-inverse lgbtn" role="button" data-toggle="modal"><i class="icon-info-sign icon-white"></i></a>
-			</c:if>
+			
 
 			<div class="visitcompletebox">
 <!-- 				<a href="<c:url value="/goMyOscarAuthenticate/${appointment.appointmentID}"/>" role="button" class="lgbtn">Authenticate PHR</a>-->	
@@ -172,7 +203,7 @@
 <!-- 			      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordionSurveys" href="#collapseTwo">
  -->			
  				
-<h4 class="pagetitle">Completed Surveys <span class="pagedesc"></span></h4>
+<h4 class="pagetitle" style="float:none">Completed Surveys <span class="pagedesc"></span></h4>
 
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 	<c:forEach items="${completedSurveys}" var="csr">
@@ -311,27 +342,110 @@
 			</c:choose>
 		</div>
 		-->
-	<div id="modalNotes" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="warnLabel" aria-hidden="true">
-		<div class="modal-header">
-   			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-   			<h3 id="warnLabel" style="color:#000000;">
-   				<c:choose>
-					<c:when test="${not empty patient.preferredName}">
-						${patient.preferredName}
-					</c:when>
-					<c:otherwise>
-						${patient.displayName}
-					</c:otherwise>
-				</c:choose>
-   			</h3>
-  		</div>
-  		<div class="modal-body">
-  			<p class="text-warning">${patient.notes}</p>
-  		</div>
-  		<div class="modal-footer">
-   			<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
-  		</div>
-	</div>
+
+<div class="modal fade" id="modalNotes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">
+			<c:choose>
+				<c:when test="${not empty patient.preferredName}">
+					${patient.preferredName}
+				</c:when>
+				<c:otherwise>
+					${patient.displayName}
+				</c:otherwise>
+			</c:choose>
+        </h4>
+      </div>
+      <div class="modal-body">
+        <p class="text-warning">${patient.notes}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="modalSOS" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">
+        	If You Suspect ...
+        </h4>
+      </div>
+      <div class="modal-body">
+    	<a class="lgbtn" href="#elderabuse">Elder Abuse</a>
+    	<a class="lgbtn" href="#selfharm">Self Harm</a>
+    	<a class="lgbtn" href="#crisislines">Crisis Line</a>
+
+
+      <h3 id="elderabuse">Elder Abuse</h3>
+      <h4>CALL the Volunteer Coordinator immediately.</h4>
+
+		<h4>WARNING SIGNS:</h4>
+		<ul>
+			<li>Frequent arguments or tension between the caregiver and the elderly person</li>
+			<li>Changes in personality or behaviour in the elder</li>
+		</ul>
+		<h4>Elder abuse may include</h4>
+		<ul>
+			<li>Physical abuse</li>
+			<li>Emotional or psychological abuse (e.g. intimidation, humiliation, isolating from supports)</li>
+			<li>Sexual abuse</li>
+			<li>Neglect or abandonment by a caretaker</li>
+			<li>Financial exploitation (e.g. misusing an elder's checks, credit  cards, or accounts; forging an elder's signature; stealing) </li>
+		</ul> 
+		<hr>
+
+		<h3 id="selfharm"> At Risk of Harming Themselves </h3>
+
+			<h4>CALL the Volunteer Coordinator immediately.</h4>
+
+			<p>IF you ever feel unsafe in a situation, LEAVE immediately.</p>
+				<ul>
+					<li>Stay calm,</li> 
+					<li>Be clear in your language, </li>
+					<li>Don't use judgmental phrases or tones,</li> 
+					<li>Give the client personal space.</li> 
+				</ul>
+			
+
+				<p>If a client expresses:</p>
+					<ul>
+						<li>Some sort of suicidal thoughts or ideation</li>
+						<li>A plan for harming themselves</li>
+					</ul>
+
+
+				<p>THEN, </p>
+
+				<p>Let the client know that you will be mentioning what they said (or implied) to the Volunteer Coordinator and their clinic.</p>
+
+				<p>If you feel comfortable, you can 'contract against self-harm' by asking a question like 
+				"Will you agree not to hurt yourself until you are contacted by your clinic?" </p> 
+
+				<p>If a client says that they will not be safe after you leave, You can ask if they want to call their clinic, a crisis line, or 911 while you are present </p>
+
+			<hr>
+			<h3 id="crisislines">Local 24-Hour Crisis Lines</h3>
+			<ul>
+			<li>Crisis Outreach and Response Team (COAST), St Joseph's Healthcare - 905-972-8338 - also has a mobile team that can respond to calls from 8am-1am daily</li>
+			<li>Good Shepherd Barrett Centre for Crisis Support - 905-529-7878 - also has a 10-bed centre for brief stays for individuals in mental health crisis</li>
+			<li>Sexual Assault Centre Hamilton &amp; Area (SACHA) - 905-525-4162 - sexual assault specific, also has other counselling and advocacy services</li>
+			</ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 		<!-- Modal 

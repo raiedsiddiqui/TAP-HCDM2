@@ -153,7 +153,7 @@
 	</div> -->
 	<div class="bs-example bs-example-tabs">
     <ul id="myTab" class="nav nav-tabs">
-	      <li class="active"><a href="#home" data-toggle="tab">All Appointments</a></li>
+	      <li class="active"><a href="#home" data-toggle="tab">Upcoming Appointments</a></li>
 	      <li class=""><a href="#pastappointments" data-toggle="tab">Past Appointments</a></li>
 	      <li class=""><a href="#pendingapproval" data-toggle="tab">Pending Approval</a></li>
 	<!--       <li class="dropdown">
@@ -164,24 +164,27 @@
 	        </ul>
 	      </li> -->
 	    </ul>
-
+<div class="input-group"> <span class="input-group-addon">Filter</span>
+	<input id="filter" type="text" class="form-control" placeholder="Type here...">
+</div>
 
     <div id="myTabContent" class="tab-content">
     	<div class="tab-pane fade active in" id="home">
-    		<div class="input-group"> <span class="input-group-addon">Filter</span>
-				<input id="filter" type="text" class="form-control" placeholder="Type here...">
-			</div>
+    		
       		<table id="myTable" class="table table-striped searchable">
         		<tr>
         			<th>Client</th>
         			<th>Date</th>
         			<th>Time</th>
+        			<th>Volunteer Pair</th>
         			<th>Status</th>
         			<th width=500>Comments</th>
         			<!--<th>Activities</th>-->
+        			<td>Approve/Decline</td>
+        			<td>Delete</td>
         		</tr>
 
-        		<c:forEach items="${appointments}" var="a">
+        		<c:forEach items="${upcomingAppointments}" var="a">
         			<!-- <c:forEach items="${patients}" var="p"> -->
         				
 							<c:if test="${p.patientID == a.patientID}">	
@@ -196,6 +199,9 @@
 							    	<td>
 							    		${a.time}
 							    	</td>
+							    	<td>
+							    		${a.volunteer}, ${a.partner}
+							    	</td>
 
 							    	<td>
 										${a.status}
@@ -207,7 +213,21 @@
 							    	</td>
 							    	<!--<td>
 							    		${act.time}: ${act.description}
-							    	</td>-->	
+							    	</td>-->
+
+							    	<td>
+							    		<c:if test="${a.status == 'Approved'}">
+							    				<a href="<c:url value="/decline_appointment/${a.appointmentID}"/>" class="btn btn-warning">Decline</a>
+							    		</c:if>	
+
+							    		<c:if test="${a.status == 'Declined'}">
+											<a href="<c:url value="/approve_appointment/${a.appointmentID}"/>" class="btn btn-primary">Approve</a>
+							    		</c:if>	
+
+							    	</td>
+
+									<td><a href="<c:url value="/delete_appointment/${a.appointmentID}"/>" class="">Delete</a></td>
+
 							    </tr>
 					    </c:if>
 				     <!-- </c:forEach>-->
@@ -218,24 +238,33 @@
 		</div>
 
 	<div class="tab-pane fade" id="pastappointments">
-	
-		<table class="table">
+		<table class="table searchable">
 			<tr>
 				<th width = "200"> Client</th>
 				<th width = "300"> Volunteers</th>
 				<th width = "200"> Date</th>
+				<th width=500>Comments</th>
 				<th width = "200"> Status</th>				
 			</tr>
 			<c:forEach items="${pastAppointments}" var="pa">
+			<!-- <c:forEach items="${patients}" var="p"> -->
+			<c:if test="${p.patientID == pa.patientID}">
 				<tr>
-					<td> <a href="<c:url value="/display_appointment/${pa.appointmentID}"/>">${pa.patient}</a></td>
+					<td> <a href="<c:url value="/display_appointment/${pa.appointmentID}"/>">${p.firstName} ${p.lastName}</a></td>
 					<td> ${pa.volunteer}, ${pa.partner}</td>
-					<td> ${pa.date}</td>					
+					<td> ${pa.date}</td>
+					<td>
+			    		<c:if test="${not empty pa.comments}">
+	    					${pa.comments}
+	    				</c:if>
+					</td>					
 					<td>
 						<c:if test="${pa.completed eq true}"><span style="color:green">Completed</span></c:if>
 						<c:if test="${pa.completed eq false}"><span style="color:red">Incompleted</span></c:if>						
 					</td>					
-				</tr>								
+				</tr>
+			</c:if>
+			<!-- 	</c:forEach> -->
 			</c:forEach>
 		
 		</table>
@@ -320,7 +349,7 @@
   				<label>With patient:</label>
 				<select name="patient" form="appt-form">
 					<c:forEach items="${patients}" var="p">
-					<option value="${p.patientID}">${p.displayName}</option>
+						<option value="${p.patientID}">${p.displayName}</option>
 					</c:forEach>
 				</select><br />
 				<label>Date:</label>		

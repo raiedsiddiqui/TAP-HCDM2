@@ -58,13 +58,17 @@
 						<option value="6" >10:30 AM</option>
 						<option value="7" >11:00 AM</option>
 						<option value="8" >11:30 AM</option>							
-						<option value="9" >13:00 PM</option>
-						<option value="10" >13:30 PM</option>
-						<option value="11" >14:00 PM</option>
-						<option value="12" >14:30 PM</option>							
-						<option value="13" >15:00 PM</option>
-						<option value="14" >15:30 PM</option>
-						<option value="15" >16:00 PM</option>											
+						<option value="9" >12:00 PM</option>
+						<option value="10" >12:30 PM</option>
+                        <option value="11" >1:00 PM</option>
+                      	<option value="12" >1:30 PM</option>
+                      	<option value="13" >2:00 PM</option>               
+                      	<option value="14" >2:30 PM</option>
+                      	<option value="15" >3:00 PM</option>
+                      	<option value="16" >3:30 PM</option>
+                      	<option value="17" >4:00 PM</option>
+                      	<option value="18" >4:30 PM</option>
+                      	<option value="19" >5:00 PM</option>										
 					</select>			   
 				</div>
  			</td>

@@ -67,7 +67,7 @@
 			
 			<table class="table">
 				<tr>
-					<th>Client ID</th>
+					<!-- <th>Client ID</th> -->
 					<th>Research ID</th>
 					<th>Name</th>
 					<!-- <th>DOB</th>
@@ -85,7 +85,7 @@
 				
 				<c:forEach items="${patients}" var="p">
 					<tr>
-						<td>${p.patientID}</td>
+						<!-- <td>${p.patientID}</td> -->
 						<td>${p.researchID}</td>
 						<td><a href="<c:url value="/display_client/${p.patientID}"/>">${p.firstName} ${p.lastName}</a></td>						
 						<!-- <td>${p.bod}</td>

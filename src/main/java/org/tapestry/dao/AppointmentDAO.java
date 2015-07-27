@@ -15,6 +15,12 @@ public interface AppointmentDAO {
      */
     public List<Appointment> getAllAppointments();
     
+	/**
+     * @return all Upcoming Appointments in a list
+     */
+    public List<Appointment> getAllUpcomingAppointments();
+    
+    
     
     /**
      * 
@@ -160,6 +166,14 @@ public interface AppointmentDAO {
      * @return
      */
     public List<Appointment> getAppointmentsGroupByOrganization(int organizationId);
+
+    /**
+     * Group Upcoming appointment by volunteer's organization
+     * @param organizationId
+     * @return
+     */
+    public List<Appointment> getUpcomingAppointmentsGroupByOrganization(int organizationId);
+
     
     /**
      * Group past appointment by volunteer's organization
@@ -258,4 +272,5 @@ public interface AppointmentDAO {
      * @return if it is successful for creating new record in database
      */
     public boolean addPlans(int id, String plan);
+
 }
