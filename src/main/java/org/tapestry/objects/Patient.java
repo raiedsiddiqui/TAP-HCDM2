@@ -31,7 +31,8 @@ public class Patient{
 	private String provice;
 	private String postalCode;
 	private String researchID;
-
+	private boolean enabled;
+	
 	public int getGroup() {
 		return group;
 	}
@@ -342,6 +343,20 @@ public class Patient{
 
 	public void setPostalCode(String postalCode) {
 		this.postalCode = postalCode;
+	}
+	
+	/**
+	*@return enabled Whether the patient's account is active
+	*/
+	public boolean isEnabled(){
+		return enabled;
+	}
+	
+	/**
+	* @param enabled The new status for the patient
+	*/
+	public void setEnabled(boolean enabled){
+		this.enabled = enabled;
 	}
 	
 }

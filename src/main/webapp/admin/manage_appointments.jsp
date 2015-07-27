@@ -187,7 +187,8 @@
 							<c:if test="${p.patientID == a.patientID}">	
 			        			<tr>
 				        			<td>
-				        				${p.firstName} ${p.lastName}</a>
+				        				<!--  a>${p.firstName} ${p.lastName}</a>-->
+				        				<a href="<c:url value="/display_appointment/${a.appointmentID}"/>">${a.patient}</a>
 								    </td>
 							    	<td>	    				
 										${a.date}  				    				

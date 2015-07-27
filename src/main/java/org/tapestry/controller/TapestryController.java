@@ -1180,6 +1180,22 @@ public class TapestryController{
 		return "/admin/display_client";
 	}
 	
+	@RequestMapping(value="/disable_patient/{patient_id}",method=RequestMethod.GET)
+	public String disablePatient(@PathVariable("patient_id") int id, 
+			SecurityContextHolderAwareRequestWrapper request, ModelMap model)
+	{
+		patientManager.disablePatientWithID(id);
+		//add log
+		User u = TapestryHelper.getLoggedInUser(request, userManager);		
+		StringBuffer sb = new StringBuffer();
+		sb.append(u.getName());
+		sb.append(" has disabled patient #");
+		sb.append(id);
+		userManager.addUserLog(sb.toString(), u);
+		
+		return "redirect:/view_clients_admin"; 
+	}
+	
 	//============report======================
 	@RequestMapping(value="/generate_report_hl7/{patientID}", method=RequestMethod.GET)
 	@ResponseBody
@@ -2001,7 +2017,7 @@ public class TapestryController{
 		return "admin/manage_survey";
 	}
  
-	/*
+	
    	@RequestMapping(value="/manage_surveys", method=RequestMethod.GET)
 	public String manageSurveys(@RequestParam(value="failed", required=false) String failed, ModelMap model, 
 			SecurityContextHolderAwareRequestWrapper request)
@@ -2010,20 +2026,27 @@ public class TapestryController{
    		
    		List<Patient> patientList = new ArrayList<Patient>();
    		List<SurveyResult> surveyResultList = new ArrayList<SurveyResult>();
-   		List<SurveyTemplate> surveyTemplateList; 
-   		if (request.isUserInRole("ROLE_ADMIN")||request.isUserInRole("ROLE_CLINICIAN"))//central admin and clinician
-   		{
-   			patientList = patientManager.getAllPatients();
-   			surveyResultList = surveyManager.getAllSurveyResults();
-   			surveyTemplateList = surveyManager.getAllSurveyTemplates();
-   		}
-   		else //local admin/site admin
+   		List<SurveyTemplate> surveyTemplateList = new ArrayList<SurveyTemplate>(); 
+//   		if (request.isUserInRole("ROLE_ADMIN")||request.isUserInRole("ROLE_CLINICIAN"))//central admin and clinician
+//   		{
+//   			patientList = patientManager.getAllPatients();
+//   			surveyResultList = surveyManager.getAllSurveyResults();
+//   			surveyTemplateList = surveyManager.getAllSurveyTemplates();
+//   		}
+//   		else //local admin/site admin
+//   		{
+//   			int siteId = loggedInUser.getSite();
+//   			patientList = patientManager.getPatientsBySite(siteId);
+//   			surveyResultList = surveyManager.getAllSurveyResultsBySite(siteId);	
+//   			surveyTemplateList = surveyManager.getSurveyTemplatesBySite(siteId);
+//   		}   
+   		if (request.isUserInRole("ROLE_CLINICIAN"))
    		{
    			int siteId = loggedInUser.getSite();
-   			patientList = patientManager.getPatientsBySite(siteId);
-   			surveyResultList = surveyManager.getAllSurveyResultsBySite(siteId);	
-   			surveyTemplateList = surveyManager.getSurveyTemplatesBySite(siteId);
-   		}   		
+			patientList = patientManager.getPatientsBySite(siteId);
+			surveyResultList = surveyManager.getAllSurveyResultsBySite(siteId);	
+			surveyTemplateList = surveyManager.getSurveyTemplatesBySite(siteId);
+   		}
 		model.addAttribute("surveys", surveyResultList);		
 		model.addAttribute("survey_templates", surveyTemplateList);
 		model.addAttribute("patients", patientList);
@@ -2037,7 +2060,7 @@ public class TapestryController{
 			model.addAttribute("unread", session.getAttribute("unread_messages"));
         
 		return "admin/manage_surveys";
-	}*/
+	}
    	
    	@RequestMapping(value="/go_assign_survey/{patientId}", method=RequestMethod.GET)
 	public String goAssignSurvey(@PathVariable("patientId") int id, SecurityContextHolderAwareRequestWrapper request, 
@@ -2480,16 +2503,16 @@ public class TapestryController{
    		HttpSession session = request.getSession();
 		User loggedInUser = (User)session.getAttribute("loggedInUser");	
 		int siteId = loggedInUser.getSite();
-		
+		int patientId = sr.getPatientID();
 		if (loggedInUser.getRole().equals("ROLE_ADMIN"))//central admin 
 			surveyTemplates = surveyManager.getAllSurveyTemplates();
    		else //local admin/site admin
    			surveyTemplates = surveyManager.getSurveyTemplatesBySite(siteId);
-		surveyResults = surveyManager.getSurveysByPatientID(sr.getPatientID());
+		surveyResults = surveyManager.getSurveysByPatientID(patientId);
    		DoSurveyAction.updateSurveyMapInSession(request, surveyResults, surveyTemplates);
    		
    		//archive the deleted survey result
-   		Patient patient = patientManager.getPatientByID(sr.getPatientID());
+   		Patient patient = patientManager.getPatientByID(patientId);
    		StringBuffer sb = new StringBuffer();
    		sb.append(patient.getFirstName());
    		sb.append(" ");
@@ -3281,11 +3304,24 @@ public class TapestryController{
 	@RequestMapping(value="/set_defaultSurveys", method=RequestMethod.POST)
    	public String setDefaultSurveyTemplates(HttpServletRequest request, ModelMap model)
    	{		
-		String[] surveyTemplateIds = request.getParameterValues("survey_template"); 
-				
+		String[] surveyTemplateIds = request.getParameterValues("survey_template"); 		
 		surveyManager.setDefaultSurveyTemplate(surveyTemplateIds);
-		List<SurveyTemplate> surveyTemplates = TapestryHelper.getSurveyTemplates(request, surveyManager);	
+		
+		List<SurveyTemplate> surveyTemplates = TapestryHelper.updateSurveyTemplates(request, surveyManager);	
 		model.addAttribute("survey_templates", surveyTemplates);
+		
+		return "/admin/default_survey_template";   	
+   	}
+	
+	@RequestMapping(value="/remove_defaultSurveys", method=RequestMethod.POST)
+   	public String removeDefaultSurveyTemplates(HttpServletRequest request, ModelMap model)
+   	{		
+		String[] surveyTemplateIds = request.getParameterValues("survey_template"); 		
+		surveyManager.removeDefaultSurveyTemplate(surveyTemplateIds);
+		
+		List<SurveyTemplate> surveyTemplates = TapestryHelper.updateSurveyTemplates(request, surveyManager);	
+		model.addAttribute("survey_templates", surveyTemplates);
+		
 		return "/admin/default_survey_template";   	
    	}
 }

@@ -36,7 +36,7 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, v1.organization, "
 				+ "c.clinic_name FROM patients AS p INNER JOIN volunteers AS v1 ON p.volunteer=v1.volunteer_ID "
 				+ "INNER JOIN volunteers AS v2 ON p.volunteer2=v2.volunteer_ID INNER JOIN clinics AS c "
-				+ "ON p.clinic=c.clinic_ID WHERE p.patient_ID=?";
+				+ "ON p.clinic=c.clinic_ID WHERE p.patient_ID=? AND p.enabled=1";
 		
 		return getJdbcTemplate().queryForObject(sql, new Object[]{id}, new PatientMapper());
 	}
@@ -46,7 +46,7 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 		String sql = "SELECT p.*, v1.firstname AS v1_firstname, v1.lastname AS v1_lastname, "
 				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, v1.organization, v1.organization, "
 				+ "c.clinic_name FROM patients AS p INNER JOIN volunteers AS v1 ON p.volunteer=v1.volunteer_ID INNER JOIN "
-				+ "volunteers AS v2 ON p.volunteer2=v2.volunteer_ID INNER JOIN clinics AS c ON p.clinic=c.clinic_ID";
+				+ "volunteers AS v2 ON p.volunteer2=v2.volunteer_ID INNER JOIN clinics AS c ON p.clinic=c.clinic_ID WHERE p.enabled=1";
 		
 		return getJdbcTemplate().query(sql, new PatientMapper());
 	}
@@ -57,7 +57,7 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, v1.organization, c.clinic_name FROM patients "
 				+ "AS p INNER JOIN volunteers AS v1 ON p.volunteer=v1.volunteer_ID INNER JOIN "
 				+ "volunteers AS v2 ON p.volunteer2=v2.volunteer_ID INNER JOIN clinics AS c ON p.clinic=c.clinic_ID "
-				+ "WHERE p.volunteer=? OR p.volunteer2=? ";
+				+ "WHERE (p.volunteer=? OR p.volunteer2=?) AND p.enabled=1 ";
 		
 		return getJdbcTemplate().query(sql, new Object[]{volunteerId, volunteerId}, new PatientMapper());
 	}
@@ -67,8 +67,8 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 		String sql = "SELECT p.*, v1.firstname AS v1_firstname, v1.lastname AS v1_lastname, "
 				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, v1.organization, c.clinic_name FROM patients "
 				+ "AS p INNER JOIN volunteers AS v1 ON p.volunteer=v1.volunteer_ID INNER JOIN "
-				+ "volunteers AS v2 ON p.volunteer2=v2.volunteer_ID INNER JOIN clinics AS c ON p.clinic=c.clinic_ID WHERE UPPER(p.firstname) "
-				+ "LIKE UPPER('%" + partialName + "%') OR UPPER(p.lastname) LIKE UPPER('%" + partialName + "%') ";
+				+ "volunteers AS v2 ON p.volunteer2=v2.volunteer_ID INNER JOIN clinics AS c ON p.clinic=c.clinic_ID WHERE (UPPER(p.firstname) "
+				+ "LIKE UPPER('%" + partialName + "%') OR UPPER(p.lastname) LIKE UPPER('%" + partialName + "%')) AND p.enabled=1 ";
 		
 		return getJdbcTemplate().query(sql, new PatientMapper());
 	}
@@ -80,7 +80,7 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 				+ "AS p INNER JOIN volunteers AS v1 ON p.volunteer=v1.volunteer_ID INNER JOIN "
 				+ "volunteers AS v2 ON p.volunteer2=v2.volunteer_ID INNER JOIN clinics AS c ON p.clinic=c.clinic_ID WHERE (UPPER(p.firstname) "
 				+ "LIKE UPPER('%" + partialName + "%') OR UPPER(p.lastname) LIKE UPPER('%" + partialName + "%')) "
-				+ "AND v1.organization =? ";
+				+ "AND v1.organization =? AND p.enabled=1";
 		
 		return getJdbcTemplate().query(sql, new Object[]{organizationId}, new PatientMapper());
 	}
@@ -91,7 +91,7 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, v1.organization, c.clinic_name FROM patients "
 				+ "AS p INNER JOIN volunteers AS v1 ON p.volunteer=v1.volunteer_ID INNER JOIN "
 				+ "volunteers AS v2 ON p.volunteer2=v2.volunteer_ID INNER JOIN clinics AS c ON p.clinic=c.clinic_ID "
-				+ "WHERE c.site_ID =? ";
+				+ "WHERE c.site_ID =? AND p.enabled=1";
 		
 		return getJdbcTemplate().query(sql, new Object[]{siteId}, new PatientMapper());
 	}
@@ -100,8 +100,8 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 	public int createPatient(final Patient p) {	
 		 final String sql = "INSERT INTO patients (firstname, lastname, preferredname, volunteer,"
 					+ " gender, notes, volunteer2, alerts, myoscar_verified, clinic, username, mrp, "
-					+ "mrp_firstname, mrp_lastname, research_ID) VALUES (?, ?, ?, ?, ?, ?, ?,"
-					+ " ?, ?, ?, ?, ?, ?, ?, ?)";
+					+ "mrp_firstname, mrp_lastname, research_ID, enabled) VALUES (?, ?, ?, ?, ?, ?, ?,"
+					+ " ?, ?, ?, ?, ?, ?, ?, ?, 1)";
 		  
 		 JdbcTemplate jdbcTemplate = getJdbcTemplate();  
 		 KeyHolder keyHolder = new GeneratedKeyHolder();  
@@ -165,7 +165,7 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 
 	@Override
 	public String getPlanByPatientId(int id) {
-		String sql = "SELECT plan FROM patients WHERE patient_ID=?";		
+		String sql = "SELECT plan FROM patients WHERE patient_ID=? ";		
 		List<String> sList = getJdbcTemplate().queryForList(sql, new Object[]{id}, String.class);
 		
 		if (sList.isEmpty())
@@ -182,6 +182,25 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 		return true;
 	}
 	
+	@Override
+	public void disablePatientWithID(int id){
+		String sql = "UPDATE patients SET enabled=0 WHERE patient_ID=?";
+		getJdbcTemplate().update(sql, id);
+	}
+	
+	@Override
+	public void enablePatientWithID(int id){
+		String sql = "UPDATE patients SET enabled=1 WHERE patient_ID=?";
+		getJdbcTemplate().update(sql, id);
+	}
+
+	@Override
+	public List<String> getResearchIds() {
+		String sql = "SELECT research_ID FROM patients";
+		getJdbcTemplate().queryForList(sql, String.class);
+		return null;
+	}
+
 	class PatientMapper implements RowMapper<Patient> {
 		public Patient mapRow(ResultSet rs, int rowNum) throws SQLException{
 			Patient patient = new Patient();			
@@ -230,6 +249,10 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 			patient.setPartnerName(sb.toString());
 			patient.setUserName(rs.getString("username"));//user name in MyOscar		
 			patient.setGroup(rs.getInt("organization")); //group by volunteer's organization			
+			if (rs.getString("enabled").equals("1"))
+				patient.setEnabled(true);
+			else
+				patient.setEnabled(false);
 			
 			return patient;
 		}

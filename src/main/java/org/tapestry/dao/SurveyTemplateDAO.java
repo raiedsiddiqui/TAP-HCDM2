@@ -22,6 +22,17 @@ public interface SurveyTemplateDAO {
 	 */
 	public List<SurveyTemplate> getAllSurveyTemplates();
 	
+	/**
+	 * A list of default Survey template
+	 * @return a list of SurveyTemplate objects
+	 */
+	public List<SurveyTemplate> getDefaultSurveyTemplates();
+	
+	/**
+	 * A list of default Survey template
+	 * @return a list of SurveyTemplate objects
+	 */
+	public List<SurveyTemplate> getDefaultSurveyTemplatesBySite(int siteId);
 	
 	/**
 	 * A list of Survey template
@@ -59,7 +70,13 @@ public interface SurveyTemplateDAO {
 	 * Set survey templates as default
 	 * @param surveyIds
 	 */
-	public void setDefaultSurveyTemplate(String surveyIds);
+	public void setDefaultSurveyTemplate(String[] surveyIds);
+	
+	/**
+	 * removed survey templates from default
+	 * @param surveyIds
+	 */
+	public void removeDefaultSurveyTemplate(String[] surveyIds);
 	
 	/**
 	 * Delete a survey template from the database

@@ -28,6 +28,20 @@ public interface SurveyManager {
 	public List<SurveyTemplate> getAllSurveyTemplates();
 	
 	/**
+	 * A list of default Survey template
+	 * @return a list of SurveyTemplate objects
+	 */
+	@Transactional
+	public List<SurveyTemplate> getDefaultSurveyTemplates();
+	
+	/**
+	 * A list of Survey template
+	 * @return a list of default SurveyTemplate objects
+	 */
+	@Transactional
+	public List<SurveyTemplate> getDefaultSurveyTemplatesBySite(int siteId);
+	
+	/**
 	 * 
 	 * @param siteId
 	 * @return A list of Survey templates grouped by site
@@ -50,8 +64,7 @@ public interface SurveyManager {
 	@Transactional
 	public List<SurveyTemplate> getSurveyTemplatesByPartialTitle(String partialTitle);
 	
-	/**
-	 * 
+	/**	 * 
 	 * @param title
 	 * @return surveyId
 	 */
@@ -78,6 +91,14 @@ public interface SurveyManager {
 	 */
 	@Transactional
 	public void setDefaultSurveyTemplate(String[] surveyTemplateIds);
+	
+	/**
+	 * Remove survey templates from default list
+	 * @param surveyTemplateIds
+	 */
+	@Transactional
+	public void removeDefaultSurveyTemplate(String[] surveyTemplateIds);
+	
 	/**
 	 * Delete a survey template from the database
 	 * @param id

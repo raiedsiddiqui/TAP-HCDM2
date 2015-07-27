@@ -72,6 +72,12 @@ public interface AppointmentDAO {
     public List<Appointment> getAllUpcomingAppointmentsForVolunteer(int volunteerId);
 
     /**
+     * those completed appointments, but volunteer forgets clicking on Complete Visit button to set complete status 
+     * @param patientId
+     * @return a List of Appointment object
+     */ 
+    public List<Appointment> getUnCompleteAppointments(int patientId);
+    /**
      * all approved appointments filtered by patient
      * @param patientId
      * @return a List of Appointment object
@@ -176,6 +182,12 @@ public interface AppointmentDAO {
      * @param contacedAdmin    
      */
     public void completeAppointment(int id, String comments, boolean contactedAdmin);
+    
+    /**
+     * Set an appointment status as completed 
+     * @param id appointmentId     
+     */
+    public void completeAppointment(int id);
     
     /**
      * Set an appointment status as completed and add comments 

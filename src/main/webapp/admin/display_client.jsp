@@ -2,16 +2,21 @@
 <%@ taglib prefix="fn"  uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Details of client</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
-
-	
+<script src="${pageContext.request.contextPath}/resources/js/jquery-2.0.3.min.js"></script>
+	<style type="text/css">
+		.row-fluid{
+			margin:10px;
+		}
+	</style>
 	<script type="text/javascript">
-		
+
+ 
 	</script>
 
 </head>
@@ -31,7 +36,7 @@
 		<h5>Research ID: ${patient.researchID}</h5>
 	</div>
 	<div class="col-md-2">
-		<a class="btn btn-warning" href="#">Disable Patient Profile</a>
+		<a class="btn btn-warning" href="<c:url value="/disable_patient/${patient.patientID}"/>">Disable Patient Profile</a>	
 	</div>
 </div>
 
@@ -116,7 +121,9 @@
 		</tr>
 		</c:forEach>
 	</table>
-	<h2>Completed Visits</h2>
+	<h2>Completed Visits</h2><c:if test="${goCompleteVisits}">
+							<a href="#complete_visit" class="btn btn-primary" data-toggle="modal">Complete Visits</a>
+						</c:if>
 	<table  class="table table-striped" width="970" border="1">
 		<tr>
 			<th width="300">Visit #</th>
@@ -174,14 +181,43 @@
 		</tr>
 		</c:forEach>
 	</table>
-	
-
-<hr>
-
-	
+	<hr>	
+</div>
 </div>
 
 
+<div class="modal fade" id="#complete_visit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+    		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+    		<h3 id="modalHeader">Add Patient</h3>
+  		</div>
+  		<div class="modal-body">
+  			<form id="complete_visit" method="post" action="<c:url value="/complete_visit_admin"/>">
+  				<div class="row form-group">
+  				<tr>			
+					<th width="500">Visit Date</th>			
+					<th>Assigned Volunteers</th>	
+					<th>Action</th>		
+				</tr>
+  					<c:forEach items="${uncompleteSurveys}" var="us">
+						<tr >							
+							<td>${us.date}</td>			
+							<td>${us.volunteer},&nbsp &nbsp ${us.partner}</td>	
+							<td align="center"> <input type="checkbox" name="completeVisitByAdmin" value="checked" ></td>	
+														
+						</tr>
+						</c:forEach>
+  				</div>
+			</form>
+  		</div>
+  		<div class="modal-footer">
+    		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+			<input class="btn btn-primary" form="complete_visit" type="submit" value="Update" />
+  		</div>
+  	</div>
+  </div>
 </div>
 
 </body>

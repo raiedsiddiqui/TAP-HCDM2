@@ -123,6 +123,16 @@ public class SurveyManagerImpl implements SurveyManager {
 	}
 
 	@Override
+	public List<SurveyTemplate> getDefaultSurveyTemplates() {		
+		return surveyTemplateDao.getDefaultSurveyTemplates();
+	}
+
+	@Override
+	public List<SurveyTemplate> getDefaultSurveyTemplatesBySite(int siteId) {
+		return surveyTemplateDao.getDefaultSurveyTemplatesBySite(siteId);
+	}
+	
+	@Override
 	public List<SurveyTemplate> getSurveyTemplatesWithCanDelete(int siteId) {
 		List<SurveyTemplate> surveyTemplates;
 		int surveyTemplateId;
@@ -179,11 +189,12 @@ public class SurveyManagerImpl implements SurveyManager {
 	
 	@Override
 	public void setDefaultSurveyTemplate(String[] surveyTemplateIds) {
-		String stIds = Arrays.toString(surveyTemplateIds);
-		stIds = stIds.replace("[", "");
-		stIds = stIds.replace("]", "").trim();
-		
-		surveyTemplateDao.setDefaultSurveyTemplate(stIds);
+		surveyTemplateDao.setDefaultSurveyTemplate(surveyTemplateIds);
+	}
+	
+	@Override
+	public void removeDefaultSurveyTemplate(String[] surveyTemplateIds) {
+		surveyTemplateDao.removeDefaultSurveyTemplate(surveyTemplateIds);
 	}
 	
 	@Override
@@ -280,5 +291,6 @@ public class SurveyManagerImpl implements SurveyManager {
 	public List<SurveyResult> getVolunteerSurveyResultsById(int volunteerId) {		
 		return surveyResultDao.getVolunteerSurveyResultsById(volunteerId);
 	}
+
 
 }

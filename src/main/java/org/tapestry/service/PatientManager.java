@@ -119,6 +119,24 @@ public interface PatientManager {
 	@Transactional
     public boolean addPlans(int id, String plan);
 	
+	/**
+	 * Disable a patient by id
+	 * @param id
+	 */
+	@Transactional
+	public void disablePatientWithID(int id);
 	
+	/**
+	 * Enable a patient by id
+	 * @param id
+	 */
+	@Transactional
+	public void enablePatientWithID(int id);
 	
+	/**
+	 * Retrieve all exist research IDs
+	 * @return ids
+	 */
+	@Transactional
+	public List<String> getResearchIds();
 }

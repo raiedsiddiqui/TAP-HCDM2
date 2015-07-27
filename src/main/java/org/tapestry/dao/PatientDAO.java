@@ -98,4 +98,22 @@ public interface PatientDAO {
      * @return if it is successful for creating new record in database
      */
     public boolean addPlans(int id, String plan);
+    
+    /**
+	 * Disable a patient by id
+	 * @param id
+	 */
+	public void disablePatientWithID(int id);
+	
+	/**
+	 * Enable a patient by id
+	 * @param id
+	 */
+	public void enablePatientWithID(int id);
+	
+	/**
+	 * Retrieve all exist research IDs
+	 * @return ids
+	 */
+	public List<String> getResearchIds();
 }

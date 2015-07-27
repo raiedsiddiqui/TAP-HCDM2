@@ -189,6 +189,14 @@ public interface AppointmentManager {
 	 */
 	@Transactional
 	public List<Appointment> getPendingAppointmentsGroupByOrganization(int organizationId);
+	
+	/**
+     * Set an appointment status as completed 
+     * @param id appointmentId
+     */
+	@Transactional
+	public void completeAppointment(int id);
+	
     /**
      * Set an appointment status as completed and add comments, set if contacted admin
      * @param id appointmentId
@@ -278,4 +286,12 @@ public interface AppointmentManager {
      */
 	@Transactional
     public boolean addPlans(int id, String plan);
+	
+	/**
+     * those completed appointments, but volunteer forgets clicking on Complete Visit button to set complete status 
+     * @param patientId
+     * @return a List of Appointment object
+     */ 
+	@Transactional
+    public List<Appointment> getUnCompleteAppointments(int patientId);
 }

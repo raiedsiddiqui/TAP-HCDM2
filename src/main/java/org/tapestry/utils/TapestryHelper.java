@@ -979,19 +979,47 @@ public class TapestryHelper {
 		List<SurveyTemplate> surveyTemplateList;
 		if (session.getAttribute("survey_template_list") == null)
 		{			
-			if (request.isUserInRole("ROLE_ADMIN"))//central admin 
-				surveyTemplateList = surveyManager.getAllSurveyTemplates();
-			else //local admin/site admin
-				surveyTemplateList = surveyManager.getSurveyTemplatesBySite(getLoggedInUser(request).getSite());
-			//save in the session
-			if (surveyTemplateList != null && surveyTemplateList.size()>0)
-				session.setAttribute("survey_template_list", surveyTemplateList);
+			surveyTemplateList = updateSurveyTemplates(request, surveyManager);
+//			if (request.isUserInRole("ROLE_ADMIN"))//central admin 
+//				surveyTemplateList = surveyManager.getAllSurveyTemplates();
+//			else //local admin/site admin
+//				surveyTemplateList = surveyManager.getSurveyTemplatesBySite(getLoggedInUser(request).getSite());
+//			//save in the session
+//			if (surveyTemplateList != null && surveyTemplateList.size()>0)
+//				session.setAttribute("survey_template_list", surveyTemplateList);
 		}
 		else
 			surveyTemplateList = (List<SurveyTemplate>)session.getAttribute("survey_template_list");
 		
 		return surveyTemplateList;
 	}
+	
+	public static List<SurveyTemplate> getDefaultSurveyTemplates(HttpServletRequest request, SurveyManager surveyManager){
+		List<SurveyTemplate> surveyTemplateList;
+		if (request.isUserInRole("ROLE_ADMIN"))//central admin 
+			surveyTemplateList = surveyManager.getDefaultSurveyTemplates();
+		else //local admin/site admin
+			surveyTemplateList = surveyManager.getDefaultSurveyTemplatesBySite(getLoggedInUser(request).getSite());
+		
+		return surveyTemplateList;
+	}
+	
+	public static List<SurveyTemplate> updateSurveyTemplates(HttpServletRequest request, SurveyManager surveyManager)
+	{
+		List<SurveyTemplate> surveyTemplateList;
+		HttpSession session = request.getSession();
+		if (request.isUserInRole("ROLE_ADMIN"))//central admin 
+			surveyTemplateList = surveyManager.getAllSurveyTemplates();
+		else //local admin/site admin
+			surveyTemplateList = surveyManager.getSurveyTemplatesBySite(getLoggedInUser(request).getSite());
+		//save in the session
+		if (surveyTemplateList != null && surveyTemplateList.size()>0)
+			session.setAttribute("survey_template_list", surveyTemplateList);
+		
+		return surveyTemplateList;
+	}
+	
+	
 	
 	/**
 	 * Check if survey result exist in DB

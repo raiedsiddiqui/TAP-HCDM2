@@ -190,4 +190,14 @@ public class AppointmentManagerImpl implements AppointmentManager {
 		return appointmentDao.getAllAppointmentsByVolunteer(id);
 	}
 
+	@Override
+	public void completeAppointment(int id) {
+		appointmentDao.completeAppointment(id);		
+	}
+
+	@Override
+	public List<Appointment> getUnCompleteAppointments(int patientId) {
+		return appointmentDao.getUnCompleteAppointments(patientId);
+	}
+
 }

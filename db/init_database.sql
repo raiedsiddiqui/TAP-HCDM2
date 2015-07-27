@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS patients (
 	mrp_firstname VARCHAR(50) NOT NULL,
 	mrp_lastname VARCHAR(50) NOT NULL,
 	research_ID VARCHAR(10) NOT NULL, 
+	enabled BOOLEAN NOT NULL,
 		
 	PRIMARY KEY (patient_ID)
 );

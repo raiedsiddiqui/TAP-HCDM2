@@ -98,5 +98,20 @@ public class PatientManagerImpl implements PatientManager {
 		return null;
 	}
 
+	@Override
+	public void disablePatientWithID(int id) {
+		patientDao.disablePatientWithID(id);		
+	}
+
+	@Override
+	public void enablePatientWithID(int id) {
+		patientDao.enablePatientWithID(id);
+	}
+
+	@Override
+	public List<String> getResearchIds() {
+		return patientDao.getResearchIds();
+	}
+
 
 }

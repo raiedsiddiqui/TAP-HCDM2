@@ -2,6 +2,7 @@ package org.tapestry.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -37,6 +38,24 @@ public class SurveyTemplateDAOImpl extends JdbcDaoSupport implements SurveyTempl
 		String sql = "SELECT sur.*, st.site_name AS site_name FROM surveys AS sur INNER JOIN sites AS st "
 				+ "ON sur.site = st.site_ID ORDER BY priority DESC";
 		List<SurveyTemplate> surveyTemplates = getJdbcTemplate().query(sql, new SurveyTemplateMapper());
+		
+		return surveyTemplates;
+	}
+	
+	@Override
+	public List<SurveyTemplate> getDefaultSurveyTemplates() {
+		String sql = "SELECT sur.*, st.site_name AS site_name FROM surveys AS sur INNER JOIN sites AS st "
+				+ "ON sur.site = st.site_ID WHERE sur.isDefault = 1 ORDER BY priority DESC";
+		List<SurveyTemplate> surveyTemplates = getJdbcTemplate().query(sql, new SurveyTemplateMapper());
+		
+		return surveyTemplates;
+	}
+	
+	@Override
+	public List<SurveyTemplate> getDefaultSurveyTemplatesBySite(int siteId) {
+		String sql = "SELECT sur.*, st.site_name AS site_name FROM surveys AS sur INNER JOIN sites AS st "
+				+ "ON sur.site = st.site_ID WHERE sur.isDefault = 1 AND site=? ORDER BY priority DESC";
+		List<SurveyTemplate> surveyTemplates = getJdbcTemplate().query(sql, new Object[]{siteId}, new SurveyTemplateMapper());
 		
 		return surveyTemplates;
 	}
@@ -179,10 +198,40 @@ public class SurveyTemplateDAOImpl extends JdbcDaoSupport implements SurveyTempl
 	}
 
 	@Override
-	public void setDefaultSurveyTemplate(String surveyIds) {		
-		String sql = "UPDATE surveys SET isDefault='1' WHERE survey_ID IN (?)";
-		getJdbcTemplate().update(sql, surveyIds);
+	public void setDefaultSurveyTemplate(String[] surveyIds) {
+		int size = surveyIds.length;
+		StringBuffer sb = new StringBuffer();
+		sb.append("UPDATE surveys SET isDefault='1' WHERE survey_ID IN (");
 		
+		for (int i = 0; i < size; i++)
+		{
+			sb.append(surveyIds[i]);
+			if (i != size - 1)
+				sb.append(",");
+		}
+		sb.append(")");
+		
+		getJdbcTemplate().update(sb.toString());
 	}
+	
+	@Override
+	public void removeDefaultSurveyTemplate(String[] surveyIds) {
+		int size = surveyIds.length;
+		StringBuffer sb = new StringBuffer();
+		sb.append("UPDATE surveys SET isDefault='0' WHERE survey_ID IN (");
+		
+		for (int i = 0; i < size; i++)
+		{
+			sb.append(surveyIds[i]);
+			if (i != size - 1)
+				sb.append(",");
+		}
+		sb.append(")");
+		
+		getJdbcTemplate().update(sb.toString());
+	}
+
+
+	
 
 }

@@ -532,7 +532,7 @@ public class VolunteerController {
 	@RequestMapping(value="/volunteerList.html")
 	@ResponseBody
 	public List<Volunteer> getVolunteerByOrganization(@RequestParam(value="volunteerId") int vId)
-	{
+	{System.out.println("ddd");
 		Volunteer volunteer = volunteerManager.getVolunteerById(vId);	
 		List<Volunteer> vl = volunteerManager.getAllVolunteersByOrganization(volunteer.getOrganizationId());
 		
@@ -2055,6 +2055,13 @@ public class VolunteerController {
 		}		
 	}
 	
+	@RequestMapping(value="/complete_visit_admin/{appointment_id}", method=RequestMethod.POST)
+	public String completeVisitByAdmin(@PathVariable("appointment_id") int id, SecurityContextHolderAwareRequestWrapper request, 
+			ModelMap model) {
+		appointmentManager.completeAppointment(id);
+		return "aal";
+	}
+	
 	@RequestMapping(value="/complete_visit/{appointment_id}", method=RequestMethod.POST)
 	public String completeVisit(@PathVariable("appointment_id") int id, SecurityContextHolderAwareRequestWrapper request, 
 			ModelMap model) 
@@ -2087,7 +2094,7 @@ public class VolunteerController {
 								
 				sb = new StringBuffer();
 				sb.append(patientName);
-				sb.append("'s hl7/PDF report is ready to be downloaded. ");				
+				sb.append("'s hl7/PDF report is ready to be downloaded. ");			
 				
 				if (coordinators != null)			
 				{	//send message to all coordinators in the organization					
