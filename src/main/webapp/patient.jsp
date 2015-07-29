@@ -376,16 +376,16 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">
-        	If You Suspect ...
+        	SOS
         </h4>
       </div>
       <div class="modal-body">
     	<a class="lgbtn" href="#elderabuse">Elder Abuse</a>
     	<a class="lgbtn" href="#selfharm">Self Harm</a>
-    	<a class="lgbtn" href="#crisislines">Crisis Line</a>
+    	<a class="lgbtn" href="#crisislines">Crisis Lines</a>
 
 
-      <h3 id="elderabuse">Elder Abuse</h3>
+      <h3 id="elderabuse">If You Suspect Elder Abuse</h3>
       <h4>CALL the Volunteer Coordinator immediately.</h4>
 
 		<h4>WARNING SIGNS:</h4>
@@ -403,7 +403,7 @@
 		</ul> 
 		<hr>
 
-		<h3 id="selfharm"> At Risk of Harming Themselves </h3>
+		<h3 id="selfharm">If You Suspect a Client is At Risk of Harming Themselves </h3>
 
 			<h4>CALL the Volunteer Coordinator immediately.</h4>
 
