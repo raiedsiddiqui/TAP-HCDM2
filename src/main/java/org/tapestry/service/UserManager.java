@@ -217,4 +217,12 @@ public interface UserManager {
 	 * @return
 	 */
 	public List<UserLog> getGroupedUserLogssByPartialName(String partialName, int organizationId);
+	
+	
+	/**
+	 * 
+	 * @param id
+	 * @return list of local admins from a site
+	 */
+	public List<User> getLocalAdminBySite(int id);
 }

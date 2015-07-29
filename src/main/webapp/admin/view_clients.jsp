@@ -61,7 +61,9 @@
 				<div class="col-md-2">
 					<a href="<c:url value="/add_client"/>" class="btn btn-primary" data-toggle="modal">Add New Client</a>
 				</div>
-
+					<div class="col-md-2">
+						<a class="btn btn-warning" href="<c:url value="/getDisabledPatient"/>">Enable Patient Profile</a>	
+					</div>
 			</div>
 
 			

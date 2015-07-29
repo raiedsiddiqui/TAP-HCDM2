@@ -532,7 +532,7 @@ public class VolunteerController {
 	@RequestMapping(value="/volunteerList.html")
 	@ResponseBody
 	public List<Volunteer> getVolunteerByOrganization(@RequestParam(value="volunteerId") int vId)
-	{System.out.println("ddd");
+	{
 		Volunteer volunteer = volunteerManager.getVolunteerById(vId);	
 		List<Volunteer> vl = volunteerManager.getAllVolunteersByOrganization(volunteer.getOrganizationId());
 		
@@ -2075,7 +2075,14 @@ public class VolunteerController {
 		Patient patient = patientManager.getPatientByID(patientId);
 		User loggedInUser = TapestryHelper.getLoggedInUser(request);
 		StringBuffer sb = new StringBuffer();
-		boolean completedAllSurveys = TapestryHelper.completedAllSurveys(patientId, surveyManager);
+
+		boolean completed = false;
+   		int siteId = loggedInUser.getSite();
+   		int count = surveyManager.countSurveyTemplateBySite(siteId);
+   		List<SurveyResult> completedSurveys = surveyManager.getCompletedSurveysByPatientID(patientId);
+   		
+   		if (count == completedSurveys.size())
+   			completed = true;
 		
 		if (!Utils.isNullOrEmpty(visitAlert))		
 		{
@@ -2088,26 +2095,25 @@ public class VolunteerController {
 			sb.append("'s status as completed");
 			userManager.addUserLog(sb.toString(), loggedInUser);
 			
-			if (completedAllSurveys)
+			if (completed)
 			{	//for temporary use, send a message to coordinator, hl7 report is ready to donwload on Admin side					
-				int userId = loggedInUser.getUserID();
 				String patientName = patient.getDisplayName();
-				int organizationId = appt.getGroup();						
-				List<User> coordinators = userManager.getVolunteerCoordinatorByOrganizationId(organizationId);
+				List<User> coordinators = userManager.getLocalAdminBySite(siteId);
 								
 				sb = new StringBuffer();
 				sb.append(patientName);
 				sb.append("'s hl7/PDF report is ready to be downloaded. ");			
-				
+				                                                  
 				if (coordinators != null)			
-				{	//send message to all coordinators in the organization					
-					for (int i = 0; i<coordinators.size(); i++)		
-						TapestryHelper.sendMessageToInbox("PDF/HL7 Report", sb.toString(), userId, coordinators.get(i).getUserID(), messageManager);			
+				{	//send message to all coordinators in the site					
+					for (int i = 0; i<coordinators.size(); i++)	
+						TapestryHelper.sendMessageToInbox("PDF/HL7 Report", sb.toString(), loggedInUser.getUserID(),
+								coordinators.get(i).getUserID(), messageManager);
 				}
-				else{
-					System.out.println("Can't find any coordinator in organization id# " + organizationId);
-					logger.error("Can't find any coordinator in organization id# " + organizationId);
-				}
+//				else{
+//					System.out.println("Can't find any coordinator in organization id# " + organizationId);
+//					logger.error("Can't find any coordinator in organization id# " + organizationId);
+//				}
 			}
 			else
 			{
@@ -2116,15 +2122,15 @@ public class VolunteerController {
 			}
 			
 		}
-		else //no alert
-		{
-			if (completedAllSurveys)
-			{
-				//generate report
-				//send to MRP and message to patient in PHR
-			}
-	
-		}
+//		else //no alert
+//		{
+//			if (completed)
+//			{
+//				//generate report
+//				//send to MRP and message to patient in PHR
+//			}
+//	
+//		}
 		return "redirect:/";
 	}
 	

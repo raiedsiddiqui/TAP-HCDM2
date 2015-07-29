@@ -36,7 +36,7 @@ public class SurveyTemplateDAOImpl extends JdbcDaoSupport implements SurveyTempl
 	@Override
 	public List<SurveyTemplate> getAllSurveyTemplates() {
 		String sql = "SELECT sur.*, st.site_name AS site_name FROM surveys AS sur INNER JOIN sites AS st "
-				+ "ON sur.site = st.site_ID ORDER BY priority DESC";
+				+ "ON sur.site = st.site_ID ORDER BY site DESC";
 		List<SurveyTemplate> surveyTemplates = getJdbcTemplate().query(sql, new SurveyTemplateMapper());
 		
 		return surveyTemplates;
@@ -110,8 +110,8 @@ public class SurveyTemplateDAOImpl extends JdbcDaoSupport implements SurveyTempl
 	
 	@Override
 	public int countSurveyTemplateBySite(int site) {
-		String sql = "SELECT COUNT(*) as c FROM surveys WHERE site=? OR site=? ";
-		return getJdbcTemplate().queryForInt(sql, new Object[] {site, 0});
+		String sql = "SELECT COUNT(*) as c FROM surveys WHERE site=? ";
+		return getJdbcTemplate().queryForInt(sql, new Object[] {site});
 	}
 	
 	class SurveyTemplateMapper implements RowMapper<SurveyTemplate> {

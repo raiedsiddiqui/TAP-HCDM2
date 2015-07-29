@@ -250,16 +250,25 @@ public class UserDAOImpl extends JdbcDaoSupport implements UserDAO {
 	}
 
 	/**
-	* Creates a User object from the result of executing an SQL query
-	* @param result The ResultSet returned by calling PreparedStatement.executeQuery()
-	* @return A User object representing the person
-	*/
+	 * 
+	 */
 	@Override
 	public List<User> getVolunteerCoordinatorByOrganizationId(int id) {
 		String sql = "SELECT * FROM users WHERE organization=? AND role ='ROLE_LOCAL_ADMIN'";
 		List<User> coordinatorIds = getJdbcTemplate().query(sql, new Object[]{id}, new UserMapper());		
 	
 		return coordinatorIds;
+	}
+	
+	/**
+	*
+	*/
+	@Override
+	public List<User> getLocalAdminBySite(int id) {
+		String sql = "SELECT * FROM users WHERE site=? AND role ='ROLE_LOCAL_ADMIN'";
+		List<User> users = getJdbcTemplate().query(sql, new Object[]{id}, new UserMapper());		
+	
+		return users;
 	}
 	
 	class UserMapper implements RowMapper<User> {

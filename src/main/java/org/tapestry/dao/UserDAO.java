@@ -130,6 +130,13 @@ public interface UserDAO {
 	public List<User> getVolunteerCoordinatorByOrganizationId(int id);
 	
 	/**
+	 * Group user by site
+	 * @param id
+	 * @return
+	 */
+	public List<User> getLocalAdminBySite(int id);
+	
+	/**
 	 * Save a copy of deleted user
 	 * @param user
 	 * @param deletedBy

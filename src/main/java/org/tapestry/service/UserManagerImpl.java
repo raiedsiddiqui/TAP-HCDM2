@@ -125,6 +125,11 @@ public class UserManagerImpl implements UserManager {
 	public List<User> getVolunteerCoordinatorByOrganizationId(int id) {		
 		return userDao.getVolunteerCoordinatorByOrganizationId(id);
 	}
+
+	@Override
+	public List<User> getLocalAdminBySite(int id) {
+		return userDao.getLocalAdminBySite(id);
+	}
 	
 	@Override
 	public List<UserLog> getUserLogs(int start, int n) {		

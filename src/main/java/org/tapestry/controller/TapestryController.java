@@ -740,13 +740,17 @@ public class TapestryController{
 			model.addAttribute("unread", unreadMessages);
 		}	
 		TapestryHelper.loadPatientsAndVolunteers(model, volunteerManager, patientManager, organizationManager, request);
-		//clinic
+		//clinic and site
 		List<Clinic> clinics;
 		if (request.isUserInRole("ROLE_ADMIN"))//central admin
+		{
 			clinics = organizationManager.getAllClinics();
+			List<Site> sites = organizationManager.getAllSites();
+			model.addAttribute("sites", sites);
+		}
 		else
 			clinics = organizationManager.getClinicsBySite(loggedInUser.getSite());
-		
+			
 		model.addAttribute("clinics", clinics);
 
 		return "admin/add_client";
@@ -842,8 +846,15 @@ public class TapestryController{
 			userManager.addUserLog(sb.toString(), loggedInUser);
 			
 			//Auto assign all existing surveys			
-			List<SurveyTemplate> surveyTemplates;			
-			surveyTemplates = TapestryHelper.getSurveyTemplates(request, surveyManager);
+			List<SurveyTemplate> surveyTemplates;
+			int site = loggedInUser.getSite();
+			if (site == 0)//central admin
+			{
+				site = Integer.parseInt(request.getParameter("site"));
+			
+			System.out.println("site "+ site);}
+			
+			surveyTemplates = surveyManager.getDefaultSurveyTemplatesBySite(site);
 	   		
 	   		for(SurveyTemplate st: surveyTemplates) 
 	   		{
@@ -1016,9 +1027,8 @@ public class TapestryController{
 		List<SurveyResult> incompleteSurveyResultList = surveyManager.getIncompleteSurveysByPatientID(id);
 		
 		Collections.sort(completedSurveyResultList);
-		Collections.sort(incompleteSurveyResultList);
-		
-	//	Collections.
+		Collections.sort(incompleteSurveyResultList);		
+	
 		//get display survey result for displaying question text and answer
 		String xml;
 		LinkedHashMap<String, String> res;
@@ -1093,7 +1103,7 @@ public class TapestryController{
 		if ("ROLE_ADMIN".equalsIgnoreCase(user.getRole()))
 			patients = patientManager.getAllPatients();	//For central Admin		
 		else
-			patients = patientManager.getPatientsBySite(user.getSite());		
+			patients = patientManager.getPatientsBySite(user.getSite());				
 		
 		model.addAttribute("patients", patients);
 		
@@ -1170,8 +1180,10 @@ public class TapestryController{
 		int site = organizationManager.getSiteByClinic(patient.getClinic());
 		int totalSurveys = surveyManager.countSurveyTemplateBySite(site);
 		int totalCompletedSurveys = surveyManager.countCompletedSurveys(id);
-						
-		if ((totalSurveys-1) == totalCompletedSurveys)//as added 3 month follow up survey, not used in report
+		
+//		if ((totalSurveys-1) == totalCompletedSurveys)//as added 3 month follow up survey, not used in report
+//			model.addAttribute("showReport", true);
+		if (totalSurveys == totalCompletedSurveys)
 			model.addAttribute("showReport", true);
 		
 		HttpSession session = request.getSession();				
@@ -1194,6 +1206,15 @@ public class TapestryController{
 		userManager.addUserLog(sb.toString(), u);
 		
 		return "redirect:/view_clients_admin"; 
+	}
+
+	@RequestMapping(value="/getDisabledPatient",method=RequestMethod.GET)
+	public String getDisablePatients(SecurityContextHolderAwareRequestWrapper request, ModelMap model)
+	{
+//		patientManager.;
+		
+		
+		return "admin/display_disabled_patients"; 
 	}
 	
 	//============report======================
@@ -1848,18 +1869,7 @@ public class TapestryController{
    		report.setScores(scores);
 		report.setAlerts(lAlert);
 		//end of alert
-		
-		//set life goals, health goals and Patient Goals in the report
-		//===========================
-//		try{
-//   			xml = new String(sr.getResults(), "UTF-8");
-//   		} catch (Exception e) {
-//   			xml = "";
-//   		}
-//		mSurvey = ResultParser.getResults(xml);
-//		qList = new ArrayList<String>();
-//		qList = TapestryHelper.getQuestionList(mSurvey);
-		
+			
 		//===================
 		try{
    			xml = new String(goals.getResults(), "UTF-8");
@@ -2136,7 +2146,7 @@ public class TapestryController{
    	   		}
    		}
    		else//user select SurveyManagement/Assign Survey
-   		{ 	System.out.println("/assign_selectedsurvey...2");
+   		{ 	
    			List<Patient> patients = TapestryHelper.getPatients(request, patientManager); 
    			
 	   		if (request.getParameter("searchPatient") != null && 
@@ -2336,7 +2346,7 @@ public class TapestryController{
 	
    	@RequestMapping(value="/show_survey/{resultID}", method=RequestMethod.GET)
    	public ModelAndView showSurvey(@PathVariable("resultID") int id, HttpServletRequest request)
-   	{   	   		
+   	{   	   		System.out.println("show...");
    		ModelAndView redirectAction = null;
    		List<SurveyResult> surveyResults;
 		List<SurveyTemplate> surveyTemplates;
@@ -2349,6 +2359,7 @@ public class TapestryController{
 		TapestrySurveyMap userSurveys = TapestryHelper.getSurveyMap(request);
 		SurveyResult surveyResult = surveyManager.getSurveyResultByID(id);
 		int patientId = surveyResult.getPatientID();
+		
 		if (userSurveys == null)
 		{
 			if (request.isUserInRole("ROLE_ADMIN"))//central admin 
@@ -2357,10 +2368,11 @@ public class TapestryController{
 	   			surveyTemplates = surveyManager.getSurveyTemplatesBySite(siteId);
 			
 			surveyResults = surveyManager.getSurveysByPatientID(patientId);
-			userSurveys = TapestryHelper.storeSurveyMapInSession(request, surveyResults, surveyTemplates);
+			userSurveys = TapestryHelper.storeSurveyMapInSession(request, surveyResults, surveyTemplates);			
 		}
+				
 		SurveyTemplate surveyTemplate = surveyManager.getSurveyTemplateByID(surveyResult.getSurveyID());
-		
+	
 		//user logs
 		Patient p = patientManager.getPatientByID(patientId);
 		StringBuffer sb  = new StringBuffer();
@@ -2377,6 +2389,7 @@ public class TapestryController{
 				
 		//all survey results stored in map	
 		TapestryPHRSurvey currentSurvey = userSurveys.getSurvey(Integer.toString(id));
+//		if (currentSurvey == null)
 		
 		try {
 			SurveyFactory surveyFactory = new SurveyFactory();

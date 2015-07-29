@@ -74,6 +74,17 @@
 					<label>Research ID:</label>
 					<input type="text" name="researchid" class="form-control" maxlength="10"/>
 				</div>	
+				<c:if test="${not empty sites}">
+					<div class="col-md-6">
+						<label>Site:</label>
+						<select name="site" id="site" form="newPatient" class="form-control" required>
+							<option value=""></option>
+							<c:forEach items="${sites}" var="s">
+								<option value="${s.siteId}">${s.name}</option>
+							</c:forEach>
+						</select>
+					</div>
+				</c:if>
 			</div>
 				<div class="row form-group">
 					<div class="col-md-6">
