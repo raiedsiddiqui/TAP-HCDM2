@@ -54,6 +54,7 @@
 	<script src="${pageContext.request.contextPath}/resources/js/goals/goals.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/js/eq5d/eq5d.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/js/pain/pain.js"></script>
+	<script src="${pageContext.request.contextPath}/resources/js/vscale/vscale.js"></script>
 
 	<style type="text/css">
 		.row-fluid{
