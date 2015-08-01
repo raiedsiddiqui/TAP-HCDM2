@@ -55,6 +55,13 @@ public interface SurveyTemplateDAO {
 	public int getSurveyIdByTitle(String title);
 	
 	/**
+	 * @param site
+	 * @param title
+	 * @return surveyId
+	 */
+	public int getSurveyIdByTitle(String title, int site);
+	
+	/**
 	 * Uploads a survey template to the database
 	 * @param st
 	 */

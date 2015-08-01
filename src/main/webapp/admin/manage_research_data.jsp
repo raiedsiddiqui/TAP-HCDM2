@@ -24,7 +24,8 @@
 				<c:forEach items="${sites}" var="s">
 					<tr>
 						<td>${s.name }</td>
-					 	<td><a href="<c:url value="/download_research_data/${s.siteId}?name=${s.name}"/>">Download Data</a> </td>	
+					 	<!-- td><a href="<c:url value="/download_research_data/${s.siteId}?name=${s.name}"/>">Download Data</a> </td>	 -->
+					 	<td><a href="<c:url value="/download_researchData/${s.siteId}?name=${s.name}"/>">Download Data</a> </td>
 					</tr>
 				</c:forEach>
 			</table>

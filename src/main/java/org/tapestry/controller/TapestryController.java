@@ -2706,43 +2706,55 @@ public class TapestryController{
 
 		return "admin/manage_research_data";
    	}
-		
-	@RequestMapping(value="/download_research_data/{siteID}", method=RequestMethod.GET)
-	@ResponseBody
-	public String downloadResearchData(@PathVariable("siteID") int id, HttpServletRequest request, 
-			@RequestParam(value="name", required=false) String siteName, HttpServletResponse response) 			
-	{
-		//This data needs to be written (Object[])
-        List<ResearchData> results = TapestryHelper.getResearchDatas(patientManager, surveyManager, id); 
+	
+	@RequestMapping(value="/download_researchData/{siteID}", method=RequestMethod.GET)
+	public String downLoadResearchDataBySite(@PathVariable("siteID") int id, HttpServletRequest request,  HttpServletResponse response)
+	{//This data needs to be written (Object[])
+        List<ResearchData> results = TapestryHelper.getResearchDatas(patientManager, surveyManager, id);       
         //Blank workbook
         XSSFWorkbook workbook = new XSSFWorkbook();         
         //Create a blank sheet
         XSSFSheet sheet = workbook.createSheet("Research Data");   
               
         Map<Integer, Object[]> data = new TreeMap<Integer, Object[]>();
-        data.put(1, new Object[] {"Pat_ID","EQ5D1_Mobility_T0", "EQ5D2_2Selfcare_T0", "EQ5D3_Usualact_T0", 
-        		"EQ5D4_Pain_T0", "EQ5D5_Anxdep_T0", "EQ5D5_notes_T0", "EQ5D6_Healthstate_T0", "EQ5D6_Healthstate_notes_T0", 
-        		"DSS1_role_T0",	"DSS2_under_T0","DSS3_useful_T0","DSS4_listen_T0","DSS5_happen_T0","DSS6_talk_T0",
-        		"DSS7_satisfied_T0", "DSS8_nofam_T0","DSS9_timesnotliving_T0","DSS10_timesphone_T0","DSS11_timesclubs_T0",
+        data.put(1, new Object[] {"Pat_ID","QOL1_mobility_T0", "QOL2_selfcare_T0", "QOL3_usualact_T0", 
+        		"QOL4_paindis_T0", "QOL5_anxdepr_T0", "QOL6_scale_T0", "DSS1_role_T0",	"DSS2_under_T0","DSS3_useful_T0",
+        		"DSS4_listen_T0","DSS5_happen_T0","DSS6_talk_T0", "DSS7_satisfied_T0", "DSS8_nofam_T0","DSS9_timesnotliving_T0",
+        		"DSS10_timesphone_T0","DSS11_timesclubs_T0",
         		"DSS_notes_T0", "Goals1matter_T0", "Goals2life_T0", "Goals3health_T0", "Goals4list_T0", "Goals5firstspecific_T0", 
         		"Goals6firstbaseline_T0", "Goals7firsttarget_T0", "Goals5secondspecific_T0", "Goals6secondbaseline_T0",
         		"Goals7secondtarget_T0", "Goals5thirdspecific_T0", "Goals6thirdbaseline_T0", "Goals7thirdtarget_T0",
-        		"Goals8priority_T0", "Goalsdiscussion_notes_T0"});
+        		"Goals8priority_T0", "Goalsdiscussion_notes_T0", "DLA1_typday_T0","DLA2_goto_T0","DLA3_gotowhy_T0","DLA4_goodday_T0",
+        		"DLA5_managingconcerns_T0","DLA6_diffactivPressneed_T0","DLA7_fallinyear_T0","DLA7a_fallwhy_T0", "RAPA1_neverpa_T0", 
+        		"RAPA2_moderpa_T0", "RAPA3_lightpa_T0", "RAPA4_moderpaless30_T0", "RAPA5_vigpaless20_T0", "RAPA6_moderpamore30_T0", 
+        		"RAPA7_vigopamore20_T0", "RAPA8_lift_T0","RAPA9_stretch_T0", "AD1_written_T0", "AD2_doctor_T0", "AD3_interest_T0",
+        		"Mem1_worst_T0", "Mem1a_worseexplain_T0", "Mem2_worry_T0", "Mem2a_worrywhy_T0", "GH1_clockcomplt_T0","GH2_hosptadmins_T0", 
+        		"GH3_genhealth_T0", "GH4_helpactivs_T0", "GH5_relihelp_T0", "GH6_prescrip_T0", "GH7_forgetprescrip_T0", "GH8_lostwr_T0",
+        		"GH9_depr_T0", "GH10_bladdercontr_T0", "GH11_walktime_T0", "Mob1_diffwalking_T0", "Mob2_modwalking_T0", "Mob3_diffwalkingp5_T0",
+        		"Mob4_modwalkingp5_T0", "Mob5_diffstairs_T0", "Mob6_modstaris_T0", "Nut1_wtchg_T0", "Nut2_intentwtchg_T0", "Nut3_rightwt_T0",
+        		"Nut4_skipmeals_T0", "Nut5_avoidfoods_T0", "Nut6_apetit_T0", "Nut7_servfrtveg_T0", "Nut8_eggsmeat_T0", "Nut9_dairy_T0",
+        		"Nut10_fluid_T0", "Nut11_painswallow_T0", "Nut12_diffchew_T0", "Nut13_mealreplace_T0","Nut14_mealcompany_T0","Nut15_mealaprep_T0",
+        		"Nut16_mealprepstate_T0","Nut17_groceries_T0"});
         ResearchData r;
         for (int i=0; i< results.size(); i++)
         {
-        	r = results.get(i);
-        	
-        	data.put(Integer.valueOf(i+2), new Object[]{r.getPatientId(),r.geteQ5D1_Mobility_TO(), r.geteQ5D2_2Selfcare_TO(),
-        		r.geteQ5D3_Usualact_TO(), r.geteQ5D4_Pain_TO(), r.geteQ5D5_Anxdep_TO(), r.geteQ5D5_notes_TO(), 
-        		r.geteQ5D6_Healthstate_TO(), r.geteQ5D6_Healthstate_notes_TO(), r.getdSS1_role_TO(), r.getdSS2_under_TO(), 
+        	r = results.get(i);        	
+        	data.put(Integer.valueOf(i+2), new Object[]{r.getPatientId(),r.getQol1(), r.getQol2(),r.getQol3(), r.getQol4(),
+        		r.getQol5(), r.getQol6(), r.getdSS1_role_TO(), r.getdSS2_under_TO(), 
         		r.getdSS3_useful_TO(), r.getdSS4_listen_TO(), r.getdSS5_happen_TO(), r.getdSS6_talk_TO(), 
         		r.getdSS7_satisfied_TO(), r.getdSS8_nofam_TO(), r.getdSS9_timesnotliving_TO(), r.getdSS10_timesphone_TO(), 
         		r.getdSS11_timesclubs_TO(), r.getdSS_notes_TO(), r.getGoals1Matter_TO(), r.getGoals2Life_TO(), 
         		r.getGoals3Health_TO(), r.getGoals4List_TO(), r.getGoals5FirstSpecific_TO(), r.getGoals6FirstBaseline_TO(), 
         		r.getGoals7FirstTaget_TO(), r.getGoals5SecondSpecific_TO(), r.getGoals6SecondBaseline_TO(), 
         		r.getGoals7SecondTaget_TO(), r.getGoals5ThirdSpecific_TO(), r.getGoals6ThirdBaseline_TO(), 
-        		r.getGoals7ThirdTaget_TO(), r.getGoals8Priority_TO(), r.getGoalsDiscussion_notes_TO()});
+        		r.getGoals7ThirdTaget_TO(), r.getGoals8Priority_TO(), r.getGoalsDiscussion_notes_TO(), r.getDla1(), r.getDla2(), 
+        		r.getDla3(), r.getDla4(), r.getDla5(), r.getDla6(), r.getDla7(), r.getDla7a(), r.getRapa1(), r.getRapa2(), r.getRapa3(),
+        		r.getRapa4(), r.getRapa5(), r.getRapa6(), r.getRapa7(), r.getRapa8(), r.getRapa9(), r.getAd1(), r.getAd2(), r.getAd3(),
+        		r.getMem1(), r.getMem2(), r.getMem3(), r.getMem4(), r.getGh1(), r.getGh2(), r.getGh3(), r.getGh4(), r.getGh5(),
+        		r.getGh6(), r.getGh7(), r.getGh8(), r.getGh9(), r.getGh10(), r.getGh11(), r.getMob1(), r.getMob2(), r.getMob3(),
+        		r.getMob4(), r.getMob5(), r.getMob6(), r.getNut1(), r.getNut2(), r.getNut3(), r.getNut4(), r.getNut5(), r.getNut6(),
+        		r.getNut7(), r.getNut8(), r.getNut9(), r.getNut10(), r.getNut11(), r.getNut12(), r.getNut13(), r.getNut14(), r.getNut15(),
+        		r.getNut16(), r.getNut17()});
         }          
         //Iterate over data and write to sheet
         Set<Integer> keyset = data.keySet();
@@ -2765,7 +2777,7 @@ public class TapestryController{
             }
         }   
         //Adjusts the each column width to fit the contents
-        for (int c=1; c<=36; c++)
+        for (int c=1; c<=100; c++)
         	sheet.autoSizeColumn(c);
        
         response.setContentType("application/vnd.ms-excel");
@@ -2777,18 +2789,91 @@ public class TapestryController{
    		} catch (Exception e) {
    			e.printStackTrace();
    		}
-   		//add logs
-   		HttpSession session = request.getSession();
-   		User loggedInUser = (User)session.getAttribute("loggedInUser");
-		StringBuffer sb = new StringBuffer();
-		sb.append(loggedInUser.getName());
-		sb.append(" has downloaded Researcha Data for ");
-		sb.append(siteName);
 		
-		userManager.addUserLog(sb.toString(), loggedInUser);
-		
-  		return null;
+		return null;
 	}
+//	@RequestMapping(value="/download_research_data/{siteID}", method=RequestMethod.GET)
+//	@ResponseBody
+//	public String downloadResearchData(@PathVariable("siteID") int id, HttpServletRequest request, 
+//			@RequestParam(value="name", required=false) String siteName, HttpServletResponse response) 			
+//	{		
+//		//This data needs to be written (Object[])
+//        List<ResearchData> results = TapestryHelper.getResearchDatas(patientManager, surveyManager, id); 
+//        //Blank workbook
+//        XSSFWorkbook workbook = new XSSFWorkbook();         
+//        //Create a blank sheet
+//        XSSFSheet sheet = workbook.createSheet("Research Data");   
+//              
+//        Map<Integer, Object[]> data = new TreeMap<Integer, Object[]>();
+//        data.put(1, new Object[] {"Pat_ID","EQ5D1_Mobility_T0", "EQ5D2_2Selfcare_T0", "EQ5D3_Usualact_T0", 
+//        		"EQ5D4_Pain_T0", "EQ5D5_Anxdep_T0", "EQ5D5_notes_T0", "EQ5D6_Healthstate_T0", "EQ5D6_Healthstate_notes_T0", 
+//        		"DSS1_role_T0",	"DSS2_under_T0","DSS3_useful_T0","DSS4_listen_T0","DSS5_happen_T0","DSS6_talk_T0",
+//        		"DSS7_satisfied_T0", "DSS8_nofam_T0","DSS9_timesnotliving_T0","DSS10_timesphone_T0","DSS11_timesclubs_T0",
+//        		"DSS_notes_T0", "Goals1matter_T0", "Goals2life_T0", "Goals3health_T0", "Goals4list_T0", "Goals5firstspecific_T0", 
+//        		"Goals6firstbaseline_T0", "Goals7firsttarget_T0", "Goals5secondspecific_T0", "Goals6secondbaseline_T0",
+//        		"Goals7secondtarget_T0", "Goals5thirdspecific_T0", "Goals6thirdbaseline_T0", "Goals7thirdtarget_T0",
+//        		"Goals8priority_T0", "Goalsdiscussion_notes_T0"});
+//        ResearchData r;
+//        for (int i=0; i< results.size(); i++)
+//        {
+//        	r = results.get(i);
+//        	
+//        	data.put(Integer.valueOf(i+2), new Object[]{r.getPatientId(),r.geteQ5D1_Mobility_TO(), r.geteQ5D2_2Selfcare_TO(),
+//        		r.geteQ5D3_Usualact_TO(), r.geteQ5D4_Pain_TO(), r.geteQ5D5_Anxdep_TO(), r.geteQ5D5_notes_TO(), 
+//        		r.geteQ5D6_Healthstate_TO(), r.geteQ5D6_Healthstate_notes_TO(), r.getdSS1_role_TO(), r.getdSS2_under_TO(), 
+//        		r.getdSS3_useful_TO(), r.getdSS4_listen_TO(), r.getdSS5_happen_TO(), r.getdSS6_talk_TO(), 
+//        		r.getdSS7_satisfied_TO(), r.getdSS8_nofam_TO(), r.getdSS9_timesnotliving_TO(), r.getdSS10_timesphone_TO(), 
+//        		r.getdSS11_timesclubs_TO(), r.getdSS_notes_TO(), r.getGoals1Matter_TO(), r.getGoals2Life_TO(), 
+//        		r.getGoals3Health_TO(), r.getGoals4List_TO(), r.getGoals5FirstSpecific_TO(), r.getGoals6FirstBaseline_TO(), 
+//        		r.getGoals7FirstTaget_TO(), r.getGoals5SecondSpecific_TO(), r.getGoals6SecondBaseline_TO(), 
+//        		r.getGoals7SecondTaget_TO(), r.getGoals5ThirdSpecific_TO(), r.getGoals6ThirdBaseline_TO(), 
+//        		r.getGoals7ThirdTaget_TO(), r.getGoals8Priority_TO(), r.getGoalsDiscussion_notes_TO()});
+//        }          
+//        //Iterate over data and write to sheet
+//        Set<Integer> keyset = data.keySet();
+//        int rownum = 0;
+//        int cellnum;  
+//        Row row;
+//        Object [] objArr;
+//        for (Integer key : keyset)
+//        {
+//            row = sheet.createRow(rownum++);           
+//            objArr = data.get(key);            
+//            cellnum = 0;
+//            for (Object obj : objArr)
+//            {
+//               Cell cell = row.createCell(cellnum++);               
+//               if(obj instanceof String)
+//                    cell.setCellValue((String)obj);
+//                else if(obj instanceof Integer)
+//                    cell.setCellValue((Integer)obj);              
+//            }
+//        }   
+//        //Adjusts the each column width to fit the contents
+//        for (int c=1; c<=36; c++)
+//        	sheet.autoSizeColumn(c);
+//       
+//        response.setContentType("application/vnd.ms-excel");
+//        response.setHeader("Content-Disposition", "attachment; filename=\"result.xlsx\"");
+//     
+//        try{// Write workbook to response.
+//            workbook.write(response.getOutputStream()); 
+//            response.getOutputStream().close();
+//   		} catch (Exception e) {
+//   			e.printStackTrace();
+//   		}
+//   		//add logs
+//        HttpSession session = request.getSession();
+//   		User loggedInUser = (User)session.getAttribute("loggedInUser");
+//		StringBuffer sb = new StringBuffer();
+//		sb.append(loggedInUser.getName());
+//		sb.append(" has downloaded Researcha Data for ");
+//		sb.append(siteName);
+//		
+//		userManager.addUserLog(sb.toString(), loggedInUser);
+//		
+//  		return null;
+//	}
 	
 	//============================ Clinic ==================================
 	
@@ -3014,6 +3099,7 @@ public class TapestryController{
    		User loginUser = TapestryHelper.getLoggedInUser(request);   		  		
    		List<Volunteer> volunteers = volunteerManager.getAllVolunteersByOrganization(loginUser.getOrganization());
    		
+   		
    		model.addAttribute("volunteers", volunteers);
    		model.addAttribute("surveyTemplates", surveyTemplates);   		
 
@@ -3039,10 +3125,10 @@ public class TapestryController{
    		{//search volunteer by name
    			String name = request.getParameter("searchVolunteerName");   		   			
    			volunteers = volunteerManager.getVolunteersByName(name);			
-   			model.addAttribute("searchPatientName", name);	 	   			
+   			model.addAttribute("searchVolunteerName", name);	 	   			
 	   	}
    		else if(request.getParameter("assignSurvey") != null)//assign selected surveys to selected patients
-   		{    System.out.println("/assign_volunteerSurvey...assign");	   		
+   		{       		
    			String[] selectedVolunteerIds = request.getParameterValues("volunteerId");
    			String assignToAll = request.getParameter("assignAllVolunteers");	   	   		   	   		
 	   	   		
@@ -3052,7 +3138,7 @@ public class TapestryController{
    				TapestryHelper.addSurveyTemplate(surveyTemplateIds,sTemplates, selectSurveyTemplats);   
    				StringBuffer sb = new StringBuffer();
    				sb.append(loginUser.getName());
-   				sb.append(" has assigned surveys to patients");
+   				sb.append(" has assigned surveys to volunteer");
    				String logDes = sb.toString();
    				
    				if ("true".equalsIgnoreCase(assignToAll))

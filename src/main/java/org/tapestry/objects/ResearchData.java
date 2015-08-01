@@ -2,15 +2,13 @@ package org.tapestry.objects;
 
 public class ResearchData {
 	private int patientId;
-	//survey ED5Q
-	private String eQ5D1_Mobility_TO;
-	private String eQ5D2_2Selfcare_TO;
-	private String eQ5D3_Usualact_TO;
-	private String eQ5D4_Pain_TO;
-	private String eQ5D5_Anxdep_TO;
-	private String eQ5D5_notes_TO;
-	private String eQ5D6_Healthstate_TO;
-	private String eQ5D6_Healthstate_notes_TO;
+	//survey ED5Q quality of life
+	private int qol1;
+	private int qol2;
+	private int qol3;
+	private int qol4;
+	private int qol5;
+	private int qol6;
 	//survey social life
 	private String dSS1_role_TO;
 	private String dSS2_under_TO;
@@ -42,6 +40,72 @@ public class ResearchData {
 	private String goals8Priority_TO;
 	private String goalsDiscussion_notes_TO;
 	
+	//survey daily life active
+	private String dla1;	
+	private String dla2;
+	private String dla3;
+	private String dla4;
+	private String dla5;
+	private String dla6;
+	private String dla7;
+	private String dla7a;
+	//RAPA
+	private int rapa1;
+	private int rapa2;
+	private int rapa3;
+	private int rapa4;
+	private int rapa5;
+	private int rapa6;
+	private int rapa7;
+	private int rapa8;
+	private int rapa9;
+	//memory
+	private int mem1;
+	private String mem2;
+	private int mem3;
+	private String mem4;
+	//advance directive
+	private int ad1;
+	private int ad2;
+	private int ad3;
+	//general health
+	private int gh1;
+	private int gh2;
+	private int gh3;
+	private int gh4;
+	private int gh5;
+	private int gh6;
+	private int gh7;
+	private int gh8;
+	private int gh9;
+	private int gh10;
+	private int gh11;
+	//mobility
+	private int mob1;
+	private int mob2;
+	private int mob3;
+	private int mob4;
+	private int mob5;
+	private int mob6;
+	//nutrition
+	private int nut1;
+	private int nut2;
+	private int nut3;
+	private int nut4;
+	private int nut5;
+	private int nut6;
+	private int nut7;
+	private int nut8;
+	private int nut9;
+	private int nut10;
+	private int nut11;
+	private int nut12;
+	private int nut13;
+	private int nut14;
+	private int nut15;
+	private int nut16;
+	private int nut17;
+	
 	public ResearchData(){
 		
 	}
@@ -52,54 +116,7 @@ public class ResearchData {
 	public void setPatientId(int patientId) {
 		this.patientId = patientId;
 	}
-	public String geteQ5D1_Mobility_TO() {
-		return eQ5D1_Mobility_TO;
-	}
-	public void seteQ5D1_Mobility_TO(String eQ5D1_Mobility_TO) {
-		this.eQ5D1_Mobility_TO = eQ5D1_Mobility_TO;
-	}
-	public String geteQ5D2_2Selfcare_TO() {
-		return eQ5D2_2Selfcare_TO;
-	}
-	public void seteQ5D2_2Selfcare_TO(String eQ5D2_2Selfcare_TO) {
-		this.eQ5D2_2Selfcare_TO = eQ5D2_2Selfcare_TO;
-	}
-	public String geteQ5D3_Usualact_TO() {
-		return eQ5D3_Usualact_TO;
-	}
-	public void seteQ5D3_Usualact_TO(String eQ5D3_Usualact_TO) {
-		this.eQ5D3_Usualact_TO = eQ5D3_Usualact_TO;
-	}
-	public String geteQ5D4_Pain_TO() {
-		return eQ5D4_Pain_TO;
-	}
-	public void seteQ5D4_Pain_TO(String eQ5D4_Pain_TO) {
-		this.eQ5D4_Pain_TO = eQ5D4_Pain_TO;
-	}
-	public String geteQ5D5_Anxdep_TO() {
-		return eQ5D5_Anxdep_TO;
-	}
-	public void seteQ5D5_Anxdep_TO(String eQ5D5_Anxdep_TO) {
-		this.eQ5D5_Anxdep_TO = eQ5D5_Anxdep_TO;
-	}
-	public String geteQ5D5_notes_TO() {
-		return eQ5D5_notes_TO;
-	}
-	public void seteQ5D5_notes_TO(String eQ5D5_notes_TO) {
-		this.eQ5D5_notes_TO = eQ5D5_notes_TO;
-	}
-	public String geteQ5D6_Healthstate_TO() {
-		return eQ5D6_Healthstate_TO;
-	}
-	public void seteQ5D6_Healthstate_TO(String eQ5D6_Healthstate_TO) {
-		this.eQ5D6_Healthstate_TO = eQ5D6_Healthstate_TO;
-	}
-	public String geteQ5D6_Healthstate_notes_TO() {
-		return eQ5D6_Healthstate_notes_TO;
-	}
-	public void seteQ5D6_Healthstate_notes_TO(String eQ5D6_Healthstate_notes_TO) {
-		this.eQ5D6_Healthstate_notes_TO = eQ5D6_Healthstate_notes_TO;
-	}
+
 	public String getdSS1_role_TO() {
 		return dSS1_role_TO;
 	}
@@ -262,4 +279,517 @@ public class ResearchData {
 	public void setGoalsDiscussion_notes_TO(String goalsDiscussion_notes_TO) {
 		this.goalsDiscussion_notes_TO = goalsDiscussion_notes_TO;
 	}
+	public String getDla1() {
+		return dla1;
+	}
+
+	public void setDla1(String dla1) {
+		this.dla1 = dla1;
+	}
+
+	public String getDla2() {
+		return dla2;
+	}
+
+	public void setDla2(String dla2) {
+		this.dla2 = dla2;
+	}
+
+	public String getDla3() {
+		return dla3;
+	}
+
+	public void setDla3(String dla3) {
+		this.dla3 = dla3;
+	}
+
+	public String getDla4() {
+		return dla4;
+	}
+
+	public void setDla4(String dla4) {
+		this.dla4 = dla4;
+	}
+
+	public String getDla5() {
+		return dla5;
+	}
+
+	public void setDla5(String dla5) {
+		this.dla5 = dla5;
+	}
+
+	public String getDla6() {
+		return dla6;
+	}
+
+	public void setDla6(String dla6) {
+		this.dla6 = dla6;
+	}
+
+	public String getDla7() {
+		return dla7;
+	}
+
+	public void setDla7(String dla7) {
+		this.dla7 = dla7;
+	}
+
+	public String getDla7a() {
+		return dla7a;
+	}
+
+	public void setDla7a(String dla7a) {
+		this.dla7a = dla7a;
+	}
+
+	public int getQol1() {
+		return qol1;
+	}
+
+	public void setQol1(int qol1) {
+		this.qol1 = qol1;
+	}
+
+	public int getQol2() {
+		return qol2;
+	}
+
+	public void setQol2(int qol2) {
+		this.qol2 = qol2;
+	}
+
+	public int getQol3() {
+		return qol3;
+	}
+
+	public void setQol3(int qol3) {
+		this.qol3 = qol3;
+	}
+
+	public int getQol4() {
+		return qol4;
+	}
+
+	public void setQol4(int qol4) {
+		this.qol4 = qol4;
+	}
+
+	public int getQol5() {
+		return qol5;
+	}
+
+	public void setQol5(int qol5) {
+		this.qol5 = qol5;
+	}
+
+	public int getQol6() {
+		return qol6;
+	}
+
+	public void setQol6(int qol6) {
+		this.qol6 = qol6;
+	}
+
+	public int getRapa1() {
+		return rapa1;
+	}
+
+	public void setRapa1(int rapa1) {
+		this.rapa1 = rapa1;
+	}
+
+	public int getRapa2() {
+		return rapa2;
+	}
+
+	public void setRapa2(int rapa2) {
+		this.rapa2 = rapa2;
+	}
+
+	public int getRapa3() {
+		return rapa3;
+	}
+
+	public void setRapa3(int rapa3) {
+		this.rapa3 = rapa3;
+	}
+
+	public int getRapa4() {
+		return rapa4;
+	}
+
+	public void setRapa4(int rapa4) {
+		this.rapa4 = rapa4;
+	}
+
+	public int getRapa5() {
+		return rapa5;
+	}
+
+	public void setRapa5(int rapa5) {
+		this.rapa5 = rapa5;
+	}
+
+	public int getRapa6() {
+		return rapa6;
+	}
+
+	public void setRapa6(int rapa6) {
+		this.rapa6 = rapa6;
+	}
+
+	public int getRapa7() {
+		return rapa7;
+	}
+
+	public void setRapa7(int rapa7) {
+		this.rapa7 = rapa7;
+	}
+
+	public int getRapa8() {
+		return rapa8;
+	}
+
+	public void setRapa8(int rapa8) {
+		this.rapa8 = rapa8;
+	}
+
+	public int getRapa9() {
+		return rapa9;
+	}
+
+	public void setRapa9(int rapa9) {
+		this.rapa9 = rapa9;
+	}
+
+	public int getMem1() {
+		return mem1;
+	}
+
+	public void setMem1(int mem1) {
+		this.mem1 = mem1;
+	}
+
+	public String getMem2() {
+		return mem2;
+	}
+
+	public void setMem2(String mem2) {
+		this.mem2 = mem2;
+	}
+
+	public int getMem3() {
+		return mem3;
+	}
+
+	public void setMem3(int mem3) {
+		this.mem3 = mem3;
+	}
+
+	public String getMem4() {
+		return mem4;
+	}
+
+	public void setMem4(String mem4) {
+		this.mem4 = mem4;
+	}
+
+	public int getAd1() {
+		return ad1;
+	}
+
+	public void setAd1(int ad1) {
+		this.ad1 = ad1;
+	}
+
+	public int getAd2() {
+		return ad2;
+	}
+
+	public void setAd2(int ad2) {
+		this.ad2 = ad2;
+	}
+
+	public int getAd3() {
+		return ad3;
+	}
+
+	public void setAd3(int ad3) {
+		this.ad3 = ad3;
+	}
+
+	public int getGh1() {
+		return gh1;
+	}
+
+	public void setGh1(int gh1) {
+		this.gh1 = gh1;
+	}
+
+	public int getGh2() {
+		return gh2;
+	}
+
+	public void setGh2(int gh2) {
+		this.gh2 = gh2;
+	}
+
+	public int getGh3() {
+		return gh3;
+	}
+
+	public void setGh3(int gh3) {
+		this.gh3 = gh3;
+	}
+
+	public int getGh4() {
+		return gh4;
+	}
+
+	public void setGh4(int gh4) {
+		this.gh4 = gh4;
+	}
+
+	public int getGh5() {
+		return gh5;
+	}
+
+	public void setGh5(int gh5) {
+		this.gh5 = gh5;
+	}
+
+	public int getGh6() {
+		return gh6;
+	}
+
+	public void setGh6(int gh6) {
+		this.gh6 = gh6;
+	}
+
+	public int getGh7() {
+		return gh7;
+	}
+
+	public void setGh7(int gh7) {
+		this.gh7 = gh7;
+	}
+
+	public int getGh8() {
+		return gh8;
+	}
+
+	public void setGh8(int gh8) {
+		this.gh8 = gh8;
+	}
+
+	public int getGh9() {
+		return gh9;
+	}
+
+	public void setGh9(int gh9) {
+		this.gh9 = gh9;
+	}
+
+	public int getGh10() {
+		return gh10;
+	}
+
+	public void setGh10(int gh10) {
+		this.gh10 = gh10;
+	}
+
+	public int getGh11() {
+		return gh11;
+	}
+
+	public void setGh11(int gh11) {
+		this.gh11 = gh11;
+	}
+
+	public int getMob1() {
+		return mob1;
+	}
+
+	public void setMob1(int mob1) {
+		this.mob1 = mob1;
+	}
+
+	public int getMob2() {
+		return mob2;
+	}
+
+	public void setMob2(int mob2) {
+		this.mob2 = mob2;
+	}
+
+	public int getMob3() {
+		return mob3;
+	}
+
+	public void setMob3(int mob3) {
+		this.mob3 = mob3;
+	}
+
+	public int getMob4() {
+		return mob4;
+	}
+
+	public void setMob4(int mob4) {
+		this.mob4 = mob4;
+	}
+
+	public int getMob5() {
+		return mob5;
+	}
+
+	public void setMob5(int mob5) {
+		this.mob5 = mob5;
+	}
+
+	public int getMob6() {
+		return mob6;
+	}
+
+	public void setMob6(int mob6) {
+		this.mob6 = mob6;
+	}
+
+	public int getNut1() {
+		return nut1;
+	}
+
+	public void setNut1(int nut1) {
+		this.nut1 = nut1;
+	}
+
+	public int getNut2() {
+		return nut2;
+	}
+
+	public void setNut2(int nut2) {
+		this.nut2 = nut2;
+	}
+
+	public int getNut3() {
+		return nut3;
+	}
+
+	public void setNut3(int nut3) {
+		this.nut3 = nut3;
+	}
+
+	public int getNut4() {
+		return nut4;
+	}
+
+	public void setNut4(int nut4) {
+		this.nut4 = nut4;
+	}
+
+	public int getNut5() {
+		return nut5;
+	}
+
+	public void setNut5(int nut5) {
+		this.nut5 = nut5;
+	}
+
+	public int getNut6() {
+		return nut6;
+	}
+
+	public void setNut6(int nut6) {
+		this.nut6 = nut6;
+	}
+
+	public int getNut7() {
+		return nut7;
+	}
+
+	public void setNut7(int nut7) {
+		this.nut7 = nut7;
+	}
+
+	public int getNut8() {
+		return nut8;
+	}
+
+	public void setNut8(int nut8) {
+		this.nut8 = nut8;
+	}
+
+	public int getNut9() {
+		return nut9;
+	}
+
+	public void setNut9(int nut9) {
+		this.nut9 = nut9;
+	}
+
+	public int getNut10() {
+		return nut10;
+	}
+
+	public void setNut10(int nut10) {
+		this.nut10 = nut10;
+	}
+
+	public int getNut11() {
+		return nut11;
+	}
+
+	public void setNut11(int nut11) {
+		this.nut11 = nut11;
+	}
+
+	public int getNut12() {
+		return nut12;
+	}
+
+	public void setNut12(int nut12) {
+		this.nut12 = nut12;
+	}
+
+	public int getNut13() {
+		return nut13;
+	}
+
+	public void setNut13(int nut13) {
+		this.nut13 = nut13;
+	}
+
+	public int getNut14() {
+		return nut14;
+	}
+
+	public void setNut14(int nut14) {
+		this.nut14 = nut14;
+	}
+
+	public int getNut15() {
+		return nut15;
+	}
+
+	public void setNut15(int nut15) {
+		this.nut15 = nut15;
+	}
+
+	public int getNut16() {
+		return nut16;
+	}
+
+	public void setNut16(int nut16) {
+		this.nut16 = nut16;
+	}
+
+	public int getNut17() {
+		return nut17;
+	}
+
+	public void setNut17(int nut17) {
+		this.nut17 = nut17;
+	}
+	
+	
 }

@@ -113,6 +113,11 @@ public class SurveyManagerImpl implements SurveyManager {
 	}
 
 	@Override
+	public int getSurveyIdByTitle(String title, int site) {
+		return surveyTemplateDao.getSurveyIdByTitle(title, site);
+	}
+
+	@Override
 	public List<SurveyTemplate> getAllSurveyTemplates() {
 		return surveyTemplateDao.getAllSurveyTemplates();
 	}
@@ -291,6 +296,5 @@ public class SurveyManagerImpl implements SurveyManager {
 	public List<SurveyResult> getVolunteerSurveyResultsById(int volunteerId) {		
 		return surveyResultDao.getVolunteerSurveyResultsById(volunteerId);
 	}
-
 
 }

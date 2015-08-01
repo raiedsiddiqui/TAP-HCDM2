@@ -71,6 +71,13 @@ public interface SurveyManager {
 	@Transactional
 	public int getSurveyIdByTitle(String title);
 	
+	/**	 * 
+	 * @param title
+	 * @return surveyId
+	 */
+	@Transactional
+	public int getSurveyIdByTitle(String title, int site);
+	
 	/**
 	 * Uploads a survey template to the database
 	 * @param st

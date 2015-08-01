@@ -85,6 +85,12 @@ public class SurveyTemplateDAOImpl extends JdbcDaoSupport implements SurveyTempl
 	}
 
 	@Override
+	public int getSurveyIdByTitle(String title, int site) {
+		String sql = "SELECT survey_ID FROM surveys WHERE title=? AND site=?";
+		return getJdbcTemplate().queryForInt(sql, new Object[] {title, site});
+	}
+
+	@Override
 	public void uploadSurveyTemplate(SurveyTemplate st) {
 		String sql = "INSERT INTO surveys (title, type, contents, priority, description, site, isDefault) values (?,?,?,?,?,?,?)";
 		getJdbcTemplate().update(sql, st.getTitle(), st.getType(), st.getContents(), st.getPriority(), st.getDescription(), st.getSite(), st.isDefaultSurvey());
@@ -231,7 +237,5 @@ public class SurveyTemplateDAOImpl extends JdbcDaoSupport implements SurveyTempl
 		getJdbcTemplate().update(sb.toString());
 	}
 
-
-	
 
 }

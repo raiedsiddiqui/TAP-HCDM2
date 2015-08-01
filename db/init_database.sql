@@ -1,6 +1,8 @@
-/*CREATE DATABASE IF NOT EXISTS survey_app;
+/*
+CREATE DATABASE IF NOT EXISTS survey_app;
 USE survey_app;
 */
+
 CREATE DATABASE IF NOT EXISTS tapestry_db;
 USE tapestry_db;
 

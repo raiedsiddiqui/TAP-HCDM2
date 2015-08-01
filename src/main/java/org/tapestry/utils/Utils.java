@@ -17,6 +17,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.commons.lang.math.*;
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
@@ -371,6 +372,10 @@ public class Utils {
 		if (index != (-1))
 			strSource = strSource.substring(0, index); 
 		return strSource;
+	}
+	
+	public static boolean isNumeric(String str){
+		return NumberUtils.isNumber(str);
 	}
 	
 }
