@@ -49,6 +49,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"></meta>
 
 	<%@include file="/volunteer/volunteer_head.jsp" %>
+	<script src="${pageContext.request.contextPath}/resources/js/vscale/vscale.js"></script>
 	<style type="text/css">
 		.row-fluid{
 			margin:10px;
@@ -228,7 +229,7 @@
 					
             		
             		<div class="row">
-            			<div id="qtext" class="col-md-12 animated fadeIn">
+            			<div id="qtext" class="col-md-12">
 	           				<%
 	           					String questionText = question.getQuestionTextRenderKeys(survey);
 	            				//put enterspaces into the text, except if the <script tag is unclosed (allows javascript)
@@ -255,6 +256,7 @@
 							%>
 							
 	            			<%=questionText%>
+	            			<div id="externalsurveycode"></div>
             			</div>
             		</div>
 
@@ -349,11 +351,11 @@
 	                		
 
 	                	
-	                		<!-- <div class="col-md-4">
+	                		<div class="col-md-4">
 		                		<c:if test="${not hideObservernote}">
 		                			<a href="#modalObserverNotes" data-toggle="modal" id="observernote">Observer Notes</a>
 		                		</c:if>
-	                		</div> -->
+	                		</div>
 
 
 	                		<div class="col-md-4"> 
