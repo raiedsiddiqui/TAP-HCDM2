@@ -1146,10 +1146,8 @@ public class VolunteerController {
    		if ("ROLE_ADMIN".equalsIgnoreCase(user.getRole())){//For central Admin
    			allUpcomingAppointments = appointmentManager.getAllUpcomingAppointments(); 
    			allPatients = patientManager.getAllPatients(); 
-   			allPastAppointments = appointmentManager.getAllPastAppointments();
-   			allPendingAppointments = appointmentManager.getAllPendingAppointments();
-   		
-   			
+   			allPastAppointments = appointmentManager.getAllPastAppointments();   			   			
+   			allPendingAppointments = appointmentManager.getAllPendingAppointments();   			
    		}
    		else {//For local Admin
    			int organizationId = user.getOrganization();   			
@@ -1157,10 +1155,11 @@ public class VolunteerController {
    			allUpcomingAppointments = appointmentManager.getUpcomingAppointmentsGroupByOrganization(organizationId);     			 			
    			allPastAppointments = appointmentManager.getPastAppointmentsGroupByOrganization(organizationId);
    			allPendingAppointments = appointmentManager.getPendingAppointmentsGroupByOrganization(organizationId);   			
-   			allPatients = patientManager.getPatientsBySite(user.getSite());
-   			
-   	
-   		}   		
+   			allPatients = patientManager.getPatientsBySite(user.getSite());   			   	
+   		}   
+   		
+   		for(int jj=0;jj<allPastAppointments.size(); jj++)
+   			System.out.println("past appointment patientId === " + jj + " == " + allPastAppointments.get(jj).getPatientID());
    
 		model.addAttribute("upcomingAppointments", allUpcomingAppointments);
    		model.addAttribute("pastAppointments", allPastAppointments);   		

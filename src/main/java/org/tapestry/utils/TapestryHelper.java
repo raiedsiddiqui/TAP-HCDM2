@@ -3914,18 +3914,63 @@ public class TapestryHelper {
 				{
 					size = displayedResults.size();
 					rData.setMob1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
-					rData.setMob2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
-					rData.setMob3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
-					
-					if (size == 4)
-						rData.setMob4(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+					if (size == 3)
+					{	//a2a, a3a, a4a					
+						rData.setMob3(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
+						rData.setMob5(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+					}
+					else if (size == 4)
+					{						
+						if (displayedResults.get(0).getQuestionAnswer().equals("1"))
+						{	//a2a, a2b, a3a, a4a			
+							rData.setMob2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
+							rData.setMob3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+							rData.setMob5(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));													
+						}
+						else 
+						{
+							rData.setMob3(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));							
+							if(displayedResults.get(1).getQuestionAnswer().equals("1"))
+							{//a2a, a3a, a3b, a4a
+								rData.setMob4(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+								rData.setMob5(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+							}
+							else
+							{//a2a, a3a, a4a, a4b
+								rData.setMob5(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+								rData.setMob6(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+							}							
+						}						
+					}
 					else if(size == 5)
 					{
-						rData.setMob4(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
-						rData.setMob5(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
+						if (displayedResults.get(0).getQuestionAnswer().equals("1"))
+						{
+							rData.setMob2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
+							rData.setMob3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+							if (displayedResults.get(2).getQuestionAnswer().equals("1"))
+							{//a2a, a2b, a3a, a3b, a4a								
+								rData.setMob4(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+								rData.setMob5(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
+							}
+							else
+							{//a2a, a2b, a3a, a4a, a4b
+								rData.setMob5(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+								rData.setMob6(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
+							}
+						}
+						else
+						{//a2a, a3a, a3b, a4a, a4b
+							rData.setMob3(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
+							rData.setMob4(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+							rData.setMob5(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+							rData.setMob6(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
+						}
 					}
 					else if(size == 6)
-					{
+					{						
+						rData.setMob2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
+						rData.setMob3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
 						rData.setMob4(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
 						rData.setMob5(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
 						rData.setMob6(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));	

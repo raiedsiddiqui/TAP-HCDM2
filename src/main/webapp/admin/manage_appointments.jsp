@@ -5,12 +5,6 @@
 <head>
 	<title>Tapestry Admin</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
-
-
-<!-- 		<link href="${pageContext.request.contextPath}/resources/css/bootstrap-responsive.min.css" rel="stylesheet" />  
- 	
- 	<link href="${pageContext.request.contextPath}/resources/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />-->
-
 	
 	<style type="text/css">
 		.row-fluid{
@@ -61,96 +55,9 @@
 			 		<c:out value="${noMachedTime}" />
 			 	</div>
 			 </c:if>
-			
-			<!--<div class="panel-group" id="accordian">
-			<c:forEach items="${patients}" var="p">
-				
-				<div class="panel panel-default">
-					<div class="panel-heading">
-				    	<h4 class="panel-title">
-				    		<a class="accordion-toggle" data-toggle="collapse" href="#collapse${p.firstName}${p.lastName}">
-				        	${p.displayName}
-				      	</a>
-				      </h4>
-				    </div>
-				    <div id="collapse${p.firstName}${p.lastName}" class="panel-collapse collapse">
-				    	<div class="accordion-inner">
-				    		<div class="accordion-group">
-				    			<c:forEach items="${appointments}" var="a">
-				    				<c:if test="${p.patientID == a.patientID}">
-										<a href="<c:url value="/delete_appointment/${a.appointmentID}"/>" class="btn btn-danger pull-right btn-sm">Delete</a>
-										<a href="<c:url value="/decline_appointment/${a.appointmentID}"/>" class="btn btn-warning pull-right btn-sm">Decline</a>
-										
-										<a href="<c:url value="/approve_appointment/${a.appointmentID}"/>" class="btn btn-primary pull-right btn-sm">Approve</a>
-										<div class="accordion-heading">
-									    	<a class="accordion-toggle" data-toggle="collapse" href="#collapse${a.appointmentID}">${a.date} ${a.time}   (${a.status})</a>
-									    </div>
-									    
-									    <div id="collapse${a.appointmentID}" class="accordion-body collapse">
-				    						<div class="accordion-inner">
-				    							<c:if test="${a.completed}">
-					    							<c:choose>
-					    								<c:when test="${a.contactedAdmin}">
-					    									Volunteer contacted Ernie<br /><br />
-					    								</c:when>
-					    								<c:otherwise>
-					    									Volunteer did not contact Ernie<br /><br />
-					    								</c:otherwise>
-					    							</c:choose>
-					    							<c:if test="${not empty a.comments}">
-					    								Comments: ${a.comments} <br /><br />
-					    							</c:if>
-					    							Activites Completed:<br />
-					    							<c:forEach items="${activities}" var="act">
-					    								<c:if test="${a.appointmentID == act.appointment}">
-					    									<h2>${act.time}: ${act.description}</h2> <br />
-					    								</c:if>
-					    							</c:forEach>
-					    						</c:if>
-				    						</div>
-				    					</div>
-				    				</c:if>
-				    			</c:forEach>
-				    		</div>
-				    	</div>
-				    </div>
-				</div>
-			</c:forEach> -->
+	
 			<br />
-<!-- 			<a href="#bookAppointment" class="btn btn-primary" data-toggle="modal">Book new appointment</a>
- -->				    									
-			<!-- <table class="table">
-				<tr>
-					<th>Volunteer</th>
-					<th>Patient</th>
-					<th>Time</th>
-					<th>Status</th>
-					<th>Incomplete/Complete</th>
-					<th>Comments</th>
-					<th>Approve</th>
-					<th>Decline</th>
-					<th>Delete</th>
-				</tr>
-				<c:forEach items="${appointments}" var="a">
-				<tr>
-					<td>${a.volunteer}</td>
-					<td>${a.patient}</td>
-					<td>${a.date} ${a.time}</td>
-					<td>${a.status}</td>
-					<td><c:choose>
-						<c:when test="${!a.completed}">Incomplete</c:when>
-						<c:otherwise>Complete</c:otherwise>
-						</c:choose></td>
-					<td>${a.comments}</td>
-					<td><a href="<c:url value="/approve_appointment/${a.appointmentID}"/>" class="btn btn-primary">Approve</a></td>
-					<td><a href="<c:url value="/decline_appointment/${a.appointmentID}"/>" class="btn btn-danger">Decline</a></td>
-					<td><a href="<c:url value="/delete_appointment/${a.appointmentID}"/>" class="btn btn-danger">Delete</a></td>
-				</tr>
-				</c:forEach>
-			</table>
-			<a href="#bookAppointment" class="btn btn-primary" data-toggle="modal">Book new appointment</a>
-		</div>
-	</div> -->
+
 	<div class="bs-example bs-example-tabs">
     <ul id="myTab" class="nav nav-tabs">
 	      <li class="active"><a href="#home" data-toggle="tab">Upcoming Appointments</a></li>
@@ -183,56 +90,43 @@
         			<td>Approve/Decline</td>
         			<td>Delete</td>
         		</tr>
-
         		<c:forEach items="${upcomingAppointments}" var="a">
-        			<!-- <c:forEach items="${patients}" var="p"> -->
-        				
-							<c:if test="${p.patientID == a.patientID}">	
-			        			<tr>
-				        			<td>
-				        				<!--  a>${p.firstName} ${p.lastName}</a>-->
-				        				<a href="<c:url value="/display_appointment/${a.appointmentID}"/>">${a.patient}</a>
-								    </td>
-							    	<td>	    				
-										${a.date}  				    				
-							    	</td>
-							    	<td>
-							    		${a.time}
-							    	</td>
-							    	<td>
-							    		${a.volunteer}, ${a.partner}
-							    	</td>
-
-							    	<td>
-										${a.status}
-							    	</td>
-							    	<td>
-							    		<c:if test="${not empty a.comments}">
-					    					${a.comments}
-					    				</c:if>
-							    	</td>
-							    	<!--<td>
-							    		${act.time}: ${act.description}
-							    	</td>-->
-
-							    	<td>
-							    		<c:if test="${a.status == 'Approved'}">
-							    				<a href="<c:url value="/decline_appointment/${a.appointmentID}"/>" class="btn btn-warning">Decline</a>
-							    		</c:if>	
-
-							    		<c:if test="${a.status == 'Declined'}">
-											<a href="<c:url value="/approve_appointment/${a.appointmentID}"/>" class="btn btn-primary">Approve</a>
-							    		</c:if>	
-
-							    	</td>
-
-									<td><a href="<c:url value="/delete_appointment/${a.appointmentID}"/>" class="">Delete</a></td>
-
-							    </tr>
-					    </c:if>
-				     <!-- </c:forEach>-->
-				</c:forEach>
-        		
+        			<tr>
+				    	<td>
+				    		<!--  a>${p.firstName} ${p.lastName}</a>-->
+				    		<a href="<c:url value="/display_appointment/${a.appointmentID}"/>">${a.patient}</a>
+					    </td>
+					   	<td>	    				
+							${a.date}  				    				
+					   	</td>
+					   	<td>
+					   		${a.time}
+					   	</td>
+					  	<td>
+					   		${a.volunteer}, ${a.partner}
+					   	</td>
+				    	<td>
+							${a.status}
+				    	</td>
+				    	<td>
+				    		<c:if test="${not empty a.comments}">
+		    					${a.comments}
+		    				</c:if>
+				    	</td>
+				    	<!--<td>
+				    		${act.time}: ${act.description}
+				    	</td>-->
+				    	<td>
+				    		<c:if test="${a.status == 'Approved'}">
+			    				<a href="<c:url value="/decline_appointment/${a.appointmentID}"/>" class="btn btn-warning">Decline</a>
+				    		</c:if>	
+				    		<c:if test="${a.status == 'Declined'}">
+								<a href="<c:url value="/approve_appointment/${a.appointmentID}"/>" class="btn btn-primary">Approve</a>
+				    		</c:if>	
+				    	</td>
+						<td><a href="<c:url value="/delete_appointment/${a.appointmentID}"/>" class="">Delete</a></td>
+				    </tr>					  
+				</c:forEach>      		
         	</table>
 
 		</div>
@@ -247,22 +141,20 @@
 				<th width = "200"> Status</th>				
 			</tr>
 			<c:forEach items="${pastAppointments}" var="pa">			
-				<c:if test="${p.patientID == pa.patientID}">
-					<tr>					
-						<td> <a href="<c:url value="/display_appointment/${pa.appointmentID}"/>">${pa.patient}</a></td>
-						<td> ${pa.volunteer}, ${pa.partner}</td>
-						<td> ${pa.date}</td>
-						<td>
-				    		<c:if test="${not empty pa.comments}">
-		    					${pa.comments}
-		    				</c:if>
-						</td>					
-						<td>
-							<c:if test="${pa.completed eq true}"><span style="color:green">Completed</span></c:if>
-							<c:if test="${pa.completed eq false}"><span style="color:red">Incompleted</span></c:if>						
-						</td>					
-					</tr>
-				</c:if>			
+				<tr>					
+					<td> <a href="<c:url value="/display_appointment/${pa.appointmentID}"/>">${pa.patient}</a></td>
+					<td> ${pa.volunteer}, ${pa.partner}</td>
+					<td> ${pa.date}</td>
+					<td>
+				   		<c:if test="${not empty pa.comments}">
+		    				${pa.comments}
+		    			</c:if>
+					</td>					
+					<td>
+						<c:if test="${pa.completed eq true}"><span style="color:green">Completed</span></c:if>
+						<c:if test="${pa.completed eq false}"><span style="color:red">Incompleted</span></c:if>						
+					</td>					
+				</tr>
 			</c:forEach>		
 		</table>
     </div>
@@ -288,49 +180,6 @@
 		</table>
     </div>
  </div>
-<!--       <div class="tab-pane fade" id="dropdown1">
-        <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork. Williamsburg banh mi whatever gluten-free, carles pitchfork biodiesel fixie etsy retro mlkshk vice blog. Scenester cred you probably haven't heard of them, vinyl craft beer blog stumptown. Pitchfork sustainable tofu synth chambray yr.</p>
-      </div>
-      <div class="tab-pane fade" id="dropdown2">
-        <p>Trust fund seitan letterpress, keytar raw denim keffiyeh etsy art party before they sold out master cleanse gluten-free squid scenester freegan cosby sweater. Fanny pack portland seitan DIY, art party locavore wolf cliche high life echo park Austin. Cred vinyl keffiyeh DIY salvia PBR, banh mi before they sold out farm-to-table VHS viral locavore cosby sweater. Lomo wolf viral, mustache readymade thundercats keffiyeh craft beer marfa ethical. Wolf salvia freegan, sartorial keffiyeh echo park vegan.</p>
-      </div> -->
- 
-	<!-- OLD Modal -->
-<!-- 	<div id="bookAppointment" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modalHeader" aria-hidden="true">
-  		<div class="modal-header">
-    		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-    		<h3 id="modalHeader">Book Appointment</h3>
-  		</div>
-  		<div class="modal-body">
-  			<form id="appt-form" method="post" action="<c:url value="/book_appointment"/>">
-  				<label>With patient:</label>
-				<select name="patient" form="appt-form">
-					<c:forEach items="${patients}" var="p">
-					<option value="${p.patientID}">${p.displayName}</option>
-					</c:forEach>
-				</select><br />
-				<label>Date:</label>		
-				<div id="dp" class="input-append">
-					<input data-format="yyyy-MM-dd" type="text" name="appointmentDate" readonly>
-					<span class="add-on">
-						<i class="icon-calendar"></i>
-					</span>
-				</div>
-				<label>Time:</label>
-				<div id="tp" class="input-append">
-					<input data-format="hh:mm:00" type="text" name="appointmentTime" readonly>
-				    <span class="add-on">
-				    	<i class="icon-time"></i>
-				    </span>
-				</div>
-  			</form>
-  		</div>
-  		<div class="modal-footer">
-    		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-    		<button id="bookAppt" data-loading-text="Loading..." type="submit" value="Book" form="appt-form" class="btn btn-primary">Book</button>
-  		</div>
-	</div> -->
-<!-- OLD Modal -->
 
 
 <div class="modal fade" id="bookAppointment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
