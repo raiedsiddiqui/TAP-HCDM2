@@ -82,11 +82,11 @@ public class ResearchData {
 	private int gh11;
 	//mobility
 	private int mob1;
-	private int mob2;
+	private String mob2;
 	private int mob3;
-	private int mob4;
+	private String mob4;
 	private int mob5;
-	private int mob6;
+	private String mob6;
 	//nutrition
 	private int nut1;
 	private int nut2;
@@ -615,11 +615,11 @@ public class ResearchData {
 		this.mob1 = mob1;
 	}
 
-	public int getMob2() {
+	public String getMob2() {
 		return mob2;
 	}
 
-	public void setMob2(int mob2) {
+	public void setMob2(String mob2) {
 		this.mob2 = mob2;
 	}
 
@@ -631,11 +631,11 @@ public class ResearchData {
 		this.mob3 = mob3;
 	}
 
-	public int getMob4() {
+	public String getMob4() {
 		return mob4;
 	}
 
-	public void setMob4(int mob4) {
+	public void setMob4(String mob4) {
 		this.mob4 = mob4;
 	}
 
@@ -647,11 +647,11 @@ public class ResearchData {
 		this.mob5 = mob5;
 	}
 
-	public int getMob6() {
+	public String getMob6() {
 		return mob6;
 	}
 
-	public void setMob6(int mob6) {
+	public void setMob6(String mob6) {
 		this.mob6 = mob6;
 	}
 

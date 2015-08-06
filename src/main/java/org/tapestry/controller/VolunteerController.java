@@ -1150,16 +1150,12 @@ public class VolunteerController {
    			allPendingAppointments = appointmentManager.getAllPendingAppointments();   			
    		}
    		else {//For local Admin
-   			int organizationId = user.getOrganization();   			
-   			
+   			int organizationId = user.getOrganization();     			
    			allUpcomingAppointments = appointmentManager.getUpcomingAppointmentsGroupByOrganization(organizationId);     			 			
    			allPastAppointments = appointmentManager.getPastAppointmentsGroupByOrganization(organizationId);
    			allPendingAppointments = appointmentManager.getPendingAppointmentsGroupByOrganization(organizationId);   			
    			allPatients = patientManager.getPatientsBySite(user.getSite());   			   	
-   		}   
-   		
-   		for(int jj=0;jj<allPastAppointments.size(); jj++)
-   			System.out.println("past appointment patientId === " + jj + " == " + allPastAppointments.get(jj).getPatientID());
+   		}
    
 		model.addAttribute("upcomingAppointments", allUpcomingAppointments);
    		model.addAttribute("pastAppointments", allPastAppointments);   		
