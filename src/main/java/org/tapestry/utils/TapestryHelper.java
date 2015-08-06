@@ -4040,6 +4040,8 @@ public class TapestryHelper {
 				
 				if (!displayedResults.isEmpty())
 				{					
+					System.out.println("patient's ID is === "+ sr.getPatientID());
+					
 					rData.setDla1(displayedResults.get(0).getQuestionAnswer());
 					rData.setDla2(displayedResults.get(1).getQuestionAnswer());
 					rData.setDla3(displayedResults.get(2).getQuestionAnswer());
