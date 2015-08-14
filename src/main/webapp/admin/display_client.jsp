@@ -15,7 +15,11 @@
 		}
 	</style>
 	<script type="text/javascript">
-
+	function passSurveyResultId(id)
+	{
+		document.getElementById("hSurveyResultId").value = id;
+		
+	}
  
 	</script>
 
@@ -108,7 +112,7 @@
 		</table>
  
 	<h2>Upcoming Visits</h2>
-	<a href="<c:url value="/book_appointment"/>" class="btn btn-primary">Book Appointment</a>
+	<a href="<c:url value="/book_appointment"/>" class="btn btn-primary">Book Appointment</a>	
 	<table  class="table table-striped" width="970" border="1">
 		<tr>			
 			<th width="500">Visit Date</th>			
@@ -121,9 +125,7 @@
 		</tr>
 		</c:forEach>
 	</table>
-	<h2>Completed Visits</h2><c:if test="${goCompleteVisits}">
-							<a href="#complete_visit" class="btn btn-primary" data-toggle="modal">Complete Visits</a>
-						</c:if>
+	<h2>Completed Visits</h2>
 	<table  class="table table-striped" width="970" border="1">
 		<tr>
 			<th width="300">Visit #</th>
@@ -146,6 +148,9 @@
 		</tr>
 		</c:forEach>
 	</table>	
+	<c:if test="${not empty unCompletedVisits}">
+		<a id="unCompleteVisitBtn" href="#modalUnCompleteVisit" role="button" class="btn btn-primary" data-toggle="modal">UnCompleted Visits</a>	
+	</c:if>
 	<h2>Surveys <a href="<c:url value="/go_assign_survey/${patient.patientID}"/>">Assign Survey</a> </h2>
 	
 	<c:if test="${showReport}">
@@ -159,6 +164,7 @@
 			<th>Completed Status</th>
 			<th>Delete</th>
 			<th>Results</th>
+			<!--  th>Complete Survey</th>-->
 		</tr>
 		<c:forEach items="${surveys}" var="s">
 		<tr >
@@ -178,47 +184,80 @@
 					</c:otherwise>
 				</c:choose>
 			</td>
+			<!--  td>
+				<c:if test="${not s.completed}">
+					<a href="<c:url value="/complete_survey_results/${s.resultID}?patientId=${patient.patientID}"/>" class="btn btn-success">Complete Survey</a>
+					<a id="completeBtn" href="#modalCompleteSurvey" role="button" class="lgbtn" data-toggle="modal" onclick="passSurveyResultId(${s.resultID})">Complete</a>
+				</c:if>				
+			</td>-->
 		</tr>
 		</c:forEach>
 	</table>
 	<hr>	
 </div>
 </div>
-
-
-<div class="modal fade" id="#complete_visit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+<!--
+<div class="modal fade" id="modalCompleteSurvey" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-    		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-    		<h3 id="modalHeader">Add Patient</h3>
-  		</div>
-  		<div class="modal-body">
-  			<form id="complete_visit" method="post" action="<c:url value="/complete_visit_admin"/>">
-  				<div class="row form-group">
-  				<tr>			
-					<th width="500">Visit Date</th>			
-					<th>Assigned Volunteers</th>	
-					<th>Action</th>		
-				</tr>
-  					<c:forEach items="${uncompleteSurveys}" var="us">
-						<tr >							
-							<td>${us.date}</td>			
-							<td>${us.volunteer},&nbsp &nbsp ${us.partner}</td>	
-							<td align="center"> <input type="checkbox" name="completeVisitByAdmin" value="checked" ></td>	
-														
-						</tr>
-						</c:forEach>
-  				</div>
-			</form>
-  		</div>
-  		<div class="modal-footer">
-    		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-			<input class="btn btn-primary" form="complete_visit" type="submit" value="Update" />
-  		</div>
-  	</div>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">
+			
+        </h4>
+      </div>
+      <div class="modal-body">
+      	<form id="completSurveyFrm" method="post" action="<c:url value="/complete_survey_results/${patient.patientID}"/>">
+      		<label>Complete Survey Notes:</label>
+			<textarea class="form-control" name="noteBody" id="noteBody"></textarea><br />		
+			<input type="hidden" id="hSurveyResultId" name="hSurveyResultId" value=""/>
+		</form>
+      </div>
+      
+      <div class="modal-footer">      
+      	<input type="submit" form="completSurveyFrm" class="btn btn-primary" value="Submit" />
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
   </div>
-</div>
+</div>-->
+ 
+<div class="modal fade" id="modalUnCompleteVisit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">
+			
+        </h4>
+      </div>
+      <div class="modal-body">
+      	<h2>UnCompleted Visits</h2>
+		<table  class="table table-striped" width="970" border="1">
+			<tr>
+				<th width="300">Visit #</th>
+				<th width="300"> Visit Date</th>		
+				<th>Assigned Volunteers</th>
+				<th>Action</th>					
+			</tr>
+			<c:forEach items="${unCompletedVisits}" var="uv">
+			<tr >
+				<td>${uv.appointmentID}</td>	
+				<td>${uv.date}</td>			
+				<td>${uv.volunteer},&nbsp &nbsp ${cVistits.partner}</td>		
+				<td><a href="<c:url value="/complete_visit_byAdmin/${uv.appointmentID}?patientId=${patient.patientID}"/>" class="btn btn-success">Complete Visit</a>
+				</td>				
+			</tr>
+			</c:forEach>
+		</table>	
+      </div>
+      
+      <div class="modal-footer">       
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div> 
 
 </body>
 </html>

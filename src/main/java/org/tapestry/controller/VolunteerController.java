@@ -2053,11 +2053,20 @@ public class VolunteerController {
 		}		
 	}
 	
-	@RequestMapping(value="/complete_visit_admin/{appointment_id}", method=RequestMethod.POST)
-	public String completeVisitByAdmin(@PathVariable("appointment_id") int id, SecurityContextHolderAwareRequestWrapper request, 
-			ModelMap model) {
+	@RequestMapping(value="/complete_visit_byAdmin/{appointmentId}", method=RequestMethod.GET)
+	public String completeVisitByAdmin(@PathVariable("appointmentId") int id, SecurityContextHolderAwareRequestWrapper request, 
+			@RequestParam(value="patientId", required=true) int patientId, ModelMap model) 
+	{
 		appointmentManager.completeAppointment(id);
-		return "aal";
+		
+   		User loggedInUser = TapestryHelper.getLoggedInUser(request);
+   		StringBuffer sb = new StringBuffer();
+   		sb.append(loggedInUser.getName());
+   		sb.append(" has completed Appointment # ");
+   		sb.append(id);
+   		userManager.addUserLog(sb.toString(), loggedInUser);
+			
+   		return "redirect:/display_client/" + patientId;		
 	}
 	
 	@RequestMapping(value="/complete_visit/{appointment_id}", method=RequestMethod.POST)

@@ -20,7 +20,11 @@ public interface AppointmentDAO {
      */
     public List<Appointment> getAllUpcomingAppointments();
     
-    
+    /**     * 
+     * @param id
+     * @return all uncompleted appointments
+     */
+    public List<Appointment> getAllUnCompletedAppointmentsForPatient(int id);
     
     /**
      * 

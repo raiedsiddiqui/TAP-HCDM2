@@ -197,8 +197,7 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 	@Override
 	public List<String> getResearchIds() {
 		String sql = "SELECT research_ID FROM patients";
-		getJdbcTemplate().queryForList(sql, String.class);
-		return null;
+		return getJdbcTemplate().queryForList(sql, String.class);		 
 	}
 
 	class PatientMapper implements RowMapper<Patient> {

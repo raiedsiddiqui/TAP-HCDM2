@@ -202,6 +202,12 @@ public class SurveyTemplateDAOImpl extends JdbcDaoSupport implements SurveyTempl
 		String sql = "SELECT * FROM volunteer_surveys WHERE survey_ID=?";
 		return getJdbcTemplate().queryForObject(sql, new Object[]{id}, new VolunteerSurveyTemplateMapper());
 	}
+	
+	@Override
+	public List<String> getSurveyTemplateTitlesBySite(int siteId) {
+		String sql = "SELECT title FROM surveys";
+		return getJdbcTemplate().queryForList(sql, String.class);	
+	}
 
 	@Override
 	public void setDefaultSurveyTemplate(String[] surveyIds) {
@@ -236,6 +242,7 @@ public class SurveyTemplateDAOImpl extends JdbcDaoSupport implements SurveyTempl
 		
 		getJdbcTemplate().update(sb.toString());
 	}
+
 
 
 }

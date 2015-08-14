@@ -148,6 +148,14 @@ public interface AppointmentManager {
      */
 	@Transactional
     public List<Appointment> getAllCompletedAppointmentsForPatient(int patientId);
+	
+	/**
+     * get all uncompleted appointment filtered by patient
+     * @param patientId
+     * @return a List of Appointment object
+     */
+	@Transactional
+	public List<Appointment> getAllUnCompletedAppointmentsForPatient(int patientId);
     
     /**
      * recent approved, not completed appointments filtered by patient

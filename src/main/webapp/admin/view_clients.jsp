@@ -22,6 +22,7 @@
 			function printTable(){
 				$('.table').printThis();
 			}
+		
 		</script>
 </head>
 <body>

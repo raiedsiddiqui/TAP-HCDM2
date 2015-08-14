@@ -749,9 +749,13 @@ public class TapestryController{
 			model.addAttribute("sites", sites);
 		}
 		else
-			clinics = organizationManager.getClinicsBySite(loggedInUser.getSite());
-			
+			clinics = organizationManager.getClinicsBySite(loggedInUser.getSite());			
 		model.addAttribute("clinics", clinics);
+		
+		List<String> existResearchIds = patientManager.getResearchIds();
+		existResearchIds.removeAll(Collections.singleton(""));
+		String ids = existResearchIds.toString().trim();
+		model.addAttribute("researchIds", ids);
 
 		return "admin/add_client";
 	}
@@ -848,11 +852,8 @@ public class TapestryController{
 			//Auto assign all existing surveys			
 			List<SurveyTemplate> surveyTemplates;
 			int site = loggedInUser.getSite();
-			if (site == 0)//central admin
-			{
+			if (site == 0)//central admin			{
 				site = Integer.parseInt(request.getParameter("site"));
-			
-			System.out.println("site "+ site);}
 			
 			surveyTemplates = surveyManager.getDefaultSurveyTemplatesBySite(site);
 	   		
@@ -1105,7 +1106,7 @@ public class TapestryController{
 		else
 			patients = patientManager.getPatientsBySite(user.getSite());				
 		
-		model.addAttribute("patients", patients);
+		model.addAttribute("patients", patients);	
 		
 		if (session.getAttribute("unread_messages") != null)
 			model.addAttribute("unread", session.getAttribute("unread_messages"));
@@ -1174,21 +1175,21 @@ public class TapestryController{
 		appointments = appointmentManager.getAllCompletedAppointmentsForPatient(id);
 		model.addAttribute("completedVisits", appointments);
 		
+		appointments = new ArrayList<Appointment>();
+		appointments = appointmentManager.getAllUnCompletedAppointmentsForPatient(id);
+		model.addAttribute("unCompletedVisits", appointments);
+		
 		List<SurveyResult> surveys = surveyManager.getSurveysByPatientID(id);
 		model.addAttribute("surveys", surveys);
 		
 		int site = organizationManager.getSiteByClinic(patient.getClinic());
-		int totalSurveys = surveyManager.countSurveyTemplateBySite(site);
-		int totalCompletedSurveys = surveyManager.countCompletedSurveys(id);
-		
-//		if ((totalSurveys-1) == totalCompletedSurveys)//as added 3 month follow up survey, not used in report
-//			model.addAttribute("showReport", true);
-		if (totalSurveys == totalCompletedSurveys)
+		if (surveyManager.hasCompletedAllSurveysForReport(id, site))
 			model.addAttribute("showReport", true);
 		
 		HttpSession session = request.getSession();				
  		if (session.getAttribute("unread_messages") != null)
-			model.addAttribute("unread", session.getAttribute("unread_messages"));				
+			model.addAttribute("unread", session.getAttribute("unread_messages"));			
+ 		
 		return "/admin/display_client";
 	}
 	
@@ -1215,6 +1216,32 @@ public class TapestryController{
 		
 		
 		return "admin/display_disabled_patients"; 
+	}
+	
+	@RequestMapping(value="/call_coordinator_SOS/{patientName}", method=RequestMethod.GET)
+	public String callCoordinatorForElderAbuse(SecurityContextHolderAwareRequestWrapper request, ModelMap model, 
+			@PathVariable("patientName") String patientName, @RequestParam(value="type", required=true) int type)
+	{
+		User loggedInUser = TapestryHelper.getLoggedInUser(request);		
+		StringBuffer sb = new StringBuffer();
+		sb.append(loggedInUser.getName());
+		sb.append(" is reporting of risk for ");
+		if (type ==1)
+			sb.append("ELDER ABUSE");
+		else if (type == 2)
+			sb.append("SELF HARM");
+		else
+			sb.append("CRISIS LINES");
+		sb.append(" for patient ");
+		sb.append(patientName);
+		
+		//send message to Marianne Hannon and Katharine May
+		TapestryHelper.sendMessageToInbox("SOS alert", sb.toString(), loggedInUser.getUserID(), 22, messageManager);//need to change to Marianne's id
+		TapestryHelper.sendMessageToInbox("SOS alert", sb.toString(), loggedInUser.getUserID(), 1, messageManager);//need to change to Marianne's id
+		
+		//log
+		userManager.addUserLog(sb.toString(), loggedInUser);
+		return "redirect:/";
 	}
 	
 	//============report======================
@@ -2541,6 +2568,45 @@ public class TapestryController{
    		return "redirect:/display_client/" + sr.getPatientID();
    	}
    	
+   	@RequestMapping(value="/complete_survey_results/{resultID}", method=RequestMethod.GET)
+   	public String completeSurveyResults(@PathVariable("resultID") int id, 
+   			@RequestParam(value="patientId", required=true) int patientId, HttpServletRequest request, ModelMap model)
+   	{
+   		surveyManager.markAsComplete(id);
+   	
+   		User loggedInUser = TapestryHelper.getLoggedInUser(request);
+   		StringBuffer sb = new StringBuffer();
+   		sb.append(loggedInUser.getName());
+   		sb.append(" has completed survey result # ");
+   		sb.append(id);
+   		userManager.addUserLog(sb.toString(), loggedInUser);
+			
+   		return "redirect:/display_client/" + patientId;
+   	}
+   	
+	@RequestMapping(value="/complete_survey_results/{patientId}", method=RequestMethod.POST)
+   	public String compSurveyResults(@PathVariable("patientId") int id, 	HttpServletRequest request, ModelMap model)
+   	{
+		if (request.getParameter("hSurveyResultId") != null)
+		{
+			int surveyResultId = Integer.valueOf(request.getParameter("hSurveyResultId"));
+			surveyManager.markAsComplete(surveyResultId);
+			
+			String adminNote = request.getParameter("noteBody");
+	   		
+	   		System.out.println("note body is === " + adminNote);
+	   		User loggedInUser = TapestryHelper.getLoggedInUser(request);
+	   		StringBuffer sb = new StringBuffer();
+	   		sb.append(loggedInUser.getName());
+	   		sb.append(" has completed survey result # ");
+	   		sb.append(surveyResultId);
+	   		userManager.addUserLog(sb.toString(), loggedInUser);
+		}
+			
+   		return "redirect:/display_client/" + id;
+   	}
+   	
+   	
    	@RequestMapping(value="/view_survey_results/{resultID}", method=RequestMethod.GET)
    	public String viewSurveyResults(@PathVariable("resultID") int id, HttpServletRequest request, ModelMap model)
    	{
@@ -2710,7 +2776,10 @@ public class TapestryController{
 	@RequestMapping(value="/download_researchData/{siteID}", method=RequestMethod.GET)
 	public String downLoadResearchDataBySite(@PathVariable("siteID") int id, HttpServletRequest request,  HttpServletResponse response)
 	{//This data needs to be written (Object[])
-        List<ResearchData> results = TapestryHelper.getResearchDatas(patientManager, surveyManager, id);       
+        List<ResearchData> results = TapestryHelper.getResearchDatas(patientManager, surveyManager, id);   
+        
+        System.out.println("size of results === " + results.size());
+        
         //Blank workbook
         XSSFWorkbook workbook = new XSSFWorkbook();         
         //Create a blank sheet
@@ -2720,10 +2789,9 @@ public class TapestryController{
         data.put(1, new Object[] {"Pat_ID","QOL1_mobility_T0", "QOL2_selfcare_T0", "QOL3_usualact_T0", 
         		"QOL4_paindis_T0", "QOL5_anxdepr_T0", "QOL6_scale_T0", "DSS1_role_T0",	"DSS2_under_T0","DSS3_useful_T0",
         		"DSS4_listen_T0","DSS5_happen_T0","DSS6_talk_T0", "DSS7_satisfied_T0", "DSS8_nofam_T0","DSS9_timesnotliving_T0",
-        		"DSS10_timesphone_T0","DSS11_timesclubs_T0",
-        		"DSS_notes_T0", "Goals1matter_T0", "Goals2life_T0", "Goals3health_T0", "Goals4list_T0", "Goals5firstspecific_T0", 
-        		"Goals6firstbaseline_T0", "Goals7firsttarget_T0", "Goals5secondspecific_T0", "Goals6secondbaseline_T0",
-        		"Goals7secondtarget_T0", "Goals5thirdspecific_T0", "Goals6thirdbaseline_T0", "Goals7thirdtarget_T0",
+        		"DSS10_timesphone_T0","DSS11_timesclubs_T0", "DSS_notes_T0", "Goals1matter_T0", "Goals2life_T0", "Goals3health_T0", 
+        		"Goals4list_T0", "Goals5firstspecific_T0", "Goals6firstbaseline_T0", "Goals7firsttarget_T0", "Goals5secondspecific_T0", 
+        		"Goals6secondbaseline_T0", "Goals7secondtarget_T0", "Goals5thirdspecific_T0", "Goals6thirdbaseline_T0", "Goals7thirdtarget_T0",
         		"Goals8priority_T0", "Goalsdiscussion_notes_T0", "DLA1_typday_T0","DLA2_goto_T0","DLA3_gotowhy_T0","DLA4_goodday_T0",
         		"DLA5_managingconcerns_T0","DLA6_diffactivPressneed_T0","DLA7_fallinyear_T0","DLA7a_fallwhy_T0", "RAPA1_neverpa_T0", 
         		"RAPA2_moderpa_T0", "RAPA3_lightpa_T0", "RAPA4_moderpaless30_T0", "RAPA5_vigpaless20_T0", "RAPA6_moderpamore30_T0", 

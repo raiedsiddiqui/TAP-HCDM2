@@ -33,6 +33,15 @@
 				return false;
 			}
 		}
+		function isExistResearchId()
+		{
+			var existIds = document.getElementById("existResearchIds").value;		
+			var current_researchId = document.getElementById("researchId").value;			
+			
+			if (existIds.indexOf(current_researchId) > -1)
+				alert("This id has been existed in the DB...");
+		}
+		
 		 function getVolunteers(){			 
 		        $.getJSON(
 		             "volunteerList.html", 
@@ -72,7 +81,7 @@
 			<div class="row">
 				<div class="col-md-6">
 					<label>Research ID:</label>
-					<input type="text" name="researchid" class="form-control" maxlength="10"/>
+					<input type="text" id="researchId" name="researchid" class="form-control" maxlength="10" onchange="isExistResearchId()"/>
 				</div>	
 				<c:if test="${not empty sites}">
 					<div class="col-md-6">
@@ -128,7 +137,7 @@
 				</div>
 				<div class="col-md-6">
 					<label>MRP:</label>
-					<input type="text" id="mrp" name="mrp" class="form-control" onchange="checkNumericInput(this.id);"/>
+					<input type="text" id="mrp" name="mrp" class="form-control" onchange="checkNumericInput(this);"/>
 				</div>		
 				<div class="col-md-6">
 					<label>MRP Firstname:</label>
@@ -164,6 +173,8 @@
 		<div class="row">
 			<input class="btn btn-primary" form="newPatient" type="submit" value="Add" />
 		</div>
+		<input type="hidden" id="existResearchIds" value="${researchIds}"/>
+		
 	</div>
 </body>
 </html>

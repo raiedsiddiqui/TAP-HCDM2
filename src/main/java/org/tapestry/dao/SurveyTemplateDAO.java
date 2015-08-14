@@ -109,6 +109,13 @@ public interface SurveyTemplateDAO {
 	 */
 	public void archiveSurveyTemplate(SurveyTemplate st, String deletedBy);
 	
+	/**
+	 * 
+	 * @param siteId
+	 * @return
+	 */
+	public List<String> getSurveyTemplateTitlesBySite(int siteId);
+	
 	//=================== UBC ===============
 	/**
 	 * A list of Volunteer Survey template for UBC

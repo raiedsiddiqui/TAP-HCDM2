@@ -297,4 +297,24 @@ public class SurveyManagerImpl implements SurveyManager {
 		return surveyResultDao.getVolunteerSurveyResultsById(volunteerId);
 	}
 
+	@Override
+	public boolean hasCompletedAllSurveysForReport(int patientId, int siteId) {
+		boolean completed = false;		
+		List<SurveyResult> surveys = getCompletedSurveysByPatientID(patientId);		
+		List<String> completedSurveyTitles = new ArrayList<String>();
+		
+		for (SurveyResult st : surveys)
+			completedSurveyTitles.add(st.getSurveyTitle());				
+		//only all surveys except "3 Month Follow" are finished
+		int templateCount = countSurveyTemplateBySite(siteId);
+		int completedSurveyCount = surveys.size();
+		
+		if (templateCount == completedSurveyCount)
+			completed = true;	
+		else if (((templateCount - completedSurveyCount) == 1) && (!completedSurveyTitles.contains("3 Month Followup")))
+			completed = true;
+		
+		return completed;
+	}
+
 }

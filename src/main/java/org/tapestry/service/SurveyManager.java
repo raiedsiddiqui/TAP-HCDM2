@@ -374,5 +374,13 @@ public interface SurveyManager {
 	 */
 	@Transactional
 	public List<SurveyResult> getVolunteerSurveyResultsById(int volunteerId);
+	
+	/**
+	 * 
+	 * @param patientId
+	 * @return
+	 */
+	@Transactional
+	public boolean hasCompletedAllSurveysForReport(int patientId, int siteId);
 
 }

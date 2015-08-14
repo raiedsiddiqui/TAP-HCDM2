@@ -1608,26 +1608,6 @@ public class TapestryHelper {
 		model.addAttribute("volunteers", volunteers);	  
         model.addAttribute("patients", patientList);
 	}
-
-	
-	/**
-	 * hard coded clinics in a map, when it grows, will store them in the DB.
-	 * @return
-	 */
-//	public static Map<String, String> getClinics(){
-//		Map<String, String> clinics = new HashMap<String, String>();
-//		
-//		clinics.put("1", "McMaster Family Practice");
-//		clinics.put("2", "Stonechurch Family Health Center");
-//		
-//		return clinics;		
-//	}
-	
-//	public static String getClinicName(String code){
-//		Map<String, String> clinics = getClinics();
-//		
-//		return clinics.get(code);		
-//	}
 	
 	// =========================== report generator =========================//
 	/**
@@ -3365,220 +3345,6 @@ public class TapestryHelper {
 	}
 
 	//======================Research Data Download===================================//
-	public static boolean hasSurveyResultByPatient(int patientId, int site, SurveyManager surveyManager)
-	{
-		boolean hasResult = false;
-		int surveyId = surveyManager.getSurveyIdByTitle("4. Social Life", site);
-		
-		if (surveyManager.hasCompleteSurvey(surveyId, patientId))
-			hasResult = true;
-		else
-		{
-			surveyId = surveyManager.getSurveyIdByTitle("Goals", site);
-			
-			if (surveyManager.hasCompleteSurvey(surveyId, patientId))
-				hasResult = true;
-			else
-			{
-				surveyId = surveyManager.getSurveyIdByTitle("3. Quality of Life", site);
-				
-				if (surveyManager.hasCompleteSurvey(surveyId, patientId))
-					hasResult = true;
-			}
-		}		
-		return hasResult;
-	}
-	
-//	public static List<Object> getResearchData(PatientManager patientManager, SurveyManager surveyManager, int siteId)
-//	{
-//		List<Patient> patients;
-//		if (siteId == 0)//for central admin
-//			patients = patientManager.getAllPatients();	
-//		else
-//			patients = patientManager.getPatientsBySite(siteId);
-//		
-//		SurveyResult sr;
-//		List<Object> researchDatas = new ArrayList<Object>();
-//		ResearchData rData;
-//		int patientId, size;
-//		String xml, observerNote;
-//		LinkedHashMap<String, String> res;
-//		List<DisplayedSurveyResult> displayedResults;
-//		StringBuffer sb;
-//		String[] goalsArray;
-//		
-//	
-//		for (int i = 0; i < patients.size(); i++)
-//		{
-//			rData = new ResearchData();
-//			patientId = patients.get(i).getPatientID();			
-//
-//			rData.setPatientId(patientId);
-//		
-//			//Social life
-//			try{
-//				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "4. Social Life");
-//			}catch (Exception e) {
-//				System.out.println("throws exception on Social life === patient id == " + patientId);
-//				sr = null;
-//			}
-//			
-//			if (sr != null)
-//			{
-//				sb = new StringBuffer();
-//				
-//				try{
-//					xml = new String(sr.getResults(), "UTF-8");
-//			   	} catch (Exception e) {
-//			   		xml = "";
-//			   	}
-//				res = ResultParser.getResults(xml);
-//				displayedResults = ResultParser.getDisplayedSurveyResults(res);	
-//				
-//				if (!displayedResults.isEmpty())
-//				{
-//					rData.setdSS1_role_TO(displayedResults.get(0).getQuestionAnswer());
-//					rData.setdSS2_under_TO(displayedResults.get(1).getQuestionAnswer());
-//					rData.setdSS3_useful_TO(displayedResults.get(2).getQuestionAnswer());
-//					rData.setdSS4_listen_TO(displayedResults.get(3).getQuestionAnswer());
-//					rData.setdSS5_happen_TO(displayedResults.get(4).getQuestionAnswer());
-//					rData.setdSS6_talk_TO(displayedResults.get(5).getQuestionAnswer());
-//					rData.setdSS7_satisfied_TO(displayedResults.get(6).getQuestionAnswer());
-//					rData.setdSS8_nofam_TO(displayedResults.get(7).getQuestionAnswer());		   		
-//					rData.setdSS9_timesnotliving_TO(displayedResults.get(8).getQuestionAnswer());
-//					rData.setdSS10_timesphone_TO(displayedResults.get(9).getQuestionAnswer());	
-//					size = displayedResults.size();
-//					if (size == 11)
-//						rData.setdSS11_timesclubs_TO(displayedResults.get(10).getQuestionAnswer());
-//				   		
-//					for (int j=0; j<size; j++)
-//					{
-//						observerNote = displayedResults.get(j).getObserverNotes();
-//						if (!Utils.isNullOrEmpty(observerNote))
-//						{
-//							sb.append(displayedResults.get(j).getObserverNotes());			
-//							sb.append("\n");
-//				   		}
-//				   	}
-//					rData.setdSS_notes_TO(sb.toString());
-//				}									
-//			}		
-//			//EQ5D
-//			try{
-//				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "3. Quality of Life");
-//			}catch (Exception e) {
-//				System.out.println("throws exception on EQ5D=== patient id == " + patientId);
-//				sr = null;
-//			}
-//			
-//			if (sr != null)
-//			{
-//				sb = new StringBuffer();
-//				
-//				try{
-//					xml = new String(sr.getResults(), "UTF-8");
-//			   	} catch (Exception e) {
-//			   		xml = "";
-//			   	}
-//				res = ResultParser.getResults(xml);
-//				displayedResults = ResultParser.getDisplayedSurveyResults(res);		
-//				
-//				if (!displayedResults.isEmpty())
-//				{
-//					rData.seteQ5D1_Mobility_TO(displayedResults.get(0).getQuestionAnswer());
-//					rData.seteQ5D2_2Selfcare_TO(displayedResults.get(1).getQuestionAnswer());
-//					rData.seteQ5D3_Usualact_TO(displayedResults.get(2).getQuestionAnswer());
-//					rData.seteQ5D4_Pain_TO(displayedResults.get(3).getQuestionAnswer());
-//					rData.seteQ5D5_Anxdep_TO(displayedResults.get(4).getQuestionAnswer());
-//					rData.seteQ5D6_Healthstate_TO(displayedResults.get(5).getQuestionAnswer());				
-//					
-//					for (int j=0; j<displayedResults.size()-1; j++)
-//					{
-//						observerNote = displayedResults.get(j).getObserverNotes();
-//						if (!Utils.isNullOrEmpty(observerNote))
-//						{
-//							sb.append(displayedResults.get(j).getObserverNotes());
-//							sb.append("\n");
-//				   		}
-//				   	}
-//					rData.seteQ5D5_notes_TO(sb.toString());
-//					rData.seteQ5D6_Healthstate_notes_TO(displayedResults.get(5).getObserverNotes());	
-//				}
-//			}
-//			//Goals
-//			try{
-//				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "Goals");
-//			}catch (Exception e) {
-//				System.out.println("throws exception on Goals === patient id == " + patientId);
-//				sr = null;
-//			}
-//			
-//			if (sr != null)
-//			{
-//				sb = new StringBuffer();
-//				
-//				try{
-//					xml = new String(sr.getResults(), "UTF-8");
-//			   	} catch (Exception e) {
-//			   		xml = "";
-//			   	}
-//				res = ResultParser.getResults(xml);
-//				displayedResults = ResultParser.getDisplayedSurveyResults(res);		
-//				
-//				if (!displayedResults.isEmpty())
-//				{
-//					rData.setGoals1Matter_TO(displayedResults.get(0).getQuestionAnswer());
-//					rData.setGoals2Life_TO(displayedResults.get(1).getQuestionAnswer());
-//					rData.setGoals3Health_TO(displayedResults.get(2).getQuestionAnswer());
-//					rData.setGoals4List_TO(displayedResults.get(3).getQuestionAnswer());
-//													
-//					goalsArray = displayedResults.get(4).getQuestionAnswer().split("<br>");
-//					size = goalsArray.length;
-//					if (size == 3)
-//					{
-//						rData.setGoals5FirstSpecific_TO(goalsArray[0]);
-//						rData.setGoals6FirstBaseline_TO(goalsArray[1]);
-//						rData.setGoals7FirstTaget_TO(goalsArray[2]);
-//					}				
-//								
-//					goalsArray = displayedResults.get(5).getQuestionAnswer().split("<br>");
-//					size = goalsArray.length;
-//					if (size == 3)
-//					{
-//						rData.setGoals5SecondSpecific_TO(goalsArray[0]);
-//						rData.setGoals6SecondBaseline_TO(goalsArray[1]);
-//						rData.setGoals7SecondTaget_TO(goalsArray[2]);
-//					}
-//					
-//					goalsArray = displayedResults.get(6).getQuestionAnswer().split("<br>");
-//					size = goalsArray.length;
-//					if (size == 3)
-//					{
-//						rData.setGoals5ThirdSpecific_TO(goalsArray[0]);
-//						rData.setGoals6ThirdBaseline_TO(goalsArray[1]);	
-//						rData.setGoals7ThirdTaget_TO(goalsArray[2]);
-//					}			
-//					
-//					if (displayedResults.size() == 8)
-//						rData.setGoals8Priority_TO(displayedResults.get(7).getQuestionAnswer());
-//					
-//					for (int j=0; j<displayedResults.size(); j++)
-//					{
-//						observerNote = displayedResults.get(j).getObserverNotes();
-//						if (!Utils.isNullOrEmpty(observerNote))
-//						{
-//							sb.append(displayedResults.get(j).getObserverNotes());
-//							sb.append("\n");
-//				   		}
-//				   	}
-//					rData.setGoalsDiscussion_notes_TO(sb.toString());			
-//				}			
-//				researchDatas.add(rData);
-//			}
-//		}		
-//		return researchDatas;
-//	}
-	
 	public static List<ResearchData> getResearchDatas(PatientManager patientManager, SurveyManager surveyManager, int siteId)
 	{
 		List<Patient> patients = patientManager.getPatientsBySite(siteId);	
@@ -3591,16 +3357,12 @@ public class TapestryHelper {
 		List<DisplayedSurveyResult> displayedResults;
 		StringBuffer sb;
 		String[] goalsArray;
-		
+			
 		for (int i = 0; i < patients.size(); i++)
 		{
 			rData = new ResearchData();
 			patientId = patients.get(i).getPatientID();
-			
-			if (!hasSurveyResultByPatient(patientId, siteId, surveyManager))
-				continue;
 			rData.setPatientId(patientId);
-		
 			//Social life
 			try{
 				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "4. Social Life");
@@ -3770,15 +3532,30 @@ public class TapestryHelper {
 				
 				if (!displayedResults.isEmpty())
 				{
-					rData.setRapa1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
-					rData.setRapa2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
-					rData.setRapa3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
-					rData.setRapa4(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
-					rData.setRapa5(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
-					rData.setRapa6(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
-					rData.setRapa7(Integer.parseInt(displayedResults.get(6).getQuestionAnswer()));
-					rData.setRapa8(Integer.parseInt(displayedResults.get(7).getQuestionAnswer()));
-					rData.setRapa9(Integer.parseInt(displayedResults.get(8).getQuestionAnswer()));				
+					if (displayedResults.size() == 9)
+					{//new survey with 9 questions
+						rData.setRapa1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
+						rData.setRapa2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
+						rData.setRapa3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+						rData.setRapa4(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+						rData.setRapa5(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
+						rData.setRapa6(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
+						rData.setRapa7(Integer.parseInt(displayedResults.get(6).getQuestionAnswer()));
+						rData.setRapa8(Integer.parseInt(displayedResults.get(7).getQuestionAnswer()));
+						rData.setRapa9(Integer.parseInt(displayedResults.get(8).getQuestionAnswer()));			
+					}
+					else
+					{// old survey with 8 questions
+						rData.setRapa1(0);		
+						rData.setRapa2(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
+						rData.setRapa3(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
+						rData.setRapa4(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+						rData.setRapa5(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+						rData.setRapa6(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
+						rData.setRapa7(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
+						rData.setRapa8(Integer.parseInt(displayedResults.get(6).getQuestionAnswer()));
+						rData.setRapa9(Integer.parseInt(displayedResults.get(7).getQuestionAnswer()));									
+					}
 				}
 			}
 			//Advance directive
@@ -3912,7 +3689,7 @@ public class TapestryHelper {
 				
 				if (!displayedResults.isEmpty())
 				{
-					size = displayedResults.size();
+					size = displayedResults.size();					
 					rData.setMob1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
 					if (size == 3)
 					{	//a2a, a3a, a4a					
@@ -3925,7 +3702,11 @@ public class TapestryHelper {
 						{	//a2a, a2b, a3a, a4a			
 							rData.setMob2(displayedResults.get(1).getQuestionAnswer());
 							rData.setMob3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
-							rData.setMob5(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));													
+							
+							if (displayedResults.get(3).getQuestionAnswer().equals(""))
+								rData.setMob5(0);
+							else
+								rData.setMob5(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));																					
 						}
 						else 
 						{
@@ -3933,7 +3714,10 @@ public class TapestryHelper {
 							if(displayedResults.get(1).getQuestionAnswer().equals("1"))
 							{//a2a, a3a, a3b, a4a
 								rData.setMob4(displayedResults.get(2).getQuestionAnswer());
-								rData.setMob5(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+								if (displayedResults.get(3).getQuestionAnswer().equals(""))
+									rData.setMob5(0);
+								else
+									rData.setMob5(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
 							}
 							else
 							{//a2a, a3a, a4a, a4b
@@ -3951,11 +3735,18 @@ public class TapestryHelper {
 							if (displayedResults.get(2).getQuestionAnswer().equals("1"))
 							{//a2a, a2b, a3a, a3b, a4a								
 								rData.setMob4(displayedResults.get(3).getQuestionAnswer());
-								rData.setMob5(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
+								
+								if (displayedResults.get(4).getQuestionAnswer().equals(""))
+									rData.setMob5(0);
+								else
+									rData.setMob5(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
 							}
 							else
 							{//a2a, a2b, a3a, a4a, a4b
-								rData.setMob5(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+								if (displayedResults.get(3).getQuestionAnswer().equals(""))
+									rData.setMob5(0);
+								else
+									rData.setMob5(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
 								rData.setMob6(displayedResults.get(4).getQuestionAnswer());
 							}
 						}
@@ -3963,7 +3754,11 @@ public class TapestryHelper {
 						{//a2a, a3a, a3b, a4a, a4b
 							rData.setMob3(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
 							rData.setMob4(displayedResults.get(2).getQuestionAnswer());
-							rData.setMob5(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+							
+							if (displayedResults.get(3).getQuestionAnswer().equals(""))
+								rData.setMob5(0);
+							else
+								rData.setMob5(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
 							rData.setMob6(displayedResults.get(4).getQuestionAnswer());
 						}
 					}
@@ -3972,7 +3767,12 @@ public class TapestryHelper {
 						rData.setMob2(displayedResults.get(1).getQuestionAnswer());
 						rData.setMob3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
 						rData.setMob4(displayedResults.get(3).getQuestionAnswer());
-						rData.setMob5(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
+						
+						if (displayedResults.get(4).getQuestionAnswer().equals(""))
+							rData.setMob5(0);
+						else
+							rData.setMob5(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
+			
 						rData.setMob6(displayedResults.get(5).getQuestionAnswer());	
 					}
 				}
@@ -4039,21 +3839,66 @@ public class TapestryHelper {
 				displayedResults = ResultParser.getDisplayedSurveyResults(res);		
 				
 				if (!displayedResults.isEmpty())
-				{					
-					System.out.println("patient's ID is === "+ sr.getPatientID());
-					
-					rData.setDla1(displayedResults.get(0).getQuestionAnswer());
-					rData.setDla2(displayedResults.get(1).getQuestionAnswer());
-					rData.setDla3(displayedResults.get(2).getQuestionAnswer());
-					rData.setDla4(displayedResults.get(3).getQuestionAnswer());
-					rData.setDla5(displayedResults.get(4).getQuestionAnswer());
-					rData.setDla6(displayedResults.get(5).getQuestionAnswer());
-					rData.setDla7(displayedResults.get(6).getQuestionAnswer());
-					if (displayedResults.size() > 7)
-						rData.setDla7a(displayedResults.get(7).getQuestionAnswer());
-					}			
-				researchDatas.add(rData);
-			}
+				{						
+					size = displayedResults.size();
+					switch (size) {
+						case 1: rData.setDla1(displayedResults.get(0).getQuestionAnswer());			
+					 			break;
+					 	case 2: rData.setDla1(displayedResults.get(0).getQuestionAnswer());
+					 			rData.setDla2(displayedResults.get(1).getQuestionAnswer());
+					 			break;
+					 	case 3: rData.setDla1(displayedResults.get(0).getQuestionAnswer());
+								rData.setDla2(displayedResults.get(1).getQuestionAnswer());
+								rData.setDla3(displayedResults.get(2).getQuestionAnswer());
+					 			break;
+					 	case 4: rData.setDla1(displayedResults.get(0).getQuestionAnswer());
+								rData.setDla2(displayedResults.get(1).getQuestionAnswer());
+								rData.setDla3(displayedResults.get(2).getQuestionAnswer());
+								rData.setDla4(displayedResults.get(3).getQuestionAnswer());
+					 			break;	
+					 	case 5: rData.setDla1(displayedResults.get(0).getQuestionAnswer());
+								rData.setDla2(displayedResults.get(1).getQuestionAnswer());
+								rData.setDla3(displayedResults.get(2).getQuestionAnswer());
+								rData.setDla4(displayedResults.get(3).getQuestionAnswer());
+								rData.setDla5(displayedResults.get(4).getQuestionAnswer());
+					 			break;	
+					 	case 6: rData.setDla1(displayedResults.get(0).getQuestionAnswer());
+								rData.setDla2(displayedResults.get(1).getQuestionAnswer());
+								rData.setDla3(displayedResults.get(2).getQuestionAnswer());
+								rData.setDla4(displayedResults.get(3).getQuestionAnswer());
+								rData.setDla5(displayedResults.get(4).getQuestionAnswer());
+								rData.setDla6(displayedResults.get(5).getQuestionAnswer());
+					 			break;
+					 	case 7: rData.setDla1(displayedResults.get(0).getQuestionAnswer());
+								rData.setDla2(displayedResults.get(1).getQuestionAnswer());
+								rData.setDla3(displayedResults.get(2).getQuestionAnswer());
+								rData.setDla4(displayedResults.get(3).getQuestionAnswer());
+								rData.setDla5(displayedResults.get(4).getQuestionAnswer());
+								rData.setDla6(displayedResults.get(5).getQuestionAnswer());
+								rData.setDla7(displayedResults.get(6).getQuestionAnswer());
+					 			break;
+					 	case 8: rData.setDla1(displayedResults.get(0).getQuestionAnswer());
+								rData.setDla2(displayedResults.get(1).getQuestionAnswer());
+								rData.setDla3(displayedResults.get(2).getQuestionAnswer());
+								rData.setDla4(displayedResults.get(3).getQuestionAnswer());
+								rData.setDla5(displayedResults.get(4).getQuestionAnswer());
+								rData.setDla6(displayedResults.get(5).getQuestionAnswer());
+								rData.setDla7(displayedResults.get(6).getQuestionAnswer());
+								rData.setDla7a(displayedResults.get(7).getQuestionAnswer());
+					 			break;
+					 }			
+//					rData.setDla1(displayedResults.get(0).getQuestionAnswer());
+//					rData.setDla2(displayedResults.get(1).getQuestionAnswer());
+//					rData.setDla3(displayedResults.get(2).getQuestionAnswer());
+//					rData.setDla4(displayedResults.get(3).getQuestionAnswer());
+//					rData.setDla5(displayedResults.get(4).getQuestionAnswer());
+//					rData.setDla6(displayedResults.get(5).getQuestionAnswer());
+//					rData.setDla7(displayedResults.get(6).getQuestionAnswer());
+//					if (displayedResults.size() > 7)
+//						rData.setDla7a(displayedResults.get(7).getQuestionAnswer());
+				}
+			}			
+			researchDatas.add(rData);
 		}		
 		return researchDatas;
 	}	

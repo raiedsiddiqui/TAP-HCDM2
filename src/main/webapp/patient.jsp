@@ -64,6 +64,15 @@
 				return false;
 		}
 		
+		function confirmSOS()
+		{
+			var x = confirm("SOS - Message Alert sent to Volunteer Coordinator. Please call your Volunteer Coordinator to follow up.");
+			if (x)
+				return true;
+			else
+				return false;
+		}
+		
 		function goalsPrompt()
 		{
 			var x = confirm("The Goals Survey should be completed last. Ensure there are no remaining surveys before proceeding.Tap [OK] to open the Goals survey. Tap [Cancel] to go back and complete another survey.");
@@ -380,9 +389,9 @@
         </h4>
       </div>
       <div class="modal-body">
-    	<a class="lgbtn" href="#elderabuse">Elder Abuse</a>
-    	<a class="lgbtn" href="#selfharm">Self Harm</a>
-    	<a class="lgbtn" href="#crisislines">Crisis Lines</a>
+    	<a class="lgbtn" href="<c:url value="/call_coordinator_SOS/${patient.displayName}?type=1"/>" Onclick="return confirmSOS()">Elder Abuse</a>
+    	<a class="lgbtn" href="<c:url value="/call_coordinator_SOS/${patient.displayName}?type=2"/>" Onclick="return confirmSOS()">Self Harm</a>
+    	<a class="lgbtn" href="<c:url value="/call_coordinator_SOS/${patient.displayName}?type=3"/>" Onclick="return confirmSOS()">Crisis Lines</a>
 
 
       <h3 id="elderabuse">If You Suspect Elder Abuse</h3>
