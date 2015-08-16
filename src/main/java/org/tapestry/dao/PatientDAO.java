@@ -54,6 +54,18 @@ public interface PatientDAO {
      */
     public List<Patient> getPatientsBySite(int siteId);
 	
+    /**
+     * 
+     * @return
+     */
+    public List<Patient> getAllDisabledPatients();
+    
+    /**
+     * 
+     * @param site
+     * @return
+     */
+    public List<Patient> getAllDisabledPatients(int site);
 	/**
 	* create a patient in the database
 	* @param p The Patient object to save
@@ -116,4 +128,17 @@ public interface PatientDAO {
 	 * @return ids
 	 */
 	public List<String> getResearchIds();
+	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public String getPatientNote(int id);
+	
+	/**
+	 * 
+	 * @param id
+	 */
+	public void updatePatientNote(int id, String notes);
 }

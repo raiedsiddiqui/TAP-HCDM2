@@ -72,7 +72,7 @@
 		<form id="assignVolunteerSurveyForm" action="<c:url value="/assign_volunteerSurvey"/>" method="post" >
 			<label>Select Volunteer Survey : </label><br/>
 			<select multiple id="survey_template" name="volunteerSurveyTemplates" class="form-control" style="max-width:50%;">
-				<c:forEach items="${surveyTemplates}" var="st">
+				<c:forEach items="${volunteerSurveyTemplates}" var="st">
 					<option value="${st.surveyID}">${st.title}</option>
 				</c:forEach>
 			</select><br/>

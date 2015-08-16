@@ -134,9 +134,40 @@ public interface PatientManager {
 	public void enablePatientWithID(int id);
 	
 	/**
+	 * 
+	 * @param id
+	 * @param notes
+	 */
+	@Transactional
+	public void disablePatient(int id, String notes);
+	
+	/**
 	 * Retrieve all exist research IDs
-	 * @return ids
+	 * @return a list of ids
 	 */
 	@Transactional
 	public List<String> getResearchIds();
+	
+	/**
+	 * 
+	 * @param id
+	 * @param notes
+	 */
+	@Transactional
+	public void updatePatientNote(int id, String notes);
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@Transactional
+	public List<Patient> getAllDisabledPatients();
+	
+	/**
+	 * 
+	 * @param siteId
+	 */
+	@Transactional
+	public List<Patient> getAllDisabledPatients(int siteId);
+	
 }

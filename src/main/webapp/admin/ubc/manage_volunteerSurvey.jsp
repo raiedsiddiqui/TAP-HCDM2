@@ -69,7 +69,7 @@
 					<th>Date Added</th>				
 					
 				</tr>
-				<c:forEach items="${survey_templates}" var="st">
+				<c:forEach items="${volunteer_survey_templates}" var="st">
 				<tr>					
 					<td><a href="<c:url value="/modify_volunteerSurveyTemplate/${st.surveyID}"/>">${st.title}</a></td>
 					<td width="200">${st.description}</td>

@@ -113,5 +113,32 @@ public class PatientManagerImpl implements PatientManager {
 		return patientDao.getResearchIds();
 	}
 
+	@Override
+	public void updatePatientNote(int id, String notes) {		
+		StringBuffer sb = new StringBuffer();
+		sb.append(patientDao.getPatientNote(id));
+		sb.append("-- Disable note from Admin ---");
+		sb.append(notes);
+		
+		patientDao.updatePatientNote(id, sb.toString());	
+	}
+
+	@Override
+	public void disablePatient(int id, String notes) {
+		disablePatientWithID(id);
+		updatePatientNote(id,notes);
+	}
+
+	@Override
+	public List<Patient> getAllDisabledPatients() {
+		return patientDao.getAllDisabledPatients();
+	}
+
+	@Override
+	public List<Patient> getAllDisabledPatients(int siteId) {
+		return patientDao.getAllDisabledPatients(siteId);
+		
+	}
+
 
 }

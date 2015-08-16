@@ -17,8 +17,7 @@
 	<script type="text/javascript">
 	function passSurveyResultId(id)
 	{
-		document.getElementById("hSurveyResultId").value = id;
-		
+		document.getElementById("hSurveyResultId").value = id;		
 	}
  
 	</script>
@@ -39,8 +38,8 @@
 		<h2>${patient.displayName}<a href="<c:url value="/edit_patient/${patient.patientID}"/>">Edit</a></h2>
 		<h5>Research ID: ${patient.researchID}</h5>
 	</div>
-	<div class="col-md-2">
-		<a class="btn btn-warning" href="<c:url value="/disable_patient/${patient.patientID}"/>">Disable Patient Profile</a>	
+	<div class="col-md-2">		
+		<a id="unDisablePatienttBtn" href="#modalDisableNotes" role="button" class="btn btn-primary" data-toggle="modal">Disable Patient Profile</a>
 	</div>
 </div>
 
@@ -259,5 +258,28 @@
   </div>
 </div> 
 
+<div class="modal fade" id="modalDisableNotes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">
+			
+        </h4>
+      </div>
+      <div class="modal-body">
+      	<form id="diablePatientFrm" method="post" action="<c:url value="/disable_patient/${patient.patientID}"/>">
+      		<label>Notes:</label>
+			<textarea class="form-control" name="noteBody" id="noteBody"></textarea><br />	
+		</form>
+      </div>
+      
+      <div class="modal-footer">      
+      	<input type="submit" form="diablePatientFrm" class="btn btn-primary" value="Submit" />
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>-->
 </body>
 </html>

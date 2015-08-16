@@ -257,5 +257,43 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 		}
 	}
 
+	@Override
+	public String getPatientNote(int id) {
+		String sql = "SELECT notes FROM patients WHERE patient_ID=?";		
+		List<String> sList = getJdbcTemplate().queryForList(sql, new Object[]{id}, String.class);
+		
+		if (sList.isEmpty())
+			return null;
+		else
+			return sList.get(0);
+	}
+
+	@Override
+	public void updatePatientNote(int id, String notes) {
+		String sql = "UPDATE patients SET notes=? WHERE patient_ID=? ";
+		getJdbcTemplate().update(sql, notes, id);				
+	}
+
+	@Override
+	public List<Patient> getAllDisabledPatients() {
+		String sql = "SELECT p.*, v1.firstname AS v1_firstname, v1.lastname AS v1_lastname, "
+				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, v1.organization, v1.organization, "
+				+ "c.clinic_name FROM patients AS p INNER JOIN volunteers AS v1 ON p.volunteer=v1.volunteer_ID INNER JOIN "
+				+ "volunteers AS v2 ON p.volunteer2=v2.volunteer_ID INNER JOIN clinics AS c ON p.clinic=c.clinic_ID WHERE p.enabled=0";
+		
+		return getJdbcTemplate().query(sql, new PatientMapper());
+	}
+
+	@Override
+	public List<Patient> getAllDisabledPatients(int site) {
+		String sql = "SELECT p.*, v1.firstname AS v1_firstname, v1.lastname AS v1_lastname, "
+				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, v1.organization, c.clinic_name FROM patients "
+				+ "AS p INNER JOIN volunteers AS v1 ON p.volunteer=v1.volunteer_ID INNER JOIN "
+				+ "volunteers AS v2 ON p.volunteer2=v2.volunteer_ID INNER JOIN clinics AS c ON p.clinic=c.clinic_ID "
+				+ "WHERE c.site_ID =? AND p.enabled=0";
+		
+		return getJdbcTemplate().query(sql, new Object[]{site}, new PatientMapper());
+	}
+
 
 }

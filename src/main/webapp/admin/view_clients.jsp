@@ -62,9 +62,11 @@
 				<div class="col-md-2">
 					<a href="<c:url value="/add_client"/>" class="btn btn-primary" data-toggle="modal">Add New Client</a>
 				</div>
-					<div class="col-md-2">
-						<a class="btn btn-warning" href="<c:url value="/getDisabledPatient"/>">Enable Patient Profile</a>	
+				<c:if test="${not empty(disabledPatients)}">
+					<div class="col-md-2">						
+						<a id="enablePatientBtn" href="#modalEnablePatients" role="button" class="btn btn-primary" data-toggle="modal">Enable Patient Profile</a>
 					</div>
+				</c:if>
 			</div>
 
 			
@@ -108,5 +110,49 @@
 		
 </div>
 
+<div class="modal fade" id="modalEnablePatients" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">
+			
+        </h4>
+      </div>
+      <div class="modal-body">
+      	<h2>Disabled Patients</h2>
+		<table  class="table table-striped" width="970" border="1">
+			<tr>
+				<th >Research ID</th>
+				<th width="100"> Patient Name</th>		
+				<th>Gender</th>
+				<th width="100">Clinic</th>
+				<th>MRP</th>
+				<th>Volunteer1</th>
+				<th>Volunteer2</th>				
+				<th>Action</th>					
+			</tr>
+			<c:forEach items="${disabledPatients}" var="dp">
+			<tr >
+				<td>${dp.researchID}</td>	
+				<td>${dp.displayName}</td>			
+				<td>${dp.gender}</td>	
+				<td>${dp.clinicName}</td>
+				<td>${dp.mrpFirstName} ${dp.mrpLastName}</td>	
+				<td>${dp.volunteerName}</td>
+	            <td>${dp.partnerName}</td>
+				<td><a href="<c:url value="/enable_patient/${dp.patientID}"/>" class="btn btn-success">Enable</a>
+				</td>				
+			</tr>
+			</c:forEach>
+		</table>	
+      </div>
+      
+      <div class="modal-footer">       
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div> 
 </body>
 </html>

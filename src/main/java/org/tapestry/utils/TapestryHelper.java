@@ -1138,7 +1138,7 @@ public class TapestryHelper {
    	
    	
    	/**
-   	 * Assign selected surveys to selected clients
+   	 * Assign selected surveys to selected volunteer
    	 * @param surveyTemplates
    	 * @param patientIds
    	 * @param request
