@@ -28,9 +28,9 @@
        </property>
     </bean> -->
 	 
-	<bean id="keyLocationConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">      
+	<bean id="tapestryConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">      
      	<property name="location" > 
-     		<value>/WEB-INF/classes/keyLocation.properties</value>  		
+     		<value>/WEB-INF/classes/tapestry.properties</value>  		
      	</property>
    	</bean> 
    	

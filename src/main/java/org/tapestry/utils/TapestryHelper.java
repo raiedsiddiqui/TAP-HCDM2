@@ -1,6 +1,18 @@
 package org.tapestry.utils;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.security.KeyFactory;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.Security;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +38,8 @@ import javax.servlet.http.HttpSession;
 import javax.xml.bind.JAXBException;
 import javax.xml.datatype.DatatypeConfigurationException;
 
+import org.apache.commons.codec.binary.Base64;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.oscarehr.myoscar_server.ws.PersonTransfer3;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
@@ -3429,10 +3443,12 @@ public class TapestryHelper {
 			   		xml = "";
 			   	}
 				res = ResultParser.getResults(xml);
-				displayedResults = ResultParser.getDisplayedSurveyResults(res);		
+				displayedResults = ResultParser.getDisplayedSurveyResults(res);					
 				
 				if (!displayedResults.isEmpty())
-				{
+				{//if answer is empty, format it to 0
+					displayedResults = formatEmptyResultAnswerToInt(displayedResults);
+					
 					rData.setQol1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
 					rData.setQol2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
 					rData.setQol3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
@@ -3532,6 +3548,9 @@ public class TapestryHelper {
 				
 				if (!displayedResults.isEmpty())
 				{
+					//if answer is empty, format it to 0
+					displayedResults = formatEmptyResultAnswerToInt(displayedResults);
+					
 					if (displayedResults.size() == 9)
 					{//new survey with 9 questions
 						rData.setRapa1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
@@ -3580,6 +3599,9 @@ public class TapestryHelper {
 				
 				if (!displayedResults.isEmpty())
 				{
+					//if answer is empty, format it to 0
+					displayedResults = formatEmptyResultAnswerToInt(displayedResults);
+					
 					rData.setAd1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
 					rData.setAd2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
 					rData.setAd3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));							
@@ -3608,11 +3630,19 @@ public class TapestryHelper {
 				if (!displayedResults.isEmpty())
 				{
 					int sizeOfMemory = displayedResults.size();
-					rData.setMem1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));		
+					DisplayedSurveyResult result;
+					
+					result = displayedResults.get(0);
+					result = formatEmptyResultAnswerToInt(result);
+					rData.setMem1(Integer.parseInt(result.getQuestionAnswer()));		
+	//				rData.setMem1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));		
 					if (sizeOfMemory == 2)
 					{
 						rData.setMem2("");
-						rData.setMem3(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
+						result = displayedResults.get(1);
+						result = formatEmptyResultAnswerToInt(result);
+						rData.setMem1(Integer.parseInt(result.getQuestionAnswer()));
+		//				rData.setMem3(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
 						rData.setMem4("");
 					}
 					else if (sizeOfMemory == 3)
@@ -3620,14 +3650,20 @@ public class TapestryHelper {
 						if (Utils.isNumeric(displayedResults.get(1).getQuestionAnswer()))
 						{
 							rData.setMem2("");
-							rData.setMem3(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
+							result = displayedResults.get(1);
+							result = formatEmptyResultAnswerToInt(result);
+							rData.setMem1(Integer.parseInt(result.getQuestionAnswer()));
+	//						rData.setMem3(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
 							rData.setMem4(displayedResults.get(2).getQuestionAnswer());		
 						}
 					}
 					else
 					{
 						rData.setMem2(displayedResults.get(1).getQuestionAnswer());
-						rData.setMem3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+						result = displayedResults.get(2);
+						result = formatEmptyResultAnswerToInt(result);
+						rData.setMem1(Integer.parseInt(result.getQuestionAnswer()));
+				//		rData.setMem3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
 						rData.setMem4(displayedResults.get(3).getQuestionAnswer());				
 					}
 				}
@@ -3653,7 +3689,9 @@ public class TapestryHelper {
 				displayedResults = ResultParser.getDisplayedSurveyResults(res);		
 				
 				if (!displayedResults.isEmpty())
-				{
+				{//if answer is empty, format it to 0
+					displayedResults = formatEmptyResultAnswerToInt(displayedResults);
+					
 					rData.setGh1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
 					rData.setGh2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
 					rData.setGh3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
@@ -3688,7 +3726,9 @@ public class TapestryHelper {
 				displayedResults = ResultParser.getDisplayedSurveyResults(res);		
 				
 				if (!displayedResults.isEmpty())
-				{
+				{//if answer is empty, format it to 0
+					displayedResults = formatEmptyResultAnswerToInt(displayedResults);
+					
 					size = displayedResults.size();					
 					rData.setMob1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
 					if (size == 3)
@@ -3798,7 +3838,9 @@ public class TapestryHelper {
 				displayedResults = ResultParser.getDisplayedSurveyResults(res);		
 				
 				if (!displayedResults.isEmpty())
-				{
+				{//if answer is empty, format it to 0
+					displayedResults = formatEmptyResultAnswerToInt(displayedResults);
+					
 					rData.setNut1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
 					rData.setNut2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
 					rData.setNut3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
@@ -3901,7 +3943,27 @@ public class TapestryHelper {
 			researchDatas.add(rData);
 		}		
 		return researchDatas;
-	}	
+	}
+	
+	public static List<DisplayedSurveyResult> formatEmptyResultAnswerToInt(List<DisplayedSurveyResult> results)
+	{
+		for (int i =0; i<results.size(); i++)
+		{
+			if (Utils.isNullOrEmpty(results.get(i).getQuestionAnswer()))
+				results.get(i).setQuestionAnswer("0");
+		}
+		
+		return results;
+	}
+	
+	public static DisplayedSurveyResult formatEmptyResultAnswerToInt(DisplayedSurveyResult result)
+	{
+		if (Utils.isNullOrEmpty(result.getQuestionAnswer()))
+			result.setQuestionAnswer("0");
+		
+		return result;
+	}
+	
 	
 	public static List<Site> getSites(SecurityContextHolderAwareRequestWrapper request, OrganizationManager organizationManager)
 	{
@@ -4179,5 +4241,30 @@ public class TapestryHelper {
 				
 		return strSource;
 	}
-
+	
+	public void readProperties() throws Exception{		
+	      
+		Properties props = new Properties();
+		try{
+			props.load(TapestryHelper.class.getClassLoader().getResourceAsStream("tapestry.properties"));
+			String sos = props.getProperty("Admin");
+			System.out.println("admin === " + sos);
+		}catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public static String getProperties(String key) throws Exception{
+		Properties props = new Properties();
+		String value = "";
+		try{
+			props.load(TapestryHelper.class.getClassLoader().getResourceAsStream("tapestry.properties"));
+			value = props.getProperty(key);			
+		}catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+		return value;
+	}	
 }

@@ -35,11 +35,18 @@
 		}
 		function isExistResearchId()
 		{
-			var existIds = document.getElementById("existResearchIds").value;		
-			var current_researchId = document.getElementById("researchId").value;			
+			var existIds = document.getElementById("existResearchIds").value;	
+			var researchId = document.getElementById("researchId");	
+			var current_researchId = researchId.value;
 			
 			if (existIds.indexOf(current_researchId) > -1)
-				alert("This id has been existed in the DB...");
+			{
+				alert("This ID has existed in the DB...");
+				researchId.value = "";
+				document.getElementById("researchId").focus();
+		
+			}
+				
 		}
 		
 		 function getVolunteers(){			 

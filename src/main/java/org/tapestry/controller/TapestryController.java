@@ -1,9 +1,11 @@
 package org.tapestry.controller;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -1097,6 +1099,13 @@ public class TapestryController{
 //		User loggedInUser = TapestryHelper.getLoggedInUser(request);
 //		HttpSession session = request.getSession();
 //		List<Patient> patients = TapestryHelper.getAllPatientsWithFullInfos(patientManager, request);	
+		try{
+			TapestryHelper th = new TapestryHelper();
+			th.readProperties();
+		}catch (Exception e)
+		{
+			System.out.println("sss");
+		}
 		
 		List<Patient> patients, disabledPatients;
 		User user = TapestryHelper.getLoggedInUser(request);
@@ -1238,7 +1247,7 @@ public class TapestryController{
 	}
 	
 	@RequestMapping(value="/call_coordinator_SOS/{patientName}", method=RequestMethod.GET)
-	public String callCoordinatorForElderAbuse(SecurityContextHolderAwareRequestWrapper request, ModelMap model, 
+	public String callCoordinatorForSOSAlert (SecurityContextHolderAwareRequestWrapper request, ModelMap model, 
 			@PathVariable("patientName") String patientName, @RequestParam(value="type", required=true) int type)
 	{
 		User loggedInUser = TapestryHelper.getLoggedInUser(request);		
@@ -1254,10 +1263,24 @@ public class TapestryController{
 		sb.append(" for patient ");
 		sb.append(patientName);
 		
-		//send message to Marianne Hannon and Katharine May
-		TapestryHelper.sendMessageToInbox("SOS alert", sb.toString(), loggedInUser.getUserID(), 22, messageManager);//need to change to Marianne's id
-		TapestryHelper.sendMessageToInbox("SOS alert", sb.toString(), loggedInUser.getUserID(), 1, messageManager);//need to change to Marianne's id
-		
+		//send message to Marianne Hannon and Katharine May, their's userId are stored in tapestry.properties 
+		try
+		{
+			String sosReceiver = TapestryHelper.getProperties("SOSReceiver");
+			System.out.println("ddd=== " + sosReceiver);
+			
+			List<String> receivers = new ArrayList<String>(Arrays.asList(sosReceiver.split(",")));
+			int rID;
+			for (int i=0; i< receivers.size(); i++)
+			{
+				rID = Integer.valueOf(receivers.get(i));
+				TapestryHelper.sendMessageToInbox("SOS alert", sb.toString(), loggedInUser.getUserID(), rID, messageManager);			
+			}
+			
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 		//log
 		userManager.addUserLog(sb.toString(), loggedInUser);
 		return "redirect:/";
@@ -2603,7 +2626,8 @@ public class TapestryController{
    		return "redirect:/display_client/" + patientId;
    	}
    	
-	@RequestMapping(value="/complete_survey_results/{patientId}", method=RequestMethod.POST)
+/**
+   	@RequestMapping(value="/complete_survey_results/{patientId}", method=RequestMethod.POST)
    	public String compSurveyResults(@PathVariable("patientId") int id, 	HttpServletRequest request, ModelMap model)
    	{
 		if (request.getParameter("hSurveyResultId") != null)
@@ -2612,8 +2636,7 @@ public class TapestryController{
 			surveyManager.markAsComplete(surveyResultId);
 			
 			String adminNote = request.getParameter("noteBody");
-	   		
-	   		System.out.println("note body is === " + adminNote);
+	   		   	
 	   		User loggedInUser = TapestryHelper.getLoggedInUser(request);
 	   		StringBuffer sb = new StringBuffer();
 	   		sb.append(loggedInUser.getName());
@@ -2623,7 +2646,7 @@ public class TapestryController{
 		}
 			
    		return "redirect:/display_client/" + id;
-   	}
+   	}*/
    	
    	
    	@RequestMapping(value="/view_survey_results/{resultID}", method=RequestMethod.GET)
@@ -3141,7 +3164,7 @@ public class TapestryController{
 	@RequestMapping(value="/search_volunteer_survey", method=RequestMethod.POST)
 	public String searchVolunteerSurvey(@RequestParam(value="failed", required=false) Boolean failed, ModelMap model, 
 			SecurityContextHolderAwareRequestWrapper request)
-	{	System.out.println("search vol");	
+	{	
 		String title = request.getParameter("searchTitle");		
 		List<SurveyTemplate>  surveyTemplateList = surveyManager.getVolunteerSurveyTemplatesByPartialTitle(title);
 		
