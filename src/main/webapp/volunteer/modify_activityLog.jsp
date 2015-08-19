@@ -70,7 +70,7 @@
 		
 		<div class="row-fluid">
 			<div class="col-md-3">
-				<textarea name="activityDesc"  maxlength="50">${activityLog.description}</textarea>
+				<textarea name="activityDesc"  maxlength="500">${activityLog.description}</textarea>
 				<input type="hidden" name="activityId" value="${activityLog.activityId}"/>	
 			</div>
 		</div>

@@ -77,7 +77,7 @@
 			
 			<div class="row">
 				<div class="col-md-12">
-					<textarea id="activitytxt" name="activityDesc"  maxlength="50">${activityLog.description}</textarea>
+					<textarea id="activitytxt" name="activityDesc"  maxlength="500">${activityLog.description}</textarea>
 					<input type="hidden" name="activityId" value="${activityLog.activityId}"/>	
 				</div>
 			</div>
