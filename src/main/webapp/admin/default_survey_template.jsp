@@ -1,8 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -20,6 +19,15 @@
 			
 			}
 	</style>
+	
+	<script type="text/javascript">
+	function setAction()
+	{alert(document.pressed);
+		document.getElementById("hAction").value = document.pressed;
+	
+	    return true;
+	}
+	</script>
 </head>
 <body>
 <div class="content">
@@ -29,17 +37,18 @@
 
 	<br/>
 	<div id="suveyTemplates">
-		<form id="setDefaultSurveyTemplate" method="post" action="<c:url value="/set_defaultSurveys"/>">
+		<form id="setDefaultSurveyTemplate" method="post" action="<c:url value="/set_defaultSurveys"/>" onsubmit="return setAction();">		
 			<c:forEach items="${survey_templates}" var="st">										 
 				 <input type="checkbox" name="survey_template" value=${st.surveyID} ><c:choose><c:when test="${st.defaultSurvey}"><font color="red">${st.title}</font></c:when><c:otherwise>${st.title}</c:otherwise></c:choose>
 				 <br>
 			</c:forEach>
-		
+		<input id="hAction" name="hAction" type="hidden" value=""/>
 		</form>
 	</div>
 	
 	<div class="row">
-			<input class="btn btn-primary" form="setDefaultSurveyTemplate" type="submit" value="Save Settings" />
+			<input class="btn btn-primary" form="setDefaultSurveyTemplate" type="submit" name ="setDefault" value="Set Default" onclick="document.pressed=this.value" />
+			<input class="btn btn-primary" form="setDefaultSurveyTemplate" type="submit" name ="removeDefault" value="Remove Default" onclick="document.pressed=this.value" />
 			
 		</div>
 </div>

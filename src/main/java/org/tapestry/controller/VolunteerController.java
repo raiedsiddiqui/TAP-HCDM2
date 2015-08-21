@@ -134,7 +134,7 @@ public class VolunteerController {
 		model.addAttribute("existUserNames", existUserNames);
 		
 		List<Organization> organizations = new ArrayList<Organization>();
-		List<Site> sites = new ArrayList<Site>();
+//		List<Site> sites = new ArrayList<Site>();
 		HttpSession session = request.getSession();
 		User logginUser = TapestryHelper.getLoggedInUser(request);
 		
@@ -154,14 +154,14 @@ public class VolunteerController {
 		}
 		model.addAttribute("organizations", organizations);
 		
-		if (request.isUserInRole("ROLE_ADMIN"))
-			sites = organizationManager.getAllSites();
-		else
-		{
-			int siteId = logginUser.getSite();
-			sites.add(organizationManager.getSiteById(siteId));
-		}
-		model.addAttribute("sites", sites);
+//		if (request.isUserInRole("ROLE_ADMIN"))
+//			sites = organizationManager.getAllSites();
+//		else
+//		{
+//			int siteId = logginUser.getSite();
+//			sites.add(organizationManager.getSiteById(siteId));
+//		}
+//		model.addAttribute("sites", sites);
 		
 		if (session.getAttribute("unread_messages") != null)
 			model.addAttribute("unread", session.getAttribute("unread_messages"));
@@ -281,7 +281,19 @@ public class VolunteerController {
 			ShaPasswordEncoder enc = new ShaPasswordEncoder();
 			String hashedPassword = enc.encodePassword(request.getParameter("password"), null);			
 			volunteer.setPassword(hashedPassword);
-					
+			volunteer.setInterviewDate(request.getParameter("interviewDate"));
+			volunteer.setStatus(request.getParameter("status"));
+			volunteer.setdOB(request.getParameter("dob"));
+			volunteer.setReference1(request.getParameter("reference1"));
+			volunteer.setReference2(request.getParameter("reference2"));
+			volunteer.setReferenceCheckDate(request.getParameter("rDate"));
+			volunteer.setPoliceCheckDate(request.getParameter("pCheckDate"));
+			volunteer.settBTestDate(request.getParameter("tbTDate"));
+			volunteer.setvLCCompletionDate(request.getParameter("vCDate"));
+			volunteer.setcAgreementDate(request.getParameter("cAgreementDate"));
+			volunteer.setvAgreementDate(request.getParameter("vAgreementDate"));
+			volunteer.setPhotoDate(request.getParameter("pDate"));
+			volunteer.setSource(request.getParameter("source"));					
 			String strAvailableTime = TapestryHelper.getAvailableTime(request);
 			volunteer.setAvailability(strAvailableTime);
 			//save a volunteer in the table volunteers
@@ -363,43 +375,7 @@ public class VolunteerController {
 		}
 		model.addAttribute("organizations", organizations);	
 		TapestryHelper.showVolunteerAvailability(volunteer, request, model);
-//		String strAvailibilities = volunteer.getAvailability();
-//		boolean mondayNull = false;
-//		boolean tuesdayNull = false;
-//		boolean wednesdayNull = false;
-//		boolean thursdayNull = false;
-//		boolean fridayNull = false;
-//		
-//		if (strAvailibilities.contains("1non"))
-//			mondayNull = true;
-//		if (strAvailibilities.contains("2non"))
-//			tuesdayNull = true;
-//		if (strAvailibilities.contains("3non"))
-//			wednesdayNull = true;
-//		if (strAvailibilities.contains("4non"))
-//			thursdayNull = true;
-//		if (strAvailibilities.contains("5non"))
-//			fridayNull = true;
-//		
-//		String[] arrayAvailibilities = strAvailibilities.split(",");
-//		
-//		Utils.getPosition("1","monDropPosition",arrayAvailibilities,mondayNull, model);
-//		Utils.getPosition("2","tueDropPosition",arrayAvailibilities,tuesdayNull, model);
-//		Utils.getPosition("3","wedDropPosition",arrayAvailibilities,wednesdayNull, model);
-//		Utils.getPosition("4","thuDropPosition",arrayAvailibilities,thursdayNull, model);
-//		Utils.getPosition("5","friDropPosition",arrayAvailibilities,fridayNull, model);
-//		
-//		model.addAttribute("volunteer", volunteer);
-//		model.addAttribute("mondayNull", mondayNull);
-//		model.addAttribute("tuesdayNull", tuesdayNull);
-//		model.addAttribute("wednesdayNull", wednesdayNull);
-//		model.addAttribute("thursdayNull", thursdayNull);
-//		model.addAttribute("fridayNull", fridayNull);
-//		model.addAttribute("organizations", organizations);		
-//		
-//		if (session.getAttribute("unread_messages") != null)
-//			model.addAttribute("unread", session.getAttribute("unread_messages"));
-				
+
 		return "/admin/modify_volunteer";
 	}
 	
@@ -444,7 +420,20 @@ public class VolunteerController {
 		volunteer.setAvailabilityPerMonth(Double.parseDouble(request.getParameter("availabilityPerMonthe")));
 		volunteer.setTechnologySkillsScore(Double.parseDouble(request.getParameter("technologySkillsScore")));
 		volunteer.setPerceptionOfOlderAdultsScore(Double.parseDouble(request.getParameter("perceptionOfOlderAdultScore")));
-			
+		volunteer.setInterviewDate(request.getParameter("interviewDate"));
+		volunteer.setStatus(request.getParameter("status"));
+		volunteer.setdOB(request.getParameter("dob"));
+		volunteer.setReference1(request.getParameter("reference1"));
+		volunteer.setReference2(request.getParameter("reference2"));
+		volunteer.setReferenceCheckDate(request.getParameter("rDate"));
+		volunteer.setPoliceCheckDate(request.getParameter("pCheckDate"));
+		volunteer.settBTestDate(request.getParameter("tbTDate"));
+		volunteer.setvLCCompletionDate(request.getParameter("vCDate"));
+		volunteer.setcAgreementDate(request.getParameter("cAgreementDate"));
+		volunteer.setvAgreementDate(request.getParameter("vAgreementDate"));
+		volunteer.setPhotoDate(request.getParameter("pDate"));
+		volunteer.setSource(request.getParameter("source"));			
+		
 		String strAvailableTime = TapestryHelper.getAvailableTime(request);				
 		volunteer.setAvailability(strAvailableTime);
 			

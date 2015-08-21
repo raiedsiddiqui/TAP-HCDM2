@@ -165,6 +165,19 @@ CREATE TABLE IF NOT EXISTS volunteers (
 	technology_skills_score DECIMAL(6,2),
 	perception_older_adult_score DECIMAL(6,2),
 	vlc_ID MEDIUMINT UNSIGNED NOT NULL,
+	interview_date TIMESTAMP,
+	date_of_birth TIMESTAMP,
+	mature_or_student VARCHAR(5), /* Using VARCHAR(1) for 1 character, expecting value like "S"--Student, "M"--Mature*/
+	reference1 VARCHAR(50),
+	reference2 VARCHAR(50),
+	reference_check_date TIMESTAMP,
+	police_check_received_date TIMESTAMP,
+	tb_test_received_date TIMESTAMP,
+	vlc_completion_date TIMESTAMP,
+	confidentiality_agreement_signed_date TIMESTAMP,
+	volunteer_agreement_signed_date TIMESTAMP,
+	photo_received_date TIMESTAMP,	
+	source VARCHAR(100),
 	
 	PRIMARY KEY (volunteer_ID)	
 );

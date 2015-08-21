@@ -104,7 +104,7 @@ public interface SurveyManager {
 	 * @param surveyTemplateIds
 	 */
 	@Transactional
-	public void removeDefaultSurveyTemplate(String[] surveyTemplateIds);
+	public void removeDefaultSurveyTemplateSetting(String[] surveyTemplateIds);
 	
 	/**
 	 * Delete a survey template from the database

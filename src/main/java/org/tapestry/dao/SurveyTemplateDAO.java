@@ -78,12 +78,12 @@ public interface SurveyTemplateDAO {
 	 * @param surveyIds
 	 */
 	public void setDefaultSurveyTemplate(String[] surveyIds);
-	
+				
 	/**
 	 * removed survey templates from default
 	 * @param surveyIds
 	 */
-	public void removeDefaultSurveyTemplate(String[] surveyIds);
+	public void removeDefaultSurveyTemplateSetting(String[] surveyIds);
 	
 	/**
 	 * Delete a survey template from the database

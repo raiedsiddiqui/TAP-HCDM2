@@ -226,8 +226,8 @@ public class SurveyTemplateDAOImpl extends JdbcDaoSupport implements SurveyTempl
 		getJdbcTemplate().update(sb.toString());
 	}
 	
-	@Override
-	public void removeDefaultSurveyTemplate(String[] surveyIds) {
+	@Override  
+	public void removeDefaultSurveyTemplateSetting(String[] surveyIds) {
 		int size = surveyIds.length;
 		StringBuffer sb = new StringBuffer();
 		sb.append("UPDATE surveys SET isDefault='0' WHERE survey_ID IN (");

@@ -2819,9 +2819,6 @@ public class TapestryController{
 	public String downLoadResearchDataBySite(@PathVariable("siteID") int id, HttpServletRequest request,  HttpServletResponse response)
 	{//This data needs to be written (Object[])
         List<ResearchData> results = TapestryHelper.getResearchDatas(patientManager, surveyManager, id);   
-        
-        System.out.println("size of results === " + results.size());
-        
         //Blank workbook
         XSSFWorkbook workbook = new XSSFWorkbook();         
         //Create a blank sheet
@@ -3543,8 +3540,12 @@ public class TapestryController{
 	@RequestMapping(value="/set_defaultSurveys", method=RequestMethod.POST)
    	public String setDefaultSurveyTemplates(HttpServletRequest request, ModelMap model)
    	{		
-		String[] surveyTemplateIds = request.getParameterValues("survey_template"); 		
-		surveyManager.setDefaultSurveyTemplate(surveyTemplateIds);
+		String action = request.getParameter("hAction");
+		String[] surveyTemplateIds = request.getParameterValues("survey_template"); 	
+		if ("Set Default".equals(action))
+			surveyManager.setDefaultSurveyTemplate(surveyTemplateIds);
+		else
+			surveyManager.removeDefaultSurveyTemplateSetting(surveyTemplateIds);
 		
 		List<SurveyTemplate> surveyTemplates = TapestryHelper.updateSurveyTemplates(request, surveyManager);	
 		model.addAttribute("survey_templates", surveyTemplates);
@@ -3552,15 +3553,15 @@ public class TapestryController{
 		return "/admin/default_survey_template";   	
    	}
 	
-	@RequestMapping(value="/remove_defaultSurveys", method=RequestMethod.POST)
-   	public String removeDefaultSurveyTemplates(HttpServletRequest request, ModelMap model)
-   	{		
-		String[] surveyTemplateIds = request.getParameterValues("survey_template"); 		
-		surveyManager.removeDefaultSurveyTemplate(surveyTemplateIds);
-		
-		List<SurveyTemplate> surveyTemplates = TapestryHelper.updateSurveyTemplates(request, surveyManager);	
-		model.addAttribute("survey_templates", surveyTemplates);
-		
-		return "/admin/default_survey_template";   	
-   	}
+//	@RequestMapping(value="/remove_defaultSurveys", method=RequestMethod.POST)
+//   	public String removeDefaultSurveyTemplates(HttpServletRequest request, ModelMap model)
+//   	{		
+//		String[] surveyTemplateIds = request.getParameterValues("survey_template"); 		
+//		surveyManager.removeDefaultSurveyTemplateSetting(surveyTemplateIds);
+//		
+//		List<SurveyTemplate> surveyTemplates = TapestryHelper.updateSurveyTemplates(request, surveyManager);	
+//		model.addAttribute("survey_templates", surveyTemplates);
+//		
+//		return "/admin/default_survey_template";   	
+//   	}
 }

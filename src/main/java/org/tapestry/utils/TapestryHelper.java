@@ -3950,20 +3950,17 @@ public class TapestryHelper {
 		for (int i =0; i<results.size(); i++)
 		{
 			if (Utils.isNullOrEmpty(results.get(i).getQuestionAnswer()))
-				results.get(i).setQuestionAnswer("0");
-		}
-		
+				results.get(i).setQuestionAnswer("000");
+		}		
 		return results;
 	}
 	
 	public static DisplayedSurveyResult formatEmptyResultAnswerToInt(DisplayedSurveyResult result)
 	{
 		if (Utils.isNullOrEmpty(result.getQuestionAnswer()))
-			result.setQuestionAnswer("0");
-		
+			result.setQuestionAnswer("000");		
 		return result;
-	}
-	
+	}	
 	
 	public static List<Site> getSites(SecurityContextHolderAwareRequestWrapper request, OrganizationManager organizationManager)
 	{

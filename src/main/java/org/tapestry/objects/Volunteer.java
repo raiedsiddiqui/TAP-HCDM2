@@ -35,7 +35,27 @@ public class Volunteer {
 	private double perceptionOfOlderAdultsScore;
 	private boolean showDelete;
 	private int vLCID;
-	
+	private String interviewDate;
+	private String dOB;
+	private String status; //Mature or Student
+	private String reference1;
+	private String reference2;
+	private String referenceCheckDate;
+	private String policeCheckDate;
+	private String tBTestDate;
+	private String vLCCompletionDate;
+	private String cAgreementDate;
+	private String vAgreementDate;//		if (request.isUserInRole("ROLE_ADMIN"))
+//	sites = organizationManager.getAllSites();
+//else
+//{
+//	int siteId = logginUser.getSite();
+//	sites.add(organizationManager.getSiteById(siteId));
+//}
+//
+	private String photoDate;
+	private String source;
+
 	public Volunteer(){
 		
 	}
@@ -303,5 +323,109 @@ public class Volunteer {
 		this.vLCID = vLCID;
 	}
 	
+	public String getInterviewDate() {
+		return interviewDate;
+	}
+
+	public void setInterviewDate(String interviewDate) {
+		this.interviewDate = interviewDate;
+	}
+
+	public String getdOB() {
+		return dOB;
+	}
+
+	public void setdOB(String dOB) {
+		this.dOB = dOB;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getReference1() {
+		return reference1;
+	}
+
+	public void setReference1(String reference1) {
+		this.reference1 = reference1;
+	}
+
+	public String getReference2() {
+		return reference2;
+	}
+
+	public void setReference2(String reference2) {
+		this.reference2 = reference2;
+	}
+
+	public String getReferenceCheckDate() {
+		return referenceCheckDate;
+	}
+
+	public void setReferenceCheckDate(String referenceCheckDate) {
+		this.referenceCheckDate = referenceCheckDate;
+	}
+
+	public String getPoliceCheckDate() {
+		return policeCheckDate;
+	}
+
+	public void setPoliceCheckDate(String policeCheckDate) {
+		this.policeCheckDate = policeCheckDate;
+	}
+
+	public String gettBTestDate() {
+		return tBTestDate;
+	}
+
+	public void settBTestDate(String tBTestDate) {
+		this.tBTestDate = tBTestDate;
+	}
+
+	public String getvLCCompletionDate() {
+		return vLCCompletionDate;
+	}
+
+	public void setvLCCompletionDate(String vLCCompletionDate) {
+		this.vLCCompletionDate = vLCCompletionDate;
+	}
+
+	public String getcAgreementDate() {
+		return cAgreementDate;
+	}
+
+	public void setcAgreementDate(String cAgreementDate) {
+		this.cAgreementDate = cAgreementDate;
+	}
+
+	public String getvAgreementDate() {
+		return vAgreementDate;
+	}
+
+	public void setvAgreementDate(String vAgreementDate) {
+		this.vAgreementDate = vAgreementDate;
+	}
+
+	public String getPhotoDate() {
+		return photoDate;
+	}
+
+	public void setPhotoDate(String photoDate) {
+		this.photoDate = photoDate;
+	}
+
+	
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
 	
 }

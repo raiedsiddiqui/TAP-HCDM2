@@ -198,8 +198,8 @@ public class SurveyManagerImpl implements SurveyManager {
 	}
 	
 	@Override
-	public void removeDefaultSurveyTemplate(String[] surveyTemplateIds) {
-		surveyTemplateDao.removeDefaultSurveyTemplate(surveyTemplateIds);
+	public void removeDefaultSurveyTemplateSetting(String[] surveyTemplateIds) {
+		surveyTemplateDao.removeDefaultSurveyTemplateSetting(surveyTemplateIds);
 	}
 	
 	@Override

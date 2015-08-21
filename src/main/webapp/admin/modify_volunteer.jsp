@@ -178,10 +178,71 @@
 										</select>
 								</div>
 								<div class="col-md-4">
-									<label>VLC ID</label>
+									<label>VLC ID:</label>
 									<input type="text" id="vlcId" name="vlcId" value="${volunteer.vLCID}" class="form-control" required/>									
 								</div>	
-								
+								<div class="col-md-4">
+									<label>Source - where they learned about Tapestry:</label>
+									<input type="text" id="source" name="source" value="${volunteer.source}" class="form-control" > 								
+								</div>								
+							</div>
+							
+							<div class="row form-group">
+								<div class="col-md-4">
+									<label>Interview Date:</label>
+									<input type="text" id="interviewDate" name="interviewDate" value="${volunteer.interviewDate}" class="form-control" > 																
+								</div>
+								<div class="col-md-4">
+									<label>Mature or Student:</label>
+									<input type="text" id="status" name="status" value="${volunteer.status}" class="form-control" />									
+								</div>	
+								<div class="col-md-4">
+									<label>Date of Birth:</label>
+									<input id="dob" name="dob" value="${volunteer.dOB}" class="form-control" > 				
+								</div>								
+							</div>
+							<div class="row form-group">
+								<div class="col-md-4">
+									<label>Reference 1:</label>
+									<input type="text" id="reference1" name="reference1" value="${volunteer.reference1}" class="form-control" > 								
+								</div>
+								<div class="col-md-4">
+									<label>Reference 2:</label>
+									<input type="text" id="reference2" name="reference2" value="${volunteer.reference2}" class="form-control" />									
+								</div>	
+								<div class="col-md-4">
+									<label>Reference Check - Date:</label>
+									<input id="rDate" name="rDate" value="${volunteer.referenceCheckDate}" class="form-control" > 				
+								</div>								
+							</div>
+							<div class="row form-group">
+								<div class="col-md-4">
+									<label>Police Check Date Received?</label>
+									<input type="text" id="pCheckDate" name="pCheckDate" value="${volunteer.policeCheckDate}" class="form-control" > 								
+								</div>
+								<div class="col-md-4">
+									<label>TB Test Received/Date?</label>
+									<input type="text" id="tbTDate" name="tbTDate" value="${volunteer.tBTestDate}" class="form-control" />									
+								</div>	
+								<div class="col-md-4">
+									<label>VLC Completion Date:</label>
+									<input id="vCDate" name="vCDate" value="${volunteer.vLCCompletionDate}" class="form-control" > 				
+								</div>								
+							</div>
+							
+							<div class="row form-group">
+								<div class="col-md-4">
+									<label>Confidentiality Agreement Date Signed:</label>
+									<input type="text" id="cAgreementDate" name="cAgreementDate" value="${volunteer.cAgreementDate}" class="form-control" > 								
+								</div>
+								<div class="col-md-4">
+									<label>Volunteer Agreement Date Signed:</label>
+									<input type="text" id="vAgreementDate" name="vAgreementDate" value="${volunteer.vAgreementDate}" class="form-control" />									
+								</div>	
+								<div class="col-md-4">
+									<label>Photo Date Received:</label>
+									<input id="pDate" name="pDate" value="${volunteer.photoDate}" class="form-control" > 				
+								</div>								
 							</div>
 
 
