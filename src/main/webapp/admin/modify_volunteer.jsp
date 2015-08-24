@@ -244,7 +244,12 @@
 									<input id="pDate" name="pDate" value="${volunteer.photoDate}" class="form-control" > 				
 								</div>								
 							</div>
-
+							<div class="row form-group">
+								<div class="col-md-4">
+									<label>Application Form Completion Date:</label>		
+									<input id="aCompleteDate" name="aCompleteDate" value="${volunteer.applicationFormCompletionDate}" class="form-control" > 										
+								</div>
+							</div>
 
 						<h2>User Account </h2>
 

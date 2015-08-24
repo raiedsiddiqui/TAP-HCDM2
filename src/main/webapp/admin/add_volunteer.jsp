@@ -399,6 +399,10 @@
 									</select>
 								</div> -->
 								<div class="col-md-4">
+									<label>Application Form Completion Date:</label>		
+									<input id="aCompleteDate" name="aCompleteDate" class="form-control" > 										
+								</div>
+								<div class="col-md-4">
 									<label>Organization:</label>									
 									<select name="organization" form="add_volunteer" class="form-control">
 										<c:forEach items="${organizations}" var="o">

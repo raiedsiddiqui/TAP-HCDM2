@@ -242,7 +242,7 @@ public class VolunteerController {
 	@RequestMapping(value="/add_volunteer", method=RequestMethod.POST)
 	public String addVolunteer(SecurityContextHolderAwareRequestWrapper request, ModelMap model)
 	{
-		String username = request.getParameter("username").trim();
+		String username = request.getParameter("username").trim();		
 		List<String> uList = volunteerManager.getAllExistUsernames();
 		
 		if (uList.contains(username))
@@ -293,7 +293,9 @@ public class VolunteerController {
 			volunteer.setcAgreementDate(request.getParameter("cAgreementDate"));
 			volunteer.setvAgreementDate(request.getParameter("vAgreementDate"));
 			volunteer.setPhotoDate(request.getParameter("pDate"));
-			volunteer.setSource(request.getParameter("source"));					
+			volunteer.setSource(request.getParameter("source"));	
+			
+			volunteer.setApplicationFormCompletionDate(request.getParameter("aCompleteDate"));
 			String strAvailableTime = TapestryHelper.getAvailableTime(request);
 			volunteer.setAvailability(strAvailableTime);
 			//save a volunteer in the table volunteers
@@ -322,10 +324,10 @@ public class VolunteerController {
 				user.setPassword(volunteer.getPassword());
 				user.setEmail(volunteer.getEmail());
 				user.setOrganization(volunteer.getOrganizationId());		
-				user.setSite(Integer.valueOf(request.getParameter("site")));
+				user.setSite(loggedInUser.getSite());
 				
-				success = userManager.createUser(user);			
-				
+				success = userManager.createUser(user);	
+								
 //				sb = new StringBuffer();
 //				sb.append("Thank you for volunteering with Tapestry. Your account has been successfully created.\n");
 //				sb.append("Your username and password are as follows:\n");
@@ -432,7 +434,8 @@ public class VolunteerController {
 		volunteer.setcAgreementDate(request.getParameter("cAgreementDate"));
 		volunteer.setvAgreementDate(request.getParameter("vAgreementDate"));
 		volunteer.setPhotoDate(request.getParameter("pDate"));
-		volunteer.setSource(request.getParameter("source"));			
+		volunteer.setSource(request.getParameter("source"));	
+		volunteer.setApplicationFormCompletionDate(request.getParameter("aCompleteDate"));
 		
 		String strAvailableTime = TapestryHelper.getAvailableTime(request);				
 		volunteer.setAvailability(strAvailableTime);

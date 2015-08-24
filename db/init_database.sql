@@ -178,6 +178,7 @@ CREATE TABLE IF NOT EXISTS volunteers (
 	volunteer_agreement_signed_date TIMESTAMP,
 	photo_received_date TIMESTAMP,	
 	source VARCHAR(100),
+	application_form_completion_date TIMESTAMP,
 	
 	PRIMARY KEY (volunteer_ID)	
 );

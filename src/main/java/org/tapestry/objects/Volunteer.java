@@ -45,16 +45,10 @@ public class Volunteer {
 	private String tBTestDate;
 	private String vLCCompletionDate;
 	private String cAgreementDate;
-	private String vAgreementDate;//		if (request.isUserInRole("ROLE_ADMIN"))
-//	sites = organizationManager.getAllSites();
-//else
-//{
-//	int siteId = logginUser.getSite();
-//	sites.add(organizationManager.getSiteById(siteId));
-//}
-//
+	private String vAgreementDate;	
 	private String photoDate;
 	private String source;
+	private String applicationFormCompletionDate;
 
 	public Volunteer(){
 		
@@ -427,5 +421,15 @@ public class Volunteer {
 	public void setSource(String source) {
 		this.source = source;
 	}
+
+	public String getApplicationFormCompletionDate() {
+		return applicationFormCompletionDate;
+	}
+
+	public void setApplicationFormCompletionDate(
+			String applicationFormCompletionDate) {
+		this.applicationFormCompletionDate = applicationFormCompletionDate;
+	}
+
 	
 }

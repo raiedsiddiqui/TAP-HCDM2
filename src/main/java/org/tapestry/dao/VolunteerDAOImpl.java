@@ -96,9 +96,10 @@ public class VolunteerDAOImpl extends JdbcDaoSupport implements VolunteerDAO {
 				+ "perception_older_adult_score, vlc_ID, "
 				+ "interview_date, date_of_birth, mature_or_student, reference1, "
 				+ "reference2, reference_check_date, police_check_received_date, tb_test_received_date,vlc_completion_date, "
-				+ "confidentiality_agreement_signed_date, volunteer_agreement_signed_date, photo_received_date, source) "
+				+ "confidentiality_agreement_signed_date, volunteer_agreement_signed_date, photo_received_date, source, "
+				+ "application_form_completion_date) "
 				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,"
-				+ " ?, ?, ?, ?, ?, ?, ?,?)";
+				+ " ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		getJdbcTemplate().update(sql, v.getFirstName(), v.getLastName(), v.getStreet(), 
 				v.getUserName(),	v.getEmail(),v.getExperienceLevel(), v.getCity(), v.getProvince(), v.getHomePhone(),	v.getCellPhone(), 
 				v.getPostalCode(), v.getCountry(), v.getEmergencyContact(), v.getEmergencyPhone(), v.getAptNumber(), v.getNotes(), 
@@ -107,7 +108,8 @@ public class VolunteerDAOImpl extends JdbcDaoSupport implements VolunteerDAO {
 				v.getPerceptionOfOlderAdultsScore(), v.getvLCID(),				
 				v.getInterviewDate(), v.getdOB(),v.getStatus(),  
 				v.getReference1(), v.getReference2(), v.getReferenceCheckDate(), v.getPoliceCheckDate(),v.gettBTestDate(), 
-				v.getvLCCompletionDate(), v.getcAgreementDate(), v.getvAgreementDate(), v.getPhotoDate(), v.getSource());
+				v.getvLCCompletionDate(), v.getcAgreementDate(), v.getvAgreementDate(), v.getPhotoDate(), v.getSource(), 
+				v.getApplicationFormCompletionDate());
 		
 		return true;
 	}
@@ -123,7 +125,7 @@ public class VolunteerDAOImpl extends JdbcDaoSupport implements VolunteerDAO {
 				+ "date_of_birth=?, mature_or_student=?, reference1=?, reference2=?, reference_check_date=?, "
 				+ "police_check_received_date=?, tb_test_received_date=?, vlc_completion_date=?, "
 				+ "confidentiality_agreement_signed_date=?, volunteer_agreement_signed_date=?, "
-				+ "photo_received_date=?, source=? WHERE volunteer_ID=?";
+				+ "photo_received_date=?, source=?, application_form_completion_date=? WHERE volunteer_ID=?";
 		
 		getJdbcTemplate().update(sql, v.getFirstName(), v.getLastName(), v.getUserName(), v.getStreet(), 
 				v.getEmail(), v.getExperienceLevel(), v.getCity(), v.getProvince(), v.getHomePhone(),
@@ -133,7 +135,8 @@ public class VolunteerDAOImpl extends JdbcDaoSupport implements VolunteerDAO {
 				v.getAvailabilityPerMonth(), v.getTechnologySkillsScore(), v.getPerceptionOfOlderAdultsScore(),
 				v.getvLCID(),  v.getInterviewDate(), v.getdOB(), v.getStatus(),	v.getReference1(), v.getReference2(), 
 				v.getReferenceCheckDate(), v.getPoliceCheckDate(),v.gettBTestDate(), v.getvLCCompletionDate(), 
-				v.getcAgreementDate(), v.getvAgreementDate(), v.getPhotoDate(), v.getSource(), v.getVolunteerId());		
+				v.getcAgreementDate(), v.getvAgreementDate(), v.getPhotoDate(), v.getSource(), 
+				v.getApplicationFormCompletionDate(), v.getVolunteerId());		
 	}
 	
 	@Override
@@ -362,6 +365,13 @@ public class VolunteerDAOImpl extends JdbcDaoSupport implements VolunteerDAO {
 				date = truncateDate(date);
 				vol.setPhotoDate(date);
 			}
+			
+			date = rs.getString("application_form_completion_date");
+			if (date != null && date.length() > 10)
+			{
+				date = truncateDate(date);
+				vol.setApplicationFormCompletionDate(date);;
+			}					
 						
 			vol.setSource(rs.getString("source"));
 			
