@@ -1448,8 +1448,8 @@ public class VolunteerController {
 						System.out.println("Can't find any coordinator in organization id# " + organizationId);
 						logger.error("Can't find any coordinator in organization id# " + organizationId);
 					}
-					TapestryHelper.sendMessageToInbox(inboxMsg, userId, volunteer1UserId, messageManager);//send message to volunteer1 
-					TapestryHelper.sendMessageToInbox(inboxMsg, userId, volunteer2UserId, messageManager);//send message to volunteer2
+//					TapestryHelper.sendMessageToInbox(inboxMsg, userId, volunteer1UserId, messageManager);//send message to volunteer1 
+//					TapestryHelper.sendMessageToInbox(inboxMsg, userId, volunteer2UserId, messageManager);//send message to volunteer2
 					
 					//log
 					userManager.addUserLog(logMsg, user);
@@ -1482,8 +1482,8 @@ public class VolunteerController {
 				if ((TapestryHelper.isAvailableForVolunteer(availability, vAvailability)) && 
 						(TapestryHelper.isAvailableForVolunteer(availability, pAvailability)))
 				{//send message to both volunteer and login user 					
-					TapestryHelper.sendMessageToInbox(inboxMsg, userId, volunteer1UserId, messageManager);//send message to volunteer1 
-					TapestryHelper.sendMessageToInbox(inboxMsg, userId, volunteer2UserId, messageManager);//send message to volunteer2	
+		//			TapestryHelper.sendMessageToInbox(inboxMsg, userId, volunteer1UserId, messageManager);//send message to volunteer1 
+		//			TapestryHelper.sendMessageToInbox(inboxMsg, userId, volunteer2UserId, messageManager);//send message to volunteer2	
 					TapestryHelper.sendMessageToInbox(inboxMsg, userId, userId, messageManager);//send message to login user 
 					
 					return "redirect:/manage_appointments?success=true";					
