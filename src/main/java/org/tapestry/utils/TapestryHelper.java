@@ -1114,13 +1114,12 @@ public class TapestryHelper {
    	 * @param allSurveyTemplates
    	 * @param selectedSurveyTemplates
    	 */
-  	public static void addSurveyTemplate(String[] surveyId,List<SurveyTemplate> allSurveyTemplates, 
-   			List<SurveyTemplate> selectedSurveyTemplates){
+  	public static void addSurveyTemplate(String[] surveyId,List<SurveyTemplate> allSurveyTemplates, List<SurveyTemplate> selectedSurveyTemplates){
    		int surveyTemplateId;
    		for (int i = 0; i < surveyId.length; i ++)
    		{  						
    			surveyTemplateId = Integer.parseInt(surveyId[i]);
-  				
+  				System.out.println("size of volunteer/client survey template == "+ allSurveyTemplates.size());
   			for (SurveyTemplate st: allSurveyTemplates){
   				if (surveyTemplateId == st.getSurveyID())
   					selectedSurveyTemplates.add(st);
@@ -1166,14 +1165,14 @@ public class TapestryHelper {
    					throws JAXBException, DatatypeConfigurationException, Exception{
 		
 		List<SurveyResult> surveyResults = surveyManager.getAllVolunteerSurveyResults();
-		
-   		TapestrySurveyMap surveys = DoSurveyAction.getSurveyMapAndStoreInSession(request, surveyResults, surveyTemplates);
+		//
+//   		TapestrySurveyMap surveys = DoSurveyAction.getSurveyMapAndStoreInSession(request, surveyResults, surveyTemplates);
+		TapestrySurveyMap surveys = DoSurveyAction.getVolunteerSurveyMapAndStoreInSession(request, surveyResults, surveyTemplates);
    		SurveyResult sr;
    		
    		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
    		String startDate = sdf.format(new Date());   
- 	
-//   		List<TapestryPHRSurvey> specificSurveys;
+
    		for(SurveyTemplate st: surveyTemplates) 
    		{
 			List<TapestryPHRSurvey> specificSurveys = surveys.getSurveyListById(Integer.toString(st.getSurveyID()));
@@ -3365,8 +3364,8 @@ public class TapestryHelper {
 		SurveyResult sr;
 		List<ResearchData> researchDatas = new ArrayList<ResearchData>();
 		ResearchData rData;
-		int patientId, size;
-		String xml, observerNote;
+		int patientId, researchId, size;
+		String xml, observerNote, strResearchId;
 		LinkedHashMap<String, String> res;
 		List<DisplayedSurveyResult> displayedResults;
 		StringBuffer sb;
@@ -3376,7 +3375,13 @@ public class TapestryHelper {
 		{
 			rData = new ResearchData();
 			patientId = patients.get(i).getPatientID();
-			rData.setPatientId(patientId);
+	//		rData.setPatientId(patientId);
+			strResearchId = patients.get(i).getResearchID();
+			
+			if (Utils.isNullOrEmpty(strResearchId))
+				rData.setPatientId(00);
+			else
+				rData.setPatientId(Integer.valueOf(strResearchId));
 			//Social life
 			try{
 				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "4. Social Life");

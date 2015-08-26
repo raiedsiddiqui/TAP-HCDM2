@@ -2228,14 +2228,17 @@ public class TapestryController{
 	   			
 	   		}
 	   		else if(request.getParameter("assignSurvey") != null)//assign selected surveys to selected patients
-	   		{    	   		
+	   		{    	   		System.out.println("assign survey to client...");
 	   	   		String[] selectedPatientIds = request.getParameterValues("patientId");
 	   	   		String assignToAll = request.getParameter("assignAllClinets");	   	   		   	   		
 	   	   		
 	   	   		//get survey template list 
 	   	   		if (surveyTemplateIds != null && surveyTemplateIds.length > 0)
 	   	   		{
-	   	   			TapestryHelper.addSurveyTemplate(surveyTemplateIds,sTemplates, selectSurveyTemplats);   
+	   	   			TapestryHelper.addSurveyTemplate(surveyTemplateIds,sTemplates, selectSurveyTemplats);  
+	   	   			
+	   	   		for (int i=0; i<selectSurveyTemplats.size(); i++)
+   					System.out.print( "selected client survey template === id = "+ selectSurveyTemplats.get(i).getSurveyID() + " title is == "+ selectSurveyTemplats.get(0).getTitle());
 	   	   			
 		   	   		if ("true".equalsIgnoreCase(assignToAll))
 		   	   		{//for assign to all clients   			
@@ -2711,7 +2714,7 @@ public class TapestryController{
 		st.setSurveyID(id);
 		st.setTitle(request.getParameter("title"));		
 		st.setDescription(request.getParameter("description"));		
-		
+			
 		if (loggedInUser.getSite() == 3)//for temporary UBC
 		{
 			surveyManager.updateVolunteerSurveyTemplate(st);
@@ -2825,7 +2828,7 @@ public class TapestryController{
         XSSFSheet sheet = workbook.createSheet("Research Data");   
               
         Map<Integer, Object[]> data = new TreeMap<Integer, Object[]>();
-        data.put(1, new Object[] {"Pat_ID","QOL1_mobility_T0", "QOL2_selfcare_T0", "QOL3_usualact_T0", 
+        data.put(1, new Object[] {"Research_ID","QOL1_mobility_T0", "QOL2_selfcare_T0", "QOL3_usualact_T0", 
         		"QOL4_paindis_T0", "QOL5_anxdepr_T0", "QOL6_scale_T0", "DSS1_role_T0",	"DSS2_under_T0","DSS3_useful_T0",
         		"DSS4_listen_T0","DSS5_happen_T0","DSS6_talk_T0", "DSS7_satisfied_T0", "DSS8_nofam_T0","DSS9_timesnotliving_T0",
         		"DSS10_timesphone_T0","DSS11_timesclubs_T0", "DSS_notes_T0", "Goals1matter_T0", "Goals2life_T0", "Goals3health_T0", 
@@ -3251,10 +3254,13 @@ public class TapestryController{
 	public String assignVolunteerSurvey(SecurityContextHolderAwareRequestWrapper request, ModelMap model) 
 			throws JAXBException, DatatypeConfigurationException, Exception
 	{   
-   		List<SurveyTemplate> sTemplates = surveyManager.getAllVolunteerSurveyTemplates();	    	
+   		List<SurveyTemplate> sTemplates = surveyManager.getAllVolunteerSurveyTemplates();	
+   		
    		ArrayList<SurveyTemplate> selectSurveyTemplats = new ArrayList<SurveyTemplate>();
    		User loginUser = TapestryHelper.getLoggedInUser(request);   		
    		String[] surveyTemplateIds = request.getParameterValues("volunteerSurveyTemplates"); 
+   		
+   		
    		int[] volunteerIds;   	   		
    		List<Volunteer> volunteers = volunteerManager.getAllVolunteersByOrganization(loginUser.getOrganization());
    	
@@ -3264,15 +3270,29 @@ public class TapestryController{
    			volunteers = volunteerManager.getVolunteersByName(name);			
    			model.addAttribute("searchVolunteerName", name);	 	   			
 	   	}
-   		else if(request.getParameter("assignSurvey") != null)//assign selected surveys to selected patients
-   		{       		
+   		else if(request.getParameter("assignVolunteerSurvey") != null)//assign selected surveys to selected volunteer
+   		{       		System.out.println("assign survey to volunteer ...");
    			String[] selectedVolunteerIds = request.getParameterValues("volunteerId");
    			String assignToAll = request.getParameter("assignAllVolunteers");	   	   		   	   		
 	   	   		
    			//get survey template list 
    			if (surveyTemplateIds != null && surveyTemplateIds.length > 0)
    			{
-   				TapestryHelper.addSurveyTemplate(surveyTemplateIds,sTemplates, selectSurveyTemplats);   
+   				////////////////////
+   	//			TapestryHelper.addSurveyTemplate(surveyTemplateIds,sTemplates, selectSurveyTemplats);   
+   				int stId;
+   				
+   				for (int i = 0; i < surveyTemplateIds.length; i ++)
+   		   		{  						
+   					stId = Integer.parseInt(surveyTemplateIds[i]);
+   		  				
+   		  			for (SurveyTemplate st: sTemplates){
+   		  				if (stId == st.getSurveyID())
+   		  				selectSurveyTemplats.add(st);
+   		  	   		}
+   		   		}
+   				   				   				
+   				///////////////////
    				StringBuffer sb = new StringBuffer();
    				sb.append(loginUser.getName());
    				sb.append(" has assigned surveys to volunteer");
