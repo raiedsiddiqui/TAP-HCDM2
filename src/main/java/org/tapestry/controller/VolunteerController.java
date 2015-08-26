@@ -281,21 +281,74 @@ public class VolunteerController {
 			ShaPasswordEncoder enc = new ShaPasswordEncoder();
 			String hashedPassword = enc.encodePassword(request.getParameter("password"), null);			
 			volunteer.setPassword(hashedPassword);
-			volunteer.setInterviewDate(request.getParameter("interviewDate"));
+			
+			String date = request.getParameter("interviewDate");
+			
+			if (Utils.isNullOrEmpty(date))				
+				volunteer.setInterviewDate("1900-01-01");
+			else
+				volunteer.setInterviewDate(date);
+			
 			volunteer.setStatus(request.getParameter("status"));
-			volunteer.setdOB(request.getParameter("dob"));
+			
+			date = request.getParameter("dob");
+			if (Utils.isNullOrEmpty(date))				
+				volunteer.setdOB("1900-01-01");
+			else
+				volunteer.setdOB(date);
+			
 			volunteer.setReference1(request.getParameter("reference1"));
 			volunteer.setReference2(request.getParameter("reference2"));
-			volunteer.setReferenceCheckDate(request.getParameter("rDate"));
-			volunteer.setPoliceCheckDate(request.getParameter("pCheckDate"));
-			volunteer.settBTestDate(request.getParameter("tbTDate"));
-			volunteer.setvLCCompletionDate(request.getParameter("vCDate"));
-			volunteer.setcAgreementDate(request.getParameter("cAgreementDate"));
-			volunteer.setvAgreementDate(request.getParameter("vAgreementDate"));
-			volunteer.setPhotoDate(request.getParameter("pDate"));
-			volunteer.setSource(request.getParameter("source"));	
 			
-			volunteer.setApplicationFormCompletionDate(request.getParameter("aCompleteDate"));
+			date = request.getParameter("rDate");
+			if (Utils.isNullOrEmpty(date))				
+				volunteer.setReferenceCheckDate("1900-01-01");
+			else
+				volunteer.setReferenceCheckDate(date);
+			
+			date = request.getParameter("pCheckDate");
+			if (Utils.isNullOrEmpty(date))				
+				volunteer.setPoliceCheckDate("1900-01-01");
+			else
+				volunteer.setPoliceCheckDate(date);
+			
+			date = request.getParameter("tbTDate");
+			if (Utils.isNullOrEmpty(date))				
+				volunteer.settBTestDate("1900-01-01");
+			else
+				volunteer.settBTestDate(date);
+			
+			date = request.getParameter("vCDate");
+			if (Utils.isNullOrEmpty(date))				
+				volunteer.setvLCCompletionDate("1900-01-01");
+			else
+				volunteer.setvLCCompletionDate(date);
+			
+			date = request.getParameter("cAgreementDate");
+			if (Utils.isNullOrEmpty(date))				
+				volunteer.setcAgreementDate("1900-01-01");
+			else
+				volunteer.setcAgreementDate(date);
+			
+			date = request.getParameter("vAgreementDate");
+			if (Utils.isNullOrEmpty(date))				
+				volunteer.setvAgreementDate("1900-01-01");
+			else
+				volunteer.setvAgreementDate(date);
+			
+			date = request.getParameter("pDate");
+			if (Utils.isNullOrEmpty(date))				
+				volunteer.setPhotoDate("1900-01-01");
+			else
+				volunteer.setPhotoDate(date);
+			volunteer.setSource(request.getParameter("source"));				
+			
+			date = request.getParameter("aCompleteDate");
+			if (Utils.isNullOrEmpty(date))				
+				volunteer.setApplicationFormCompletionDate("1900-01-01");
+			else
+				volunteer.setApplicationFormCompletionDate(date);
+			
 			String strAvailableTime = TapestryHelper.getAvailableTime(request);
 			volunteer.setAvailability(strAvailableTime);
 			//save a volunteer in the table volunteers
@@ -422,20 +475,73 @@ public class VolunteerController {
 		volunteer.setAvailabilityPerMonth(Double.parseDouble(request.getParameter("availabilityPerMonthe")));
 		volunteer.setTechnologySkillsScore(Double.parseDouble(request.getParameter("technologySkillsScore")));
 		volunteer.setPerceptionOfOlderAdultsScore(Double.parseDouble(request.getParameter("perceptionOfOlderAdultScore")));
-		volunteer.setInterviewDate(request.getParameter("interviewDate"));
+		
+		String date = request.getParameter("interviewDate");
+		
+		if (Utils.isNullOrEmpty(date))				
+			volunteer.setInterviewDate("1900-01-01");
+		else
+			volunteer.setInterviewDate(date);
+		
 		volunteer.setStatus(request.getParameter("status"));
-		volunteer.setdOB(request.getParameter("dob"));
+		
+		date = request.getParameter("dob");
+		if (Utils.isNullOrEmpty(date))				
+			volunteer.setdOB("1900-01-01");
+		else
+			volunteer.setdOB(date);
+		
 		volunteer.setReference1(request.getParameter("reference1"));
 		volunteer.setReference2(request.getParameter("reference2"));
-		volunteer.setReferenceCheckDate(request.getParameter("rDate"));
-		volunteer.setPoliceCheckDate(request.getParameter("pCheckDate"));
-		volunteer.settBTestDate(request.getParameter("tbTDate"));
-		volunteer.setvLCCompletionDate(request.getParameter("vCDate"));
-		volunteer.setcAgreementDate(request.getParameter("cAgreementDate"));
-		volunteer.setvAgreementDate(request.getParameter("vAgreementDate"));
-		volunteer.setPhotoDate(request.getParameter("pDate"));
-		volunteer.setSource(request.getParameter("source"));	
-		volunteer.setApplicationFormCompletionDate(request.getParameter("aCompleteDate"));
+		
+		date = request.getParameter("rDate");
+		if (Utils.isNullOrEmpty(date))				
+			volunteer.setReferenceCheckDate("1900-01-01");
+		else
+			volunteer.setReferenceCheckDate(date);
+		
+		date = request.getParameter("pCheckDate");
+		if (Utils.isNullOrEmpty(date))				
+			volunteer.setPoliceCheckDate("1900-01-01");
+		else
+			volunteer.setPoliceCheckDate(date);
+		
+		date = request.getParameter("tbTDate");
+		if (Utils.isNullOrEmpty(date))				
+			volunteer.settBTestDate("1900-01-01");
+		else
+			volunteer.settBTestDate(date);
+		
+		date = request.getParameter("vCDate");
+		if (Utils.isNullOrEmpty(date))				
+			volunteer.setvLCCompletionDate("1900-01-01");
+		else
+			volunteer.setvLCCompletionDate(date);
+		
+		date = request.getParameter("cAgreementDate");
+		if (Utils.isNullOrEmpty(date))				
+			volunteer.setcAgreementDate("1900-01-01");
+		else
+			volunteer.setcAgreementDate(date);
+		
+		date = request.getParameter("vAgreementDate");
+		if (Utils.isNullOrEmpty(date))				
+			volunteer.setvAgreementDate("1900-01-01");
+		else
+			volunteer.setvAgreementDate(date);
+		
+		date = request.getParameter("pDate");
+		if (Utils.isNullOrEmpty(date))				
+			volunteer.setPhotoDate("1900-01-01");
+		else
+			volunteer.setPhotoDate(date);
+		volunteer.setSource(request.getParameter("source"));				
+		
+		date = request.getParameter("aCompleteDate");
+		if (Utils.isNullOrEmpty(date))				
+			volunteer.setApplicationFormCompletionDate("1900-01-01");
+		else
+			volunteer.setApplicationFormCompletionDate(date);
 		
 		String strAvailableTime = TapestryHelper.getAvailableTime(request);				
 		volunteer.setAvailability(strAvailableTime);
@@ -1358,6 +1464,7 @@ public class VolunteerController {
 		//set appointment
 		Appointment a = new Appointment();
 		String date = request.getParameter("appointmentDate");	
+		System.out.println("app date = "+ date);
 		String time = request.getParameter("appointmentTime");
 		
 		//format the date from yyyy/MM/dd to yyyy-MM-dd

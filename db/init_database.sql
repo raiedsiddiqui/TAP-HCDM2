@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS users (
 	password VARCHAR(255) NOT NULL,
 	phone_number VARCHAR(20),
 	site INT UNSIGNED NOT NULL,
-	enabled BOOLEAN NOT NULL,
+	enabled BOOLEAN NOT NULL,q
 	email VARCHAR(50) NOT NULL,
 	role VARCHAR(45),
 	organization MEDIUMINT UNSIGNED NOT NULL, /*for volunteer and volunteer coordinator*/
@@ -165,20 +165,20 @@ CREATE TABLE IF NOT EXISTS volunteers (
 	technology_skills_score DECIMAL(6,2),
 	perception_older_adult_score DECIMAL(6,2),
 	vlc_ID MEDIUMINT UNSIGNED NOT NULL,
-	interview_date TIMESTAMP NULL DEFAULT NULL,
-	date_of_birth TIMESTAMP NULL DEFAULT NULL,
+	interview_date DATE NOT NULL DEFAULT '1900-01-01',
+	date_of_birth DATE NOT NULL DEFAULT '1900-01-01',
 	mature_or_student VARCHAR(5), /* Using VARCHAR(1) for 1 character, expecting value like "S"--Student, "M"--Mature*/
 	reference1 VARCHAR(50),
 	reference2 VARCHAR(50),
-	reference_check_date TIMESTAMP NULL DEFAULT NULL,
-	police_check_received_date TIMESTAMP NULL DEFAULT NULL,
-	tb_test_received_date TIMESTAMP NULL DEFAULT NULL,
-	vlc_completion_date TIMESTAMP NULL DEFAULT NULL,
-	confidentiality_agreement_signed_date TIMESTAMP NULL DEFAULT NULL,
-	volunteer_agreement_signed_date TIMESTAMP NULL DEFAULT NULL,
-	photo_received_date TIMESTAMP NULL DEFAULT NULL,	
+	reference_check_date DATE NOT NULL DEFAULT '1900-01-01',
+	police_check_received_date DATE NOT NULL DEFAULT '1900-01-01',
+	tb_test_received_date DATE NOT NULL DEFAULT '1900-01-01',
+	vlc_completion_date DATE NOT NULL DEFAULT '1900-01-01',
+	confidentiality_agreement_signed_date DATE NOT NULL DEFAULT '1900-01-01',
+	volunteer_agreement_signed_date DATE NOT NULL DEFAULT '1900-01-01',
+	photo_received_date DATE NOT NULL DEFAULT '1900-01-01',	
 	source VARCHAR(100),
-	application_form_completion_date TIMESTAMP NULL DEFAULT NULL,
+	application_form_completion_date DATE NOT NULL DEFAULT '1900-01-01',
 	
 	PRIMARY KEY (volunteer_ID)	
 );

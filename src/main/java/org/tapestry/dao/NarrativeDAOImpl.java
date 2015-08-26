@@ -61,9 +61,8 @@ public class NarrativeDAOImpl extends JdbcDaoSupport implements NarrativeDAO {
 
 	@Override
 	public Narrative getNarrativeById(int narrativeId) {
-		String sql = "SELECT narratives.*, patients.firstname, patients.lastname FROM narratives INNER JOIN patients "
-				+ "ON narratives.patient_ID = patients.patient_ID WHERE narratives.narrative_ID=? AND patients.enabled=1 "
-				+ "ORDER BY narratives.edit_Date DESC ";
+		String sql = "SELECT n.*, p.firstname, p.lastname FROM narratives AS n INNER JOIN patients AS p "
+				+ "ON n.patient_ID = p.patient_ID WHERE n.narrative_ID=? AND p.enabled=1 ";
 		
 		return getJdbcTemplate().queryForObject(sql, new Object[]{narrativeId}, new NarrativeMapper());
 	}
@@ -71,9 +70,8 @@ public class NarrativeDAOImpl extends JdbcDaoSupport implements NarrativeDAO {
 	
 	@Override
 	public Narrative getNarrativeByAppointmentId(int appointmentId) {
-		String sql = "SELECT narratives.*, patients.firstname, patients.lastname FROM narratives INNER JOIN patients "
-				+ "ON narratives.patient_ID = patients.patient_ID WHERE narratives.appointment=? AND patients.enabled=1"
-				+ "ORDER BY narratives.edit_Date DESC ";
+		String sql = "SELECT n.*, p.firstname, p.lastname FROM narratives AS n INNER JOIN patients AS p "
+				+ "ON n.patient_ID = p.patient_ID WHERE n.appointment=? AND p.enabled=1";
 		
 		return getJdbcTemplate().queryForObject(sql, new Object[]{appointmentId}, new NarrativeMapper());
 	}
