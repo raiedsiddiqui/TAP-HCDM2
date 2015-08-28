@@ -167,8 +167,17 @@
 		</tr>
 		<c:forEach items="${surveys}" var="s">
 		<tr >
-			
-			<td><a href="<c:url value="/show_survey/${s.resultID}"/>">${s.surveyTitle}</a></td>
+			<td>
+				<c:choose>
+					<c:when test="${s.completed}">
+						<a href="<c:url value="/show_survey/${s.resultID}"/>">${s.surveyTitle}</a>
+					</c:when>
+					<c:otherwise>
+						${s.surveyTitle}
+					</c:otherwise>
+				</c:choose>
+			</td>
+			<!--  td><a href="<c:url value="/show_survey/${s.resultID}"/>">${s.surveyTitle}</a></td>-->
 			<td>${s.startDate}</td>
 			<td>${s.editDate}</td>
 			<td>${s.strCompleted}</td>

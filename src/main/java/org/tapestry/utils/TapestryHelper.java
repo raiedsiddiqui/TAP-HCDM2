@@ -1272,7 +1272,8 @@ public class TapestryHelper {
 	}
    	
    	public static TapestrySurveyMap storeSurveyMapInSession(HttpServletRequest request, List<SurveyResult> surveyResults, List<SurveyTemplate> surveyTemplates)
-	{
+	{	
+   		request.getSession().removeAttribute("session_survey_list");
 		TapestrySurveyMap userSurveys = new TapestrySurveyMap(getSurveyResultsList(surveyResults, surveyTemplates));
 		request.getSession().setAttribute("session_survey_list", userSurveys);
 		
@@ -4249,8 +4250,8 @@ public class TapestryHelper {
 		Properties props = new Properties();
 		try{
 			props.load(TapestryHelper.class.getClassLoader().getResourceAsStream("tapestry.properties"));
-			String sos = props.getProperty("Admin");
-			System.out.println("admin === " + sos);
+//			String sos = props.getProperty("Admin");
+//			System.out.println("admin === " + sos);
 		}catch(IOException e)
 		{
 			e.printStackTrace();

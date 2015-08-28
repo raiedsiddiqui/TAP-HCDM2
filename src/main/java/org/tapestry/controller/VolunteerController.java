@@ -78,8 +78,9 @@ public class VolunteerController {
 		
 		if ("ROLE_ADMIN".equalsIgnoreCase(user.getRole()))
 			volunteers = volunteerManager.getAllVolunteersWithCanDelete();	//For central Admin		
-		else		
+		else	
 			volunteers = volunteerManager.getAllVolunteersWithCanDeleteByOrganization(user.getOrganization());	// for local Admin
+		
 		model.addAttribute("volunteers", volunteers);	
 		
 		if (session.getAttribute("volunteerMessage") != null)

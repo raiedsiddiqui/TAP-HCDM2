@@ -42,8 +42,8 @@ public interface VolunteerDAO {
 	 * @param id
 	 * @return a list of volunteer who belong to a organization
 	 */
-	public List<Volunteer> getAllVolunteersByOrganization(int id);
-	
+	public List<Volunteer> getAllVolunteersByOrganization(int id);	
+		
 	/**
 	 * 
 	 * @param id

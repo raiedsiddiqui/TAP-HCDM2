@@ -283,7 +283,7 @@ public class DoSurveyAction
 		}//end of forward action
 		else if (direction.equalsIgnoreCase("backward"))
 		{
-			int questionIndex = currentSurvey.getQuestionIndexbyId(questionId);
+			int questionIndex = currentSurvey.getQuestionIndexbyId(questionId);			
 			if (questionIndex > 0) 
 				nextQuestionId = currentSurvey.getQuestions().get(questionIndex - 1).getId();
 		}
@@ -366,6 +366,21 @@ public class DoSurveyAction
 
 		return(userSurveys);
 	}
+	
+	public static TapestrySurveyMap getVolunteerSurveyMapAndStoreInSession(HttpServletRequest request, List<SurveyResult> surveyResults, List<SurveyTemplate> surveyTemplates)
+	{
+		TapestrySurveyMap userSurveys = (TapestrySurveyMap) request.getSession().getAttribute("session_volunteer_survey_list");
+
+		//if survey list not in the session, retrieve from server
+		if (userSurveys == null)
+		{
+			userSurveys = new TapestrySurveyMap(getSurveyResultsList(surveyResults, surveyTemplates));
+			request.getSession().setAttribute("session_volunteer_survey_list", userSurveys);
+		}
+
+		return(userSurveys);
+	}
+	
 	
 	public static void updateSurveyMapInSession(HttpServletRequest request, List<SurveyResult> surveyResults, List<SurveyTemplate> surveyTemplates)
 	{

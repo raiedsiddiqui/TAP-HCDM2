@@ -83,6 +83,30 @@ public class VolunteerManagerImpl implements VolunteerManager {
 		
 		return volunteers;
 	}
+	
+	@Override
+	public List<Volunteer> getAllVolunteersWithCanDeleteBySite(int id) {
+		List<Volunteer> volunteers = getAllVolunteersByOrganization(id);
+		List<Appointment> appointments = new ArrayList<Appointment>();
+		List<Patient> patients = new ArrayList<Patient>();
+		int vId;
+		
+		for (Volunteer v: volunteers)
+		{
+			vId = v.getVolunteerId();
+			appointments = appointmentDao.getAllUpcomingAppointmentsForVolunteer(vId);
+			patients = patientDao.getPatientsForVolunteer(vId);
+			
+			
+			if (((appointments != null) && (appointments.size()>0)) || ((patients != null)
+					&& (patients.size()>0)))
+				v.setShowDelete(true);
+			else
+				v.setShowDelete(false);			
+		}
+		
+		return volunteers;
+	}
 
 	@Override
 	public List<Volunteer> getVolunteersWithAvailability() {

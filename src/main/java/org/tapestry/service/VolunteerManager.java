@@ -58,6 +58,16 @@ public interface VolunteerManager {
 	@Transactional
 	public List<Volunteer> getAllVolunteersWithCanDeleteByOrganization(int id);
 	
+		
+	/**
+	 * 
+	 * @param id
+	 * @return a list of volunteer
+	 * has info about if it can be delete or not
+	 */
+	@Transactional
+	public List<Volunteer> getAllVolunteersWithCanDeleteBySite(int id);
+	
 	/**
 	 * search by name for a grouped volunteer
 	 * @param partialName

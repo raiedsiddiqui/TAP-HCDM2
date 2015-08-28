@@ -54,7 +54,7 @@ public class VolunteerDAOImpl extends JdbcDaoSupport implements VolunteerDAO {
 				+ "ON v.organization=o.organization_ID WHERE v.organization=? ORDER BY v.firstname DESC";
 		return getJdbcTemplate().query(sql, new Object[]{id}, new VolunteerMapper());
 	}
-
+	
 	@Override
 	public List<Volunteer> getGroupedVolunteersByName(String partialName, int organizationId) {
 		String sql = "SELECT v.*, o.name FROM volunteers AS v INNER JOIN organizations AS o "
@@ -409,7 +409,7 @@ public class VolunteerDAOImpl extends JdbcDaoSupport implements VolunteerDAO {
 		return date;				
 	}
 
-	
+
 
 
 }

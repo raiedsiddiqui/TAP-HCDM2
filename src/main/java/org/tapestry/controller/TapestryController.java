@@ -2418,7 +2418,7 @@ public class TapestryController{
 	
    	@RequestMapping(value="/show_survey/{resultID}", method=RequestMethod.GET)
    	public ModelAndView showSurvey(@PathVariable("resultID") int id, HttpServletRequest request)
-   	{   	   		System.out.println("show...");
+   	{   	   	
    		ModelAndView redirectAction = null;
    		List<SurveyResult> surveyResults;
 		List<SurveyTemplate> surveyTemplates;
@@ -2427,10 +2427,31 @@ public class TapestryController{
 		User u = (User)session.getAttribute("loggedInUser");
 		String name = u.getName();		
 		int siteId = u.getSite();
-		
-		TapestrySurveyMap userSurveys = TapestryHelper.getSurveyMap(request);
+		TapestrySurveyMap userSurveys;		
 		SurveyResult surveyResult = surveyManager.getSurveyResultByID(id);
 		int patientId = surveyResult.getPatientID();
+		int pIdInSession;
+		
+		if (request.isUserInRole("ROLE_USER")) 
+			userSurveys = TapestryHelper.getSurveyMap(request);
+		else
+		{						
+			if (session.getAttribute("selectedPatient") != null)
+			{// to view survey result for other patient 
+				pIdInSession = Integer.valueOf(session.getAttribute("selectedPatient").toString());
+				
+				if (patientId != pIdInSession)
+				{
+					session.setAttribute("selectedPatient", patientId);
+					userSurveys = null;					
+				}	
+				else
+					userSurveys = TapestryHelper.getSurveyMap(request);
+					
+			}// to view survey result for first patient 				
+			else
+				userSurveys = null;					
+		}
 		
 		if (userSurveys == null)
 		{
@@ -2440,28 +2461,13 @@ public class TapestryController{
 	   			surveyTemplates = surveyManager.getSurveyTemplatesBySite(siteId);
 			
 			surveyResults = surveyManager.getSurveysByPatientID(patientId);
-			userSurveys = TapestryHelper.storeSurveyMapInSession(request, surveyResults, surveyTemplates);			
+			userSurveys = TapestryHelper.storeSurveyMapInSession(request, surveyResults, surveyTemplates);	
 		}
 				
 		SurveyTemplate surveyTemplate = surveyManager.getSurveyTemplateByID(surveyResult.getSurveyID());
-	
-		//user logs
-		Patient p = patientManager.getPatientByID(patientId);
-		StringBuffer sb  = new StringBuffer();
-		sb.append(name);
-		sb.append(" opened survey ");
-		sb.append(surveyResult.getSurveyTitle());
-		sb.append(" for patient ");
-		if(p.getPreferredName() != null && p.getPreferredName() != "")
-			sb.append(p.getPreferredName());
-		else 
-			sb.append(p.getDisplayName());
-			
-		userManager.addUserLog(sb.toString(), u);		
 				
-		//all survey results stored in map	
+		//all survey results stored in map		
 		TapestryPHRSurvey currentSurvey = userSurveys.getSurvey(Integer.toString(id));
-//		if (currentSurvey == null)
 		
 		try {
 			SurveyFactory surveyFactory = new SurveyFactory();
@@ -2475,20 +2481,27 @@ public class TapestryController{
 		
 		if (redirectAction == null){ //Assuming we've completed the survey
 			System.out.println("Something bad happened");
-		}
+		}	
 		
-		//goals survey must be done on the last
-		// if (surveyTemplate.getTitle().equals("Goals"))
-		// {			
-		// 	if (surveyManager.countUnCompletedSurveys(patientId)!= 1)
-		// 		redirectAction.setViewName("redirect:/patient/" + p.getPatientID() + "?goalsMsg=" + true);
-		// }
-				
    		if (request.isUserInRole("ROLE_USER") && redirectAction.getViewName() == "failed")
    			redirectAction.setViewName("redirect:/");	
    		else if (request.isUserInRole("ROLE_ADMIN") && redirectAction.getViewName() == "failed")    
    			redirectAction.setViewName("redirect:/display_client/" + patientId);
   
+   		//user logs
+		Patient p = patientManager.getPatientByID(patientId);
+		StringBuffer sb  = new StringBuffer();
+		sb.append(name);
+		sb.append(" opened survey ");
+		sb.append(surveyResult.getSurveyTitle());
+		sb.append(" for patient ");
+		if(p.getPreferredName() != null && p.getPreferredName() != "")
+			sb.append(p.getPreferredName());
+		else 
+			sb.append(p.getDisplayName());
+			
+		userManager.addUserLog(sb.toString(), u);		
+		
    		return redirectAction;
    	}
    	  

@@ -107,7 +107,7 @@
 			</div>
 			<br/><br/>
 			<div class="right">
-				<input type="submit" class="btn btn-primary" name="assignSurvey" value="Assign" />
+				<input type="submit" class="btn btn-primary" name="assignVolunteerSurvey" value="Assign" />
 			</div>		 
 		</form>		
 	</div>
