@@ -2197,7 +2197,7 @@ public class TapestryController{
    		if (!Utils.isNullOrEmpty(hPatient))
    		{      		
    			if(request.getParameter("assignSurvey") != null)//assign selected surveys to selected patients
-   	   		{  
+   	   		{  	
    				if (surveyTemplateIds != null && surveyTemplateIds.length > 0){
 
    					TapestryHelper.addSurveyTemplate(surveyTemplateIds,sTemplates, selectSurveyTemplats);     					
@@ -2228,7 +2228,7 @@ public class TapestryController{
 	   			
 	   		}
 	   		else if(request.getParameter("assignSurvey") != null)//assign selected surveys to selected patients
-	   		{    	   		System.out.println("assign survey to client...");
+	   		{    	   		
 	   	   		String[] selectedPatientIds = request.getParameterValues("patientId");
 	   	   		String assignToAll = request.getParameter("assignAllClinets");	   	   		   	   		
 	   	   		
@@ -2237,10 +2237,7 @@ public class TapestryController{
 	   	   		{
 	   	   			TapestryHelper.addSurveyTemplate(surveyTemplateIds,sTemplates, selectSurveyTemplats);  
 	   	   			
-	   	   		for (int i=0; i<selectSurveyTemplats.size(); i++)
-   					System.out.print( "selected client survey template === id = "+ selectSurveyTemplats.get(i).getSurveyID() + " title is == "+ selectSurveyTemplats.get(0).getTitle());
-	   	   			
-		   	   		if ("true".equalsIgnoreCase(assignToAll))
+	   	   			if ("true".equalsIgnoreCase(assignToAll))
 		   	   		{//for assign to all clients   			
 		   	   			Patient patient;   			
 		   	   			patientIds = new int[patients.size()];
@@ -3284,15 +3281,14 @@ public class TapestryController{
    			model.addAttribute("searchVolunteerName", name);	 	   			
 	   	}
    		else if(request.getParameter("assignVolunteerSurvey") != null)//assign selected surveys to selected volunteer
-   		{       		System.out.println("assign survey to volunteer ...");
+   		{       		
    			String[] selectedVolunteerIds = request.getParameterValues("volunteerId");
    			String assignToAll = request.getParameter("assignAllVolunteers");	   	   		   	   		
 	   	   		
    			//get survey template list 
    			if (surveyTemplateIds != null && surveyTemplateIds.length > 0)
    			{
-   				////////////////////
-   	//			TapestryHelper.addSurveyTemplate(surveyTemplateIds,sTemplates, selectSurveyTemplats);   
+   				 
    				int stId;
    				
    				for (int i = 0; i < surveyTemplateIds.length; i ++)
@@ -3304,8 +3300,7 @@ public class TapestryController{
    		  				selectSurveyTemplats.add(st);
    		  	   		}
    		   		}
-   				   				   				
-   				///////////////////
+   				   	
    				StringBuffer sb = new StringBuffer();
    				sb.append(loginUser.getName());
    				sb.append(" has assigned surveys to volunteer");
@@ -3321,7 +3316,8 @@ public class TapestryController{
 		   	   			volunteer = new Volunteer();
 		   	   			volunteer = volunteers.get(i);
 		   	   			volunteerIds[i] = volunteer.getVolunteerId();
-		   	   		}		   	   			
+		   	   		}		   	   		
+		   	   
 		   	   		TapestryHelper.assignSurveysToVolunteer(selectSurveyTemplats, volunteerIds, request, model, surveyManager);		
 		   	   		userManager.addUserLog(logDes, loginUser);
    				}
@@ -3334,7 +3330,8 @@ public class TapestryController{
    	   	   				int[] iSelectedVolunteerIds = new int[selectedVolunteerIds.length];
    	   	   	   			for (int j = 0; j < selectedVolunteerIds.length; j++){
    	   	   	   				iSelectedVolunteerIds[j] = Integer.parseInt(selectedVolunteerIds[j]);
-   	   	   				}
+   	   	   				}   	   	   	   			
+   	   	   	
    	   	   	   			TapestryHelper.assignSurveysToVolunteer(selectSurveyTemplats, iSelectedVolunteerIds, request, model, surveyManager);
    	   	   	   			userManager.addUserLog(logDes, loginUser);
    	   	   			}   			

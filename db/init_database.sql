@@ -402,7 +402,7 @@ CREATE TABLE IF NOT EXISTS volunteer_survey_results (
 	volunteer_ID SMALLINT UNSIGNED NOT NULL, /*Same as patient_ID in patients*/
 	completed BOOLEAN NOT NULL DEFAULT 0, /*The completion status of the survey (0=incomplete)*/
 	startDate DATETIME, /*Automatically assigns the startDate when the survey is assigned*/
-	editDate TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP, /*editDate represents the last edit date*/
+	editDate TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP, /*editDate represents the last edit date*/	
 	data MEDIUMBLOB, /*The survey data*/
 	PRIMARY KEY (result_ID)
 );

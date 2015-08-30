@@ -1055,6 +1055,54 @@ public class TapestryHelper {
    		}
    		return exist;
    	}
+   	
+   	public static void assignSurveysToClient(List<SurveyTemplate> surveyTemplates, int[] patientIds, 
+   			SecurityContextHolderAwareRequestWrapper request, SurveyManager surveyManager) 
+   					throws JAXBException, DatatypeConfigurationException, Exception{
+  
+   		SurveyResult sr;
+   		String lastAssignSurveyTo = "";
+   		
+   		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+   		String startDate = sdf.format(new Date());   
+   		HttpSession session = request.getSession();
+   		
+   		if (session.getAttribute("assignSurveyTo") != null)
+   			lastAssignSurveyTo = session.getAttribute("assignSurveyTo").toString();
+   		for(SurveyTemplate st: surveyTemplates) 
+   		{
+			SurveyFactory surveyFactory = new SurveyFactory();
+			TapestryPHRSurvey template = surveyFactory.getSurveyTemplate(st);
+			
+			//
+		
+			if ("V".equalsIgnoreCase(lastAssignSurveyTo))
+			{
+				surveyFactory.reloadSurveyTemplate(st);
+				template = surveyFactory.getSurveyTemplate(st);
+			}			
+			sr = new SurveyResult();
+				
+			for (int i = 0; i < patientIds.length; i++)
+			{
+				sr.setPatientID(patientIds[i]);
+				sr.setSurveyID(st.getSurveyID());
+	            	
+				//set today as startDate
+				sr.setStartDate(startDate);	            	
+					    	
+				TapestryPHRSurvey blankSurvey = template;
+				blankSurvey.setQuestions(new ArrayList<SurveyQuestion>());// make blank survey
+				sr.setResults(SurveyAction.updateSurveyResult(blankSurvey));
+				surveyManager.assignSurvey(sr);
+				
+			}   			
+		}
+   		
+   		session.setAttribute("assignSurveyTo", "C");
+   	}
+   	
+   	
    	/**
    	 * Assign selected surveys to selected clients
    	 * @param surveyTemplates
@@ -1065,49 +1113,49 @@ public class TapestryHelper {
    	 * @throws DatatypeConfigurationException
    	 * @throws Exception
    	 */
-   	public static void assignSurveysToClient(List<SurveyTemplate> surveyTemplates, int[] patientIds, 
-   			SecurityContextHolderAwareRequestWrapper request, SurveyManager surveyManager) 
-   					throws JAXBException, DatatypeConfigurationException, Exception{
-		
-		List<SurveyResult> surveyResults = surveyManager.getAllSurveyResults();
-		
-   		TapestrySurveyMap surveys = DoSurveyAction.getSurveyMapAndStoreInSession(request, surveyResults, surveyTemplates);
-   		SurveyResult sr;
-   		
-   		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-   		String startDate = sdf.format(new Date());   
- 	
-   		for(SurveyTemplate st: surveyTemplates) 
-   		{
-			List<TapestryPHRSurvey> specificSurveys = surveys.getSurveyListById(Integer.toString(st.getSurveyID()));
-			
-			SurveyFactory surveyFactory = new SurveyFactory();
-			TapestryPHRSurvey template = surveyFactory.getSurveyTemplate(st);
-			sr = new SurveyResult();
-				
-			for (int i = 0; i < patientIds.length; i++){
-				sr.setPatientID(patientIds[i]);
-				sr.setSurveyID(st.getSurveyID());
-	            	
-				//set today as startDate
-				sr.setStartDate(startDate);	            	
-				//if requested survey that's already done--removed if condition check, since a survey can be re-assign to a patient
-//				if (specificSurveys.size() < template.getMaxInstances() && 
-//						!isExistInSurveyResultList(surveyResults,st.getSurveyID(), patientIds[i]))
-//				{		    	
-					TapestryPHRSurvey blankSurvey = template;
-					blankSurvey.setQuestions(new ArrayList<SurveyQuestion>());// make blank survey
-					sr.setResults(SurveyAction.updateSurveyResult(blankSurvey));
-					String documentId = surveyManager.assignSurvey(sr);
-					
-					blankSurvey.setDocumentId(documentId);
-					surveys.addSurvey(blankSurvey);
-					specificSurveys = surveys.getSurveyListById(Integer.toString(st.getSurveyID())); //reload
-	//	    	}
-				
-			}   			
-		}
-   	}
+//   	public static void assignSurveysToClient(List<SurveyTemplate> surveyTemplates, int[] patientIds, 
+//   			SecurityContextHolderAwareRequestWrapper request, SurveyManager surveyManager) 
+//   					throws JAXBException, DatatypeConfigurationException, Exception{
+//		
+//		List<SurveyResult> surveyResults = surveyManager.getAllSurveyResults();
+//		
+//   		TapestrySurveyMap surveys = DoSurveyAction.getSurveyMapAndStoreInSession(request, surveyResults, surveyTemplates);
+//   		SurveyResult sr;
+//   		
+//   		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+//   		String startDate = sdf.format(new Date());   
+// 	
+//   		for(SurveyTemplate st: surveyTemplates) 
+//   		{
+//			List<TapestryPHRSurvey> specificSurveys = surveys.getSurveyListById(Integer.toString(st.getSurveyID()));
+//			
+//			SurveyFactory surveyFactory = new SurveyFactory();
+//			TapestryPHRSurvey template = surveyFactory.getSurveyTemplate(st);
+//			sr = new SurveyResult();
+//				
+//			for (int i = 0; i < patientIds.length; i++){
+//				sr.setPatientID(patientIds[i]);
+//				sr.setSurveyID(st.getSurveyID());
+//	            	
+//				//set today as startDate
+//				sr.setStartDate(startDate);	            	
+//				//if requested survey that's already done--removed if condition check, since a survey can be re-assign to a patient
+////				if (specificSurveys.size() < template.getMaxInstances() && 
+////						!isExistInSurveyResultList(surveyResults,st.getSurveyID(), patientIds[i]))
+////				{		    	
+//					TapestryPHRSurvey blankSurvey = template;
+//					blankSurvey.setQuestions(new ArrayList<SurveyQuestion>());// make blank survey
+//					sr.setResults(SurveyAction.updateSurveyResult(blankSurvey));
+//					String documentId = surveyManager.assignSurvey(sr);
+//					
+//					blankSurvey.setDocumentId(documentId);
+//					surveys.addSurvey(blankSurvey);
+//					specificSurveys = surveys.getSurveyListById(Integer.toString(st.getSurveyID())); //reload
+//	//	    	}
+//				
+//			}   			
+//		}
+//   	}
    	/**
    	 * Add new survey script
    	 * @param surveyId
@@ -1119,7 +1167,7 @@ public class TapestryHelper {
    		for (int i = 0; i < surveyId.length; i ++)
    		{  						
    			surveyTemplateId = Integer.parseInt(surveyId[i]);
-  				System.out.println("size of volunteer/client survey template == "+ allSurveyTemplates.size());
+  				
   			for (SurveyTemplate st: allSurveyTemplates){
   				if (surveyTemplateId == st.getSurveyID())
   					selectedSurveyTemplates.add(st);
@@ -1141,8 +1189,9 @@ public class TapestryHelper {
    			SecurityContextHolderAwareRequestWrapper request,ModelMap model, SurveyManager surveyManager) 
    					throws JAXBException, DatatypeConfigurationException, Exception{
    		try
-   		{   				
+   		{   			
    			assignSurveysToClient(selectSurveyTemplats, patientIds, request, surveyManager);
+ //  			assignSurveysToClient111(selectSurveyTemplats, patientIds, request, surveyManager);
    			model.addAttribute("successful", true);
   		}catch (Exception e){
   			System.out.println("something wrong with assingn survey to client === " + e.getMessage());
@@ -1160,27 +1209,71 @@ public class TapestryHelper {
    	 * @throws DatatypeConfigurationException
    	 * @throws Exception
    	 */
+//   	public static void assignSurveysToVolunteer(List<SurveyTemplate> surveyTemplates, int[] volunteerIds, 
+//   			SecurityContextHolderAwareRequestWrapper request, SurveyManager surveyManager) 
+//   					throws JAXBException, DatatypeConfigurationException, Exception{
+//		
+//		List<SurveyResult> surveyResults = surveyManager.getAllVolunteerSurveyResults();
+//		System.out.println("selected survey template  helper=== for volunteer" + surveyTemplates.get(0).getTitle());
+//		TapestrySurveyMap surveys = DoSurveyAction.getVolunteerSurveyMapAndStoreInSession(request, surveyResults, surveyTemplates);
+//   		SurveyResult sr;
+//   		
+//   		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+//   		String startDate = sdf.format(new Date());   
+//
+//   		for(SurveyTemplate st: surveyTemplates) 
+//   		{
+//			List<TapestryPHRSurvey> specificSurveys = surveys.getSurveyListById(Integer.toString(st.getSurveyID()));
+//			
+//			SurveyFactory surveyFactory = new SurveyFactory();
+//			TapestryPHRSurvey template = surveyFactory.getSurveyTemplate(st);
+//			sr = new SurveyResult();
+//				
+//			for (int i = 0; i < volunteerIds.length; i++)
+//			{
+//				sr.setVolunteerID(volunteerIds[i]);
+//				sr.setSurveyID(st.getSurveyID());
+//	            	
+//				//set today as startDate
+//				sr.setStartDate(startDate);	            	
+//			    	
+//				TapestryPHRSurvey blankSurvey = template;
+//				blankSurvey.setQuestions(new ArrayList<SurveyQuestion>());// make blank survey
+//				sr.setResults(SurveyAction.updateSurveyResult(blankSurvey));
+//				String documentId = surveyManager.assignVolunteerSurvey(sr);
+//					
+//				blankSurvey.setDocumentId(documentId);
+//				surveys.addSurvey(blankSurvey);
+//				specificSurveys = surveys.getSurveyListById(Integer.toString(st.getSurveyID())); //reload				
+//			}   			
+//		}
+//   	}
+   	
    	public static void assignSurveysToVolunteer(List<SurveyTemplate> surveyTemplates, int[] volunteerIds, 
    			SecurityContextHolderAwareRequestWrapper request, SurveyManager surveyManager) 
-   					throws JAXBException, DatatypeConfigurationException, Exception{
-		
-		List<SurveyResult> surveyResults = surveyManager.getAllVolunteerSurveyResults();
-		//
-//   		TapestrySurveyMap surveys = DoSurveyAction.getSurveyMapAndStoreInSession(request, surveyResults, surveyTemplates);
-		TapestrySurveyMap surveys = DoSurveyAction.getVolunteerSurveyMapAndStoreInSession(request, surveyResults, surveyTemplates);
-   		SurveyResult sr;
-   		
+   					throws JAXBException, DatatypeConfigurationException, Exception{   		
+   		SurveyResult sr;   		
    		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-   		String startDate = sdf.format(new Date());   
-
+   		String startDate = sdf.format(new Date());  
+   		HttpSession session = request.getSession();
+   		String lastAssignSurveyTo="";
+   		if (session.getAttribute("assignSurveyTo") != null)
+   			lastAssignSurveyTo = session.getAttribute("assignSurveyTo").toString();
+   		
    		for(SurveyTemplate st: surveyTemplates) 
-   		{
-			List<TapestryPHRSurvey> specificSurveys = surveys.getSurveyListById(Integer.toString(st.getSurveyID()));
-			
+   		{			
 			SurveyFactory surveyFactory = new SurveyFactory();
 			TapestryPHRSurvey template = surveyFactory.getSurveyTemplate(st);
+			
+			if ("C".equalsIgnoreCase(lastAssignSurveyTo))
+			{
+				surveyFactory.reloadSurveyTemplate(st);
+				template = surveyFactory.getSurveyTemplate(st);
+			}
+			
+			
 			sr = new SurveyResult();
-				
+			
 			for (int i = 0; i < volunteerIds.length; i++)
 			{
 				sr.setVolunteerID(volunteerIds[i]);
@@ -1192,13 +1285,13 @@ public class TapestryHelper {
 				TapestryPHRSurvey blankSurvey = template;
 				blankSurvey.setQuestions(new ArrayList<SurveyQuestion>());// make blank survey
 				sr.setResults(SurveyAction.updateSurveyResult(blankSurvey));
-				String documentId = surveyManager.assignVolunteerSurvey(sr);
-					
-				blankSurvey.setDocumentId(documentId);
-				surveys.addSurvey(blankSurvey);
-				specificSurveys = surveys.getSurveyListById(Integer.toString(st.getSurveyID())); //reload				
+				surveyManager.assignVolunteerSurvey(sr);
 			}   			
 		}
+   		
+   		
+   		session.setAttribute("assignSurveyTo", "V");
+   		
    	}
    	////
   	/**
@@ -1217,6 +1310,7 @@ public class TapestryHelper {
    					throws JAXBException, DatatypeConfigurationException, Exception{
    		try
    		{   				
+   		//	assignSurveysToVolunteer(selectSurveyTemplats, volunteerIds, request, surveyManager);
    			assignSurveysToVolunteer(selectSurveyTemplats, volunteerIds, request, surveyManager);
    			model.addAttribute("successful", true);
   		}catch (Exception e){

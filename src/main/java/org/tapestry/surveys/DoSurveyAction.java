@@ -370,13 +370,13 @@ public class DoSurveyAction
 	public static TapestrySurveyMap getVolunteerSurveyMapAndStoreInSession(HttpServletRequest request, List<SurveyResult> surveyResults, List<SurveyTemplate> surveyTemplates)
 	{
 		TapestrySurveyMap userSurveys = (TapestrySurveyMap) request.getSession().getAttribute("session_volunteer_survey_list");
-
+		
 		//if survey list not in the session, retrieve from server
 		if (userSurveys == null)
 		{
 			userSurveys = new TapestrySurveyMap(getSurveyResultsList(surveyResults, surveyTemplates));
 			request.getSession().setAttribute("session_volunteer_survey_list", userSurveys);
-		}
+		}                                      
 
 		return(userSurveys);
 	}
@@ -396,7 +396,7 @@ public class DoSurveyAction
 	public static List<TapestryPHRSurvey> getSurveyResultsList(List<SurveyResult> surveyResults, List<SurveyTemplate> surveyTemplates)
 	{
 		List<TapestryPHRSurvey> results = new ArrayList<TapestryPHRSurvey>();
-
+	
 		for (SurveyResult tempResult : surveyResults)
 		{
 			try
