@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS users (
 	password VARCHAR(255) NOT NULL,
 	phone_number VARCHAR(20),
 	site INT UNSIGNED NOT NULL,
-	enabled BOOLEAN NOT NULL,q
+	enabled BOOLEAN NOT NULL,
 	email VARCHAR(50) NOT NULL,
 	role VARCHAR(45),
 	organization MEDIUMINT UNSIGNED NOT NULL, /*for volunteer and volunteer coordinator*/

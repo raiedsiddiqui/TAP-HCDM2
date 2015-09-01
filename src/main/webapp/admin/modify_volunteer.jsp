@@ -189,16 +189,16 @@
 							
 							<div class="row form-group">
 								<div class="col-md-4">
-									<label>Interview Date:</label>
-									<input type="text" id="interviewDate" name="interviewDate" value="${volunteer.interviewDate}" class="datepickera form-control" data-format="yyyy-MM-dd" > 																
+									<label>Interview Date (YYYY-MM-DD):</label>
+									<input type="text" id="interviewDate" name="interviewDate" class="form-control" value="${volunteer.interviewDate}"> 																
 								</div>
 								<div class="col-md-4">
 									<label>Mature or Student:</label>
 									<input type="text" id="status" name="status" value="${volunteer.status}" class="form-control" />									
 								</div>	
 								<div class="col-md-4">
-									<label>Date of Birth:</label>
-									<input id="dob" name="dob" value="${volunteer.dOB}" class="datepickera form-control" data-format="yyyy-MM-dd" > 				
+									<label>Date of Birth (YYYY-MM-DD):</label>
+									<input id="dob" name="dob" value="${volunteer.dOB}" class="form-control" data-format="yyyy-MM-dd" > 				
 								</div>								
 							</div>
 							<div class="row form-group">
@@ -211,43 +211,43 @@
 									<input type="text" id="reference2" name="reference2" value="${volunteer.reference2}" class="form-control" />									
 								</div>	
 								<div class="col-md-4">
-									<label>Reference Check - Date:</label>
-									<input id="rDate" name="rDate" value="${volunteer.referenceCheckDate}" class="datepickera form-control" data-format="yyyy-MM-dd"> 				
+									<label>Reference Check - Date (YYYY-MM-DD):</label>
+									<input id="rDate" name="rDate" value="${volunteer.referenceCheckDate}" class="form-control" data-format="yyyy-MM-dd"> 				
 								</div>								
 							</div>
 							<div class="row form-group">
 								<div class="col-md-4">
-									<label>Police Check Date Received?</label>
-									<input type="text" id="pCheckDate" name="pCheckDate" value="${volunteer.policeCheckDate}" class="datepickera form-control" data-format="yyyy-MM-dd"> 								
+									<label>Police Check Date Received? (YYYY-MM-DD)</label>
+									<input type="text" id="pCheckDate" name="pCheckDate" value="${volunteer.policeCheckDate}" class="form-control" data-format="yyyy-MM-dd"> 								
 								</div>
 								<div class="col-md-4">
-									<label>TB Test Received/Date?</label>
-									<input type="text" id="tbTDate" name="tbTDate" value="${volunteer.tBTestDate}" class="datepickera form-control" data-format="yyyy-MM-dd"/>									
+									<label>TB Test Received/Date? (YYYY-MM-DD)</label>
+									<input type="text" id="tbTDate" name="tbTDate" value="${volunteer.tBTestDate}" class="form-control" data-format="yyyy-MM-dd"/>									
 								</div>	
 								<div class="col-md-4">
-									<label>VLC Completion Date:</label>
-									<input id="vCDate" name="vCDate" value="${volunteer.vLCCompletionDate}" class="datepickera form-control" data-format="yyyy-MM-dd"> 				
+									<label>VLC Completion Date (YYYY-MM-DD)</label>
+									<input id="vCDate" name="vCDate" value="${volunteer.vLCCompletionDate}" class="form-control" data-format="yyyy-MM-dd"> 				
 								</div>								
 							</div>
 							
 							<div class="row form-group">
 								<div class="col-md-4">
-									<label>Confidentiality Agreement Date Signed:</label>
-									<input type="text" id="cAgreementDate" name="cAgreementDate" value="${volunteer.cAgreementDate}" class="datepickera form-control" data-format="yyyy-MM-dd"> 								
+									<label>Confidentiality Agreement Date Signed (YYYY-MM-DD)</label>
+									<input type="text" id="cAgreementDate" name="cAgreementDate" value="${volunteer.cAgreementDate}" class="form-control" data-format="yyyy-MM-dd"> 								
 								</div>
 								<div class="col-md-4">
-									<label>Volunteer Agreement Date Signed:</label>
-									<input type="text" id="vAgreementDate" name="vAgreementDate" value="${volunteer.vAgreementDate}" class="datepickera form-control" data-format="yyyy-MM-dd"/>									
+									<label>Volunteer Agreement Date Signed (YYYY-MM-DD)</label>
+									<input type="text" id="vAgreementDate" name="vAgreementDate" value="${volunteer.vAgreementDate}" class="form-control" data-format="yyyy-MM-dd"/>									
 								</div>	
 								<div class="col-md-4">
-									<label>Photo Date Received:</label>
-									<input id="pDate" name="pDate" value="${volunteer.photoDate}" class="datepickera form-control" data-format="yyyy-MM-dd"> 				
+									<label>Photo Date Received (YYYY-MM-DD)</label>
+									<input id="pDate" name="pDate" value="${volunteer.photoDate}" class="form-control" data-format="yyyy-MM-dd"> 				
 								</div>								
 							</div>
 							<div class="row form-group">
 								<div class="col-md-4">
-									<label>Application Form Completion Date:</label>		
-									<input id="aCompleteDate" name="aCompleteDate" value="${volunteer.applicationFormCompletionDate}" class="datepickera form-control" data-format="yyyy-MM-dd"> 										
+									<label>Application Form Completion Date (YYYY-MM-DD)</label>		
+									<input id="aCompleteDate" name="aCompleteDate" value="${volunteer.applicationFormCompletionDate}" class="form-control" data-format="yyyy-MM-dd"> 										
 								</div>
 							</div>
 
@@ -293,8 +293,7 @@
 			</div>		
 		</div>
 	</div>
-	</body>
-
+	
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/lib/picker.js"></script>
 <script src="${pageContext.request.contextPath}/resources/lib/picker.date.js"></script>
@@ -308,8 +307,11 @@
 	  labelMonthSelect: 'Pick a month from the dropdown',
 	  labelYearSelect: 'Pick a year from the dropdown',
 	  selectMonths: true,
-	  selectYears: true
+	  selectYears: true,
+	  formatSubmit: 'yyyy-mm-dd',
+	  hiddenName: true
 	})
+</script>	
+	</body>
 
-</script>
 </html>
