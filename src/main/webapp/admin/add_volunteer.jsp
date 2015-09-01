@@ -46,39 +46,7 @@
 			function isUsernameExist(){
 		//		alert("hi...");
 			}
-		
-			$('.datepickera').pickadate({
-		    // Escape any Ã¢ÂÂruleÃ¢ÂÂ characters with an exclamation mark (!).
-		    format: 'You selecte!d: dddd, dd mmm, yyyy',
-		    formatSubmit: 'yyyy-mm-dd',
-		    hiddenName: true
-		   	// hiddenPrefix: 'prefix__',
-		    // hiddenSuffix: '__suffix'
-			})
-			
-
-			$('.timepickera').pickatime({
-			    // Escape any Ã¢ÂÂruleÃ¢ÂÂ characters with an exclamation mark (!).
-			    formatSubmit: 'HH:i:00',
-			   	hiddenName: true,
-			   	min: [8,0],
-			   	max: [17,0]
-
-			    // hiddenPrefix: 'prefix__',
-			    // hiddenSuffix: '__suffix'
-			})
-
-			$('.timepickerb').pickatime({
-			    // Escape any Ã¢ÂÂruleÃ¢ÂÂ characters with an exclamation mark (!).
-			    formatSubmit: 'HH:i:00',
-			   	hiddenName: true,
-			   	min: [8,0],
-			   	max: [17,0]
-
-			    // hiddenPrefix: 'prefix__',
-			    // hiddenSuffix: '__suffix'
-			})
-
+	
 		
 		</script>
 	</head>
@@ -332,16 +300,16 @@
 							</div>
 							<div class="row form-group">
 								<div class="col-md-4">
-									<label>Interview Date:</label>
-									<input type="text" id="interviewDate" name="interviewDate" class="datepickera form-control" data-format="yyyy-MM-dd"> 																
+									<label>Interview Date (YYYY-MM-DD)</label>
+									<input type="text" id="interviewDate" name="interviewDate" class="form-control" data-format="yyyy-MM-dd"> 																
 								</div>
 								<div class="col-md-4">
 									<label>Mature or Student:</label>
 									<input type="text" id="status" name="status" class="form-control" />									
 								</div>	
 								<div class="col-md-4">
-									<label>Date of Birth:</label>
-									<input id="dob" name="dob" class="datepickera form-control" data-format="yyyy-MM-dd"> 				
+									<label>Date of Birth (YYYY-MM-DD)</label>
+									<input id="dob" name="dob" class="form-control" data-format="yyyy-MM-dd"> 				
 								</div>								
 							</div>
 							<div class="row form-group">
@@ -354,37 +322,37 @@
 									<input type="text" id="reference2" name="reference2" class="form-control" />									
 								</div>	
 								<div class="col-md-4">
-									<label>Reference Check - Date:</label>
-									<input id="rDate" name="rDate" class="datepickera form-control" data-format="yyyy-MM-dd"> 				
+									<label>Reference Check - Date (YYYY-MM-DD)</label>
+									<input id="rDate" name="rDate" class="form-control" data-format="yyyy-MM-dd"> 				
 								</div>								
 							</div>
 							<div class="row form-group">
 								<div class="col-md-4">
-									<label>Police Check Date Received?</label>
-									<input type="text" id="pCheckDate" name="pCheckDate" class="datepickera form-control" data-format="yyyy-MM-dd" > 								
+									<label>Police Check Date Received (YYYY-MM-DD)</label>
+									<input type="text" id="pCheckDate" name="pCheckDate" class="form-control" data-format="yyyy-MM-dd" > 								
 								</div>
 								<div class="col-md-4">
-									<label>TB Test Received/Date?</label>
-									<input type="text" id="tbTDate" name="tbTDate" class="datepickera form-control" data-format="yyyy-MM-dd" />									
+									<label>TB Test Received/Date (YYYY-MM-DD)</label>
+									<input type="text" id="tbTDate" name="tbTDate" class="form-control" data-format="yyyy-MM-dd" />									
 								</div>	
 								<div class="col-md-4">
-									<label>VLC Completion Date:</label>
-									<input id="vCDate" name="vCDate" class="datepickera form-control" data-format="yyyy-MM-dd"> 				
+									<label>VLC Completion Date (YYYY-MM-DD)</label>
+									<input id="vCDate" name="vCDate" class="form-control" data-format="yyyy-MM-dd"> 				
 								</div>								
 							</div>
 							
 							<div class="row form-group">
 								<div class="col-md-4">
-									<label>Confidentiality Agreement Date Signed:</label>
-									<input type="text" id="cAgreementDate" name="cAgreementDate" class="datepickera form-control" data-format="yyyy-MM-dd"> 								
+									<label>Confidentiality Agreement Date Signed (YYYY-MM-DD)</label>
+									<input type="text" id="cAgreementDate" name="cAgreementDate" class="form-control" data-format="yyyy-MM-dd"> 								
 								</div>
 								<div class="col-md-4">
-									<label>Volunteer Agreement Date Signed:</label>
-									<input type="text" id="vAgreementDate" name="vAgreementDate" class="datepickera form-control" data-format="yyyy-MM-dd"/>									
+									<label>Volunteer Agreement Date Signed (YYYY-MM-DD)</label>
+									<input type="text" id="vAgreementDate" name="vAgreementDate" class="form-control" data-format="yyyy-MM-dd"/>									
 								</div>	
 								<div class="col-md-4">
-									<label>Photo Date Received:</label>
-									<input id="pDate" name="pDate" class="datepickera form-control" data-format="yyyy-MM-dd"> 				
+									<label>Photo Date Received (YYYY-MM-DD)</label>
+									<input id="pDate" name="pDate" class="form-control" data-format="yyyy-MM-dd"> 				
 								</div>								
 							</div>
 							
@@ -399,11 +367,11 @@
 									</select>
 								</div> -->
 								<div class="col-md-4">
-									<label>Application Form Completion Date:</label>		
-									<input id="aCompleteDate" name="aCompleteDate" class="datepickera form-control" data-format="yyyy-MM-dd"> 										
+									<label>Application Form Completion Date (YYYY-MM-DD)</label>		
+									<input id="aCompleteDate" name="aCompleteDate" class="form-control" data-format="yyyy-MM-dd"> 										
 								</div>
 								<div class="col-md-4">
-									<label>Organization:</label>									
+									<label>Organization</label>									
 									<select name="organization" form="add_volunteer" class="form-control">
 										<c:forEach items="${organizations}" var="o">
 											<option value="${o.organizationId}">${o.name}</option>
@@ -462,7 +430,10 @@
 	  labelMonthSelect: 'Pick a month from the dropdown',
 	  labelYearSelect: 'Pick a year from the dropdown',
 	  selectMonths: true,
-	  selectYears: true
+	  selectYears: true,
+	  yearSelector: 100,
+	  formatSubmit: 'yyyy-mm-dd'
+	  hiddenName: true
 	})
 
 </script>
