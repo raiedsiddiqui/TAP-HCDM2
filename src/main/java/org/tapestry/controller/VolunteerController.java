@@ -411,7 +411,7 @@ public class VolunteerController {
 			@PathVariable("volunteerId") int id, ModelMap model)
 	{		
 		Volunteer volunteer = volunteerManager.getVolunteerById(id);		
-		
+				
 		List<Organization> organizations = new ArrayList<Organization>();
 		HttpSession session = request.getSession();
 		
@@ -482,7 +482,10 @@ public class VolunteerController {
 		if (Utils.isNullOrEmpty(date))				
 			volunteer.setInterviewDate("1900-01-01");
 		else
-			volunteer.setInterviewDate(date);
+		{
+	//		volunteer.setInterviewDate(date);
+			volunteer.setInterviewDate("2000-01-01");
+		}
 		
 		volunteer.setStatus(request.getParameter("status"));
 		
@@ -490,7 +493,12 @@ public class VolunteerController {
 		if (Utils.isNullOrEmpty(date))				
 			volunteer.setdOB("1900-01-01");
 		else
-			volunteer.setdOB(date);
+		{
+	//		volunteer.setdOB(date);
+			volunteer.setdOB("2000-01-01");
+			
+			System.out.println("volunteer birth date" + date);
+		}
 		
 		volunteer.setReference1(request.getParameter("reference1"));
 		volunteer.setReference2(request.getParameter("reference2"));
@@ -499,37 +507,55 @@ public class VolunteerController {
 		if (Utils.isNullOrEmpty(date))				
 			volunteer.setReferenceCheckDate("1900-01-01");
 		else
-			volunteer.setReferenceCheckDate(date);
+		{
+	//		volunteer.setReferenceCheckDate(date);
+			volunteer.setReferenceCheckDate("2000-01-01");
+		}
 		
 		date = request.getParameter("pCheckDate");
 		if (Utils.isNullOrEmpty(date))				
 			volunteer.setPoliceCheckDate("1900-01-01");
 		else
-			volunteer.setPoliceCheckDate(date);
+		{
+//			volunteer.setPoliceCheckDate(date);
+			volunteer.setPoliceCheckDate("2000-01-01");
+		}
 		
 		date = request.getParameter("tbTDate");
 		if (Utils.isNullOrEmpty(date))				
 			volunteer.settBTestDate("1900-01-01");
 		else
-			volunteer.settBTestDate(date);
+		{
+	//		volunteer.settBTestDate(date);
+			volunteer.settBTestDate("2000-01-01");
+		}
 		
 		date = request.getParameter("vCDate");
 		if (Utils.isNullOrEmpty(date))				
 			volunteer.setvLCCompletionDate("1900-01-01");
 		else
-			volunteer.setvLCCompletionDate(date);
+		{
+	//		volunteer.setvLCCompletionDate(date);
+			volunteer.setvLCCompletionDate("2000-01-01");
+		}
 		
 		date = request.getParameter("cAgreementDate");
 		if (Utils.isNullOrEmpty(date))				
 			volunteer.setcAgreementDate("1900-01-01");
 		else
-			volunteer.setcAgreementDate(date);
+		{
+//			volunteer.setcAgreementDate(date);
+			volunteer.setcAgreementDate("2000-01-01");
+		}
 		
 		date = request.getParameter("vAgreementDate");
 		if (Utils.isNullOrEmpty(date))				
 			volunteer.setvAgreementDate("1900-01-01");
 		else
-			volunteer.setvAgreementDate(date);
+		{
+	//		volunteer.setvAgreementDate(date);
+			volunteer.setvAgreementDate("2000-01-01");
+		}
 		
 		date = request.getParameter("pDate");
 		if (Utils.isNullOrEmpty(date))				
@@ -542,7 +568,10 @@ public class VolunteerController {
 		if (Utils.isNullOrEmpty(date))				
 			volunteer.setApplicationFormCompletionDate("1900-01-01");
 		else
-			volunteer.setApplicationFormCompletionDate(date);
+		{
+//			volunteer.setApplicationFormCompletionDate(date);
+			volunteer.setApplicationFormCompletionDate("2000-01-01");
+		}
 		
 		String strAvailableTime = TapestryHelper.getAvailableTime(request);				
 		volunteer.setAvailability(strAvailableTime);

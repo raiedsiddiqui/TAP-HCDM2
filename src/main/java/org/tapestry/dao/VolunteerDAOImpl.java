@@ -301,77 +301,47 @@ public class VolunteerDAOImpl extends JdbcDaoSupport implements VolunteerDAO {
 			vol.setNumYearsOfExperience(rs.getDouble("number_years_experience"));
 			vol.setvLCID(rs.getInt("vlc_ID"));
 			String date = rs.getString("interview_date");
-			if (date != null && date.length() > 10)
-			{
-				date = truncateDate(date);
+			if (date != null)
 				vol.setInterviewDate(date);
-			}
 			vol.setStatus(rs.getString("mature_or_student"));
 			
 			date = rs.getString("date_of_birth");
-			if (date != null && date.length() > 10)
-			{
-				date = truncateDate(date);
+			if (date != null)
 				vol.setdOB(date);
-			}
 			vol.setReference1(rs.getString("reference1"));
 			vol.setReference2(rs.getString("reference2"));
 			
 			date = rs.getString("reference_check_date");
-			if (date != null && date.length() > 10)
-			{
-				date = truncateDate(date);
+			if (date != null)
 				vol.setReferenceCheckDate(date);
-			}
 			
 			date = rs.getString("police_check_received_date");
-			if (date != null && date.length() > 10)
-			{
-				date = truncateDate(date);
+			if (date != null)
 				vol.setPoliceCheckDate(date);
-			}
 			
 			date = rs.getString("tb_test_received_date");
-			if (date != null && date.length() > 10)
-			{
-				date = truncateDate(date);
+			if (date != null)
 				vol.settBTestDate(date);
-			}
 			
 			date = rs.getString("vlc_completion_date");
-			if (date != null && date.length() > 10)
-			{
-				date = truncateDate(date);
+			if (date != null)
 				vol.setvLCCompletionDate(date);
-			}
 			
 			date = rs.getString("confidentiality_agreement_signed_date");
-			if (date != null && date.length() > 10)
-			{
-				date = truncateDate(date);
+			if (date != null)
 				vol.setcAgreementDate(date);
-			}
 			
 			date = rs.getString("volunteer_agreement_signed_date");
-			if (date != null && date.length() > 10)
-			{
-				date = truncateDate(date);
+			if (date != null)
 				vol.setvAgreementDate(date);
-			}
 			
 			date = rs.getString("photo_received_date");
-			if (date != null && date.length() > 10)
-			{
-				date = truncateDate(date);
+			if (date != null)
 				vol.setPhotoDate(date);
-			}
 			
 			date = rs.getString("application_form_completion_date");
-			if (date != null && date.length() > 10)
-			{
-				date = truncateDate(date);
-				vol.setApplicationFormCompletionDate(date);;
-			}					
+			if (date != null)
+				vol.setApplicationFormCompletionDate(date);					
 						
 			vol.setSource(rs.getString("source"));
 			
@@ -402,12 +372,12 @@ public class VolunteerDAOImpl extends JdbcDaoSupport implements VolunteerDAO {
 		}
 	}
 	
-	private String truncateDate(String date)
-	{
-		if (date != null)
-			date = date.substring(0,10);
-		return date;				
-	}
+//	private String truncateDate(String date)
+//	{
+//		if (date != null)
+//			date = date.substring(0,10);
+//		return date;				
+//	}
 
 
 
