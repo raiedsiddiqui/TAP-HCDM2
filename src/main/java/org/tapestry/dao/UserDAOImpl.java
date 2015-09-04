@@ -158,8 +158,8 @@ public class UserDAOImpl extends JdbcDaoSupport implements UserDAO {
 	@Override
 	public List<User> getAllUsers() {
 		String sql = "SELECT u.*, s.site_name AS site_name, o.name AS organization_name "
-				+ "FROM users As u INNER JOIN sites AS s ON u.site = s.site_ID INNER JOIN organizations AS o "
-				+ "ON u.organization = o.organization_ID;";		
+				+ "FROM users As u LEFT JOIN sites AS s ON u.site = s.site_ID LEFT JOIN organizations AS o "
+				+ "ON u.organization = o.organization_ID";		
 		return getJdbcTemplate().query(sql, new FullUserMapper());
 	}
 	

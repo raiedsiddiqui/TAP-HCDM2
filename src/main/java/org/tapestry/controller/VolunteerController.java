@@ -258,7 +258,16 @@ public class VolunteerController {
 			volunteer.setLastName(request.getParameter("lastname").trim());
 			volunteer.setGender(request.getParameter("gender"));
 			volunteer.setEmail(request.getParameter("email").trim());				
-			volunteer.setExperienceLevel(request.getParameter("level"));	
+	//		volunteer.setExperienceLevel(request.getParameter("level"));	
+			//set experience level based on score calculation
+			String score = request.getParameter("totalcalculated");
+			double iScore = Double.parseDouble(score);		
+			if (iScore >= 0.85)
+				volunteer.setExperienceLevel("E");	
+			else if (iScore <0.85 && iScore >= 0.55)
+				volunteer.setExperienceLevel("I");	
+			else
+				volunteer.setExperienceLevel("B");	
 			volunteer.setTotalVLCScore(Double.parseDouble(request.getParameter("totalVLCScore")));
 			volunteer.setAvailabilityPerMonth(Double.parseDouble(request.getParameter("availabilityPerMonthe")));
 			volunteer.setNumYearsOfExperience(Double.parseDouble(request.getParameter("numberYearsOfExperience")));
@@ -282,9 +291,8 @@ public class VolunteerController {
 			ShaPasswordEncoder enc = new ShaPasswordEncoder();
 			String hashedPassword = enc.encodePassword(request.getParameter("password"), null);			
 			volunteer.setPassword(hashedPassword);
-			
-			String date = request.getParameter("interviewDate");
-			
+						
+			String date = request.getParameter("interviewDate");			
 			if (Utils.isNullOrEmpty(date))				
 				volunteer.setInterviewDate("1900-01-01");
 			else
@@ -440,22 +448,20 @@ public class VolunteerController {
 			@PathVariable("volunteerId") int id, ModelMap model)
 	{		
 		HttpSession  session = request.getSession();
-		Volunteer volunteer;
-			
+		Volunteer volunteer;			
 		volunteer = volunteerManager.getVolunteerById(id);				
 		
 		if (!Utils.isNullOrEmpty(request.getParameter("firstname")))
 			volunteer.setFirstName(request.getParameter("firstname"));
 		
 		if (!Utils.isNullOrEmpty(request.getParameter("lastname")))
-			volunteer.setLastName(request.getParameter("lastname"));	
-		
+			volunteer.setLastName(request.getParameter("lastname"));			
 		//set encoded password for security
-		ShaPasswordEncoder enc = new ShaPasswordEncoder();
+//		ShaPasswordEncoder enc = new ShaPasswordEncoder();
 //		String hashedPassword = enc.encodePassword(request.getParameter("password"), null);		
 //		volunteer.setPassword(hashedPassword);
 		volunteer.setEmail(request.getParameter("email"));	
-		volunteer.setExperienceLevel((request.getParameter("level")));	
+//		volunteer.setExperienceLevel((request.getParameter("level")));	
 		volunteer.setStreet(request.getParameter("street"));
 		volunteer.setCity(request.getParameter("city"));
 		volunteer.setProvince(request.getParameter("province"));
@@ -476,7 +482,16 @@ public class VolunteerController {
 		volunteer.setAvailabilityPerMonth(Double.parseDouble(request.getParameter("availabilityPerMonthe")));
 		volunteer.setTechnologySkillsScore(Double.parseDouble(request.getParameter("technologySkillsScore")));
 		volunteer.setPerceptionOfOlderAdultsScore(Double.parseDouble(request.getParameter("perceptionOfOlderAdultScore")));
-		
+		//set experience level based on score calculation
+		String score = request.getParameter("totalcalculated");		
+		double iScore = Double.parseDouble(score);		
+		if (iScore >= 0.85)
+			volunteer.setExperienceLevel("E");	
+		else if (iScore <0.85 && iScore >= 0.55)
+			volunteer.setExperienceLevel("I");	
+		else
+			volunteer.setExperienceLevel("B");			
+				
 		String date = request.getParameter("interviewDate");
 		
 		if (Utils.isNullOrEmpty(date))				

@@ -515,10 +515,10 @@ public class AppointmentDAOImpl extends JdbcDaoSupport implements AppointmentDAO
 			sb.append(rs.getString("p_firstname"));
 			sb.append(" ");
 			lastName = rs.getString("p_lastname");
-			if (!Utils.isNullOrEmpty(lastName))
-				lastName = lastName.substring(0, 1).toUpperCase();
+//			if (!Utils.isNullOrEmpty(lastName))
+//				lastName = lastName.substring(0, 1).toUpperCase();
 			sb.append(lastName);
-			sb.append(".");
+		//	sb.append(".");
 			appointment.setPatient(sb.toString());
 			
 			appointment.setDate(rs.getString("appt_date"));

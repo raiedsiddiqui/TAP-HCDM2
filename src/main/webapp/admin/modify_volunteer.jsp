@@ -29,6 +29,93 @@
 				    element.value="";
 				}
 			}
+			
+			var vlcscore;
+			var expyears;
+			var availhours; 
+			var techscore;
+			var oldpercep;
+
+		function calctotalscore() {
+			vlcscore = document.getElementById('totalVLCScore').value;
+			expyears = document.getElementById('numberYearsOfExperience').value;
+			availhours = document.getElementById('availabilityPerMonthe').value;
+			techscore = document.getElementById('technologySkillsScore').value;
+			oldpercep = document.getElementById('perceptionOfOlderAdultScore').value;
+
+			calcvlcscore();
+			calcexpyears();
+			calcavailhours();
+			calctechscore();
+			calcoldpercep();
+
+			var finalscore = vlcscore + expyears + availhours + techscore + oldpercep;
+			document.getElementById('totalcalculated').value = finalscore;
+			
+			if (finalscore <= 0.55)
+				document.getElementById('experience_level').value = 'Beginer';
+			else if(finalscore <= 0.85 && finalscore > 0.55)
+				document.getElementById('experience_level').value = 'Intermediate';
+			else
+				document.getElementById('experience_level').value = 'Experienced';
+			}
+
+		function calcvlcscore() {
+			if (vlcscore <= 80) {
+				vlcscore = 0.15;
+			}
+			else if (vlcscore >= 81 && vlcscore <= 95) {
+				vlcscore = 0.20;
+			}
+
+			else if (vlcscore > 95) {
+				vlcscore = 0.35;
+			}
+		}
+
+		function calcexpyears() {
+			if (expyears < 1) {
+				expyears = 0.02;
+			}
+			else if (expyears >= 1 && expyears <= 2) {
+				expyears = 0.05;
+			}
+
+			else if (expyears > 2) {
+				expyears = 0.1;
+			}
+		}
+
+		function calcavailhours() {
+			if (availhours < 2) {
+				availhours = 0.05;
+			}
+			else if (availhours >= 2 && availhours <= 4) {
+				availhours = 0.15;
+			}
+
+			else if (availhours > 4) {
+				availhours = 0.20;
+			}
+		}
+
+		function calctechscore() {
+			if (techscore <= 14) {
+				techscore = 0.10;
+			}
+			else if (techscore == 15) {
+				techscore = 0.15;
+			}
+
+			else if (techscore >= 16) {
+				techscore = 0.25;
+			}
+		}
+
+		function calcoldpercep() {
+			oldpercep = oldpercep/parseFloat(100);
+			oldpercep = oldpercep*0.1;
+		}
 		</script>
 	
 	</head>
@@ -137,36 +224,42 @@
 								</div>
 							</div>	
 							<div class="row form-group">
-								<div class="col-md-4">
+								<!-- div class="col-md-4">
 									<label>Experience:</label>
 									<select class="form-control" name="level" form="modify_volunteer">
 										<option value='E' <c:if test="${volunteer.experienceLevel eq 'Experienced'}">selected</c:if>>Experienced</option>
 										<option value='I' <c:if test="${volunteer.experienceLevel eq 'Intermediate'}">selected</c:if>>Intermediate</option>
 										<option value='B' <c:if test="${volunteer.experienceLevel eq 'Beginer'}">selected</c:if> >Beginner</option>
 									</select>	
-								</div>
+								</div> -->
+								
 								<div class="col-md-4">
 									<label>Total VLC Score(.35):</label>
-									<input type="text" id="totalVLCScore" name="totalVLCScore" class="form-control" value="${volunteer.totalVLCScore}" onchange="checkNumericInput(this.id)" required/>									
+									<input type="text" id="totalVLCScore" name="totalVLCScore" class="form-control" value="${volunteer.totalVLCScore}" onchange="checkNumericInput(this.id);calctotalscore();" required/>									
 								</div>
 								<div class="col-md-4">
 									<label>Number years of experience(.1):</label>
-									<input type="text" id="numberYearsOfExperience" name="numberYearsOfExperience" class="form-control" value="${volunteer.numYearsOfExperience}" onchange="checkNumericInput(this.id)" required/>									
+									<input type="text" id="numberYearsOfExperience" name="numberYearsOfExperience" class="form-control" value="${volunteer.numYearsOfExperience}" onchange="checkNumericInput(this.id);calctotalscore();" required/>									
 								</div>	
+									<div class="col-md-4">
+									<label>Volunteer availability(hours/month)(.2):</label>
+									<input type="text" id="availabilityPerMonthe" name="availabilityPerMonthe" class="form-control" value="${volunteer.availabilityPerMonth}" onchange="checkNumericInput(this.id);calctotalscore();" required/>									
+								</div>
 							</div>	
 							<div class="row form-group">
-								<div class="col-md-4">
-									<label>Volunteer availability(hours/month)(.2):</label>
-									<input type="text" id="availabilityPerMonthe" name="availabilityPerMonthe" class="form-control" value="${volunteer.availabilityPerMonth}" onchange="checkNumericInput(this.id)" required/>									
-								</div>
+							
 								<div class="col-md-4">
 									<label>Technology skills score(.25):</label>
-									<input type="text" id="technologySkillsScore" name="technologySkillsScore" class="form-control" value="${volunteer.technologySkillsScore}" onchange="checkNumericInput(this.id)" required/>									
+									<input type="text" id="technologySkillsScore" name="technologySkillsScore" class="form-control" value="${volunteer.technologySkillsScore}" onchange="checkNumericInput(this.id);calctotalscore();" required/>									
 								</div>
 								<div class="col-md-4">
 									<label>Perception of older adults score(.2):</label>
-									<input type="text" id="perceptionOfOlderAdultScore" name="perceptionOfOlderAdultScore" class="form-control" value="${volunteer.perceptionOfOlderAdultsScore}" onchange="checkNumericInput(this.id)" required/>									
-								</div>								
+									<input type="text" id="perceptionOfOlderAdultScore" name="perceptionOfOlderAdultScore" class="form-control" value="${volunteer.perceptionOfOlderAdultsScore}" onchange="checkNumericInput(this.id);calctotalscore();" required/>									
+								</div>
+								<div class="col-md-4">
+									<label>VLC ID:</label>
+									<input type="text" id="vlcId" name="vlcId" value="${volunteer.vLCID}" class="form-control" required/>									
+								</div>							
 							</div>
 							<div class="row form-group">
 								<div class="col-md-4">
@@ -178,13 +271,15 @@
 										</select>
 								</div>
 								<div class="col-md-4">
-									<label>VLC ID:</label>
-									<input type="text" id="vlcId" name="vlcId" value="${volunteer.vLCID}" class="form-control" required/>									
-								</div>	
+									<label>Total Calculated Score:</label>
+									<input type="text" id="totalcalculated" name ="totalcalculated" class="form-control" readonly="readonly"> <!--  /span>			-->					
+								</div>
 								<div class="col-md-4">
-									<label>Source - where they learned about Tapestry:</label>
-									<input type="text" id="source" name="source" value="${volunteer.source}" class="form-control" > 								
-								</div>								
+									<label>Experience:</label>
+									<input type="text" id="experience_level" name ="experience_level" class="form-control" readonly="readonly"> <!--  /span>			-->					
+								</div>
+								
+														
 							</div>
 							
 							<div class="row form-group">
@@ -248,7 +343,11 @@
 								<div class="col-md-4">
 									<label>Application Form Completion Date (YYYY-MM-DD)</label>		
 									<input id="aCompleteDate" name="aCompleteDate" value="${volunteer.applicationFormCompletionDate}" class="form-control" data-format="yyyy-MM-dd"> 										
-								</div>
+								</div>	
+									<div class="col-md-4">
+									<label>Source - where they learned about Tapestry:</label>
+									<input type="text" id="source" name="source" value="${volunteer.source}" class="form-control" > 								
+								</div>								
 							</div>
 
 						<h2>User Account </h2>

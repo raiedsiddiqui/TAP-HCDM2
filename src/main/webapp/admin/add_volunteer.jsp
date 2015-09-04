@@ -46,6 +46,92 @@
 			function isUsernameExist(){
 		//		alert("hi...");
 			}
+			var vlcscore;
+			var expyears;
+			var availhours; 
+			var techscore;
+			var oldpercep;
+
+		function calctotalscore() {
+			vlcscore = document.getElementById('totalVLCScore').value;
+			expyears = document.getElementById('numberYearsOfExperience').value;
+			availhours = document.getElementById('availabilityPerMonthe').value;
+			techscore = document.getElementById('technologySkillsScore').value;
+			oldpercep = document.getElementById('perceptionOfOlderAdultScore').value;
+
+			calcvlcscore();
+			calcexpyears();
+			calcavailhours();
+			calctechscore();
+			calcoldpercep();
+
+			var finalscore = vlcscore + expyears + availhours + techscore + oldpercep;
+			document.getElementById('totalcalculated').value = finalscore;
+			
+			if (finalscore <= 0.55)
+				document.getElementById('experience_level').value = 'Beginer';
+			else if(finalscore <= 0.85 && finalscore > 0.55)
+				document.getElementById('experience_level').value = 'Intermediate';
+			else
+				document.getElementById('experience_level').value = 'Experienced';
+			}
+
+		function calcvlcscore() {
+			if (vlcscore <= 80) {
+				vlcscore = 0.15;
+			}
+			else if (vlcscore >= 81 && vlcscore <= 95) {
+				vlcscore = 0.20;
+			}
+
+			else if (vlcscore > 95) {
+				vlcscore = 0.35;
+			}
+		}
+
+		function calcexpyears() {
+			if (expyears < 1) {
+				expyears = 0.02;
+			}
+			else if (expyears >= 1 && expyears <= 2) {
+				expyears = 0.05;
+			}
+
+			else if (expyears > 2) {
+				expyears = 0.1;
+			}
+		}
+
+		function calcavailhours() {
+			if (availhours < 2) {
+				availhours = 0.05;
+			}
+			else if (availhours >= 2 && availhours <= 4) {
+				availhours = 0.15;
+			}
+
+			else if (availhours > 4) {
+				availhours = 0.20;
+			}
+		}
+
+		function calctechscore() {
+			if (techscore <= 14) {
+				techscore = 0.10;
+			}
+			else if (techscore == 15) {
+				techscore = 0.15;
+			}
+
+			else if (techscore >= 16) {
+				techscore = 0.25;
+			}
+		}
+
+		function calcoldpercep() {
+			oldpercep = oldpercep/parseFloat(100);
+			oldpercep = oldpercep*0.1;
+		}
 	
 		
 		</script>
@@ -168,14 +254,18 @@
 								</div>
 							</div>	
 							<div class="row form-group">
-								<div class="col-md-4">
+								<!-- div class="col-md-4">
 									<label>Experience:</label>
 									<select class="form-control" name="level" form="add_volunteer">
 										<option value="E" selected>Experienced</option>
 										<option value="I" >Intermediate</option>
 										<option value="B" >Beginner</option>
 									</select>	
-								</div>
+								</div> -->
+								<div class="col-md-4">
+									<label>VLC ID:</label>
+									<input type="text" id="vlcId" name="vlcId" class="form-control" value="0"required/>									
+								</div>	
 								<div class="col-md-4">
 									<label>Total VLC Score(.35):</label>
 									<input type="text" id="totalVLCScore" name="totalVLCScore" class="form-control" onchange="checkNumericInput(this.id);calctotalscore();" value="0" required/>									
@@ -183,7 +273,7 @@
 								<div class="col-md-4">
 									<label>Number years of experience(.1):</label>
 									<input type="text" id="numberYearsOfExperience" name="numberYearsOfExperience" class="form-control" onchange="checkNumericInput(this.id);calctotalscore();" value="0" required/>									
-								</div>								
+								</div>																
 							</div>
 							
 							<div class="row form-group">
@@ -200,7 +290,7 @@
 									<input type="text" id="perceptionOfOlderAdultScore" name="perceptionOfOlderAdultScore" class="form-control" onchange="checkNumericInput(this.id);calctotalscore();" value="0" required/>									
 								</div>	
 
-								<script type="text/javascript">
+								<!--  script type="text/javascript">
 									var vlcscore;
 									var expyears;
 									var availhours; 
@@ -222,7 +312,14 @@
 
 									var finalscore = vlcscore + expyears + availhours + techscore + oldpercep;
 									document.getElementById('totalcalculated').value = finalscore;
-									}
+									
+									if (finalscore <= 0.55)
+										document.getElementById('experience_level').value = 'Beginer';
+									else if(finalscore <= 0.85 && finalscore > 0.55)
+										document.getElementById('experience_level').value = 'Intermediate';
+									else
+										document.getElementById('experience_level').value = 'Experienced';
+								}
 
 								function calcvlcscore() {
 									if (vlcscore <= 80) {
@@ -282,21 +379,23 @@
 								}
 
 
-								</script>							
+								</script>	-->						
 							</div>
 							<div class="row form-group">
-								<div class="col-md-4">
-									<label>VLC ID:</label>
-									<input type="text" id="vlcId" name="vlcId" class="form-control" value="0"required/>									
-								</div>	
+								
 								<div class="col-md-4">
 									<label>Total Calculated Score:</label>
-									<input id="totalcalculated" class="form-control" disabled> <!--  /span>			-->					
+									<input type="text" id="totalcalculated" name ="totalcalculated" class="form-control" readonly="readonly"> <!--  /span>			-->					
+								</div>
+								<div class="col-md-4">
+									<label>Experience:</label>
+									<input type="text" id="experience_level" name ="experience_level" class="form-control" readonly="readonly"> <!--  /span>			-->					
 								</div>
 								<div class="col-md-4">
 									<label>Source - where they learned about Tapestry:</label>
 									<input type="text" id="source" name="source" class="form-control" > 								
 								</div>
+								
 							</div>
 							<div class="row form-group">
 								<div class="col-md-4">

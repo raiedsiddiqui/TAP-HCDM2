@@ -142,8 +142,10 @@ public class DoSurveyAction
 
 		//if continuing survey (just submitted an answer)
 		if (questionId != null && direction.equalsIgnoreCase("forward"))
-		{	
-			if (currentSurvey.getQuestionById(questionId).getQuestionType().equals(SurveyQuestion.ANSWER_CHECK) && answerStrs == null)
+		{			
+//			if (currentSurvey.getQuestionById(questionId).getQuestionType().equals(SurveyQuestion.ANSWER_CHECK) && answerStrs == null)
+//				answerStrs = new String[0];
+			if (answerStrs == null && currentSurvey.getQuestionById(questionId).getQuestionType().equals(SurveyQuestion.ANSWER_CHECK) )
 				answerStrs = new String[0];
 			
 			if (answerStrs != null && (currentSurvey.getQuestionById(questionId).getQuestionType().equals(SurveyQuestion.ANSWER_CHECK) || !answerStrs[0].equals("")))

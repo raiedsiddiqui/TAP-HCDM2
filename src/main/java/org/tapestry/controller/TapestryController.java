@@ -1267,8 +1267,7 @@ public class TapestryController{
 		try
 		{
 			String sosReceiver = TapestryHelper.getProperties("SOSReceiver");
-			System.out.println("ddd=== " + sosReceiver);
-			
+						
 			List<String> receivers = new ArrayList<String>(Arrays.asList(sosReceiver.split(",")));
 			int rID;
 			for (int i=0; i< receivers.size(); i++)
@@ -1283,7 +1282,11 @@ public class TapestryController{
 		}
 		//log
 		userManager.addUserLog(sb.toString(), loggedInUser);
-		return "redirect:/";
+//		return "redirect:/";
+		
+		int patientId = TapestryHelper.getPatientId(request);
+		int appointmentId = TapestryHelper.getAppointmentId(request);
+		return "redirect:/patient/" + patientId + "?appointmentId=" + appointmentId;
 	}
 	
 	//============report======================
@@ -2452,6 +2455,7 @@ public class TapestryController{
 		
 		if (userSurveys == null)
 		{
+			
 			if (request.isUserInRole("ROLE_ADMIN"))//central admin 
 				surveyTemplates = surveyManager.getAllSurveyTemplates();
 	   		else //local admin/site admin
@@ -2459,9 +2463,13 @@ public class TapestryController{
 			
 			surveyResults = surveyManager.getSurveysByPatientID(patientId);
 			userSurveys = TapestryHelper.storeSurveyMapInSession(request, surveyResults, surveyTemplates);	
+			System.out.println("surveyResults === " + surveyResults.size());
+			
+			System.out.println("userSurveys === " + userSurveys.size());
 		}
 				
 		SurveyTemplate surveyTemplate = surveyManager.getSurveyTemplateByID(surveyResult.getSurveyID());
+		System.out.println("surveyTemplate.getTitle() === " + surveyTemplate.getTitle());
 				
 		//all survey results stored in map		
 		TapestryPHRSurvey currentSurvey = userSurveys.getSurvey(Integer.toString(id));

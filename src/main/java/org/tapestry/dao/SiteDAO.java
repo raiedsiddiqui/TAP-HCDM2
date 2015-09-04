@@ -23,6 +23,7 @@ public interface SiteDAO {
 	 */
 	public Site getSiteById(int siteId);
 	
+		
 	/**
 	 * 
 	 * @param site

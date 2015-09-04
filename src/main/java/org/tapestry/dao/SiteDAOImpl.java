@@ -30,7 +30,7 @@ public class SiteDAOImpl extends JdbcDaoSupport implements SiteDAO {
 	public Site getSiteById(int siteId) {
 		String sql = "SELECT sites.* FROM sites WHERE site_ID = ? ORDER BY site_ID";				
 		return getJdbcTemplate().queryForObject(sql, new Object[]{siteId}, new SiteMapper());		
-	}
+	}	
 
 	@Override
 	public void addSite(Site site) {
@@ -61,4 +61,6 @@ public class SiteDAOImpl extends JdbcDaoSupport implements SiteDAO {
 			return site;		
 			}
 		}
+
+
 }
