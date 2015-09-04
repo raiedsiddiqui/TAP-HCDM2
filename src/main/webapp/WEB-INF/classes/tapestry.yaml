@@ -1,0 +1,21 @@
+url: "jdbc:mysql://localhost/tapestry_db"
+username: "root"
+password: "root"
+
+mailHost: "smtp.gmail.com"
+mailUser: "tapestry.notifications@gmail.com"
+mailPassword: "6E5lywnUgd"
+mailPort: "465"
+mailFrom: "tapestry.notifications@gmail.com"
+mailUsesTLS: "true"
+mailRequiresAuth: "true"
+
+uploadDir: "/var/uploads/"
+
+myoscar_url: "https://maple.myoscar.org:8443/myoscar_server"
+myoscar_username: "linda.tapestry"
+myoscar_password: "linda2006"
+tapestry_groupId: "16"
+
+
+

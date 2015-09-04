@@ -1,0 +1,119 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx" 
+    xmlns:p="http://www.springframework.org/schema/p"		
+	xsi:schemaLocation="http://www.springframework.org/schema/beans	
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	 http://www.springframework.org/schema/context  
+ 	 http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-3.0.3.xsd">	
+	<!-- telling container to take care of annotations stuff -->  
+	 <context:annotation-config />  
+	 <context:component-scan  base-package="org.tapestry.dao" />
+ 	 <context:component-scan  base-package="org.tapestry.service" />
+	 
+   	<beans:bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<beans:property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<beans:property name="url" value="jdbc:mysql://localhost:3306/tapestry_db" />
+		<beans:property name="username" value="root" />
+		<beans:property name="password" value="root" />		
+		<!-- beans:property name="url" value="jdbc:mysql://localhost:3306/survey_app" />
+		<beans:property name="username" value="root" />
+		<beans:property name="password" value="root" /> -->
+	</beans:bean>	
+	
+	<beans:bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">  
+		<beans:property name="dataSource" ref="dataSource"/>  
+	</beans:bean>  
+	
+	<beans:bean id="transactionManager"  class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+   		<beans:property name="dataSource" ref="dataSource" />
+  	</beans:bean>
+	
+	<http auto-config="true">
+		<intercept-url pattern="/admin/*" access="ROLE_ADMIN" />
+		<intercept-url pattern="/surveys/*" access="ROLE_ADMIN" />
+		<intercept-url pattern="/caretaker/*" access="ROLE_USER" />
+		<intercept-url pattern="/logout" access="ROLE_USER, ROLE_ADMIN, ROLE_LOCAL_ADMIN, ROLE_CLINICIAN" />
+		<intercept-url pattern="/loginfailed" filters="none" />
+		
+		<intercept-url pattern="/resources/**" filters="none" />
+		<intercept-url pattern="/manage_appointments" access="ROLE_ADMIN,ROLE_LOCAL_ADMIN " />
+		<intercept-url pattern="/manage_patients" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN" />
+		<intercept-url pattern="/manage_users" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN" />
+		<intercept-url pattern="/manage_survey_templates" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN" />
+		<intercept-url pattern="/manage_surveys" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN, ROLE_CLINICIAN" />
+		<intercept-url pattern="/user_logs" access="ROLE_ADMIN" />
+		<intercept-url pattern="/add_user" access="ROLE_ADMIN" />
+		<intercept-url pattern="/update_user/**" access="ROLE_USER" />
+		<intercept-url pattern="/change_password/**" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN, ROLE_USER" />
+		<intercept-url pattern="/remove_user/*" access="ROLE_ADMIN" />
+		<intercept-url pattern="/add_patient" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN"/>
+		<intercept-url pattern="/edit_patient/**" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN" />
+		<intercept-url pattern="/remove_patient/*" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN" />
+		<intercept-url pattern="/patient/*" access="ROLE_USER" />
+		<intercept-url pattern="/client" access="ROLE_USER" />
+		<intercept-url pattern="/visit_complete/*" access="ROLE_USER" />
+		<intercept-url pattern="/complete_visit/*" access="ROLE_USER" />
+		<intercept-url pattern="/inbox" access="ROLE_USER, ROLE_ADMIN, ROLE_LOCAL_ADMIN" />
+		<intercept-url pattern="/view_message/**" access="ROLE_USER, ROLE_ADMIN, ROLE_LOCAL_ADMIN" />
+		<intercept-url pattern="/send_message" access="ROLE_ADMIN, ROLE_USER, ROLE_LOCAL_ADMIN" />
+		<intercept-url pattern="/delete_message/**" access="ROLE_USER, ROLE_ADMIN, ROLE_LOCAL_ADMIN" />
+		<intercept-url pattern="/view_narratives" access="ROLE_USER"/>
+		<intercept-url pattern="/modify_narrative" access="ROLE_USER"/>
+		<intercept-url pattern="/new_narrative" access="ROLE_USER"/>		
+		<intercept-url pattern="/view_activityLogs" access="ROLE_USER"/>
+		<intercept-url pattern="/new_activityLogs" access="ROLE_USER"/>		
+		<intercept-url pattern="/delete_narrative/**" access="ROLE_USER" />
+		<intercept-url pattern="/profile" access="ROLE_USER" />
+		<intercept-url pattern="/book_appointment" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN, ROLE_USER" />
+		<intercept-url pattern="/delete_appointment/**" access="ROLE_ADMIN, ROLE_USER, ROLE_LOCAL_ADMIN" />
+		<intercept-url pattern="/approve_appointment/**" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN" />
+		<intercept-url pattern="/unapprove_appointment/**" access="ROLE_ADMIN" />
+		<intercept-url pattern="/upload_survey_template" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN" />
+		<intercept-url pattern="/download_report/**" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN"/>
+		<intercept-url pattern="/generate_report_hl7/**" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN"/>
+		<intercept-url pattern="/delete_survey_template/**" access = "ROLE_ADMIN, ROLE_LOCAL_ADMIN" />
+		<intercept-url pattern="/assign_survey/**" access="ROLE_USER" />
+		<intercept-url pattern="/assign_surveys" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN" />
+		<intercept-url pattern="/delete_survey/**" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN" />
+		<intercept-url pattern="/open_survey/**" access="ROLE_USER" />
+		<intercept-url pattern="/show_survey/**" access="ROLE_ADMIN, ROLE_USER, ROLE_LOCAL_ADMIN" />
+		<intercept-url pattern="/save_survey/**" access="ROLE_ADMIN, ROLE_USER, ROLE_LOCAL_ADMIN" />
+		<intercept-url pattern="/user_logs/**" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN" />
+		<intercept-url pattern="/view_survey_results/**" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN, ROLE_CLINICIAN" />
+		<intercept-url pattern="/export_csv/**" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN, ROLE_CLINICIAN" />
+		<intercept-url pattern="/view_volunteers" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN"/>
+		<intercept-url pattern="/display_volunteer" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN"/>
+		<intercept-url pattern="/view_organizations" access="ROLE_ADMIN"/>
+		<intercept-url pattern="/manage_clinics" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN"/>
+		<intercept-url pattern="/view_research_data" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN"/>
+		<form-login login-page="/login" authentication-failure-url="/loginfailed" default-target-url="/loginsuccess" always-use-default-target="true"/>
+	
+		<session-management invalid-session-url="/login">
+	        <concurrency-control expired-url="/login" />
+		</session-management>
+	
+	</http>
+ 
+ 	<beans:bean id="encoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder" />
+ 
+	<authentication-manager>
+	  <authentication-provider>
+	    <password-encoder ref="encoder" />
+		<jdbc-user-service data-source-ref="dataSource"
+			users-by-username-query="select username, password, enabled from users where username=?"
+			authorities-by-username-query="select username, role from users where username=?"
+		/>
+		<!--
+		<user-service>
+			<user name="admin" password="d033e22ae348aeb5660fc2140aec35850c4da997" authorities="ROLE_ADMIN" />
+		</user-service>
+		-->
+	  </authentication-provider>
+	</authentication-manager>
+ 
+</beans:beans>
