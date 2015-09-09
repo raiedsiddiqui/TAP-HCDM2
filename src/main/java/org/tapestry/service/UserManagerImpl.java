@@ -132,6 +132,11 @@ public class UserManagerImpl implements UserManager {
 	}
 	
 	@Override
+	public List<User> getUserBySIte(int id) {
+		return userDao.getUserBySIte(id);
+	}
+	
+	@Override
 	public List<UserLog> getUserLogs(int start, int n) {		
 		return activityDAO.getUserLogsPage(start, n);
 	}
@@ -165,5 +170,7 @@ public class UserManagerImpl implements UserManager {
 	public List<UserLog> getGroupedUserLogssByPartialName(String partialName, int organizationId) {
 		return activityDAO.getGroupedUserLogssByPartialName(partialName, organizationId);
 	}
+
+	
 
 }

@@ -137,6 +137,13 @@ public interface UserDAO {
 	public List<User> getLocalAdminBySite(int id);
 	
 	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public List<User> getUserBySIte(int id);
+	
+	/**
 	 * Save a copy of deleted user
 	 * @param user
 	 * @param deletedBy

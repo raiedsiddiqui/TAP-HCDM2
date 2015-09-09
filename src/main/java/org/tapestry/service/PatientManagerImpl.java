@@ -136,9 +136,12 @@ public class PatientManagerImpl implements PatientManager {
 
 	@Override
 	public List<Patient> getAllDisabledPatients(int siteId) {
-		return patientDao.getAllDisabledPatients(siteId);
-		
+		return patientDao.getAllDisabledPatients(siteId);		
 	}
-
+	
+	@Override
+	public void updatePatientVolunteers(int patientId, int volunteerId,	int partnerId) {
+		patientDao.updatePatientVolunteers(patientId, volunteerId, partnerId);		
+	}
 
 }

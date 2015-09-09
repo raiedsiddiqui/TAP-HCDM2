@@ -135,7 +135,6 @@ public class VolunteerController {
 		model.addAttribute("existUserNames", existUserNames);
 		
 		List<Organization> organizations = new ArrayList<Organization>();
-//		List<Site> sites = new ArrayList<Site>();
 		HttpSession session = request.getSession();
 		User logginUser = TapestryHelper.getLoggedInUser(request);
 		
@@ -155,14 +154,11 @@ public class VolunteerController {
 		}
 		model.addAttribute("organizations", organizations);
 		
-//		if (request.isUserInRole("ROLE_ADMIN"))
-//			sites = organizationManager.getAllSites();
-//		else
-//		{
-//			int siteId = logginUser.getSite();
-//			sites.add(organizationManager.getSiteById(siteId));
-//		}
-//		model.addAttribute("sites", sites);
+		List<Site> sites = organizationManager.getAllSites();
+		model.addAttribute("sites", sites);
+		
+		if (request.isUserInRole("ROLE_ADMIN"))		
+			model.addAttribute("showSites", true);
 		
 		if (session.getAttribute("unread_messages") != null)
 			model.addAttribute("unread", session.getAttribute("unread_messages"));
@@ -261,13 +257,18 @@ public class VolunteerController {
 	//		volunteer.setExperienceLevel(request.getParameter("level"));	
 			//set experience level based on score calculation
 			String score = request.getParameter("totalcalculated");
-			double iScore = Double.parseDouble(score);		
-			if (iScore >= 0.85)
-				volunteer.setExperienceLevel("E");	
-			else if (iScore <0.85 && iScore >= 0.55)
-				volunteer.setExperienceLevel("I");	
-			else
+			if (!Utils.isNullOrEmpty(score))
+			{
+				double iScore = Double.parseDouble(score);		
+				if (iScore >= 0.85)
+					volunteer.setExperienceLevel("E");	
+				else if (iScore <0.85 && iScore >= 0.55)
+					volunteer.setExperienceLevel("I");	
+				else
+					volunteer.setExperienceLevel("B");	
+			}else
 				volunteer.setExperienceLevel("B");	
+			
 			volunteer.setTotalVLCScore(Double.parseDouble(request.getParameter("totalVLCScore")));
 			volunteer.setAvailabilityPerMonth(Double.parseDouble(request.getParameter("availabilityPerMonthe")));
 			volunteer.setNumYearsOfExperience(Double.parseDouble(request.getParameter("numberYearsOfExperience")));
@@ -385,8 +386,12 @@ public class VolunteerController {
 						
 				user.setPassword(volunteer.getPassword());
 				user.setEmail(volunteer.getEmail());
-				user.setOrganization(volunteer.getOrganizationId());		
-				user.setSite(loggedInUser.getSite());
+				user.setOrganization(volunteer.getOrganizationId());	
+				int site = loggedInUser.getSite();
+				if (site == 0)//login user is central admin
+					site = Integer.valueOf(request.getParameter("site"));
+				System.out.println("site = " +site);
+				user.setSite(site);
 				
 				success = userManager.createUser(user);	
 								
@@ -484,13 +489,27 @@ public class VolunteerController {
 		volunteer.setPerceptionOfOlderAdultsScore(Double.parseDouble(request.getParameter("perceptionOfOlderAdultScore")));
 		//set experience level based on score calculation
 		String score = request.getParameter("totalcalculated");		
-		double iScore = Double.parseDouble(score);		
-		if (iScore >= 0.85)
-			volunteer.setExperienceLevel("E");	
-		else if (iScore <0.85 && iScore >= 0.55)
-			volunteer.setExperienceLevel("I");	
-		else
-			volunteer.setExperienceLevel("B");			
+		if (!Utils.isNullOrEmpty(score))
+		{
+			double iScore = Double.parseDouble(score);		
+			if (iScore >= 0.85)
+				volunteer.setExperienceLevel("E");	
+			else if (iScore <0.85 && iScore >= 0.55)
+				volunteer.setExperienceLevel("I");	
+			else
+				volunteer.setExperienceLevel("B");	
+		}
+		else 
+		{			
+			String experienceLeve = request.getParameter("experience_level");
+			
+			if ("Beginer".equals(experienceLeve))
+				volunteer.setExperienceLevel("B");	
+			else if ("Intermediate".equals(experienceLeve))
+				volunteer.setExperienceLevel("I");	
+			else
+				volunteer.setExperienceLevel("E");
+		}
 				
 		String date = request.getParameter("interviewDate");
 		
@@ -1479,8 +1498,7 @@ public class VolunteerController {
 		String pAvailability = volunteer2.getAvailability();
 		//set appointment
 		Appointment a = new Appointment();
-		String date = request.getParameter("appointmentDate");	
-		System.out.println("app date = "+ date);
+		String date = request.getParameter("appointmentDate");			
 		String time = request.getParameter("appointmentTime");
 		
 		//format the date from yyyy/MM/dd to yyyy-MM-dd
@@ -1571,8 +1589,8 @@ public class VolunteerController {
 						System.out.println("Can't find any coordinator in organization id# " + organizationId);
 						logger.error("Can't find any coordinator in organization id# " + organizationId);
 					}
-//					TapestryHelper.sendMessageToInbox(inboxMsg, userId, volunteer1UserId, messageManager);//send message to volunteer1 
-//					TapestryHelper.sendMessageToInbox(inboxMsg, userId, volunteer2UserId, messageManager);//send message to volunteer2
+					TapestryHelper.sendMessageToInbox(inboxMsg, userId, volunteer1UserId, messageManager);//send message to volunteer1 
+					TapestryHelper.sendMessageToInbox(inboxMsg, userId, volunteer2UserId, messageManager);//send message to volunteer2
 					
 					//log
 					userManager.addUserLog(logMsg, user);
@@ -1880,6 +1898,68 @@ public class VolunteerController {
 		else // local admin/VC
 			volunteers = volunteerManager.getAllVolunteersByOrganization(loggedInUser.getOrganization());	
 		
+		String action = request.getParameter("hhAction");
+		
+		if ("Find Avalable Volunteers".equals(action))
+		{
+				
+			volunteers = volunteerManager.getVolunteersByAvailibility(date_time, volunteers);
+			model.addAttribute("showVolunteers", true);		
+			model.addAttribute("volunteers", volunteers);	
+			return "/admin/go_scheduler";
+		}
+		else
+			return getVolunteerByScheduler(request, model, volunteers, date_time);
+//		
+//		if (volunteers.size() == 0)
+//			model.addAttribute("noAvailableTime",true);	
+//		else
+//		{
+//			List<Volunteer> availableVolunteers = TapestryHelper.getAllMatchedVolunteers(volunteers, date_time);
+//			if (availableVolunteers.size() == 0)
+//				model.addAttribute("noAvailableVolunteers",true);	
+//			else
+//			{
+//				List<Availability> matchList = TapestryHelper.getAllAvailablilities(availableVolunteers, date_time, day);
+//				if (matchList.size() == 0)
+//					model.addAttribute("noFound",true);	
+//				else
+//					model.addAttribute("matcheList",matchList);	
+//			}
+//		}		
+//		HttpSession  session = request.getSession();
+//		if (session.getAttribute("unread_messages") != null)
+//			model.addAttribute("unread", session.getAttribute("unread_messages"));
+//		
+//		return "/admin/view_scheduler";
+	}
+	private String getVolunteerByScheduler(SecurityContextHolderAwareRequestWrapper request, ModelMap model, 
+			List<Volunteer> volunteers, String date_time)
+	{
+//		User loggedInUser = TapestryHelper.getLoggedInUser(request, userManager);
+//		List<Volunteer> volunteers = new ArrayList<Volunteer>();
+//		
+//		//get Date and time for appointment		
+//		String day = request.getParameter("appointmentDate");
+//		//when date pick up from calendar, format is different, need to change from yyyy/mm/dd to yyyy-MM-dd
+//		day = day.replace("/", "-");
+//		
+//		int dayOfWeek = Utils.getDayOfWeekByDate(day);
+//		String time = request.getParameter("appointmentTime");				
+//		
+//		StringBuffer sb = new StringBuffer();
+//		sb.append(String.valueOf(dayOfWeek -1));
+//		sb.append(time);
+//		String date_time = sb.toString();
+//		
+//		if (request.isUserInRole("ROLE_ADMIN"))//for central admin
+//			volunteers = TapestryHelper.getAllVolunteers(volunteerManager);
+//		else // local admin/VC
+//			volunteers = volunteerManager.getAllVolunteersByOrganization(loggedInUser.getOrganization());	
+		String day = request.getParameter("appointmentDate");
+		//when date pick up from calendar, format is different, need to change from yyyy/mm/dd to yyyy-MM-dd
+		day = day.replace("/", "-");
+		
 		if (volunteers.size() == 0)
 			model.addAttribute("noAvailableTime",true);	
 		else
@@ -1914,8 +1994,7 @@ public class VolunteerController {
 		//retrieve volunteers id from session
 		HttpSession  session = request.getSession();			
 		Integer vId = (Integer)session.getAttribute("volunteerId");
-		int volunteerId = vId.intValue();
-		
+		int volunteerId = vId.intValue();		
 		Integer pId = (Integer)session.getAttribute("partnerId");
 		int partnerId = pId.intValue();
 		
@@ -1949,6 +2028,12 @@ public class VolunteerController {
 		{
 			Patient patient = patientManager.getPatientByID(patientId);						
 			int userId = user.getUserID();
+			int volunteer1UserId = volunteerManager.getUserIdByVolunteerId(volunteerId);	
+			int volunteer2UserId = volunteerManager.getUserIdByVolunteerId(partnerId);
+			
+			//update volunteer and partner for patient if choose different from scheduler
+			if ((volunteerId != patient.getVolunteer()) || (partnerId != patient.getPartner()))
+				patientManager.updatePatientVolunteers(patientId, volunteerId, partnerId);
 						
 			//send message to both volunteers
 			StringBuffer sb = new StringBuffer();			
@@ -1966,8 +2051,8 @@ public class VolunteerController {
 						
 			String msg = sb.toString();
 			
-			TapestryHelper.sendMessageToInbox(msg, userId, volunteerId, messageManager); //send message to volunteer
-			TapestryHelper.sendMessageToInbox(msg, userId, partnerId, messageManager); //send message to volunteer
+			TapestryHelper.sendMessageToInbox(msg, userId, volunteer1UserId, messageManager); //send message to volunteer
+			TapestryHelper.sendMessageToInbox(msg, userId, volunteer2UserId, messageManager); //send message to volunteer
 			TapestryHelper.sendMessageToInbox(msg, userId, userId, messageManager); //send message to admin her/his self	
 			model.addAttribute("successToCreateAppointment",true);
 			//log activity
@@ -1976,7 +2061,7 @@ public class VolunteerController {
 		else
 			model.addAttribute("failedToCreateAppointment",true);
 		return "redirect:/manage_appointments";		
-	}	
+	}
 	
 	@RequestMapping(value="/open_alerts_keyObservations/{appointmentId}", method=RequestMethod.GET)
 	public String openAlertsAndKeyObservations(@PathVariable("appointmentId") int id, 

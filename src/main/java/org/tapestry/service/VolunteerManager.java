@@ -159,6 +159,22 @@ public interface VolunteerManager {
 	@Transactional
 	public int getUserIdByVolunteerId(int volunteerId);
 	
+	/**
+	 * @param organization
+	 * @param time period
+	 * @return list of volunteers who are available at that time
+	 */
+	@Transactional
+	public List<Volunteer> getVolunteersByAvailibility(String time, int organization);
+	
+	/**
+	 * @param time period
+	 * @return list of volunteers who are available at that time
+	 */
+	@Transactional
+	public List<Volunteer> getVolunteersByAvailibility(String time, List<Volunteer> volunteers);
+	
+	
 	/** 
 	 * @return a list of all organizations
 	 */

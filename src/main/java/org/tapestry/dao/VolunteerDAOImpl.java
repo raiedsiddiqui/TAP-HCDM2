@@ -246,6 +246,7 @@ public class VolunteerDAOImpl extends JdbcDaoSupport implements VolunteerDAO {
 		
 	}
 	
+
 	class VolunteerMapper implements RowMapper<Volunteer>{
 		public Volunteer mapRow(ResultSet rs, int rowNum) throws SQLException{
 			
@@ -371,6 +372,7 @@ public class VolunteerDAOImpl extends JdbcDaoSupport implements VolunteerDAO {
 			
 		}
 	}
+
 	
 //	private String truncateDate(String date)
 //	{

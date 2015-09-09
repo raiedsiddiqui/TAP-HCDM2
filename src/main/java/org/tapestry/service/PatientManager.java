@@ -170,4 +170,13 @@ public interface PatientManager {
 	@Transactional
 	public List<Patient> getAllDisabledPatients(int siteId);
 	
+	/**
+	 * 
+	 * @param patientId
+	 * @param volunteerId
+	 * @param partnerId
+	 */
+	@Transactional
+	public void updatePatientVolunteers(int patientId, int volunteerId, int partnerId);
+	
 }

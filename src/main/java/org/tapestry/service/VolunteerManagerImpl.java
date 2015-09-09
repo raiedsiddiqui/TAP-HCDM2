@@ -173,6 +173,44 @@ public class VolunteerManagerImpl implements VolunteerManager {
 	public int getUserIdByVolunteerId(int volunteerId) {
 		return volunteerDao.getUserIdByVolunteerId(volunteerId);
 	}
+	
+	@Override
+	public List<Volunteer> getVolunteersByAvailibility(String time, int organization) {
+		List<Volunteer> volunteers;
+//		List<Volunteer>  new_volunteer_list = new ArrayList<Volunteer>();
+//		String availibility;
+		if (organization == 0)
+			volunteers = this.getAllVolunteers();
+		else
+			volunteers = this.getAllVolunteersByOrganization(organization);
+		
+//		for (Volunteer v: volunteers)
+//		{
+//			availibility = v.getAvailability();
+//			if (availibility.contains(time))
+//				new_volunteer_list.add(v);			
+//		}
+//		
+//		return new_volunteer_list;
+		
+		return getVolunteersByAvailibility(time, volunteers);
+	}
+	
+
+	@Override
+	public List<Volunteer> getVolunteersByAvailibility(String time,	List<Volunteer> volunteers) {
+		List<Volunteer>  new_volunteer_list = new ArrayList<Volunteer>();
+		String availibility;
+		for (Volunteer v: volunteers)
+		{
+			availibility = v.getAvailability();
+			if (availibility.contains(time))
+				new_volunteer_list.add(v);			
+		}
+		
+		return new_volunteer_list;
+	}
+
 
 	@Override
 	public List<Organization> getAllOrganizations() {			
@@ -336,6 +374,5 @@ public class VolunteerManagerImpl implements VolunteerManager {
 	public Narrative getNarrativeByAppointmentId(int appointmentId) {
 		return narrativeDao.getNarrativeByAppointmentId(appointmentId);
 	}
-
 
 }

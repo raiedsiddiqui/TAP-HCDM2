@@ -477,6 +477,16 @@
 										</c:forEach>
 									</select>
 								</div>
+								<c:if test="${showSites}">
+									<div class="col-md-4">
+										<label>Site:</label>									
+										<select name="site" id="site" form="add_volunteer" class="form-control">
+											<c:forEach items="${sites}" var="s">
+												<option value="${s.siteId}">${s.name}</option>
+											</c:forEach>
+										</select>
+									</div>
+								</c:if>
 							</div>
 
 						<h2 class="pagetitleadmin">User Account </h2>

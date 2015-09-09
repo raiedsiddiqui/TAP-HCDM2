@@ -162,6 +162,8 @@ public interface UserManager {
 	 */
 	@Transactional
 	public void setPasswordForUser(int id, String pwd);
+	
+	
 	@Transactional
 	public List<User> getVolunteerCoordinatorByOrganizationId(int id);
 	
@@ -216,13 +218,19 @@ public interface UserManager {
 	 * @param organizationId
 	 * @return
 	 */
-	public List<UserLog> getGroupedUserLogssByPartialName(String partialName, int organizationId);
-	
+	public List<UserLog> getGroupedUserLogssByPartialName(String partialName, int organizationId);	
 	
 	/**
 	 * 
 	 * @param id
 	 * @return list of local admins from a site
 	 */
-	public List<User> getLocalAdminBySite(int id);
+	public List<User> getLocalAdminBySite(int id);	
+	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public List<User> getUserBySIte(int id);
 }

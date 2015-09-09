@@ -32,12 +32,13 @@ public class SurveyFactory {
 			throw new SurveyException("Requested survey was null");
 		}
 
-		if (!loadedSurveys.containsKey(Integer.toString(surveyTemplate.getSurveyID())))
-		{
+		//comment condition check out, since there is loading problem when client survey ID is same volunteer survey ID
+//		if (!loadedSurveys.containsKey(Integer.toString(surveyTemplate.getSurveyID())))
+//		{
 			TapestryPHRSurvey loadedSurvey = SurveyActionMumps.loadSurveySource(surveyTemplate);
 			if (loadedSurvey == null) throw new SurveyException("Requested survey '" + surveyTemplate.getSurveyID() + "' cannot be found");
 			loadedSurveys.put(Integer.toString(surveyTemplate.getSurveyID()), loadedSurvey);
-		}
+//		}
 	}
 		
 	public void reloadSurveyTemplate(SurveyTemplate surveyTemplate) throws SurveyParseException

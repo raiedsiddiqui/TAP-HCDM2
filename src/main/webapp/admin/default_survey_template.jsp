@@ -22,9 +22,8 @@
 	
 	<script type="text/javascript">
 	function setAction()
-	{alert(document.pressed);
-		document.getElementById("hAction").value = document.pressed;
-	
+	{
+		document.getElementById("hAction").value = document.pressed;	
 	    return true;
 	}
 	</script>

@@ -9,6 +9,13 @@
 	<title>Scheduler in Appointment</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>	
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/printelement.js"></script>
+	<script type="text/javascript">
+	function setAction()
+	{
+		document.getElementById("hhAction").value = document.pressed;	
+	    return true;
+	}
+	</script>
 
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/lib/themes/default.css" id="theme_base">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/lib/themes/default.date.css" id="theme_date">
@@ -27,7 +34,7 @@
 	<%@include file="navbar.jsp" %>
 	<div><h4><a href="<c:url value="/manage_appointments"/>" >Appointments</a> > Scheduler</h4></div>	
 	<h3>Appointment Scheduler</h3>
- <form id="appt-form" method="post" action="<c:url value="/find_volunteers"/>">
+ <form id="appt-form" method="post" action="<c:url value="/find_volunteers"/>" onsubmit="return setAction();">
  	<table> 		
  		<tr>
  			<td>
@@ -73,19 +80,42 @@
 				</div>
  			</td>
  		</tr>
+ 		
  		<tr>
  			<td>
  				<a href="<c:url value="/manage_appointments"/>" class="btn btn-primary" >Cancel</a> 	
  			</td>
  			<td>
- 				<button id="goButton" data-loading-text="Loading..." type="submit" value="Go..."  class="btn btn-primary">Go</button>
+ 				<button id="goButton" data-loading-text="Loading..." type="submit" value="Go..."  class="btn btn-primary" onclick="document.pressed=this.value">Go</button>
+ 				<input class="btn btn-primary" form="appt-form" type="submit" name ="findAvailableVolunteers" value="Find Avalable Volunteers" onclick="document.pressed=this.value" />
  				
  			</td>
  		</tr>
  	</table> 
-					
+	<input id="hhAction" name="hhAction" type="hidden" value=""/>				
   </form>
-  
+  <c:if test="${showVolunteers}">
+	  <div id="availableVolunteers" name = "availableVolunteers">
+	  	<table class="table table-striped">
+					<tr>
+						<th>Name</th>	
+						<th>City</th>
+						<th>Organization</th>
+						<th>Phone Number</th>
+						
+					</tr>
+					<c:forEach items="${volunteers}" var="vl">
+						<tr>
+							<td>${vl.displayName}</td>
+							<td>${vl.city}</td>
+							<td>${vl.organization}</td>
+							<td>${vl.homePhone}</td>						
+						</tr>
+					</c:forEach>
+				</table>
+	  
+	  </div>
+  </c:if>
 	<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script>window.jQuery||document.write('<script src="tests/jquery.2.0.0.js"><\/script>')</script>
     <script src="${pageContext.request.contextPath}/resources/lib/picker.js"></script>

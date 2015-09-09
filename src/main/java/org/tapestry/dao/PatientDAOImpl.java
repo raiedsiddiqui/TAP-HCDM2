@@ -275,6 +275,12 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 	}
 
 	@Override
+	public void updatePatientVolunteers(int id, int volunteer, int partner) {
+		String sql = "UPDATE patients SET volunteer=?, volunteer2=? WHERE patient_ID=? ";
+		getJdbcTemplate().update(sql, volunteer, partner, id);
+	}
+
+	@Override
 	public List<Patient> getAllDisabledPatients() {
 		String sql = "SELECT p.*, v1.firstname AS v1_firstname, v1.lastname AS v1_lastname, "
 				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, v1.organization, v1.organization, "
@@ -294,6 +300,5 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 		
 		return getJdbcTemplate().query(sql, new Object[]{site}, new PatientMapper());
 	}
-
 
 }

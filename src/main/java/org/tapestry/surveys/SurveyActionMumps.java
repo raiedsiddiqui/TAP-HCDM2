@@ -33,7 +33,7 @@ public class SurveyActionMumps {
 	}
 	
 	public static TapestryPHRSurvey toPhrSurvey(List<SurveyTemplate> surveyTemplates, SurveyResult surveyResult) throws SurveyException
-	{
+	{				
 		SurveyTemplate st = new SurveyTemplate();
 		for (SurveyTemplate tempTemplate : surveyTemplates)
 		{

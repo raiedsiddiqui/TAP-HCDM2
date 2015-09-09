@@ -276,7 +276,8 @@
 								</div>
 								<div class="col-md-4">
 									<label>Experience:</label>
-									<input type="text" id="experience_level" name ="experience_level" class="form-control" readonly="readonly"> <!--  /span>			-->					
+									<input type="text" id="experience_level" name ="experience_level" value="${volunteer.experienceLevel}" class="form-control" readonly="readonly"> <!--  /span>			-->					
+									<!-- input type="hidden" id="experience_db" name ="experience_db" value="${volunteer.experienceLevel}" class="form-control" >-->
 								</div>
 								
 														

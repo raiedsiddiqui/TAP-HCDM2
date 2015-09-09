@@ -141,4 +141,13 @@ public interface PatientDAO {
 	 * @param id
 	 */
 	public void updatePatientNote(int id, String notes);
+	
+	/**
+	 * 
+	 * @param id
+	 * @param volunteer
+	 * @param partner
+	 */
+	public void updatePatientVolunteers(int id, int volunteer, int partner);
+	
 }

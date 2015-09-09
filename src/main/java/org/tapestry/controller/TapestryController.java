@@ -187,8 +187,18 @@ public class TapestryController{
 	{
 		TapestryHelper.setUnreadMessage(request, model, messageManager);
 		HttpSession session = request.getSession();
+		List<User> userList;
 		
-		List<User> userList = userManager.getAllUsers();
+		User user = TapestryHelper.getLoggedInUser(request);
+		
+		if ("ROLE_ADMIN".equalsIgnoreCase(user.getRole()))//for central admin
+		{
+			List<Site> sites = TapestryHelper.getSites(request, organizationManager);		
+			model.addAttribute("sites", sites);			
+			userList = userManager.getAllUsers();
+		}
+		else
+			userList = userManager.getUserBySIte(user.getSite());
 		
 		model.addAttribute("users", userList);
 //		model.addAttribute("active", userDao.countActiveUsers());
@@ -205,13 +215,7 @@ public class TapestryController{
 			session.setAttribute("organizations", organizations);
 		}
 		
-		User user = TapestryHelper.getLoggedInUser(request);
 		
-		if ("ROLE_ADMIN".equalsIgnoreCase(user.getRole()))//for central admin
-		{
-			List<Site> sites = TapestryHelper.getSites(request, organizationManager);		
-			model.addAttribute("sites", sites);
-		}
 		
 		return "admin/manage_users";
 	}
@@ -2452,10 +2456,8 @@ public class TapestryController{
 			else
 				userSurveys = null;					
 		}
-		
 		if (userSurveys == null)
 		{
-			
 			if (request.isUserInRole("ROLE_ADMIN"))//central admin 
 				surveyTemplates = surveyManager.getAllSurveyTemplates();
 	   		else //local admin/site admin
@@ -2463,14 +2465,9 @@ public class TapestryController{
 			
 			surveyResults = surveyManager.getSurveysByPatientID(patientId);
 			userSurveys = TapestryHelper.storeSurveyMapInSession(request, surveyResults, surveyTemplates);	
-			System.out.println("surveyResults === " + surveyResults.size());
-			
-			System.out.println("userSurveys === " + userSurveys.size());
-		}
-				
+		}				
 		SurveyTemplate surveyTemplate = surveyManager.getSurveyTemplateByID(surveyResult.getSurveyID());
-		System.out.println("surveyTemplate.getTitle() === " + surveyTemplate.getTitle());
-				
+
 		//all survey results stored in map		
 		TapestryPHRSurvey currentSurvey = userSurveys.getSurvey(Integer.toString(id));
 		
@@ -2512,7 +2509,7 @@ public class TapestryController{
    	  
    	@RequestMapping(value="/save_survey/{resultID}", method=RequestMethod.GET)
    	public String saveAndExit(@PathVariable("resultID") int id, HttpServletRequest request) throws Exception
-	{
+	{System.out.println("saving...");
    		boolean isComplete = Boolean.parseBoolean(request.getParameter("survey_completed"));
    		List<SurveyResult> surveyResults ;
 		List<SurveyTemplate> surveyTemplates;
@@ -2544,7 +2541,7 @@ public class TapestryController{
 			}
 			surveyManager.updateSurveyResults(id, data);
 			surveyManager.markAsComplete(id);
-			
+			System.out.println("complete...");
 			//user logs
 			sb  = new StringBuffer();
 			sb.append(currentUser.getName());
@@ -2561,7 +2558,7 @@ public class TapestryController{
 		}
 		
 		if (!currentSurvey.isComplete())
-		{
+		{System.out.println("no complete...");
 			byte[] data = SurveyAction.updateSurveyResult(currentSurvey);
 			surveyManager.updateSurveyResults(id, data);
 			
@@ -3254,9 +3251,13 @@ public class TapestryController{
    		if (surveyTemplates == null)
 				return "redirect:/manage_volunteer_survey?failed=true";
    		
-   		User loginUser = TapestryHelper.getLoggedInUser(request);   		  		
-   		List<Volunteer> volunteers = volunteerManager.getAllVolunteersByOrganization(loginUser.getOrganization());
-   		
+   		User loginUser = TapestryHelper.getLoggedInUser(request); 
+   		List<Volunteer> volunteers;
+   		int organizationId = loginUser.getOrganization();
+   		if (organizationId == 0)//central admin
+   			volunteers = volunteerManager.getAllVolunteers();
+   		else
+   			volunteers = volunteerManager.getAllVolunteersByOrganization(loginUser.getOrganization());   		
    		
    		model.addAttribute("volunteers", volunteers);
    		model.addAttribute("volunteerSurveyTemplates", surveyTemplates);   		
@@ -3473,7 +3474,15 @@ public class TapestryController{
 			currentSurvey.setComplete(true);			
 			surveyManager.markAsCompleteForVolunteerSurvey(id);			
 		}
-		return "redirect:/view_mySurveys";
+		
+		if (request.isUserInRole("ROLE_USER"))
+			return "redirect:/view_mySurveys";
+		else
+		{
+			SurveyResult sr = surveyManager.getVolunteerSurveyResultByID(id);
+			int volunteerId = sr.getVolunteerID();
+			return "redirect:/display_volunteer/" + volunteerId;
+		}
 	}
   	
    	@RequestMapping(value="/view_volunteer_survey_results/{resultID}", method=RequestMethod.GET)

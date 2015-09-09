@@ -270,6 +270,14 @@ public class UserDAOImpl extends JdbcDaoSupport implements UserDAO {
 	
 		return users;
 	}
+
+	@Override
+	public List<User> getUserBySIte(int id) {
+		String sql = "SELECT * FROM users WHERE site=?";
+		List<User> users = getJdbcTemplate().query(sql, new Object[]{id}, new UserMapper());		
+	
+		return users;
+	}
 	
 	class UserMapper implements RowMapper<User> {
 		public User mapRow(ResultSet rs, int rowNum) throws SQLException
@@ -319,5 +327,6 @@ public class UserDAOImpl extends JdbcDaoSupport implements UserDAO {
 				return u;
 			}
 		}
+
 
 }

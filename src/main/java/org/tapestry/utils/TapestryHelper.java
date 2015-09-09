@@ -1367,7 +1367,7 @@ public class TapestryHelper {
    	
    	public static TapestrySurveyMap storeSurveyMapInSession(HttpServletRequest request, List<SurveyResult> surveyResults, List<SurveyTemplate> surveyTemplates)
 	{	
-   		request.getSession().removeAttribute("session_survey_list");
+ //  		request.getSession().removeAttribute("session_survey_list");
 		TapestrySurveyMap userSurveys = new TapestrySurveyMap(getSurveyResultsList(surveyResults, surveyTemplates));
 		request.getSession().setAttribute("session_survey_list", userSurveys);
 		
