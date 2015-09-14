@@ -177,7 +177,7 @@
 					</c:otherwise>
 				</c:choose>
 			</td>
-			<td><a href="<c:url value="/show_survey/${s.resultID}"/>">${s.surveyTitle}</a></td>>
+			<td><a href="<c:url value="/show_survey/${s.resultID}"/>">${s.surveyTitle}</a></td>
 			<td>${s.startDate}</td>
 			<td>${s.editDate}</td>
 			<td>${s.strCompleted}</td>

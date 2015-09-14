@@ -284,6 +284,14 @@ public interface SurveyManager {
 	public List<SurveyTemplate> getAllVolunteerSurveyTemplates();
 	
 	/**
+	 * 
+	 * @param siteId
+	 * @return A list of Survey templates grouped by site
+	 */
+	@Transactional
+	public List<SurveyTemplate> getVolunteerSurveyTemplatesBySite(int siteId); 
+	
+	/**
 	 * Uploads a survey template to the database
 	 * @param st
 	 */
@@ -361,6 +369,20 @@ public interface SurveyManager {
 	public void updateVolunteerSurveyResults(int id, byte[] data);
 	
 	/**
+	 * Delete a volunteer survey template from the database
+	 * @param id
+	 */
+	@Transactional
+	public void deleteVolunteerSurveyTemplate(int id);
+	
+	/**
+	 * Delete a volunteer survey from the database
+	 * @param id
+	 */
+	@Transactional
+	public void deleteVolunteerSurvey(int id);
+	
+	/**
 	 * Mark a survey as completed
 	 * @param id
 	 */
@@ -382,5 +404,12 @@ public interface SurveyManager {
 	 */
 	@Transactional
 	public boolean hasCompletedAllSurveysForReport(int patientId, int siteId);
+	/**
+	 * 
+	 * @param surveyId
+	 * @return
+	 */
+	@Transactional
+	public int countVolunteerSurveyResultsBySurveyId(int surveyId);
 
 }

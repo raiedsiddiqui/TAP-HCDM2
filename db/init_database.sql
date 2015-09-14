@@ -392,6 +392,8 @@ CREATE TABLE IF NOT EXISTS volunteer_surveys (
 	last_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, /*Automatically updates when record changed*/
     priority TINYINT(1), /*Between 0-9*/
     description TEXT,
+    site MEDIUMINT UNSIGNED NOT NULL,
+    isDefault TINYINT(1) UNSIGNED NOT NULL,
     
 	PRIMARY KEY (survey_ID)
 );

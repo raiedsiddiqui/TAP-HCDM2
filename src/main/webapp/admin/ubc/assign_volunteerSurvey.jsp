@@ -40,14 +40,12 @@
 			if (assignToAll.checked)
 			{
 				document.getElementById("searchVolunteer").disabled = true; 
-				document.getElementById('searchVolunteerName').disabled = true;
-			
+				document.getElementById('searchVolunteerName').disabled = true;			
 			}				
 			else
 			{
 				document.getElementById("searchVolunteer").disabled = false;
-				document.getElementById('searchVolunteerName').disabled = false;
-		
+				document.getElementById('searchVolunteerName').disabled = false;		
 			}
 				
 		}
@@ -58,7 +56,7 @@
 <body>
 	<div class="content">
 		<%@include file="../navbar.jsp" %>
-		<a href="<c:url value="/manage_volunteerSurvey"/>" >Volunteer Survey Management</a> > Assign Volunteer Survey<br/>
+		<a href="<c:url value="/manage_volunteer_survey"/>">Volunteer Survey Management</a>  Assign Volunteer Survey<br/>
 		<c:if test="${not empty no_survey_selected}">
 			<div class ="alert alert-info"><spring:message code="message_noSurveySelected"/></div>
 		</c:if>

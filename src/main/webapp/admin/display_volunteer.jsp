@@ -258,8 +258,8 @@
 			<th width="200">Assigned Surveys</th>
 			<th width="250"> Date Started</th>		
 			<th width="250">Last Edited</th>
-			<th>Completed Status</th>
-			<!--  th>Delete</th>  -->
+			<th>Completed Status</th>			
+			<th>Delete</th> 
 			<th>Results</th>
 		</tr>
 		<c:forEach items="${surveys}" var="s">
@@ -269,7 +269,7 @@
 			<td>${s.startDate}</td>
 			<td>${s.editDate}</td>
 			<td>${s.strCompleted}</td>
-			<!--  td><a href="<c:url value="/delete_volunteerSurvey/${s.resultID}"/>" class="btn btn-danger">Remove</a></td> -->
+			<td><a href="<c:url value="/delete_volunteerSurvey/${s.resultID}"/>" class="btn btn-danger">Remove</a></td> 
 			<td>
 				<c:choose>
 					<c:when test="${s.completed}">
@@ -279,7 +279,7 @@
 					<a href="#" class="btn btn-success disabled">View Results</a>
 					</c:otherwise>
 				</c:choose>
-			</td>
+			</td>			
 		</tr>
 		</c:forEach>
 	</table>

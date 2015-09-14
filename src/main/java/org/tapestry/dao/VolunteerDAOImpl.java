@@ -157,11 +157,11 @@ public class VolunteerDAOImpl extends JdbcDaoSupport implements VolunteerDAO {
 		return getJdbcTemplate().queryForInt(sql);
 	}
 
-	@Override
-	public String getVolunteerNameById(int volunteerId) {
-		Volunteer volunteer = getVolunteerById(volunteerId);		
-		return volunteer.getDisplayName();
-	}
+//	@Override
+//	public String getVolunteerNameById(int volunteerId) {
+//		Volunteer volunteer = getVolunteerById(volunteerId);		
+//		return volunteer.getDisplayName();
+//	}
 
 	@Override
 	public int getUserIdByVolunteerId(int volunteerId) {

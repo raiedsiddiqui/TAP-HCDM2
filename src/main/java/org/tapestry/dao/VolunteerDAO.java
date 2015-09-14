@@ -95,12 +95,12 @@ public interface VolunteerDAO {
 	 */
 	public int countAllVolunteers();
 
-	/**
-	 * get volunteer's name
-	 * @param volunteerId
-	 * @return
-	 */
-	public String getVolunteerNameById(int volunteerId);
+//	/**
+//	 * get volunteer's name
+//	 * @param volunteerId
+//	 * @return
+//	 */
+//	public String getVolunteerNameById(int volunteerId);
 	
 	/**
 	 * @param volunteerId

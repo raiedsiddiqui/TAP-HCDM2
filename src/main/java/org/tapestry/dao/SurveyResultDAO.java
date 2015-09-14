@@ -199,6 +199,12 @@ public interface SurveyResultDAO {
 	public void updateVolunteerSurveyResults(int id, byte[] data);
 	
 	/**
+	 * Delete a volunteer survey from the database
+	 * @param id
+	 */
+	public void deleteVolunteerSurvey(int id);
+	
+	/**
 	 * Mark a survey as completed
 	 * @param id
 	 */

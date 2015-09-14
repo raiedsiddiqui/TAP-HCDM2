@@ -137,6 +137,13 @@ public interface SurveyTemplateDAO {
 	public List<SurveyTemplate> getVolunteerSurveyTemplatesByPartialTitle(String partialTitle);
 	
 	/**
+	 * 
+	 * @param siteId
+	 * @return
+	 */
+	public List<SurveyTemplate> getVolunteerSurveyTemplatesBySite(int siteId);
+	
+	/**
 	 * Modify a survey template on title and description fields
 	 * @param st
 	 */
@@ -148,5 +155,37 @@ public interface SurveyTemplateDAO {
 	* @return A SurveyTemplate object representing the result
 	*/
 	public SurveyTemplate getVolunteerSurveyTemplateByID(int id);
+	
+	/**
+	 * 
+	 * @param siteId
+	 * @return
+	 */
+	public List<String> getVolunteerSurveyTemplateTitlesBySite(int siteId);
+	
+	/**
+	 * Delete a volunteer survey template from the database
+	 * @param id
+	 */
+	public void deleteVolunteerSurveyTemplate(int id);	
+	
+	/**
+	 * 
+	 * @param surveyId
+	 * @return
+	 */
+	public int countVolunteerSurveyResultsBySurveyId(int surveyId);
+	
+	/**
+	 * 
+	 * @param surveyIds
+	 */
+	public void setDefaultVolunteerSurveyTemplate(String[] surveyIds);
+	
+	/**
+	 * 
+	 * @param surveyIds
+	 */
+	public void removeDefaultVolunteerSurveyTemplateSetting(String[] surveyIds);
 	
 }

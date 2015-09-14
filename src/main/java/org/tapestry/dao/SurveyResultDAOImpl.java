@@ -330,6 +330,12 @@ public class SurveyResultDAOImpl extends JdbcDaoSupport implements SurveyResultD
 		return results;
 	}
 	
+	@Override
+	public void deleteVolunteerSurvey(int id) {
+		String sql = "DELETE FROM volunteer_survey_results WHERE result_ID=?";
+		getJdbcTemplate().update(sql, id);
+	}
+	
 	class VolunteerSurveyResultMapper implements RowMapper<SurveyResult> {
 		public SurveyResult mapRow(ResultSet rs, int rowNum) throws SQLException{
 			SurveyResult sr = new SurveyResult();

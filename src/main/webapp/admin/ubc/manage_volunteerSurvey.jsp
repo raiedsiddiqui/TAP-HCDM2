@@ -32,8 +32,11 @@
 		</c:if>
 		<c:if test="${not empty surveyTemplateUpdated }">
 			<div class ="alert alert-info"><spring:message code="message_modifySurveyTemplate"/></div>
-		</c:if>			
-		<a href="<c:url value="/manage_volunteer_survey"/>">Volunteer Survey Management</a> <br/>
+		</c:if>	
+		<c:if test="${not empty noDelete }">
+			<div class ="alert alert-info"><spring:message code="message_noDeleteSurveyTemplate"/></div>
+		</c:if>		
+		<!--  a href="<c:url value="/manage_volunteer_survey"/>">Volunteer Survey Management</a> <br/>-->
 		<p>This is where you add/edit and assign surveys to Volunteers</p>
 		<table >
 			<tr>
@@ -66,7 +69,9 @@
 					<th>Description</th>
 					<th>Type</th>
 					<th>Priority</th>				
-					<th>Date Added</th>				
+					<th>Site</th>
+					<th>Date Added</th>					
+					<th>Remove</th>	
 					
 				</tr>
 				<c:forEach items="${volunteer_survey_templates}" var="st">
@@ -74,8 +79,10 @@
 					<td><a href="<c:url value="/modify_volunteerSurveyTemplate/${st.surveyID}"/>">${st.title}</a></td>
 					<td width="200">${st.description}</td>
 					<td>${st.type}</td>
-					<td>${st.priority}</td>					
+					<td>${st.priority}</td>		
+					<td>${st.siteName}</td>			
 					<td>${st.createdDate }</td>	
+					<td><a href="<c:url value="/delete_volunteer_survey_template/${st.surveyID}"/>" Onclick="return confirmDelete()" class="btn btn-danger">Remove</a></td>
 				</tr>
 				</c:forEach>
 			</table>		
@@ -89,7 +96,7 @@
     		<h3 id="modalHeader">Add Survey</h3>
   		</div>
   		<div class="modal-body">
-  			<form id="uploadSurveyForm" action="upload_volunteer_survey_template" method="post" enctype="multipart/form-data">
+  			<form id="uploadVolunteerSurveyForm" action="upload_volunteer_survey_template" method="post" enctype="multipart/form-data">
 				<fieldset>
 					<legend>New survey</legend>
 					<label><h3>Title:</h3></label>
@@ -100,12 +107,21 @@
 					<select name="type">
 						<option value="MUMPS">MUMPS</option>
 					</select>
+					<label>Default? </label>
+				<input type="radio" name="default_volunteer_survey" value="1" />Yes
+				<input type="radio" name="default_volunteer_survey" value="0" checked/>No
 					<label>Priority: (Higher numbers will be above lower numbers on the patient page)</label>
 					<select name="priority">
 						<c:forEach begin="0" end="9" varStatus="loop">
 						<option value="${loop.index}">${loop.index}</option>
 						</c:forEach>
-					</select>									
+					</select>	
+					<label>Site:</label>									
+					<select name="site" id="site" form="uploadVolunteerSurveyForm" class="form-control">
+						<c:forEach items="${sites}" var="s">
+							<option value="${s.siteId}">${s.name}</option>
+						</c:forEach>
+					</select>								
 					<label>File:</label>
 					<input type="hidden" name="MAX_FILE_SIZE" value="2000000">
 					<input type="file" accept="text/*" name="file" required/>
@@ -114,7 +130,7 @@
   		</div>
   		<div class="modal-footer">
     		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-			<input class="right" form="uploadSurveyForm" type="submit" value="Add Survey" />
+			<input class="right" form="uploadVolunteerSurveyForm" type="submit" value="Add Survey" />
   		</div>
 	</div>
 	</div>

@@ -233,7 +233,12 @@ public class SurveyManagerImpl implements SurveyManager {
 		return surveyTemplateDao.getAllVolunteerSurveyTemplates();
 	}
 
-		@Override
+	@Override
+	public List<SurveyTemplate> getVolunteerSurveyTemplatesBySite(int siteId) {		
+		return surveyTemplateDao.getVolunteerSurveyTemplatesBySite(siteId);
+	}
+	
+	@Override
 	public void uploadVolunteerSurveyTemplate(SurveyTemplate st) {
 		surveyTemplateDao.uploadVolunteerSurveyTemplate(st);
 		
@@ -285,6 +290,12 @@ public class SurveyManagerImpl implements SurveyManager {
 		surveyResultDao.updateVolunteerSurveyResults(id, data);
 		
 	}
+	
+	@Override
+	public void deleteVolunteerSurveyTemplate(int id) {
+		surveyTemplateDao.deleteVolunteerSurveyTemplate(id);
+		
+	}
 
 	@Override
 	public void markAsCompleteForVolunteerSurvey(int id) {
@@ -316,5 +327,17 @@ public class SurveyManagerImpl implements SurveyManager {
 		
 		return completed;
 	}
+
+	@Override
+	public int countVolunteerSurveyResultsBySurveyId(int surveyId) {
+		return surveyTemplateDao.countVolunteerSurveyResultsBySurveyId(surveyId);
+	}
+
+	@Override
+	public void deleteVolunteerSurvey(int id) {
+		surveyResultDao.deleteVolunteerSurvey(id);		
+	}
+
+	
 
 }

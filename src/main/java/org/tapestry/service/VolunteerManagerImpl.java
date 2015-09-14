@@ -166,7 +166,8 @@ public class VolunteerManagerImpl implements VolunteerManager {
 
 	@Override
 	public String getVolunteerNameById(int volunteerId) {
-		return volunteerDao.getVolunteerNameById(volunteerId);
+		Volunteer volunteer = getVolunteerById(volunteerId);		
+		return volunteer.getDisplayName();
 	}
 
 	@Override
