@@ -127,7 +127,8 @@ public class DoSurveyAction
 					m.addObject("hideObservernote", true);
 				else
 					m.addObject("hideObservernote", false);				
-			}		
+			}	
+			
 			m.addObject("survey", currentSurvey);
 			m.addObject("templateSurvey", templateSurvey);
 			m.addObject("questionid", lastQuestionId);
@@ -137,7 +138,7 @@ public class DoSurveyAction
 			
 			return m;
 		}//end of questionId == null;
-
+		
 		String errMsg = null;
 
 		//if continuing survey (just submitted an answer)

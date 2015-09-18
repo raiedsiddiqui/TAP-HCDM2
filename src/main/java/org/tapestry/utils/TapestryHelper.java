@@ -1369,10 +1369,14 @@ public class TapestryHelper {
 	{	
  //  		request.getSession().removeAttribute("session_survey_list");
 		TapestrySurveyMap userSurveys = new TapestrySurveyMap(getSurveyResultsList(surveyResults, surveyTemplates));
-		request.getSession().setAttribute("session_survey_list", userSurveys);
-		
+		request.getSession().setAttribute("session_survey_list", userSurveys);		
 		return userSurveys;
 	}
+   	
+   	public static TapestrySurveyMap getUserSurveys(List<SurveyResult> surveyResults, List<SurveyTemplate> surveyTemplates)
+   	{
+   		return new TapestrySurveyMap(getSurveyResultsList(surveyResults, surveyTemplates));
+   	}
    	
    	public static TapestrySurveyMap storeVolunteerSurveyMapInSession(HttpServletRequest request, List<SurveyResult> surveyResults, List<SurveyTemplate> surveyTemplates)
 	{

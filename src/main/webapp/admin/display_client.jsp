@@ -162,28 +162,17 @@
 			<th width="250">Last Edited</th>
 			<th>Completed Status</th>
 			<th>Delete</th>
-			<th>Results</th>
-			<!--  th>Complete Survey</th>-->
+			<th>Results</th>			
 		</tr>
 		<c:forEach items="${surveys}" var="s">
 		<tr>
-			<td>
-				<c:choose>
-					<c:when test="${s.completed}">
-						<a href="<c:url value="/show_survey/${s.resultID}"/>">${s.surveyTitle}</a>
-					</c:when>
-					<c:otherwise>
-						${s.surveyTitle}
-					</c:otherwise>
-				</c:choose>
-			</td>
-			<td><a href="<c:url value="/show_survey/${s.resultID}"/>">${s.surveyTitle}</a></td>
+			<td><a href="<c:url value="/show_survey/${s.resultID}"/>">${s.surveyTitle}</a></td>			
 			<td>${s.startDate}</td>
 			<td>${s.editDate}</td>
 			<td>${s.strCompleted}</td>
 			<td><a href="<c:url value="/delete_survey/${s.resultID}"/>" class="btn btn-danger">Remove</a></td>
-			<td>
-				<c:choose>
+			<td>			
+				<c:choose>				
 					<c:when test="${s.completed}">
 					<a href="<c:url value="/view_survey_results/${s.resultID}"/>" class="btn btn-success">View Results</a>
 					</c:when>
@@ -192,6 +181,7 @@
 					</c:otherwise>
 				</c:choose>
 			</td>
+			
 			<!--  td>
 				<c:if test="${not s.completed}">
 					<a href="<c:url value="/complete_survey_results/${s.resultID}?patientId=${patient.patientID}"/>" class="btn btn-success">Complete Survey</a>
