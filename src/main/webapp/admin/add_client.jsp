@@ -43,10 +43,8 @@
 			{
 				alert("This ID has existed in the DB...");
 				researchId.value = "";
-				document.getElementById("researchId").focus();
-		
-			}
-				
+				document.getElementById("researchId").focus();		
+			}				
 		}
 		
 		 function getVolunteers(){			 

@@ -164,8 +164,7 @@ public class Utils {
 		positions[0] = list.get(0);		
 		String current, next;
 		int iCurrent, iNext;
-		
-				
+						
 		mainloop:
 		for (int i = 0; i<size; i++){			
 			current = list.get(i);
@@ -173,7 +172,8 @@ public class Utils {
 			if ((i + 1) == size)//only one dropdown has values
 			{//value of end position which is displayed on dropdown 
 				int j = Integer.valueOf(list.get(i));
-				j++;
+			//	j++;  when an appointment's time is suppose to be 1/2 hour
+				j = j+2; //when an appointment's time is suppose to be 1 hour
 				positions[1] = String.valueOf(j);
 				positions[2] = "null";
 				positions[3] = "null";
@@ -187,10 +187,12 @@ public class Utils {
 				//separate two group of data for two dropdown to find start position and end position
 				if ((iNext - iCurrent) > 1){	
 					//value of end position which is displayed on dropdown 
-					positions[1] = String.valueOf(iCurrent + 1);
+			//		positions[1] = String.valueOf(iCurrent + 1); when an appointment's time is suppose to be 1/2 hour
+					positions[1] = String.valueOf(iCurrent + 2);//when an appointment's time is suppose to be 1 hour
 					positions[2] = list.get(i+1);				
 					//value of end position which is displayed on dropdown 
-					positions[3] = String.valueOf(Integer.valueOf(list.get(size-1)) +1 );
+			//		positions[3] = String.valueOf(Integer.valueOf(list.get(size-1)) +1 ); when an appointment's time is suppose to be 1/2 hour
+					positions[3] = String.valueOf(Integer.valueOf(list.get(size-1)) +2 );//when an appointment's time is suppose to be 1 hour
 					
 					break mainloop;
 				}
@@ -203,7 +205,7 @@ public class Utils {
 		StringBuffer sb;
 		int start, end;
 		String dayOfWeek;
-		
+				
 		if ((from.length() == 1) || (to.length() == 1 ))//nothing selected 
 			return list;
 		else
@@ -218,8 +220,9 @@ public class Utils {
 			end = Integer.valueOf(to);
 				
 			//endTime must great than startTime
-			if (end > start){
-				for (int i = start; i <end; i++)
+			if (end > start)
+			{
+				for (int i = start; i < end-1; i++)//an appointment suppose to last 1 hour, if it is half hour, i<end instead of i<end-1
 				{
 					sb = new StringBuffer();		
 					sb = sb.append(dayOfWeek);
@@ -230,8 +233,6 @@ public class Utils {
 			return list;
 		}
 	}
-	
-
 
 	/**
 	 * get index of day of week by Date from calendar

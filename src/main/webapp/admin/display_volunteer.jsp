@@ -9,7 +9,7 @@
 <title>Details of volunteer</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
 
-	
+	<script src="${pageContext.request.contextPath}/resources/js/tapestryUtils.js"></script>	
 	<script type="text/javascript">
 		function showdisplayActivityLog(){
 			document.getElementById("displayActivityLogDiv").style.display="block";
@@ -30,7 +30,9 @@
 <div><h4><a href="<c:url value="/view_volunteers"/>"> Volunteers ></a> ${volunteer.displayName}</h4></div>
 <div class="row">
 	<div class="col-md-10">
-			<h2>${volunteer.displayName}<a href="<c:url value="/modify_volunteer/${volunteer.volunteerId}"/>"><span style="font-size:15px;">Edit</span></a></h2>
+			<h2>${volunteer.displayName}<a href="<c:url value="/modify_volunteer/${volunteer.volunteerId}"/>"><span style="font-size:15px;">Edit</span></a><c:if test="${not vl.showDelete}">
+							<a href="<c:url value="/delete_volunteer/${volunteer.volunteerId}"/>" Onclick="return confirmDelete()" class="btn btn-danger"><span style="font-size:15px;">Delete</span></a>
+						</c:if></h2>
 	</div>
 	<div class="col-md-1">
 			<a  href="#displayActivityLog" class="btn btn-primary" data-toggle="modal">Activity Log</a>

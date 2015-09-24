@@ -57,7 +57,7 @@
 					<th>City</th>
 					<th>Organization</th>
 					<th>Phone Number</th>
-					<th></th>
+					<!-- <th></th> -->
 				</tr>
 				<c:forEach items="${volunteers}" var="vl">
 					<tr>
@@ -68,9 +68,9 @@
 						<td>${vl.organization}</td>
 						<td>${vl.homePhone}</td>
 						<td><a href="<c:url value="/modify_volunteer/${vl.volunteerId}"/>" class="btn btn-info">Edit</a></td>						
-						<c:if test="${not vl.showDelete}">
+				<!--		<c:if test="${not vl.showDelete}">
 							<td><a href="<c:url value="/delete_volunteer/${vl.volunteerId}"/>" Onclick="return confirmDelete()" class="btn btn-danger">Delete</a></td>
-						</c:if>
+						</c:if> -->
 					</tr>
 				</c:forEach>
 			</table>

@@ -649,15 +649,29 @@ public class TapestryHelper {
 	public static List<Volunteer> getAllMatchedVolunteers(List<Volunteer> list, String time){		
 		List<Volunteer> vList = new ArrayList<Volunteer>();		
 		String availableTime;
-				
+		
 		for (Volunteer v: list)
 		{	//get volunteer's available time
-			availableTime = v.getAvailability();
-			
-			if (availableTime.contains(time))
+			availableTime = v.getAvailability();			
+	
+			if (isAvailable(availableTime, time))
 				vList.add(v);
 		}
 		return vList;
+	}
+	
+	public static boolean isAvailable(String availableTime, String time)
+	{
+		boolean available = false;
+		String[] strArray = availableTime.split(",");
+		
+		for (int i=0; i<strArray.length; i++)
+		{
+			if (strArray[i].equals(time))
+				available=true;
+		}		
+		return available;
+		
 	}
 	/**
 	 * 
@@ -915,6 +929,7 @@ public class TapestryHelper {
 	
 	public static void showVolunteerAvailability(Volunteer volunteer, SecurityContextHolderAwareRequestWrapper request, ModelMap model){
 		String strAvailibilities = volunteer.getAvailability();
+				
 		boolean mondayNull = false;
 		boolean tuesdayNull = false;
 		boolean wednesdayNull = false;
@@ -3474,13 +3489,8 @@ public class TapestryHelper {
 		{
 			rData = new ResearchData();
 			patientId = patients.get(i).getPatientID();
-	//		rData.setPatientId(patientId);
 			strResearchId = patients.get(i).getResearchID();
-			
-			if (Utils.isNullOrEmpty(strResearchId))
-				rData.setPatientId(00);
-			else
-				rData.setPatientId(Integer.valueOf(strResearchId));
+			rData.setResearchId(strResearchId);
 			//Social life
 			try{
 				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "4. Social Life");
@@ -3491,8 +3501,7 @@ public class TapestryHelper {
 			
 			if (sr != null)
 			{
-				sb = new StringBuffer();
-				
+				sb = new StringBuffer();				
 				try{
 					xml = new String(sr.getResults(), "UTF-8");
 			   	} catch (Exception e) {
@@ -3539,8 +3548,7 @@ public class TapestryHelper {
 			
 			if (sr != null)
 			{
-				sb = new StringBuffer();
-				
+				sb = new StringBuffer();				
 				try{
 					xml = new String(sr.getResults(), "UTF-8");
 			   	} catch (Exception e) {
@@ -3571,8 +3579,7 @@ public class TapestryHelper {
 			
 			if (sr != null)
 			{
-				sb = new StringBuffer();
-				
+				sb = new StringBuffer();				
 				try{
 					xml = new String(sr.getResults(), "UTF-8");
 			   	} catch (Exception e) {
@@ -3639,9 +3646,7 @@ public class TapestryHelper {
 			}
 			
 			if (sr != null)
-			{
-				sb = new StringBuffer();
-				
+			{				
 				try{
 					xml = new String(sr.getResults(), "UTF-8");
 			   	} catch (Exception e) {
@@ -3691,8 +3696,6 @@ public class TapestryHelper {
 			
 			if (sr != null)
 			{
-				sb = new StringBuffer();
-				
 				try{
 					xml = new String(sr.getResults(), "UTF-8");
 			   	} catch (Exception e) {
@@ -3720,9 +3723,7 @@ public class TapestryHelper {
 			}
 			
 			if (sr != null)
-			{
-				sb = new StringBuffer();
-				
+			{	
 				try{
 					xml = new String(sr.getResults(), "UTF-8");
 			   	} catch (Exception e) {
@@ -3739,14 +3740,13 @@ public class TapestryHelper {
 					result = displayedResults.get(0);
 					result = formatEmptyResultAnswerToInt(result);
 					rData.setMem1(Integer.parseInt(result.getQuestionAnswer()));		
-	//				rData.setMem1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));		
+		
 					if (sizeOfMemory == 2)
 					{
 						rData.setMem2("");
 						result = displayedResults.get(1);
 						result = formatEmptyResultAnswerToInt(result);
 						rData.setMem1(Integer.parseInt(result.getQuestionAnswer()));
-		//				rData.setMem3(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
 						rData.setMem4("");
 					}
 					else if (sizeOfMemory == 3)
@@ -3757,7 +3757,6 @@ public class TapestryHelper {
 							result = displayedResults.get(1);
 							result = formatEmptyResultAnswerToInt(result);
 							rData.setMem1(Integer.parseInt(result.getQuestionAnswer()));
-	//						rData.setMem3(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
 							rData.setMem4(displayedResults.get(2).getQuestionAnswer());		
 						}
 					}
@@ -3767,7 +3766,6 @@ public class TapestryHelper {
 						result = displayedResults.get(2);
 						result = formatEmptyResultAnswerToInt(result);
 						rData.setMem1(Integer.parseInt(result.getQuestionAnswer()));
-				//		rData.setMem3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
 						rData.setMem4(displayedResults.get(3).getQuestionAnswer());				
 					}
 				}
@@ -3782,8 +3780,6 @@ public class TapestryHelper {
 			
 			if (sr != null)
 			{
-				sb = new StringBuffer();
-				
 				try{
 					xml = new String(sr.getResults(), "UTF-8");
 			   	} catch (Exception e) {
@@ -3819,8 +3815,6 @@ public class TapestryHelper {
 			
 			if (sr != null)
 			{
-				sb = new StringBuffer();
-				
 				try{
 					xml = new String(sr.getResults(), "UTF-8");
 			   	} catch (Exception e) {
@@ -3931,8 +3925,6 @@ public class TapestryHelper {
 			
 			if (sr != null)
 			{
-				sb = new StringBuffer();
-				
 				try{
 					xml = new String(sr.getResults(), "UTF-8");
 			   	} catch (Exception e) {
@@ -3964,7 +3956,95 @@ public class TapestryHelper {
 					rData.setNut17(Integer.parseInt(displayedResults.get(16).getQuestionAnswer()));
 				}
 			}
-			
+			//3 month follow up
+			try{
+				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "3 Month Follow Up");
+			}catch (Exception e) {
+				System.out.println("throws exception on 3 Month Follow Up === patient id == " + patientId);
+				sr = null;
+			}			
+			if (sr != null)
+			{			
+				try{
+					xml = new String(sr.getResults(), "UTF-8");
+			   	} catch (Exception e) {
+			   		xml = "";
+			   	}
+				res = ResultParser.getResults(xml);
+				displayedResults = ResultParser.getDisplayedSurveyResults(res);		
+							
+				if (!displayedResults.isEmpty())
+				{//if answer is empty, format it to 0
+					displayedResults = formatEmptyResultAnswerToInt(displayedResults);
+					size = displayedResults.size();				
+					String questionId, answer;
+					answer = displayedResults.get(0).getQuestionAnswer();
+					rData.setFu1(Integer.parseInt(answer));
+					
+					for (int k =1; k < size; k++)
+					{
+						questionId = displayedResults.get(k).getQuestionId();
+						answer = displayedResults.get(k).getQuestionAnswer();
+												
+						if (questionId.equals("CFQ2"))
+							rData.setFu2(Integer.valueOf(answer));
+						
+						if (questionId.equals("CFQ3"))
+							rData.setFu3(answer);
+							
+						if (questionId.equals("PHR1"))
+							rData.setFu5(Integer.valueOf(answer));
+						
+						if (questionId.equals("PHR1a"))
+							rData.setFu6(Integer.valueOf(answer));
+						
+						if (questionId.equals("PHR1ao"))
+							rData.setFu7(answer);
+							
+						if (questionId.equals("PHR1b"))
+							rData.setFu8(Integer.valueOf(answer));
+						
+						if (questionId.equals("PHR1bo"))
+							rData.setFu9(answer);
+						
+						if (questionId.equals("GFU1"))
+							rData.setFu11(Integer.valueOf(answer));
+						
+						if (questionId.equals("GFU2"))
+							rData.setFu12(answer);
+						
+						if (questionId.equals("GFU3"))
+							rData.setFu13(answer);
+						
+						if (questionId.equals("GFU4"))
+							rData.setFu14(answer);
+						
+						if (questionId.equals("GFU5"))
+							rData.setFu15(Integer.valueOf(answer));
+						
+						if (questionId.equals("GFU6"))
+							rData.setFu16(answer);
+						
+						if (questionId.equals("GFU7"))
+							rData.setFu17(answer);
+						
+						if (questionId.equals("GFU8"))
+							rData.setFu18(answer);
+						
+						if (questionId.equals("GFU9"))
+							rData.setFu19(Integer.valueOf(answer));
+						
+						if (questionId.equals("GFU10"))
+							rData.setFu20(answer);
+						
+						if (questionId.equals("GFU11"))
+							rData.setFu21(answer);
+						
+						if (questionId.equals("GFU12"))
+							rData.setFu22(answer);							
+					}
+				}
+			}			
 			//Daily Life Activity
 			try{
 				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "1. Daily Life Activities");

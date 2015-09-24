@@ -76,10 +76,15 @@ public class VolunteerController {
 		if (session.getAttribute("unread_messages") != null)
 			model.addAttribute("unread", session.getAttribute("unread_messages"));
 		
+//		if ("ROLE_ADMIN".equalsIgnoreCase(user.getRole()))
+//			volunteers = volunteerManager.getAllVolunteersWithCanDelete();	//For central Admin		
+//		else	
+//			volunteers = volunteerManager.getAllVolunteersWithCanDeleteByOrganization(user.getOrganization());	// for local Admin
+		
 		if ("ROLE_ADMIN".equalsIgnoreCase(user.getRole()))
-			volunteers = volunteerManager.getAllVolunteersWithCanDelete();	//For central Admin		
-		else	
-			volunteers = volunteerManager.getAllVolunteersWithCanDeleteByOrganization(user.getOrganization());	// for local Admin
+			volunteers = volunteerManager.getAllVolunteers();
+		else
+			volunteers = volunteerManager.getAllVolunteersByOrganization(user.getOrganization());	// for local Admin
 		
 		model.addAttribute("volunteers", volunteers);	
 		
@@ -207,7 +212,11 @@ public class VolunteerController {
 		//get all upcoming appointments
 		appointments = new ArrayList<Appointment>();		
 		appointments = appointmentManager.getAllUpcomingAppointmentsForVolunteer(id);
-		model.addAttribute("upcomingVisits", appointments);
+		
+		if (appointments.size() > 0)
+			model.addAttribute("upcomingVisits", appointments);
+		else
+			model.addAttribute("hasNoUpComingVisits", true);
 		
 		List<SurveyResult> surveys = surveyManager.getVolunteerSurveyResultsById(id);
 		model.addAttribute("surveys", surveys);
@@ -665,7 +674,7 @@ public class VolunteerController {
 	@RequestMapping(value="/volunteerList.html")
 	@ResponseBody
 	public List<Volunteer> getVolunteerByOrganization(@RequestParam(value="volunteerId") int vId)
-	{
+	{System.out.println("hi");
 		Volunteer volunteer = volunteerManager.getVolunteerById(vId);	
 		List<Volunteer> vl = volunteerManager.getAllVolunteersByOrganization(volunteer.getOrganizationId());
 		
@@ -1886,6 +1895,7 @@ public class VolunteerController {
 		day = day.replace("/", "-");
 		
 		int dayOfWeek = Utils.getDayOfWeekByDate(day);
+		
 		String time = request.getParameter("appointmentTime");				
 		
 		StringBuffer sb = new StringBuffer();

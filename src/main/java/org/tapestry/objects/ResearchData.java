@@ -2,6 +2,7 @@ package org.tapestry.objects;
 
 public class ResearchData {
 	private int patientId;
+	private String researchId;
 	//survey ED5Q quality of life
 	private int qol1;
 	private int qol2;
@@ -105,6 +106,21 @@ public class ResearchData {
 	private int nut15;
 	private int nut16;
 	private int nut17;
+	//3 month follow up
+	private int fu1;
+	private int fu2;
+	private String fu3;
+	private int fu5;
+	private int fu6;
+	private String fu7;
+	private int fu8;
+	private String fu9;
+	private int fu11;
+	private String fu12, fu13, fu14;
+	private int fu15;
+	private String fu16, fu17, fu18;
+	private int fu19;
+	private String fu20, fu21, fu22;
 	
 	public ResearchData(){
 		
@@ -115,6 +131,14 @@ public class ResearchData {
 	}
 	public void setPatientId(int patientId) {
 		this.patientId = patientId;
+	}
+	
+	public String getResearchId() {
+		return researchId;
+	}
+
+	public void setResearchId(String researchId) {
+		this.researchId = researchId;
 	}
 
 	public String getdSS1_role_TO() {
@@ -789,6 +813,166 @@ public class ResearchData {
 
 	public void setNut17(int nut17) {
 		this.nut17 = nut17;
+	}
+
+	public int getFu1() {
+		return fu1;
+	}
+
+	public void setFu1(int fu1) {
+		this.fu1 = fu1;
+	}
+
+	public int getFu2() {
+		return fu2;
+	}
+
+	public void setFu2(int fu2) {
+		this.fu2 = fu2;
+	}
+
+	public String getFu3() {
+		return fu3;
+	}
+
+	public void setFu3(String fu3) {
+		this.fu3 = fu3;
+	}
+
+	public int getFu5() {
+		return fu5;
+	}
+
+	public void setFu5(int fu5) {
+		this.fu5 = fu5;
+	}
+
+	public int getFu6() {
+		return fu6;
+	}
+
+	public void setFu6(int fu6) {
+		this.fu6 = fu6;
+	}
+
+	public String getFu7() {
+		return fu7;
+	}
+
+	public void setFu7(String fu7) {
+		this.fu7 = fu7;
+	}
+
+	public int getFu8() {
+		return fu8;
+	}
+
+	public void setFu8(int fu8) {
+		this.fu8 = fu8;
+	}
+
+	public String getFu9() {
+		return fu9;
+	}
+
+	public void setFu9(String fu9) {
+		this.fu9 = fu9;
+	}
+
+	public int getFu11() {
+		return fu11;
+	}
+
+	public void setFu11(int fu11) {
+		this.fu11 = fu11;
+	}
+
+	public String getFu12() {
+		return fu12;
+	}
+
+	public void setFu12(String fu12) {
+		this.fu12 = fu12;
+	}
+
+	public String getFu13() {
+		return fu13;
+	}
+
+	public void setFu13(String fu13) {
+		this.fu13 = fu13;
+	}
+
+	public String getFu14() {
+		return fu14;
+	}
+
+	public void setFu14(String fu14) {
+		this.fu14 = fu14;
+	}
+
+	public int getFu15() {
+		return fu15;
+	}
+
+	public void setFu15(int fu15) {
+		this.fu15 = fu15;
+	}
+
+	public String getFu16() {
+		return fu16;
+	}
+
+	public void setFu16(String fu16) {
+		this.fu16 = fu16;
+	}
+
+	public String getFu17() {
+		return fu17;
+	}
+
+	public void setFu17(String fu17) {
+		this.fu17 = fu17;
+	}
+
+	public String getFu18() {
+		return fu18;
+	}
+
+	public void setFu18(String fu18) {
+		this.fu18 = fu18;
+	}
+
+	public int getFu19() {
+		return fu19;
+	}
+
+	public void setFu19(int fu19) {
+		this.fu19 = fu19;
+	}
+
+	public String getFu20() {
+		return fu20;
+	}
+
+	public void setFu20(String fu20) {
+		this.fu20 = fu20;
+	}
+
+	public String getFu21() {
+		return fu21;
+	}
+
+	public void setFu21(String fu21) {
+		this.fu21 = fu21;
+	}
+
+	public String getFu22() {
+		return fu22;
+	}
+
+	public void setFu22(String fu22) {
+		this.fu22 = fu22;
 	}
 	
 	

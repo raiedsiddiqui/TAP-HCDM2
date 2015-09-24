@@ -7,6 +7,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Service;
+import org.tapestry.dao.ClinicDAO;
 import org.tapestry.dao.PatientDAO;
 import org.tapestry.objects.Patient;
 /**
@@ -17,6 +18,7 @@ import org.tapestry.objects.Patient;
 public class PatientManagerImpl implements PatientManager {
 	@Autowired
 	private PatientDAO patientDao;
+	private ClinicDAO clinicDao;
 
 	@Override
 	public Patient getPatientByID(int id) {
@@ -142,6 +144,12 @@ public class PatientManagerImpl implements PatientManager {
 	@Override
 	public void updatePatientVolunteers(int patientId, int volunteerId,	int partnerId) {
 		patientDao.updatePatientVolunteers(patientId, volunteerId, partnerId);		
+	}
+
+	@Override
+	public int getSiteByPatientId(int patientId) {
+		Patient p = this.getPatientByID(patientId);		
+		return clinicDao.getSiteByClinic(p.getClinic());
 	}
 
 }

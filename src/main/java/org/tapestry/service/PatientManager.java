@@ -179,4 +179,12 @@ public interface PatientManager {
 	@Transactional
 	public void updatePatientVolunteers(int patientId, int volunteerId, int partnerId);
 	
+	/**
+	 * 
+	 * @param patientId
+	 * @return
+	 */
+	@Transactional
+	public int getSiteByPatientId(int patientId);
+	
 }

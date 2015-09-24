@@ -2180,6 +2180,49 @@ public class TapestryController{
 			model.addAttribute("unread", session.getAttribute("unread_messages"));
    		
 		return "/admin/assign_survey";
+   		
+   		
+   		
+   		/*
+   		List<SurveyTemplate> surveyTemplates = TapestryHelper.getSurveyTemplates(request, surveyManager); 
+   		HttpSession session = request.getSession();
+		if (session.getAttribute("unread_messages") != null)
+			model.addAttribute("unread", session.getAttribute("unread_messages"));
+   		//Assign Survey in Survey Mangement, it will load all patients in the table with checkbox for later selection
+   		if (id == 0)
+   		{
+   	//		List<Patient> patients  = TapestryHelper.getAllPatientsWithFullInfos(patientManager, request);
+//   			List<Patient> patients;
+//   			User user = TapestryHelper.getLoggedInUser(request);
+//   			
+//   			if (request.isUserInRole("ROLE_ADMIN"))
+//   				patients = patientManager.getAllPatients();	//For central Admin		
+//   			else
+//   				patients = patientManager.getPatientsBySite(user.getSite());		
+   			
+ //  			model.addAttribute("patients", patients);
+ //  			model.addAttribute("surveyTemplates", surveyTemplates);
+   			model.addAttribute("sites", organizationManager.getAllSites());
+   			
+   			///
+//   			model.addAttribute("volunteers", volunteerManager.getAllVolunteers());
+   			
+   			return "/admin/assign_survey_centraladmin";
+   		}//Assign Survey in Client/details, assign surveys for selected patient
+   		else
+   		{
+   			model.addAttribute("patient", id);   			
+   			model.addAttribute("surveyTemplates", surveyTemplates);
+   			model.addAttribute("hideClients", true);
+   			
+   			return "/admin/assign_survey";
+   		}
+   		
+   		
+   		
+	//	return "/admin/assign_survey";
+	 * */
+	
 	} 
    	
    	@RequestMapping(value="/assign_selectedSurvey", method=RequestMethod.POST)
@@ -2855,12 +2898,15 @@ public class TapestryController{
         		"Mob4_modwalkingp5_T0", "Mob5_diffstairs_T0", "Mob6_modstaris_T0", "Nut1_wtchg_T0", "Nut2_intentwtchg_T0", "Nut3_rightwt_T0",
         		"Nut4_skipmeals_T0", "Nut5_avoidfoods_T0", "Nut6_apetit_T0", "Nut7_servfrtveg_T0", "Nut8_eggsmeat_T0", "Nut9_dairy_T0",
         		"Nut10_fluid_T0", "Nut11_painswallow_T0", "Nut12_diffchew_T0", "Nut13_mealreplace_T0","Nut14_mealcompany_T0","Nut15_mealaprep_T0",
-        		"Nut16_mealprepstate_T0","Nut17_groceries_T0"});
+        		"Nut16_mealprepstate_T0","Nut17_groceries_T0", "FU1_cliniccontact_T3", "FU2_cliniccontacthow_T3", "FU3_cliniccontactother_T3", 
+        		"FU5_loggedin_T3", "FU6_PHRuse_T3", "FU7_PHRuseother_T3", "FU8_PHRwhynot_T3", "FU9_PHRwhynotother_T3", "FU11_goal1activ_T3", "FU12_goal1enablers_T3", 
+        		"FU13_goal1barriers_T3", "FU14_goal1nextstep_T3", "FU15_goal2activ_T3", "FU16_goal2enablers_T3", "FU17_goal2barriers_T3", "FU18_goal2nextstep_T3", 
+        		"FU19_goal3activ_T3", "FU20_goal3enablers_T3", "FU21_goal3barriers_T3", "FU22_goal3nextstep_T3"});
         ResearchData r;
         for (int i=0; i< results.size(); i++)
         {
         	r = results.get(i);        	
-        	data.put(Integer.valueOf(i+2), new Object[]{r.getPatientId(),r.getQol1(), r.getQol2(),r.getQol3(), r.getQol4(),
+        	data.put(Integer.valueOf(i+2), new Object[]{r.getResearchId(),r.getQol1(), r.getQol2(),r.getQol3(), r.getQol4(),
         		r.getQol5(), r.getQol6(), r.getdSS1_role_TO(), r.getdSS2_under_TO(), 
         		r.getdSS3_useful_TO(), r.getdSS4_listen_TO(), r.getdSS5_happen_TO(), r.getdSS6_talk_TO(), 
         		r.getdSS7_satisfied_TO(), r.getdSS8_nofam_TO(), r.getdSS9_timesnotliving_TO(), r.getdSS10_timesphone_TO(), 
@@ -2875,7 +2921,9 @@ public class TapestryController{
         		r.getGh6(), r.getGh7(), r.getGh8(), r.getGh9(), r.getGh10(), r.getGh11(), r.getMob1(), r.getMob2(), r.getMob3(),
         		r.getMob4(), r.getMob5(), r.getMob6(), r.getNut1(), r.getNut2(), r.getNut3(), r.getNut4(), r.getNut5(), r.getNut6(),
         		r.getNut7(), r.getNut8(), r.getNut9(), r.getNut10(), r.getNut11(), r.getNut12(), r.getNut13(), r.getNut14(), r.getNut15(),
-        		r.getNut16(), r.getNut17()});
+        		r.getNut16(), r.getNut17(), r.getFu1(), r.getFu2(), r.getFu3(), r.getFu5(), r.getFu6(), r.getFu7(), r.getFu8(), r.getFu9(), 
+        		r.getFu11(), r.getFu12(), r.getFu13(), r.getFu14(), r.getFu15(), r.getFu16(), r.getFu17(), r.getFu18(), r.getFu19(), r.getFu20(), 
+        		r.getFu21(), r.getFu22()});
         }          
         //Iterate over data and write to sheet
         Set<Integer> keyset = data.keySet();
@@ -3599,4 +3647,25 @@ public class TapestryController{
 //		
 //		return "/admin/default_survey_template";   	
 //   	}
+	
+	@RequestMapping(value="/myAjaxTest.html", method = RequestMethod.POST)
+	@ResponseBody	
+	public String getSurveyTemplateBySite(@RequestParam(value="site") int site)
+	{System.out.println("hi surveyTemplate ajax");
+		List<SurveyTemplate> surTemplates = surveyManager.getSurveyTemplatesBySite(site);
+		
+		String surTitles;
+		StringBuffer sb = new StringBuffer();
+		
+		for(SurveyTemplate st: surTemplates)
+		{
+			sb.append(st.getTitle());
+			sb.append(";");
+			
+		}
+		
+		return sb.toString();
+	}
+	
+	
 }
