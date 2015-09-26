@@ -13,5 +13,11 @@ $(document).ready(function(){
 	if ($("#qtext:contains(How happy do you feel at the moment?)").length) {
 		$("#externalsurveycode").load("../resources/js/vscale/carerqolvscale.html");
 	}
+
+	//VIA (McGill)
+	var via = $("#qID").val()
+	if (via.indexOf("VIA") != -1) {
+		$("#externalsurveycode").load("../resources/js/vscale/VIA.html");
+	}
 	
 });
