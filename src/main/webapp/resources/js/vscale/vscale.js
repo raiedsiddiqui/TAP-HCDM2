@@ -19,5 +19,10 @@ $(document).ready(function(){
 	if (via.indexOf("VIA") != -1) {
 		$("#externalsurveycode").load("../resources/js/vscale/VIA.html");
 	}
+
+	//Satisfaction with Healtcare
+	if (via.indexOf("SWH1") != -1) {
+		$("#externalsurveycode").load("../resources/js/vscale/SWH.html");
+	}
 	
 });
