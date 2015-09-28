@@ -50,7 +50,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"></meta>
 
 	<%@include file="/volunteer/volunteer_head.jsp" %>
-	<!-- Goals,EQ5D,Pain Survey script -->
+	<!-- Goals,EQ5D,Pain, VIA Survey script -->
 	<script src="${pageContext.request.contextPath}/resources/js/goals/goals.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/js/eq5d/eq5d.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/js/pain/pain.js"></script>
@@ -229,9 +229,9 @@
         			<!-- Look at the div with class="questionWidth" at the bottom to adjust question min-width) -->
         			
         			<form action="/tapestry/show_survey/<%=documentId%>" name="surveyQuestion" id="surveyform">
-            			<input type="hidden" name="questionid" value="<%=question.getId()%>">
+            			<input id="qID" type="hidden" name="questionid" value="<%=question.getId()%>">
             			<input type="hidden" name="direction" value="forward">
-            			<input type="hidden" name="documentid" value="<%=documentId%>">
+            			<input id="dID" type="hidden" name="documentid" value="<%=documentId%>">
             			<input type="hidden" name="observernote" value="" >
             			
             		
