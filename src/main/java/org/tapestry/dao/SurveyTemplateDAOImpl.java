@@ -205,7 +205,7 @@ public class SurveyTemplateDAOImpl extends JdbcDaoSupport implements SurveyTempl
 	
 	@Override
 	public List<SurveyTemplate> getVolunteerSurveyTemplatesBySite(int siteId) {
-		String sql = "SELECT sur.*, st.site_name AS site_name FROM surveys AS sur INNER JOIN sites AS st "
+		String sql = "SELECT sur.*, st.site_name AS site_name FROM volunteer_surveys AS sur INNER JOIN sites AS st "
 				+ "ON sur.site = st.site_ID WHERE sur.isDefault = 1 AND site=? ORDER BY priority DESC";
 		List<SurveyTemplate> surveyTemplates = getJdbcTemplate().query(sql, new Object[]{siteId}, new SurveyTemplateMapper());
 		
