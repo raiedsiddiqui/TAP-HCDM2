@@ -223,30 +223,10 @@ public class SurveyTemplateDAOImpl extends JdbcDaoSupport implements SurveyTempl
 
 	@Override
 	public List<SurveyTemplate> getVolunteerSurveyTemplatesByPartialTitle(String partialTitle) {
-//		String sql = "SELECT * FROM volunteer_surveys WHERE UPPER(title) LIKE UPPER('%" + partialTitle + "%')";		
 		String sql = "SELECT sur.*, st.site_name AS site_name FROM volunteer_surveys AS sur INNER JOIN sites AS st "
 				+ "ON sur.site = st.site_ID WHERE UPPER(title) LIKE UPPER('%" + partialTitle + "%')";
 		return getJdbcTemplate().query(sql, new SurveyTemplateMapper());
 	}
-	
-//	class VolunteerSurveyTemplateMapper implements RowMapper<SurveyTemplate> {
-//		public SurveyTemplate mapRow(ResultSet rs, int rowNum) throws SQLException{
-//			SurveyTemplate st = new SurveyTemplate();
-//		
-//			st.setSurveyID(rs.getInt("survey_ID"));
-//            st.setTitle(rs.getString("title"));
-//            st.setType(rs.getString("type"));
-//            st.setContents(rs.getBytes("contents"));
-//            st.setPriority(rs.getInt("priority"));
-//            st.setDescription(rs.getString("description"));
-//                                  
-//            //format date, remove time
-//            String date = rs.getString("last_modified");
-//            date = date.substring(0, 10);
-//            st.setCreatedDate(date);
-//			return st;
-//		}
-//	}
 
 	@Override
 	public void updateVolunteerSurveyTemplate(SurveyTemplate st) {
@@ -257,7 +237,6 @@ public class SurveyTemplateDAOImpl extends JdbcDaoSupport implements SurveyTempl
 
 	@Override
 	public SurveyTemplate getVolunteerSurveyTemplateByID(int id) {
-//		String sql = "SELECT * FROM volunteer_surveys WHERE survey_ID=?";
 		String sql = "SELECT sur.*, st.site_name AS site_name FROM volunteer_surveys AS sur INNER JOIN sites AS st "
 				+ "ON sur.site = st.site_ID WHERE survey_ID=?";
 		return getJdbcTemplate().queryForObject(sql, new Object[]{id}, new SurveyTemplateMapper());

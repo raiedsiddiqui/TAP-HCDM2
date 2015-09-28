@@ -1890,13 +1890,16 @@ public class VolunteerController {
 		List<Volunteer> volunteers = new ArrayList<Volunteer>();
 		
 		//get Date and time for appointment		
-		String day = request.getParameter("appointmentDate");
+		String date = request.getParameter("appointmentDate");
+		String time = request.getParameter("appointmentTime");	
 		//when date pick up from calendar, format is different, need to change from yyyy/mm/dd to yyyy-MM-dd
-		day = day.replace("/", "-");
+		date = date.replace("/", "-");
+		System.out.println("date -"+date);
+		int dayOfWeek = Utils.getDayOfWeekByDate(date);
 		
-		int dayOfWeek = Utils.getDayOfWeekByDate(day);
-		
-		String time = request.getParameter("appointmentTime");				
+		Map<String, String> map = TapestryHelper.getAvailabilityMap();
+		String dTime = map.get(time);
+		dTime = dTime.substring(0, 8);
 		
 		StringBuffer sb = new StringBuffer();
 		sb.append(String.valueOf(dayOfWeek -1));
@@ -1919,7 +1922,7 @@ public class VolunteerController {
 			return "/admin/go_scheduler";
 		}
 		else
-			return getVolunteerByScheduler(request, model, volunteers, date_time);
+			return getVolunteerByScheduler(request, model, volunteers, date_time, dTime);
 //		
 //		if (volunteers.size() == 0)
 //			model.addAttribute("noAvailableTime",true);	
@@ -1944,7 +1947,7 @@ public class VolunteerController {
 //		return "/admin/view_scheduler";
 	}
 	private String getVolunteerByScheduler(SecurityContextHolderAwareRequestWrapper request, ModelMap model, 
-			List<Volunteer> volunteers, String date_time)
+			List<Volunteer> volunteers, String date_time, String orignalDateTime)
 	{
 //		User loggedInUser = TapestryHelper.getLoggedInUser(request, userManager);
 //		List<Volunteer> volunteers = new ArrayList<Volunteer>();
@@ -1974,7 +1977,7 @@ public class VolunteerController {
 			model.addAttribute("noAvailableTime",true);	
 		else
 		{
-			List<Volunteer> availableVolunteers = TapestryHelper.getAllMatchedVolunteers(volunteers, date_time);
+			List<Volunteer> availableVolunteers = TapestryHelper.getAllMatchedVolunteers(volunteers, date_time, orignalDateTime, appointmentManager);
 			if (availableVolunteers.size() == 0)
 				model.addAttribute("noAvailableVolunteers",true);	
 			else

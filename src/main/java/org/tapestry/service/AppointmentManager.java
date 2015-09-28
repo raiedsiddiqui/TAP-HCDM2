@@ -320,4 +320,13 @@ public interface AppointmentManager {
 	@Transactional
     public List<Appointment> getUnCompleteAppointments(int patientId);
 	
+	/**
+	 * 
+	 * @param volunteerId
+	 * @param time
+	 * @return
+	 */
+	@Transactional
+	public boolean hasAppointment(int volunteerId, String time);
+	
 }

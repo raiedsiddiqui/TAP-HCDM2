@@ -93,7 +93,7 @@
     <div class="modal-content">
       <div class="modal-header">
     		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-    		<h3 id="modalHeader">Add Survey</h3>
+    		<h3 id="modalHeader">Add Volunteer Survey</h3>
   		</div>
   		<div class="modal-body">
   			<form id="uploadVolunteerSurveyForm" action="upload_volunteer_survey_template" method="post" enctype="multipart/form-data">
@@ -130,7 +130,7 @@
   		</div>
   		<div class="modal-footer">
     		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-			<input class="right" form="uploadVolunteerSurveyForm" type="submit" value="Add Survey" />
+			<input class="right" form="uploadVolunteerSurveyForm" type="submit" value="Add Volunteer Survey" />
   		</div>
 	</div>
 	</div>

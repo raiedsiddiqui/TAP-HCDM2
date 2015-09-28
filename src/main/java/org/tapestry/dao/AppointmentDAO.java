@@ -276,5 +276,13 @@ public interface AppointmentDAO {
      * @return if it is successful for creating new record in database
      */
     public boolean addPlans(int id, String plan);
+    
+    /**
+     * 
+     * @param volunteerId
+     * @param time
+     * @return
+     */
+    public boolean hasAppointment(int volunteerId, String time);
 
 }

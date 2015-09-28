@@ -156,11 +156,11 @@ public class Utils {
 		else
 			dayNull = true;
 	}
-	
+
+	/*
 	public static String[] getPosition(List<String> list){	
 		String[] positions = new String[4];		
 		int size = list.size();
-		
 		positions[0] = list.get(0);		
 		String current, next;
 		int iCurrent, iNext;
@@ -199,7 +199,72 @@ public class Utils {
 			}
 		}
 		return positions;
+	} */
+	
+	public static boolean isConsecutive(List<String> list)
+	{
+		boolean consecutived = true;
+		int current, next;
+		int size = list.size();
+		for (int i = 0; i<size; i++)
+		{
+			if (i < (size - 1))
+			{
+				current = Integer.valueOf(list.get(i));
+				next = Integer.valueOf(list.get(i+1));
+				
+				if ((next - current) != 1)
+					consecutived = false;
+			}
+		}
+		
+		return consecutived;
 	}
+	
+	public static String[] getPosition(List<String> aList){
+		boolean consecutived = true;
+		int current, next;
+		String pos1="";
+		String pos2="";
+		
+		int size = aList.size();
+		String[] positions = new String[4];		
+		positions[0] = aList.get(0);		
+		for (int i = 0; i<size; i++)
+		{
+			if (i < (size - 1))
+			{
+				current = Integer.valueOf(aList.get(i));
+				next = Integer.valueOf(aList.get(i+1));
+				
+				if ((next - current) != 1)
+				{
+					consecutived = false;
+					pos1 = String.valueOf(current + 2);//when an appointment's time is suppose to be 1 hour
+					pos2 = String.valueOf(next);
+					break;
+				}
+			}
+		}
+		
+		String pos3 = String.valueOf(Integer.valueOf(aList.get(size-1)) + 2);//when an appointment's time is suppose to be 1 hour
+		if (consecutived)
+		{
+			positions[1] = pos3;
+			positions[2] = "null";
+			positions[3] = "null";
+		}
+		else
+		{
+			positions[1] = pos1;
+			positions[2] = pos2;
+			positions[3] = pos3;
+			
+		}		
+		return positions;		
+	}
+	
+	
 	
 	public static List<String> getAvailablePeriod(String from, String to, List<String> list){
 		StringBuffer sb;
@@ -233,6 +298,8 @@ public class Utils {
 			return list;
 		}
 	}
+	
+
 
 	/**
 	 * get index of day of week by Date from calendar

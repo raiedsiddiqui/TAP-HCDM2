@@ -3625,11 +3625,18 @@ public class TapestryController{
    	{		
 		String action = request.getParameter("hAction");
 		String[] surveyTemplateIds = request.getParameterValues("survey_template"); 	
-		if ("Set Default".equals(action))
-			surveyManager.setDefaultSurveyTemplate(surveyTemplateIds);
-		else
-			surveyManager.removeDefaultSurveyTemplateSetting(surveyTemplateIds);
 		
+		if (surveyTemplateIds == null)
+			System.out.println("surveyTemplateIds is null");
+		else
+		{
+			if ("Set Default".equals(action))
+				surveyManager.setDefaultSurveyTemplate(surveyTemplateIds);
+			else
+				surveyManager.removeDefaultSurveyTemplateSetting(surveyTemplateIds);
+			
+			model.addAttribute("emptyMsg", true);
+		}
 		List<SurveyTemplate> surveyTemplates = TapestryHelper.updateSurveyTemplates(request, surveyManager);	
 		model.addAttribute("survey_templates", surveyTemplates);
 		

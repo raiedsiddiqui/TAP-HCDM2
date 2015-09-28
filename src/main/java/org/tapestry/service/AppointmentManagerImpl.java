@@ -215,4 +215,9 @@ public class AppointmentManagerImpl implements AppointmentManager {
 		return appointmentDao.getAllUnCompletedAppointmentsForPatient(patientId);
 	}
 
+	@Override
+	public boolean hasAppointment(int volunteerId, String time) {
+		return appointmentDao.hasAppointment(volunteerId, time);
+	}
+
 }
