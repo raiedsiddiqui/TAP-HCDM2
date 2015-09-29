@@ -70,7 +70,7 @@
 			</div>
 
 			
-			<table class="table">
+			<table class="table sortable">
 				<tr>
 					<!-- <th>Client ID</th> -->
 					<th>Research ID</th>
