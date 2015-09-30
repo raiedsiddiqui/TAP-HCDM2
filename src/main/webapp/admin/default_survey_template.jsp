@@ -21,10 +21,27 @@
 	</style>
 	
 	<script type="text/javascript">
-	function setAction()
-	{
+	function setAction(){
+		var group = document.setDefaultSurveyTemplate.survey_template;
+		var hasChecked = false;
+		
+		for (var i=1; i<group.length; i++)
+		{
+			if (group[i].checked)
+			{
+				hasChecked = true;
+				break;
+			}
+		}
+				
+		if (hasChecked == false)
+		{
+			alert("Please select at least one survey template!");
+			return false;
+		}
+		
 		document.getElementById("hAction").value = document.pressed;	
-	    return true;
+		 return true;
 	}
 	</script>
 </head>
@@ -36,9 +53,9 @@
 
 	<br/>
 	<div id="suveyTemplates">
-		<form id="setDefaultSurveyTemplate" method="post" action="<c:url value="/set_defaultSurveys"/>" onsubmit="return setAction();">		
+		<form name = "setDefaultSurveyTemplate" id="setDefaultSurveyTemplate" method="post" action="<c:url value="/set_defaultSurveys"/>" onsubmit="return setAction();">		
 			<c:forEach items="${survey_templates}" var="st">										 
-				 <input type="checkbox" name="survey_template" value=${st.surveyID} ><c:choose><c:when test="${st.defaultSurvey}"><font color="red">${st.title}</font></c:when><c:otherwise>${st.title}</c:otherwise></c:choose>
+				 <input type="checkbox" name="survey_template"  value=${st.surveyID} ><c:choose><c:when test="${st.defaultSurvey}"><font color="red">${st.title}</font></c:when><c:otherwise>${st.title}</c:otherwise></c:choose>
 				 <br>
 			</c:forEach>
 		<input id="hAction" name="hAction" type="hidden" value=""/>

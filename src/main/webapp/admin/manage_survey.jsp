@@ -120,12 +120,14 @@
 						<option value="${loop.index}">${loop.index}</option>
 						</c:forEach>
 					</select>
-					<label>Site:</label>									
-					<select name="site" id="site" form="uploadSurveyForm" class="form-control">
-						<c:forEach items="${sites}" var="s">
-							<option value="${s.siteId}">${s.name}</option>
-						</c:forEach>
-					</select>					
+					<c:if test="${sites}">
+						<label>Site:</label>									
+						<select name="site" id="site" form="uploadSurveyForm" class="form-control">
+							<c:forEach items="${sites}" var="s">
+								<option value="${s.siteId}">${s.name}</option>
+							</c:forEach>
+						</select>	
+					</c:if>				
 					<label>File:</label>
 					<input type="hidden" name="MAX_FILE_SIZE" value="2000000">
 					<input type="file" accept="text/*" name="file" required/>

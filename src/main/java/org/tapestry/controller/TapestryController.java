@@ -3098,8 +3098,11 @@ public class TapestryController{
 		
 		model.addAttribute("volunteer_survey_templates", surveyTemplateList);
 		
-		List<Site> sites = organizationManager.getAllSites();
-		model.addAttribute("sites", sites);
+		if ("ROLE_ADMIN".equalsIgnoreCase(loggedInUser.getRole()))//for central admin
+		{
+			List<Site> sites = TapestryHelper.getSites(request, organizationManager);		
+			model.addAttribute("sites", sites);
+		}
 		
 		if (failed != null)
 			model.addAttribute("failed", failed);	
