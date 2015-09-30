@@ -1894,46 +1894,51 @@ public class VolunteerController {
 		String time = request.getParameter("appointmentTime");	
 		//when date pick up from calendar, format is different, need to change from yyyy/mm/dd to yyyy-MM-dd
 		date = date.replace("/", "-");
-		System.out.println("date -"+date);
+		
 		int dayOfWeek = Utils.getDayOfWeekByDate(date);
 		
 		Map<String, String> map = TapestryHelper.getAvailabilityMap();
-		String dTime = map.get(time);
-		dTime = dTime.substring(0, 8);
+		String fullDateTime = map.get(time);
+		fullDateTime = fullDateTime.substring(0, 8);
 		
 		StringBuffer sb = new StringBuffer();
+		sb.append(date);
+		sb.append(" ");
+		sb.append(fullDateTime);
+		fullDateTime = sb.toString();
+		
+		sb = new StringBuffer();
 		sb.append(String.valueOf(dayOfWeek -1));
 		sb.append(time);
-		String date_time = sb.toString();
+		String timeSlot = sb.toString();
 		
 		if (request.isUserInRole("ROLE_ADMIN"))//for central admin
 			volunteers = TapestryHelper.getAllVolunteers(volunteerManager);
 		else // local admin/VC
 			volunteers = volunteerManager.getAllVolunteersByOrganization(loggedInUser.getOrganization());	
 		
-		String action = request.getParameter("hhAction");
-		
+		String action = request.getParameter("hhAction");		
 		if ("Find Avalable Volunteers".equals(action))
 		{
 				
-			volunteers = volunteerManager.getVolunteersByAvailibility(date_time, volunteers);
+			volunteers = volunteerManager.getVolunteersByAvailibility(timeSlot, volunteers);
 			model.addAttribute("showVolunteers", true);		
 			model.addAttribute("volunteers", volunteers);	
 			return "/admin/go_scheduler";
 		}
 		else
-			return getVolunteerByScheduler(request, model, volunteers, date_time, dTime);
+			return getVolunteerByScheduler(request, model, volunteers, timeSlot, fullDateTime);
 //		
 //		if (volunteers.size() == 0)
 //			model.addAttribute("noAvailableTime",true);	
 //		else
 //		{
-//			List<Volunteer> availableVolunteers = TapestryHelper.getAllMatchedVolunteers(volunteers, date_time);
+//			List<Volunteer> availableVolunteers = TapestryHelper.getAllMatchedVolunteers(volunteers, timeSlot);
 //			if (availableVolunteers.size() == 0)
 //				model.addAttribute("noAvailableVolunteers",true);	
 //			else
 //			{
-//				List<Availability> matchList = TapestryHelper.getAllAvailablilities(availableVolunteers, date_time, day);
+//				List<Availability> matchList = TapestryHelper.getAllAvailablilities(availableVolunteers, timeSlot, day);
 //				if (matchList.size() == 0)
 //					model.addAttribute("noFound",true);	
 //				else
@@ -1947,7 +1952,7 @@ public class VolunteerController {
 //		return "/admin/view_scheduler";
 	}
 	private String getVolunteerByScheduler(SecurityContextHolderAwareRequestWrapper request, ModelMap model, 
-			List<Volunteer> volunteers, String date_time, String orignalDateTime)
+			List<Volunteer> volunteers, String timeSlot, String dateTime)
 	{
 //		User loggedInUser = TapestryHelper.getLoggedInUser(request, userManager);
 //		List<Volunteer> volunteers = new ArrayList<Volunteer>();
@@ -1977,12 +1982,12 @@ public class VolunteerController {
 			model.addAttribute("noAvailableTime",true);	
 		else
 		{
-			List<Volunteer> availableVolunteers = TapestryHelper.getAllMatchedVolunteers(volunteers, date_time, orignalDateTime, appointmentManager);
+			List<Volunteer> availableVolunteers = TapestryHelper.getAllMatchedVolunteers(volunteers, timeSlot, dateTime, appointmentManager);
 			if (availableVolunteers.size() == 0)
 				model.addAttribute("noAvailableVolunteers",true);	
 			else
 			{
-				List<Availability> matchList = TapestryHelper.getAllAvailablilities(availableVolunteers, date_time, day);
+				List<Availability> matchList = TapestryHelper.getAllAvailablilities(availableVolunteers, timeSlot, day);
 				if (matchList.size() == 0)
 					model.addAttribute("noFound",true);	
 				else

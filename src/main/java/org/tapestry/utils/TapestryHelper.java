@@ -647,29 +647,16 @@ public class TapestryHelper {
 	 * @param dTime -- date + time
 	 * @return
 	 */
-	public static List<Volunteer> getAllMatchedVolunteers(List<Volunteer> list, String time, String dTime, AppointmentManager aManager){		
+	public static List<Volunteer> getAllMatchedVolunteers(List<Volunteer> list, String time, String dateTime, AppointmentManager aManager){		
 		List<Volunteer> vList = new ArrayList<Volunteer>();		
 		String availableTime;
 		
 		for (Volunteer v: list)
-		{		System.out.println("v id = " + v.getVolunteerId())	;
-//			if (!aManager.hasAppointment(v.getVolunteerId(), dTime))
-//			{
-//				//get volunteer's available time
-//				availableTime = v.getAvailability();			
-//		
-//				if (isAvailable(availableTime, time))
-//				{
-//					vList.add(v);
-//					System.out.println("v has no appt id = " + v.getVolunteerId())	;
-//				}
-//			}
+		{
 			availableTime = v.getAvailability();
-			if (isAvailable(availableTime, time)&&(!aManager.hasAppointment(v.getVolunteerId(), dTime)))
-			{
+						
+			if (isAvailable(availableTime, time)&&(!aManager.hasAppointment(v.getVolunteerId(), dateTime)))
 				vList.add(v);
-				System.out.println("v has no appt id = " + v.getVolunteerId())	;
-			}
 		}
 		return vList;
 	}

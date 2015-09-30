@@ -576,7 +576,7 @@ public class AppointmentDAOImpl extends JdbcDaoSupport implements AppointmentDAO
 
 	@Override
 	public boolean hasAppointment(int volunteerId, String time) {
-		String sql =  "SELECT count(*) FROM appointments WHERE volunteer=? OR partner=? AND date_time=?";
+		String sql =  "SELECT count(*) FROM appointments WHERE (volunteer=? OR partner=?) AND date_time=?";
 		int count = getJdbcTemplate().queryForInt(sql,new Object[]{volunteerId, volunteerId, time});
 		
 		if (count == 0)
