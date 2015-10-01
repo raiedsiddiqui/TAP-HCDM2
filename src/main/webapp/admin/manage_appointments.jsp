@@ -166,13 +166,17 @@
 				<th width = "200"> Client</th>
 				<th width = "300"> Volunteers</th>
 				<th width = "200"> Date</th>
+				<th width = "200"> Approve/Decline</th>
 				
 			</tr>
 			<c:forEach items="${pendingAppointments}" var="pendingapt">
 				<tr>
 					<td> ${pendingapt.patient}</td>
 					<td> ${pendingapt.volunteer}, ${pa.partner}</td>
-					<td> ${pendingapt.date}</td>				
+					<td> ${pendingapt.date}</td>	
+					<td>
+			    		<a href="<c:url value="/approve_appointment/${pendingapt.appointmentID}"/>" class="btn btn-primary">Approve</a>
+				    </td>			
 									
 				</tr>								
 			</c:forEach>
