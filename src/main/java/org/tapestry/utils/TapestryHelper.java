@@ -917,20 +917,16 @@ public class TapestryHelper {
 		
 		boolean matched = false;		
 		
-		if ("Experienced".equals(v1Type) || "Experienced".equals(v2Type) || "E".equals(v1Type) || "E".equals(v2Type)){
+		if ("Experienced".equals(v1Type) || "Experienced".equals(v2Type) || "E".equals(v1Type) || "E".equals(v2Type))
 			matched = true;
-		}
 		else if (( "Intermediate".equals(v1Type) && "Intermediate".equals(v2Type)) ||("I".equals(v1Type) && "I".equals(v2Type)))
-		{
 			matched = true;
-		}
 		
 		return matched;
 	}
 	
 	public static void showVolunteerAvailability(Volunteer volunteer, SecurityContextHolderAwareRequestWrapper request, ModelMap model){
-		String strAvailibilities = volunteer.getAvailability();
-				
+		String strAvailibilities = volunteer.getAvailability();				
 		boolean mondayNull = false;
 		boolean tuesdayNull = false;
 		boolean wednesdayNull = false;
@@ -961,8 +957,7 @@ public class TapestryHelper {
 		model.addAttribute("tuesdayNull", tuesdayNull);
 		model.addAttribute("wednesdayNull", wednesdayNull);
 		model.addAttribute("thursdayNull", thursdayNull);
-		model.addAttribute("fridayNull", fridayNull);
-//		model.addAttribute("organizations", organizations);		
+		model.addAttribute("fridayNull", fridayNull);	
 		
 		if (request.getSession().getAttribute("unread_messages") != null)
 			model.addAttribute("unread", request.getSession().getAttribute("unread_messages"));
@@ -993,7 +988,7 @@ public class TapestryHelper {
 				session.setAttribute("survey_template_withCanDelete_list", surveyTemplateList);
 		}
 		else
-			surveyTemplateList = (List<SurveyTemplate>)session.getAttribute("survey_template_list");
+			surveyTemplateList = (List<SurveyTemplate>)session.getAttribute("survey_template_withCanDelete_list");
 		
 		return surveyTemplateList;
 	}
@@ -1008,16 +1003,7 @@ public class TapestryHelper {
 		HttpSession session = request.getSession();		
 		List<SurveyTemplate> surveyTemplateList;
 		if (session.getAttribute("survey_template_list") == null)
-		{			
 			surveyTemplateList = updateSurveyTemplates(request, surveyManager);
-//			if (request.isUserInRole("ROLE_ADMIN"))//central admin 
-//				surveyTemplateList = surveyManager.getAllSurveyTemplates();
-//			else //local admin/site admin
-//				surveyTemplateList = surveyManager.getSurveyTemplatesBySite(getLoggedInUser(request).getSite());
-//			//save in the session
-//			if (surveyTemplateList != null && surveyTemplateList.size()>0)
-//				session.setAttribute("survey_template_list", surveyTemplateList);
-		}
 		else
 			surveyTemplateList = (List<SurveyTemplate>)session.getAttribute("survey_template_list");
 		
@@ -2712,12 +2698,6 @@ public class TapestryHelper {
 		    	
 		    	if (index > 0)
 		    		question = question.substring(index + 8);//length of /answer/ is 8
-   		    	
-//   		    	//remove observer notes
-//   		    	index = question.indexOf("/observernote/");
-//   		    	
-//   		    	if (index > 0)
-//   		    		question = question.substring(0, index);   		    	
    		    	qList.add(question); 
    		    }   		   
    		}		
@@ -4449,4 +4429,18 @@ public class TapestryHelper {
 		}
 		return value;
 	}	
+	
+	public static List<Patient> getPatientsByPartialName(List<Patient> patients, String partialName)
+	{
+		List<Patient> pList = new ArrayList<Patient>();
+		Patient p;
+		for (int i = 0; i < patients.size(); i++)
+		{
+			p = patients.get(i);
+			if (p.getFirstName().contains(partialName)||p.getLastName().contains(partialName))
+				pList.add(p);			
+		}
+		
+		return pList;
+	}
 }

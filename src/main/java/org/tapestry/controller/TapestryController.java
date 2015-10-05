@@ -2151,183 +2151,188 @@ public class TapestryController{
    	@RequestMapping(value="/go_assign_survey/{patientId}", method=RequestMethod.GET)
 	public String goAssignSurvey(@PathVariable("patientId") int id, SecurityContextHolderAwareRequestWrapper request, 
 			ModelMap model)
-   	{ 
-   		List<SurveyTemplate> surveyTemplates = TapestryHelper.getSurveyTemplates(request, surveyManager);		
-   		//Assign Survey in Survey Mangement, it will load all patients in the table with checkbox for later selection
-   		if (id == 0)
-   		{
-   	//		List<Patient> patients  = TapestryHelper.getAllPatientsWithFullInfos(patientManager, request);
-   			List<Patient> patients;
-   			User user = TapestryHelper.getLoggedInUser(request);
-   			
-   			if (request.isUserInRole("ROLE_ADMIN"))
-   				patients = patientManager.getAllPatients();	//For central Admin		
-   			else
-   				patients = patientManager.getPatientsBySite(user.getSite());		
-   			
-   			model.addAttribute("patients", patients);
-   			model.addAttribute("surveyTemplates", surveyTemplates);
-   		}//Assign Survey in Client/details, assign surveys for selected patient
-   		else
-   		{
-   			model.addAttribute("patient", id);   			
-   			model.addAttribute("surveyTemplates", surveyTemplates);
-   			model.addAttribute("hideClients", true);
-   		}
+   	{    		
+   		User loggedInUser = TapestryHelper.getLoggedInUser(request);
+   		List<SurveyTemplate> surveyTemplates = new ArrayList<SurveyTemplate>();
+   		String role = loggedInUser.getRole();
+   		int siteId;
    		
    		HttpSession session = request.getSession();
 		if (session.getAttribute("unread_messages") != null)
 			model.addAttribute("unread", session.getAttribute("unread_messages"));
-   		
+		
+		if (id == 0)//manage survey
+		{
+			if(role.equals("ROLE_ADMIN"))//central admin
+			{
+				session.removeAttribute("selectedSite");
+				List<Site> sites = organizationManager.getAllSites();
+	   			
+	   			model.addAttribute("sites", organizationManager.getAllSites());
+	   			model.addAttribute("showSites", true);
+			}
+			else //local admin
+			{
+				siteId = loggedInUser.getSite();
+				surveyTemplates = surveyManager.getSurveyTemplatesBySite(siteId);
+				List<Patient> patients = patientManager.getPatientsBySite(siteId);		
+				
+				model.addAttribute("patients", patients);
+   	   			model.addAttribute("surveyTemplates", surveyTemplates);
+			}
+		}
+		else //display client(Assign survey)
+		{
+			if(role.equals("ROLE_ADMIN"))//central admin
+				siteId = patientManager.getSiteByPatientId(id);
+			else
+				siteId = loggedInUser.getSite();
+				   			
+			surveyTemplates = surveyManager.getSurveyTemplatesBySite(siteId);
+			
+			model.addAttribute("patient", id);   			
+			model.addAttribute("surveyTemplates", surveyTemplates);
+			model.addAttribute("hideClients", true);
+		}
 		return "/admin/assign_survey";
-   		
-   		
-   		
-   		/*
-   		List<SurveyTemplate> surveyTemplates = TapestryHelper.getSurveyTemplates(request, surveyManager); 
-   		HttpSession session = request.getSession();
-		if (session.getAttribute("unread_messages") != null)
-			model.addAttribute("unread", session.getAttribute("unread_messages"));
-   		//Assign Survey in Survey Mangement, it will load all patients in the table with checkbox for later selection
-   		if (id == 0)
-   		{
-   	//		List<Patient> patients  = TapestryHelper.getAllPatientsWithFullInfos(patientManager, request);
-//   			List<Patient> patients;
-//   			User user = TapestryHelper.getLoggedInUser(request);
-//   			
-//   			if (request.isUserInRole("ROLE_ADMIN"))
-//   				patients = patientManager.getAllPatients();	//For central Admin		
-//   			else
-//   				patients = patientManager.getPatientsBySite(user.getSite());		
-   			
- //  			model.addAttribute("patients", patients);
- //  			model.addAttribute("surveyTemplates", surveyTemplates);
-   			model.addAttribute("sites", organizationManager.getAllSites());
-   			
-   			///
-//   			model.addAttribute("volunteers", volunteerManager.getAllVolunteers());
-   			
-   			return "/admin/assign_survey_centraladmin";
-   		}//Assign Survey in Client/details, assign surveys for selected patient
-   		else
-   		{
-   			model.addAttribute("patient", id);   			
-   			model.addAttribute("surveyTemplates", surveyTemplates);
-   			model.addAttribute("hideClients", true);
-   			
-   			return "/admin/assign_survey";
-   		}
-   		
-   		
-   		
-	//	return "/admin/assign_survey";
-	 * */
-	
 	} 
    	
    	@RequestMapping(value="/assign_selectedSurvey", method=RequestMethod.POST)
 	public String assignSurvey(SecurityContextHolderAwareRequestWrapper request, ModelMap model) 
 			throws JAXBException, DatatypeConfigurationException, Exception
-	{      		
-   		List<SurveyTemplate> sTemplates = TapestryHelper.getSurveyTemplates(request, surveyManager);	    	
-   		ArrayList<SurveyTemplate> selectSurveyTemplats = new ArrayList<SurveyTemplate>();
-   		
-   		String[] surveyTemplateIds = request.getParameterValues("surveyTemplates"); 
-   		int[] patientIds;
-   		//add logs
-   		User loggedInUser = TapestryHelper.getLoggedInUser(request);
-		StringBuffer sb = new StringBuffer();
-		sb.append(loggedInUser.getName());
-		sb.append(" has assigned surveys to patients");
-		String logDes = sb.toString();
-   		
-   		//if user selects Client/Details/Assign Survey, patient id would store in hidden field called patient   		
-   		String hPatient = request.getParameter("patient");   	
-   	   		
-   		if (!Utils.isNullOrEmpty(hPatient))
-   		{      		
-   			if(request.getParameter("assignSurvey") != null)//assign selected surveys to selected patients
-   	   		{  	
-   				if (surveyTemplateIds != null && surveyTemplateIds.length > 0){
-
-   					TapestryHelper.addSurveyTemplate(surveyTemplateIds,sTemplates, selectSurveyTemplats);     					
-   	   	   			patientIds = new int[] {Integer.valueOf(hPatient)};
-   	   	   			
-   	   	   			TapestryHelper.assignSurveysToClient(selectSurveyTemplats, patientIds, request, model, surveyManager);   	
-   	   	   			userManager.addUserLog(logDes, loggedInUser);
-   	   	   		}
-   	   	   		else//no survey template has been selected
-   	   	   		{
-   	   	   			model.addAttribute("no_survey_selected", true);   	
-   	   	   			return "admin/assign_survey";
-   	   	   		}
-   				return "redirect:/display_client/" + hPatient;  
-   	   		}
-   		}
-   		else//user select SurveyManagement/Assign Survey
-   		{ 	
-   			List<Patient> patients = TapestryHelper.getPatients(request, patientManager); 
+	{ 
+   		List<SurveyTemplate> sTemplates;
+		List<Patient> patients;
+		int siteId;
+		User loggedInUser = TapestryHelper.getLoggedInUser(request);
+		String role = loggedInUser.getRole();
+		HttpSession session = request.getSession();
+		String hPatient = request.getParameter("patient");   	
+		String action = request.getParameter("hActionAssignSurvey");
+		
+		if ((request.getParameterValues("sites") != null)&&(Utils.isNullOrEmpty(action)))//login as central admin, select site from sites dropdown
+		{
+			String[] sites = request.getParameterValues("sites"); 
+   			siteId = Integer.valueOf(sites[0]);
+   			session.setAttribute("selectedSite", siteId);
    			
-	   		if (request.getParameter("searchPatient") != null && 
-	   				request.getParameter("searchPatientName") !=null )//search patient by name
-	   		{
-	   			String name = request.getParameter("searchPatientName");   			
-	   			
-	   			patients = patientManager.getPatientsByPartialName(name);			
-	   			model.addAttribute("searchPatientName", name);	 
-	   			
-	   		}
-	   		else if(request.getParameter("assignSurvey") != null)//assign selected surveys to selected patients
-	   		{    	   		
-	   	   		String[] selectedPatientIds = request.getParameterValues("patientId");
-	   	   		String assignToAll = request.getParameter("assignAllClinets");	   	   		   	   		
-	   	   		
-	   	   		//get survey template list 
-	   	   		if (surveyTemplateIds != null && surveyTemplateIds.length > 0)
-	   	   		{
-	   	   			TapestryHelper.addSurveyTemplate(surveyTemplateIds,sTemplates, selectSurveyTemplats);  
-	   	   			
-	   	   			if ("true".equalsIgnoreCase(assignToAll))
-		   	   		{//for assign to all clients   			
-		   	   			Patient patient;   			
-		   	   			patientIds = new int[patients.size()];
-		   	   			
-		   	   			for(int i = 0; i < patients.size(); i++){
-		   	   				patient = new Patient();
-		   	   				patient = patients.get(i);
-		   	   				patientIds[i] = patient.getPatientID();
-		   	   			}		   	   			
-		   	   			TapestryHelper.assignSurveysToClient(selectSurveyTemplats, patientIds, request, model, surveyManager);		
-		   	   			userManager.addUserLog(logDes, loggedInUser);
-		   	   		}
-		   	   		else
-		   	   		{//for selected patients, convert String[] to int[]   			
-		   	   			if (selectedPatientIds == null || selectedPatientIds.length == 0)
-		   	   				model.addAttribute("no_patient_selected", true);
-		   	   			else
-		   	   			{
-		   	   				int[] iSelectedPatientIds = new int[selectedPatientIds.length];
-		   	   	   			for (int j = 0; j < selectedPatientIds.length; j++){
-		   	   	   				iSelectedPatientIds[j] = Integer.parseInt(selectedPatientIds[j]);
-		   	   				}
-		   	   	   			TapestryHelper.assignSurveysToClient(selectSurveyTemplats, iSelectedPatientIds, request, model, surveyManager);
-		   	   	   			userManager.addUserLog(logDes, loggedInUser);
-		   	   			}   			
-		   	   		} 
-	   	   		}
-	   	   		else//no survey template has been selected
-	   	   			model.addAttribute("no_survey_selected", true);
-	   		}
-	   		model.addAttribute("surveyTemplates", sTemplates);
+   			sTemplates = surveyManager.getSurveyTemplatesBySite(siteId);   			
+   	   		patients = patientManager.getPatientsBySite(siteId);
+   	   		
+	   	   	model.addAttribute("surveyTemplates", sTemplates);
 	   		model.addAttribute("patients", patients);
-   		}
-   		
-   		HttpSession session = request.getSession();
-		if (session.getAttribute("unread_messages") != null)
-			model.addAttribute("unread", session.getAttribute("unread_messages"));
-		return "admin/assign_survey";
+	   		model.addAttribute("showSites", true);
+	   		model.addAttribute("selectedSite", siteId);	   		
+	   		
+			if (session.getAttribute("unread_messages") != null)
+				model.addAttribute("unread", session.getAttribute("unread_messages"));						
+			
+			return "admin/assign_survey";
+		}
+		else // assign survey by central/local admin
+		{
+			siteId = loggedInUser.getSite();	
+			
+			if (siteId == 0)//logged in user is central admin
+			{
+				if (session.getAttribute("selectedSite") != null) //central admin(manage survey==> assign survey)
+					siteId = Integer.valueOf(session.getAttribute("selectedSite").toString());
+				else
+					siteId = patientManager.getSiteByPatientId(Integer.valueOf(hPatient));
+			}
+			sTemplates = surveyManager.getSurveyTemplatesBySite(siteId);
+			ArrayList<SurveyTemplate> selectSurveyTemplats = new ArrayList<SurveyTemplate>();	   		
+	   		String[] surveyTemplateIds = request.getParameterValues("surveyTemplates"); 
+	   		int[] patientIds;
+	   		
+		   	//add logs	
+			StringBuffer sb = new StringBuffer();
+			sb.append(loggedInUser.getName());
+			sb.append(" has assigned surveys to patients");
+			String logDes = sb.toString();
+			
+	   		if (!Utils.isNullOrEmpty(hPatient))
+	   		{      		
+	   			if(request.getParameter("assignSurvey") != null)//assign selected surveys to selected patients
+	   	   		{  
+	   				if (surveyTemplateIds != null && surveyTemplateIds.length > 0)
+	   				{
+	   					TapestryHelper.addSurveyTemplate(surveyTemplateIds,sTemplates, selectSurveyTemplats);     					
+	   	   	   			patientIds = new int[] {Integer.valueOf(hPatient)};
+	   	   	   			
+	   	   	   			TapestryHelper.assignSurveysToClient(selectSurveyTemplats, patientIds, request, model, surveyManager);   	
+	   	   	   			userManager.addUserLog(logDes, loggedInUser);
+	   	   	   		}
+	   	   	   		else//no survey template has been selected
+	   	   	   		{
+	   	   	   			model.addAttribute("no_survey_selected", true);   	
+	   	   	   			return "admin/assign_survey";
+	   	   	   		}
+	   				return "redirect:/display_client/" + hPatient;  
+	   	   		}
+	   		}
+	   		else//user select SurveyManagement/Assign Survey
+	   		{ 	
+	   			patients = patientManager.getPatientsBySite(siteId);	   			
+//		   		if (request.getParameter("searchPatient") != null && 
+//		   				request.getParameter("searchPatientName") !=null )//search patient by name
+	   			if ("Search".equals(action))
+		   		{
+		   			String name = request.getParameter("searchPatientName");   
+		   			patients = TapestryHelper.getPatientsByPartialName(patients, name);
+		   			
+		   			model.addAttribute("searchPatientName", name);	 
+		   			model.addAttribute("showSites", true);
+			   		model.addAttribute("selectedSite", siteId);	   		
+		   			
+		   		}
+		   		else if(request.getParameter("assignSurvey") != null)//assign selected surveys to selected patients
+		   		{    	   		
+		   	   		String[] selectedPatientIds = request.getParameterValues("patientId");
+		   	   		String assignToAll = request.getParameter("assignAllClinets");	   	   		   	   		
+		   	   		
+		   	   		//get survey template list 
+		   	   		if (surveyTemplateIds != null && surveyTemplateIds.length > 0)
+		   	   		{
+		   	   			TapestryHelper.addSurveyTemplate(surveyTemplateIds,sTemplates, selectSurveyTemplats);  
+		   	   			
+		   	   			if ("true".equalsIgnoreCase(assignToAll))
+			   	   		{//for assign to all clients   			
+			   	   			Patient patient;   			
+			   	   			patientIds = new int[patients.size()];
+			   	   			
+			   	   			for(int i = 0; i < patients.size(); i++){
+			   	   				patient = new Patient();
+			   	   				patient = patients.get(i);
+			   	   				patientIds[i] = patient.getPatientID();
+			   	   			}		   	   			
+			   	   			TapestryHelper.assignSurveysToClient(selectSurveyTemplats, patientIds, request, model, surveyManager);		
+			   	   			userManager.addUserLog(logDes, loggedInUser);
+			   	   		}
+			   	   		else
+			   	   		{//for selected patients, convert String[] to int[]   			
+			   	   			if (selectedPatientIds == null || selectedPatientIds.length == 0)
+			   	   				model.addAttribute("no_patient_selected", true);
+			   	   			else
+			   	   			{
+			   	   				int[] iSelectedPatientIds = new int[selectedPatientIds.length];
+			   	   	   			for (int j = 0; j < selectedPatientIds.length; j++){
+			   	   	   				iSelectedPatientIds[j] = Integer.parseInt(selectedPatientIds[j]);
+			   	   				}
+			   	   	   			TapestryHelper.assignSurveysToClient(selectSurveyTemplats, iSelectedPatientIds, request, model, surveyManager);
+			   	   	   			userManager.addUserLog(logDes, loggedInUser);
+			   	   			}   			
+			   	   		} 
+		   	   		}
+		   	   		else//no survey template has been selected
+		   	   			model.addAttribute("no_survey_selected", true);
+		   		}
+		   		model.addAttribute("surveyTemplates", sTemplates);
+		   		model.addAttribute("patients", patients);
+	   		}
+	   		return "admin/assign_survey";
+	   	}
 	}
-
    	/*
 	@RequestMapping(value="/assign_surveys", method=RequestMethod.POST)
 	public String assignSurveys(SecurityContextHolderAwareRequestWrapper request) throws JAXBException, 
@@ -2616,7 +2621,7 @@ public class TapestryController{
 			userManager.addUserLog(sb.toString(), currentUser);
 		}
 		
-		if (request.isUserInRole("ROLE_ADMIN")){
+		if (!request.isUserInRole("ROLE_USER")){
    			return "redirect:/display_client/"+surveyResult.getPatientID();
    		} else {
    			Appointment appointment = appointmentManager.getAppointmentByMostRecentIncomplete(currentPatient.getPatientID());

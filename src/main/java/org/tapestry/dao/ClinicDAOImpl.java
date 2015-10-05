@@ -45,7 +45,7 @@ public class ClinicDAOImpl extends JdbcDaoSupport implements ClinicDAO {
 	
 
 	@Override
-	public int getSiteByClinic(int clinicId) {
+	public int getSiteByClinic(int clinicId) {		
 		String sql = "SELECT site_ID FROM clinics WHERE clinic_ID = ?";				
 		return getJdbcTemplate().queryForInt(sql, new Object[]{clinicId});
 	}

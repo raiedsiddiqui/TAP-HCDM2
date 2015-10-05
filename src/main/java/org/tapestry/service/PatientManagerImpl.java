@@ -18,6 +18,7 @@ import org.tapestry.objects.Patient;
 public class PatientManagerImpl implements PatientManager {
 	@Autowired
 	private PatientDAO patientDao;
+	@Autowired
 	private ClinicDAO clinicDao;
 
 	@Override
@@ -148,7 +149,7 @@ public class PatientManagerImpl implements PatientManager {
 
 	@Override
 	public int getSiteByPatientId(int patientId) {
-		Patient p = this.getPatientByID(patientId);		
+		Patient p = this.getPatientByID(patientId);
 		return clinicDao.getSiteByClinic(p.getClinic());
 	}
 

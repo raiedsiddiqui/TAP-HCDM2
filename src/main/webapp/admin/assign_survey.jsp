@@ -28,7 +28,7 @@
 		function disablePatientCheckbox()
 		{
 			var inputs = document.getElementsByTagName("input");
-			var elements = document.forms[0].elements;	
+	//		var elements = document.forms[0].elements;	
 			var assignToAll = document.getElementById("toAll");
 			
 			for (var i = 0; i < inputs.length; i++) 
@@ -40,17 +40,55 @@
 			if (assignToAll.checked)
 			{
 				document.getElementById("searchPatient").disabled = true; 
-				document.getElementById('searchPatientName').disabled = true;
-			
+				document.getElementById('searchPatientName').disabled = true;			
 			}				
 			else
 			{
 				document.getElementById("searchPatient").disabled = false;
-				document.getElementById('searchPatientName').disabled = false;
-		
+				document.getElementById('searchPatientName').disabled = false;		
 			}
-				
 		}
+		
+		function goAction(){
+			var site = document.getElementById("sites");		
+			var siteId = site.options[site.selectedIndex].value;
+			
+			if (siteId == 000)
+			{
+				alert("Please select a site first!");
+				return false;
+			}			
+			else
+			{
+				document.getElementById("hActionAssignSurvey").value = document.pressed;					
+				var action = document.pressed;
+				
+				if (action ==="Search")
+				{					
+					if (document.getElementById("searchPatientName").value =="")
+					{
+						alert("Please type full or partial of name you want to search!");
+						return false;
+					}					
+				}
+				
+				if (action==="Assign")
+				{
+					var st = document.getElementById("survey_template");
+					var value = st.options[st.selectedIndex].value;
+					
+					if (value === "")
+					{
+						alert("Please select at least one survey template!");
+						return false;
+					}
+				}
+				
+				
+				return true;
+			}
+		}
+		
 		
 	</script>
 </head>
@@ -69,7 +107,17 @@
 			<div class ="alert alert-info"><spring:message code="message_assign_survey_successful"/></div>
 		</c:if>
 		<h2>Assign Survey</h2><br/>
-		<form id="assignSurveyForm" action="<c:url value="/assign_selectedSurvey"/>" method="post" >
+		<form id="assignSurveyForm" action="<c:url value="/assign_selectedSurvey"/>" method="post" onsubmit="return goAction();">
+			<c:if test="${not empty showSites}">
+				<label>Site: </label>
+				<select name="sites" id="sites" form="assignSurveyForm" class="form-control"  onchange="this.form.submit()">
+					<option value="000"></option>
+					<c:forEach items="${sites}" var="s">						
+						<option value="${s.siteId}" ${selectedSite == s.siteId ? 'selected' : ''}>${s.name}</option>
+					</c:forEach>
+				</select>
+			</c:if>
+		
 			<label>Select Survey : </label><br/>
 			<select multiple id="survey_template" name="surveyTemplates" class="form-control" style="max-width:50%;">
 				<c:forEach items="${surveyTemplates}" var="st">
@@ -77,13 +125,14 @@
 				</c:forEach>
 			</select><br/>
 			<input type ="hidden" value="${patient}" name = "patient" />
+			<input id="hActionAssignSurvey" name="hActionAssignSurvey" type="hidden" value=""/>
 			<div id="clients">			
 				<c:if test="${empty hideClients}">   									
 					<label>Select Client : </label><br/>			
 					<input type="checkbox" name="assignAllClinets" id="toAll" style="margin-bottom:10px;" onclick="disablePatientCheckbox()" value="true" >Assign to All clients</input><br/>
 					<div class="right">					
-						<input type="text" id = "searchPatientName" name="searchPatientName" value="${searchPatientName}" />
-						<input class="btn btn-primary" type="submit" id = "searchPatient" name="searchPatient" value="Search" />				
+						<input type="text" id = "searchPatientName" name="searchPatientName" value="${searchPatientName}"  />
+						<input class="btn btn-primary" type="submit" id = "searchPatient" name="searchPatient" value="Search" onclick="document.pressed=this.value"/>				
 					</div>
 					<div style="height:106px; overflow:auto">
 						<table border="1" cellspacing="0" cellpadding = "0">			
@@ -117,8 +166,9 @@
 			</div>
 			<br/><br/>
 			<div class="right">
-				<input type="submit" class="btn btn-primary" name="assignSurvey" value="Assign" />
-			</div>		 
+				<input type="submit" class="btn btn-primary" name="assignSurvey" value="Assign" onclick="document.pressed=this.value"/>
+			</div>	
+			<input id="hSelectSite" name="hSelectSite" type="hidden" value=""/>	 
 		</form>		
 	</div>
 

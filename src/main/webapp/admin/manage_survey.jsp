@@ -120,7 +120,7 @@
 						<option value="${loop.index}">${loop.index}</option>
 						</c:forEach>
 					</select>
-					<c:if test="${sites}">
+					<c:if test="${not empty sites}">
 						<label>Site:</label>									
 						<select name="site" id="site" form="uploadSurveyForm" class="form-control">
 							<c:forEach items="${sites}" var="s">
