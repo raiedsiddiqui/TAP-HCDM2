@@ -48,7 +48,9 @@
 				</c:if>
 		
 	<div class="row-fluid">
-			<h2>Clients </h2>
+		
+		<h2>Clients </h2>
+
 			<div class="row-fluid">
 				<div class="col-md-10">
 					<form action="<c:url value="/view_clients_admin"/>" id="searchPatients" method="POST">
@@ -61,12 +63,16 @@
 				</div>
 				<div class="col-md-2">
 					<a href="<c:url value="/add_client"/>" class="btn btn-primary" data-toggle="modal">Add New Client</a>
+					<br>
+					<c:if test="${not empty(disabledPatients)}">						
+						<a id="enablePatientBtn" href="#modalEnablePatients" role="button" class="" style='float:left' data-toggle="modal">View Disabled Patients</a>
+					</c:if>
 				</div>
-				<c:if test="${not empty(disabledPatients)}">
+				<!-- <c:if test="${not empty(disabledPatients)}">
 					<div class="col-md-2">						
-						<a id="enablePatientBtn" href="#modalEnablePatients" role="button" class="btn btn-primary" data-toggle="modal">Enable Patient Profile</a>
+						<a id="enablePatientBtn" href="#modalEnablePatients" role="button" class="" data-toggle="modal">View Disabled Patients</a>
 					</div>
-				</c:if>
+				</c:if> -->
 			</div>
 
 			
