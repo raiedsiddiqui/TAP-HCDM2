@@ -1860,7 +1860,29 @@ public class TapestryHelper {
 			cell = new PdfPCell(new Phrase("TAPESTRY REPORT: " + patientName + " " + birthDate, blFont));
 			cell.setBorder(0);
 			table.addCell(cell);
-	            
+			document.add(table);
+			
+			//message
+			table = new PdfPTable(1);
+			table.setWidthPercentage(100);
+			
+			Phrase pp = new Phrase();	
+			String msg0 = "READ THIS MESSAGE FIRST";			
+			pp.add(new Chunk(msg0, blFont));
+			
+			String msg1 = "\n\nDear MRP or Resident: After review, please comment with relevant background information or a "
+					+ "suggested course of action. \n \nThe allied health team will review and discuss this report and will make contact with your for next steps.\n \n";
+			pp.add(new Chunk(msg1, mFont));
+			
+			String msg2 = "Please do not schedule a patient visit without consulting with the allied health team first. Thank you.\n";			
+			pp.add(new Chunk(msg2, bmFont));
+		
+			cell = new PdfPCell(pp);
+			table.addCell(cell);			
+			document.add(table);
+		
+			table = new PdfPTable(1);
+			table.setWidthPercentage(100);
 			cell = new PdfPCell(new Phrase("PATIENT GOAL(S)", wbLargeFont));
 			cell.setBackgroundColor(BaseColor.BLACK);
 			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -1869,7 +1891,7 @@ public class TapestryHelper {
 			
 			List<String> patientGoals = report.getPatientGoals();
 					
-			Phrase pp = new Phrase();
+			pp = new Phrase();
 			Chunk c = new Chunk("What Matters Most To Me: ", bmFont);			 
 			pp.add(c);
 			pp.add(new Chunk(patientGoals.get(0) + "\n", mFont));
