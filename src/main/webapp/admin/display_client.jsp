@@ -34,12 +34,13 @@
 <div><h4><a href="<c:url value="/view_clients_admin"/>" >Client ></a> ${patient.displayName}</h4></div>
 
 <div class="row">
-	<div class="col-md-10">
-		<h2>${patient.displayName}<a href="<c:url value="/edit_patient/${patient.patientID}"/>">Edit</a></h2>
+	<div class="col-md-9">
+		<h2>${patient.displayName}</h2>
 		<h5>Research ID: ${patient.researchID}</h5>
 	</div>
-	<div class="col-md-2">		
-		<a id="unDisablePatienttBtn" href="#modalDisableNotes" role="button" class="btn btn-primary" data-toggle="modal">Disable Patient Profile</a>
+	<div class="col-md-3">		
+		<a id="unDisablePatienttBtn" href="#modalDisableNotes" role="button" class="btn btn-danger" data-toggle="modal">Disable Patient</a>
+		<a class="btn btn-warning" href="<c:url value="/edit_patient/${patient.patientID}"/>">Edit</a>
 	</div>
 </div>
 
@@ -111,7 +112,7 @@
 		</table>
  
 	<h2>Upcoming Visits</h2>
-	<a href="<c:url value="/book_appointment"/>" class="btn btn-primary">Book Appointment</a>	
+	<a href="<c:url value="/book_appointment"/>" class="btn btn-primary" style="float:right">Book Appointment</a>	
 	<table  class="table table-striped" width="970" border="1">
 		<tr>			
 			<th width="500">Visit Date</th>			
@@ -150,11 +151,13 @@
 	<c:if test="${not empty unCompletedVisits}">
 		<a id="unCompleteVisitBtn" href="#modalUnCompleteVisit" role="button" class="btn btn-primary" data-toggle="modal">UnCompleted Visits</a>	
 	</c:if>
-	<h2>Surveys <a href="<c:url value="/go_assign_survey/${patient.patientID}"/>">Assign Survey</a> </h2>
-	
+	<h2>Surveys</h2> 
+	<a style="float:right" class="btn btn-primary" href="<c:url value="/go_assign_survey/${patient.patientID}"/>">Assign Survey</a> 
+	.
 	<c:if test="${showReport}">
-		<a href="<c:url value="/download_clientSurveyReport/${patient.patientID}?name=${patient.displayName}"/>">Download Report</a>
+		<a style="float:right" class="btn btn-primary" href="<c:url value="/download_clientSurveyReport/${patient.patientID}?name=${patient.displayName}"/>">Download Report</a>
 	</c:if>
+
 	<table  class="table table-striped" width="970" border="1">
 		<tr>
 			<th width="200">Assigned Surveys</th>
@@ -268,7 +271,8 @@
       </div>
       <div class="modal-body">
       	<form id="diablePatientFrm" method="post" action="<c:url value="/disable_patient/${patient.patientID}"/>">
-      		<label>Notes:</label>
+
+      		<label>Please explain why the patient is being disabled</label>
 			<textarea class="form-control" name="noteBody" id="noteBody"></textarea><br />	
 		</form>
       </div>
@@ -279,6 +283,6 @@
       </div>
     </div>
   </div>
-</div>-->
+</div>
 </body>
 </html>

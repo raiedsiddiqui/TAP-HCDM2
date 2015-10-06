@@ -708,7 +708,9 @@ public class VolunteerController {
    		sb.append(volunteerManager.getVolunteerNameById(volId));
    		sb.append("] has verified [");
    		if (patientManager.getPatientByID(patientId) != null)
-   			sb.append(patientManager.getPatientByID(patientId).getDisplayName());
+   			sb.append(patientManager.getPatientByID(patientId).getFirstName());
+   			sb.append(' ');
+   			sb.append(patientManager.getPatientByID(patientId).getLastName());
    		sb.append("] on [");
    		
    		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -1334,9 +1336,11 @@ public class VolunteerController {
    		sb.append("[");
    		sb.append(volunteerManager.getVolunteerNameById(volId));
    		sb.append("] has verified [");
-   		String patientName = patientManager.getPatientByID(patientId).getDisplayName();
+   		String patientName = patientManager.getPatientByID(patientId).getFirstName();
    		if (patientManager.getPatientByID(patientId) != null)
    			sb.append(patientName);
+   			sb.append(' ');
+			sb.append(patientManager.getPatientByID(patientId).getLastName());
    		sb.append("] on [");
    		
    		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
