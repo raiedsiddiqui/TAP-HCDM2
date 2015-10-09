@@ -91,7 +91,7 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, v1.organization, c.clinic_name FROM patients "
 				+ "AS p INNER JOIN volunteers AS v1 ON p.volunteer=v1.volunteer_ID INNER JOIN "
 				+ "volunteers AS v2 ON p.volunteer2=v2.volunteer_ID INNER JOIN clinics AS c ON p.clinic=c.clinic_ID "
-				+ "WHERE c.site_ID =? AND p.enabled=1";
+				+ "WHERE c.site_ID =? AND p.enabled=1 ORDER BY LENGTH (research_ID), research_ID";
 		
 		return getJdbcTemplate().query(sql, new Object[]{siteId}, new PatientMapper());
 	}
