@@ -32,7 +32,7 @@
 			<div class ="alert alert-info"><spring:message code="message_noSearchName"/></div>
 		</c:if>
 		<c:if test="${not empty misMatchedVolunteer}">			
-			<div class="alert alert-danger"><spring:message code="message_volunteers_misMatchedVolunteer"/></div>
+			<div class="alert alert-warning"><spring:message code="message_volunteers_misMatchedVolunteer"/></div>
 		</c:if>	
 		<c:if test="${not empty sameVolunteer}">			
 			<div class="alert alert-danger"><spring:message code="message_volunteers_sameVolunteer"/></div>

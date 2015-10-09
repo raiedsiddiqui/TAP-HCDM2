@@ -112,8 +112,8 @@ public class PatientManagerImpl implements PatientManager {
 	}
 
 	@Override
-	public List<String> getResearchIds() {
-		return patientDao.getResearchIds();
+	public List<String> getResearchIds(int siteId) {
+		return patientDao.getResearchIds(siteId);
 	}
 
 	@Override

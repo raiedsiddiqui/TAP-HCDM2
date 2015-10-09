@@ -25,7 +25,7 @@
 		}
 		function validateVolunteer(){
 			var selectedVolunteer = document.getElementById("search_volunteer");
-			var vValue =selectedVolunteer.options[selectedVolunteer.selectedIndex].value;
+			var vValue=selectedVolunteer.options[selectedVolunteer.selectedIndex].value;
 			
 			if (vValue == 0)
 			{
@@ -35,13 +35,28 @@
 		}
 		function isExistResearchId()
 		{
-			var existIds = document.getElementById("existResearchIds").value;	
+			var existingIDS="${researchIds}";
+			existingIDS=existingIDS.replace(/\s/g, '');
+			var parseIDS = existingIDS.substring(1, existingIDS.length-1);
+			console.log("parseIDS");
+			console.log(parseIDS);
+			console.log("ExistingIDS");
+			var existingIDSarray=parseIDS.split(',');
+
+
+			console.log(existingIDSarray);
+
+			var testarray=[1,2,3];
+			console.log("testarray below");
+			console.log(testarray);
+
+			// var existIds = document.getElementById("existResearchIds").value;	
 			var researchId = document.getElementById("researchId");	
 			var current_researchId = researchId.value;
-			
-			if (existIds.indexOf(current_researchId) > -1)
+
+			if (existingIDSarray.indexOf(current_researchId) > -1)
 			{
-				alert("This ID has existed in the DB...");
+				alert("This Research ID is not unique and exists in the database...please try a different ID");
 				researchId.value = "";
 				document.getElementById("researchId").focus();		
 			}				
@@ -178,7 +193,8 @@
 		<div class="row">
 			<input class="btn btn-primary" form="newPatient" type="submit" value="Add" />
 		</div>
-		<input type="hidden" id="existResearchIds" value="${researchIds}"/>
+		
+		<!-- <input type="hidden" id="existResearchIds" value="${researchIds}"/> -->
 		
 	</div>
 </body>
