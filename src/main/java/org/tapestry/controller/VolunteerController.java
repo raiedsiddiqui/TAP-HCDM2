@@ -668,6 +668,14 @@ public class VolunteerController {
 	{		
 		String strAvailableTime = TapestryHelper.getAvailableTime(request);
 		volunteerManager.updateVolunteerAvalability(id, strAvailableTime);
+		
+		//add log
+		StringBuffer sb = new StringBuffer();
+		User loggedInUser = TapestryHelper.getLoggedInUser(request);
+		sb.append(loggedInUser.getName());
+		sb.append(" has updated their availability");		
+		userManager.addUserLog(sb.toString(), loggedInUser);
+		
 		return "redirect:/profile?availability=true";
 	}
 	

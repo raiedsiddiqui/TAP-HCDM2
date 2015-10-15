@@ -155,12 +155,17 @@ public class ResultParser {
     			int index2 = answer.indexOf(seperator2);
     			
     			questionAnswer = answer.substring(index2 + length2);
-    			if (!questionAnswer.startsWith("-"))//remove first non-question-answer pair, only information
+    			
+
+    			//Void questions in mumps have a answer value "-". Check if a normal answer starts with "-" and remove the start and end void questions. 
+    			if ((!questionAnswer.startsWith("-")) || (questionAnswer.startsWith("-") && questionAnswer.length()>1))//remove first non-question-answer pair, only information
     			{
     				if (index1 != -1)// has /observernote/...
     				{        				   
     					qText = answer.substring(0,index1);        				
-    					observerNotes = answer.substring(index1 + length1, index2);        								
+    					observerNotes = answer.substring(index1 + length1, index2);
+    					//remove the "/observernote/" label from cell.
+    					observerNotes = observerNotes.replace("/observernote/", "");
             		}
     				else //has no /observernote
     					qText = answer.substring(0,index2);
@@ -181,7 +186,7 @@ public class ResultParser {
     				result.setSurveyId(surveyId);
                 		
     				resultList.add(result);
-        		}    			       			
+        		}
     		}
     	}    	
     	return resultList;

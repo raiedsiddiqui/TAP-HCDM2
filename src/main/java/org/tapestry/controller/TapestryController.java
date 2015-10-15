@@ -2736,6 +2736,7 @@ public class TapestryController{
    		LinkedHashMap<String, String> res = ResultParser.getResults(xml);
    		List<DisplayedSurveyResult> displayedResults = ResultParser.getDisplayedSurveyResults(res);
    		
+   		//Substitute numbers with actual text answers
    		displayedResults = TapestryHelper.detailedResult(displayedResults);
 
    		model.addAttribute("results", displayedResults);
@@ -2973,6 +2974,12 @@ public class TapestryController{
    		} catch (Exception e) {
    			e.printStackTrace();
    		}
+        
+        StringBuffer sb = new StringBuffer();
+		User loggedInUser = TapestryHelper.getLoggedInUser(request);
+		sb.append(loggedInUser.getName());
+		sb.append("has Downloaded Research Data");		
+		userManager.addUserLog(sb.toString(), loggedInUser);
 		
 		return null;
 	}
