@@ -4429,10 +4429,16 @@ public class TapestryHelper {
 	           
 			StringBuffer sb = new StringBuffer();
 			sb.append("Satisfaction score =  ");
-			sb.append(sScore);
+			if (sScore == 0)
+				sb.append("No Data");
+			else
+				sb.append(sScore);
 			sb.append("\n");	
 			sb.append("Network score = ");
-			sb.append(nScore);
+			if (nScore == 0)
+				sb.append("No Data");
+			else
+				sb.append(nScore);
 			sb.append("\n");	            
 			sb.append("\n");
 	            
