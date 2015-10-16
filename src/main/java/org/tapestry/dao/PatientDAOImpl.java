@@ -91,7 +91,7 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, v1.organization, c.clinic_name FROM patients "
 				+ "AS p INNER JOIN volunteers AS v1 ON p.volunteer=v1.volunteer_ID INNER JOIN "
 				+ "volunteers AS v2 ON p.volunteer2=v2.volunteer_ID INNER JOIN clinics AS c ON p.clinic=c.clinic_ID "
-				+ "WHERE c.site_ID =? AND p.enabled=1";
+				+ "WHERE c.site_ID =? AND p.enabled=1 ORDER BY LENGTH (research_ID), research_ID";
 		
 		return getJdbcTemplate().query(sql, new Object[]{siteId}, new PatientMapper());
 	}
@@ -195,9 +195,11 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 	}
 
 	@Override
-	public List<String> getResearchIds() {
-		String sql = "SELECT research_ID FROM patients";
-		return getJdbcTemplate().queryForList(sql, String.class);		 
+	//Get Research ID by SITE
+	public List<String> getResearchIds(int siteId) {		
+		String sql="select research_ID from patients INNER JOIN clinics ON patients.clinic=clinics.clinic_ID where site_ID=?";		
+		return getJdbcTemplate().queryForList(sql, String.class, siteId);
+		
 	}
 
 	class PatientMapper implements RowMapper<Patient> {

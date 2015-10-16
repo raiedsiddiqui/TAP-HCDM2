@@ -758,7 +758,7 @@ public class TapestryController{
 			clinics = organizationManager.getClinicsBySite(loggedInUser.getSite());			
 		model.addAttribute("clinics", clinics);
 		
-		List<String> existResearchIds = patientManager.getResearchIds();
+		List<String> existResearchIds = patientManager.getResearchIds(loggedInUser.getSite());
 		existResearchIds.removeAll(Collections.singleton(""));
 		String ids = existResearchIds.toString().trim();
 		model.addAttribute("researchIds", ids);
@@ -817,8 +817,7 @@ public class TapestryController{
 		Volunteer v1 = volunteerManager.getVolunteerById(vId1);
 		Volunteer v2 = volunteerManager.getVolunteerById(vId2);
 		
-		if (TapestryHelper.isMatchVolunteer(v1, v2))
-		{
+		
 			p.setFirstName(request.getParameter("firstname").trim());
 			p.setLastName(request.getParameter("lastname").trim());
 			if(request.getParameter("preferredname") != "") 
@@ -879,18 +878,29 @@ public class TapestryController{
     			String documentId = surveyManager.assignSurvey(sr);
     			blankSurvey.setDocumentId(documentId);   
 	   		}
+
+	   	if (TapestryHelper.isMatchVolunteer(v1, v2))
+		{
 	   		model.addAttribute("createPatientSuccessfully",true);
 	   		TapestryHelper.loadPatientsAndVolunteers(model, volunteerManager, patientManager,  organizationManager,request);
-	   		
-	        return "admin/view_clients";
-		}
-		else
-		{			
+	   	}	
+	        
+	   	//If there is a mismatch in Volunteer experience level, send a warning message. 
+	    if (!TapestryHelper.isMatchVolunteer(v1, v2))
+		{
 			model.addAttribute("misMatchedVolunteer",true);
 			TapestryHelper.loadPatientsAndVolunteers(model, volunteerManager, patientManager,  organizationManager,request);
-			
-			return "admin/view_clients";
 		}
+
+		return "admin/view_clients";
+//OLD CODE that did not allow for volunteer pairing with wrong exp level
+//		else
+//		{			
+//			model.addAttribute("misMatchedVolunteer",true);
+//			TapestryHelper.loadPatientsAndVolunteers(model, volunteerManager, patientManager,  organizationManager,request);
+//			
+//			return "admin/view_clients";
+//		}
 	}
    	
    	@RequestMapping(value="/edit_patient/{id}", method=RequestMethod.GET)
@@ -2742,6 +2752,7 @@ public class TapestryController{
    		else
    			site = loggedInUser.getSite();
    		
+   		//Substitute numbers with actual text answers
    		if (site == 3)//UBC
    			displayedResults = TapestryHelper.getDetailedAnswerForUBCSurveys(displayedResults);
    		else
@@ -2978,6 +2989,12 @@ public class TapestryController{
    		} catch (Exception e) {
    			e.printStackTrace();
    		}
+        
+        StringBuffer sb = new StringBuffer();
+		User loggedInUser = TapestryHelper.getLoggedInUser(request);
+		sb.append(loggedInUser.getName());
+		sb.append("has Downloaded Research Data");		
+		userManager.addUserLog(sb.toString(), loggedInUser);
 		
 		return null;
 	}

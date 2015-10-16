@@ -125,9 +125,10 @@ public interface PatientDAO {
 	
 	/**
 	 * Retrieve all exist research IDs
+	 * @param siteId 
 	 * @return ids
 	 */
-	public List<String> getResearchIds();
+	public List<String> getResearchIds(int siteId);
 	
 	/**
 	 * 

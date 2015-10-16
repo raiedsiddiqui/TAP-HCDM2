@@ -146,7 +146,7 @@ public interface PatientManager {
 	 * @return a list of ids
 	 */
 	@Transactional
-	public List<String> getResearchIds();
+	public List<String> getResearchIds(int siteId);
 	
 	/**
 	 * 
