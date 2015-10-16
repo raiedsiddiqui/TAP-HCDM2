@@ -153,10 +153,8 @@
 	</c:if>
 	<h2>Surveys</h2> 
 	<a style="float:right" class="btn btn-primary" href="<c:url value="/go_assign_survey/${patient.patientID}"/>">Assign Survey</a> 
-	.
-	<c:if test="${showReport}">
-		<a style="float:right" class="btn btn-primary" href="<c:url value="/download_clientSurveyReport/${patient.patientID}?name=${patient.displayName}"/>">Download Report</a>
-	</c:if>
+	<a style="float:right" class="btn btn-primary" href="<c:url value="/download_clientSurveyReport/${patient.patientID}?name=${patient.displayName}"/>">Download Report</a>
+	
 
 	<table  class="table table-striped" width="970" border="1">
 		<tr>
