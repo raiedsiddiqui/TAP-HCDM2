@@ -283,6 +283,8 @@ public interface AppointmentDAO {
      * @param time
      * @return
      */
-    public boolean hasAppointment(int volunteerId, String time);
+    public boolean hasAppointmentByVolunteer(int volunteerId, String time);
+    
+    public boolean hasAppointmentByPatient(int patientId, String time);
 
 }

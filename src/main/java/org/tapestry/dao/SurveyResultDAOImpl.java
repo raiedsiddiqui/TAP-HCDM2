@@ -48,7 +48,7 @@ public class SurveyResultDAOImpl extends JdbcDaoSupport implements SurveyResultD
 		String sql = "SELECT survey_results.*, surveys.title, surveys.description, patients.firstname, patients.lastname "
 				+ "FROM survey_results INNER JOIN surveys ON survey_results.survey_ID = surveys.survey_ID INNER JOIN patients"
 				+ " ON survey_results.patient_ID=patients.patient_ID WHERE survey_results.patient_ID=? AND"
-				+ " survey_results.completed = 1 ORDER BY survey_results.startDate ";
+				+ " survey_results.completed = 1 ORDER BY survey_results.survey_ID ";
 		List<SurveyResult> results = getJdbcTemplate().query(sql, new Object[]{patientId}, new SurveyResultMapper());
 		
 		return results;
@@ -335,7 +335,14 @@ public class SurveyResultDAOImpl extends JdbcDaoSupport implements SurveyResultD
 		String sql = "DELETE FROM volunteer_survey_results WHERE result_ID=?";
 		getJdbcTemplate().update(sql, id);
 	}
-	
+
+	@Override
+	public int getSiteBySurveyResultID(int surveyResultId) {
+		String sql = "SELECT st.site from survey_results As sr INNER JOIN surveys AS st ON st.survey_ID= sr.survey_ID WHERE sr.result_ID=?";
+		return getJdbcTemplate().queryForInt(sql, new Object[]{surveyResultId});
+	}
+
+
 	class VolunteerSurveyResultMapper implements RowMapper<SurveyResult> {
 		public SurveyResult mapRow(ResultSet rs, int rowNum) throws SQLException{
 			SurveyResult sr = new SurveyResult();
@@ -363,6 +370,5 @@ public class SurveyResultDAOImpl extends JdbcDaoSupport implements SurveyResultD
 			return sr;
 		}
 	}
-
 
 }

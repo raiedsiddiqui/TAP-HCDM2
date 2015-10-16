@@ -112,7 +112,7 @@
 		</table>
  
 	<h2>Upcoming Visits</h2>
-	<a href="<c:url value="/book_appointment"/>" class="btn btn-primary" style="float:right">Book Appointment</a>	
+	<a href="<c:url value="/book_appointment/${patient.patientID}"/>" class="btn btn-primary" style="float:right">Book Appointment</a>	
 	<table  class="table table-striped" width="970" border="1">
 		<tr>			
 			<th width="500">Visit Date</th>			

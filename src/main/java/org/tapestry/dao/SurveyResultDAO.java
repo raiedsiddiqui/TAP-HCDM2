@@ -210,4 +210,11 @@ public interface SurveyResultDAO {
 	 */
 	public void markAsCompleteForVolunteerSurvey(int id);
 	
+	/**
+	 * 
+	 * @param surveyResultId
+	 * @return
+	 */
+	public int getSiteBySurveyResultID(int surveyResultId);
+	
 }

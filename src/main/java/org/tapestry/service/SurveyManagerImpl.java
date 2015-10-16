@@ -338,6 +338,11 @@ public class SurveyManagerImpl implements SurveyManager {
 		surveyResultDao.deleteVolunteerSurvey(id);		
 	}
 
+	@Override
+	public int getSiteBySurveyResultID(int surveyResultId) {		
+		return surveyResultDao.getSiteBySurveyResultID(surveyResultId);
+	}
+
 	
 
 }

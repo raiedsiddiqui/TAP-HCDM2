@@ -411,5 +411,14 @@ public interface SurveyManager {
 	 */
 	@Transactional
 	public int countVolunteerSurveyResultsBySurveyId(int surveyId);
+	
+	
+	/**
+	 * 
+	 * @param surveyResultId
+	 * @return
+	 */
+	@Transactional
+	public int getSiteBySurveyResultID(int surveyResultId);
 
 }
