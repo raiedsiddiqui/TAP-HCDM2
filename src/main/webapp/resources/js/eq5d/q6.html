@@ -23,7 +23,7 @@
 		<p class="healthtoday">YOUR<br>HEALTH<br>TODAY<br><span id="score"> &nbsp;</span></p>
 	</div>
 	<div class="col-md-6">
-		<div id="awesome2" onchange="populate()"></div>
+		<div id="awesome2" onchange="populate();updateanswerval();"></div>
 	</div>
 </div>
 <div class="row">
@@ -38,12 +38,18 @@
 $(function populate() {
 // first we need a slider to work with
 var $slider2 = $("#awesome2").slider({ max: 100 , orientation: "vertical", slide: function( event, ui ) {
-                $( "#score" ).html( ui.value );
-                $("#answer").html(ui.value);
-            }});
-
+               $("#score").html( ui.value );
+               $("#answer").val(ui.value);
+			}});
+ 
 // and then we can apply pips to it!
 $slider2.slider("pips", { rest: "label" }).slider("float")  });
+
+$(function updateanswerval() {
+	$(".ui-slider-label").click(function(){
+		$("#answer").val($("#score").text());
+	});
+});
 </script>
 
 <script type="text/javascript" language="JavaScript">
@@ -61,7 +67,7 @@ $(document).ready(function(){
 	document.getElementById('observernote').style.display="none"
 	document.getElementById('answer').style.display="none"
 	document.getElementById('answer-buttons').style.bottom="auto"
-	document.getElementsByClassName('ui-slider-label').style.fontSize="15px"
+	// document.getElementsByClassName('ui-slider-label').style.fontSize="15px"
 	document.getElementById('eq5dcopyright').innerHTML="&#169; 2010 EuroQol GroupEQ-5D &#8482"
 });
 </script>
