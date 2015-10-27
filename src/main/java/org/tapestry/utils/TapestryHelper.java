@@ -4133,6 +4133,7 @@ public class TapestryHelper {
 		}				
 	}
 	
+	
 	public static void buildPDFReport(Map report, HttpServletResponse response, String displayName)
 	{				
 		String orignalFileName= displayName +"_report.pdf";
@@ -4205,6 +4206,7 @@ public class TapestryHelper {
 			e.printStackTrace();			
 		}				
 	}
+
 	public static void generateClientSurveyReport(int patientId, SurveyManager surveyManager, 
 			HttpServletResponse response, String name )
 	{
@@ -4219,7 +4221,6 @@ public class TapestryHelper {
 			buildEmptyReport(response, name);
 			return;
 		}
-		
 		SurveyResult sr;
 		DisplayedSurveyResult dsr;
 		for (int i = 0; i < surveyResultList.size(); i++)
@@ -4250,7 +4251,171 @@ public class TapestryHelper {
 			}
 		}	
 		buildPDFReport(tMap, response, name);
-	}	
+	}
+	static void buildPDFUBCReport(Map tMap, HttpServletResponse response, String displayName, int sScore, int nScore){
+		String orignalFileName= displayName +"_report.pdf";
+		String key, value;
+		try {
+			Document document = new Document();
+			document.setPageSize(PageSize.A4);
+			document.setMargins(36, 36, 60, 36);
+			document.setMarginMirroring(true);
+			response.setHeader("Content-Disposition", "outline;filename=\"" +orignalFileName+ "\"");
+			PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
+			//Font setup		
+			Font mFont = new Font(Font.FontFamily.HELVETICA, 12);		
+			Font blFont = new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD);
+			Font sFont = new Font(Font.FontFamily.HELVETICA, 9);	
+			Font imFont = new Font(Font.FontFamily.HELVETICA , 12, Font.ITALIC );		
+			//white font			
+			Font wbLargeFont = new Font(Font.FontFamily.HELVETICA  , 20, Font.BOLD);
+			wbLargeFont.setColor(BaseColor.WHITE);
+			Font wMediumFont = new Font(Font.FontFamily.HELVETICA , 16, Font.BOLD);
+			wMediumFont.setColor(BaseColor.WHITE);
+			
+			document.open(); 
+			
+			PdfPTable table = new PdfPTable(2);
+			table.setWidthPercentage(110);			
+			table.setWidths(new float[]{1f, 2f});
+			
+			PdfPCell cell = new PdfPCell(new Phrase("TAPESTRY REPORT: " + displayName, blFont));	
+			cell.setPadding(5);
+			cell.setColspan(2);
+			table.addCell(cell);			
+			document.add(table);
+			////
+			//Sumamary 
+			table = new PdfPTable(3);
+			table.setWidthPercentage(110);
+			table.setWidths(new float[]{1.2f, 2f, 2f});
+			cell = new PdfPCell(new Phrase("Summary of TAPESTRY Tools", wbLargeFont));
+			cell.setBackgroundColor(BaseColor.GRAY);
+			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setFixedHeight(28f);
+			cell.setColspan(3);
+			table.addCell(cell);
+	            
+			cell = new PdfPCell(new Phrase("DOMAIN", wMediumFont));
+			cell.setBackgroundColor(BaseColor.BLACK);
+			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setFixedHeight(28f);
+			table.addCell(cell);
+	            
+			cell = new PdfPCell(new Phrase("SCORE", wMediumFont));
+			cell.setBackgroundColor(BaseColor.BLACK);
+			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setFixedHeight(28f);
+			table.addCell(cell);
+	            
+			cell = new PdfPCell(new Phrase("DESCRIPTION", wMediumFont));
+			cell.setBackgroundColor(BaseColor.BLACK);
+			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setFixedHeight(28f);
+			table.addCell(cell);
+			            
+			cell = new PdfPCell(new Phrase("Social Support", mFont));	      
+			cell.setVerticalAlignment(Element.ALIGN_TOP);
+			cell.setMinimumHeight(55f);
+			table.addCell(cell);            
+	           
+			StringBuffer sb = new StringBuffer();
+			sb.append("Satisfaction score =  ");
+			if (sScore == 0)
+				sb.append("No Data");
+			else
+				sb.append(sScore);
+			sb.append("\n");	
+			sb.append("Network score = ");
+			if (nScore == 0)
+				sb.append("No Data");
+			else
+				sb.append(nScore);
+			sb.append("\n");	            
+			sb.append("\n");
+	            
+			cell = new PdfPCell(new Phrase(sb.toString(), imFont));
+			cell.setNoWrap(false);
+			table.addCell(cell);
+	            
+			Phrase p = new Phrase();	   
+			Chunk underline = new Chunk("Duke Social Support Index", mFont);
+			underline.setUnderline(0.1f, -1f); //0.1 thick, -1 y-location	  
+			p.add(underline); 	     
+			p.add(new Chunk("\n"));
+			p.add(new Chunk("(Score < 10 risk cut off), ranges from 6-18", sFont));
+	            
+			sb = new StringBuffer();
+			sb.append(" ");	            	            
+			sb.append("\n");
+			sb.append("Perceived satisfaction with behavioural or");
+			sb.append("\n");
+			sb.append("emotional support obtained from this network");
+			sb.append("\n");
+			p.add(new Chunk(sb.toString(), sFont));
+	            
+			underline = new Chunk("Network score range : 4-12", sFont);
+			underline.setUnderline(0.1f, -1f); //0.1 thick, -1 y-location
+			p.add(underline);
+	            	            
+			sb = new StringBuffer();
+			sb.append("\n");
+			sb.append("Size and structure of social network");
+			sb.append("\n");	
+			p.add(new Chunk(sb.toString(), sFont));
+	            
+			cell = new PdfPCell(p);
+			cell.setNoWrap(false);		
+			table.addCell(cell);	                  
+			document.add(table);
+			///
+			
+	   		Iterator iterator = tMap.entrySet().iterator();
+	   		while (iterator.hasNext()) {
+	   			Map.Entry mapEntry = (Map.Entry) iterator.next();
+	   			
+	   			key = mapEntry.getKey().toString();
+	   			value = mapEntry.getValue().toString();
+	   			
+	   			table = new PdfPTable(2);
+	   			table.setWidthPercentage(110);
+	   			if (key.startsWith("SurveyTitle "))
+	   			{
+	   				cell = new PdfPCell(new Phrase(value, wbLargeFont));
+	   				cell.setBackgroundColor(BaseColor.BLACK);	   
+	   				cell.setColspan(2);
+	   				cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+	   				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);	
+	   				cell.setPaddingBottom(5);
+		   			table.addCell(cell);
+	   			}
+	   			else
+	   			{
+	   				cell = new PdfPCell(new Phrase(key, mFont));		            	
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setPaddingBottom(5);
+					table.addCell(cell);	            	
+		            	
+					cell = new PdfPCell(new Phrase(value, mFont));
+					cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setPaddingBottom(5);
+					table.addCell(cell); 
+	   			}		 
+	   			document.add(table);
+	   		}
+	   		
+			document.close();
+		} catch (Exception e) {
+			e.printStackTrace();			
+		}	
+	}
+	
+	
 
 	public static void generateClientReportForUBC(int patientId, SurveyManager surveyManager, 
 			HttpServletResponse response, String name, boolean hasObservernotes)
@@ -4523,14 +4688,13 @@ public class TapestryHelper {
 						table.addCell(cell); 
 		   			}	
 	   			}	   				 
-	   			document.add(table);
-	   		}
+	   			document.add(table);}
 			document.close();
 		} catch (Exception e) {
 			e.printStackTrace();			
 		}	
+		
 	}
-
 	public static String removeString(String strSource, String strBeRemoved){		
 		int index = strSource.indexOf(strBeRemoved);
 		if (index != (-1))
@@ -4604,10 +4768,12 @@ public class TapestryHelper {
 		for (int i = 0; i< displayedResults.size(); i++)
 		{
 			qId = displayedResults.get(i).getQuestionId();
+
 			///////////////////////
 			if (displayedResults.get(i).getTitle().equals("Caregiver_FollowUp"))//since caregiver background and caregiver follow up have same questionIds
 				qId = qId.replace("B","F");
 			////////////////////////
+
 			answer = displayedResults.get(i).getQuestionAnswer();
 			key = qId+answer;
 			try{
@@ -4623,6 +4789,7 @@ public class TapestryHelper {
 		
 		return displayedResults;
 	}
+
 	//for Mcmaster, main site
 	public static List<DisplayedSurveyResult> getDetailedAnswerForSurveys(List<DisplayedSurveyResult> displayedResults)
 	{
@@ -4660,7 +4827,6 @@ public class TapestryHelper {
 		}		
 		return displayedResults;
 	}
-	
 	static void buildSummaryInReport(Document document, int sScore, int nScore)
 	{
 		try{

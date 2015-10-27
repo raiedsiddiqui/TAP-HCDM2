@@ -153,8 +153,7 @@
 		<a id="unCompleteVisitBtn" href="#modalUnCompleteVisit" role="button" class="btn btn-primary" data-toggle="modal">UnCompleted Visits</a>	
 	</c:if>
 	<h2>Surveys</h2> 
-	<a style="float:right" class="btn btn-primary" href="<c:url value="/go_assign_survey/${patient.patientID}"/>">Assign Survey</a> 
-	
+	<a style="float:right" class="btn btn-primary" href="<c:url value="/go_assign_survey/${patient.patientID}"/>">Assign Survey</a> 	
 	<a style="float:right" class="btn btn-primary" href="<c:url value="/download_clientSurveyReport/${patient.patientID}?name=${patient.displayName}&hasObservernotes=false"/>">Download Report</a><c:if test="${site == 3}"> 
 	<a style="float:right" class="btn btn-primary" href="<c:url value="/download_clientSurveyReport/${patient.patientID}?name=${patient.displayName}&hasObservernotes=true"/>">Download Report With Observernotes</a></c:if>
 
