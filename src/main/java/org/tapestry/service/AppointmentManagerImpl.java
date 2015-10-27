@@ -216,8 +216,13 @@ public class AppointmentManagerImpl implements AppointmentManager {
 	}
 
 	@Override
-	public boolean hasAppointment(int volunteerId, String time) {
-		return appointmentDao.hasAppointment(volunteerId, time);
+	public boolean hasAppointmentByVolunteer(int volunteerId, String time) {
+		return appointmentDao.hasAppointmentByVolunteer(volunteerId, time);
+	}
+	
+	@Override
+	public boolean hasAppointmentByPatient(int patientId, String time) {
+		return appointmentDao.hasAppointmentByPatient(patientId, time);
 	}
 
 }

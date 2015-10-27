@@ -395,7 +395,7 @@ public interface SurveyManager {
 	 * @return
 	 */
 	@Transactional
-	public List<SurveyResult> getVolunteerSurveyResultsById(int volunteerId);
+	public List<SurveyResult> getVolunteerSurveyResultsByVolunteerId(int volunteerId);
 	
 	/**
 	 * 
@@ -411,5 +411,14 @@ public interface SurveyManager {
 	 */
 	@Transactional
 	public int countVolunteerSurveyResultsBySurveyId(int surveyId);
+	
+	
+	/**
+	 * 
+	 * @param surveyResultId
+	 * @return
+	 */
+	@Transactional
+	public int getSiteBySurveyResultID(int surveyResultId);
 
 }

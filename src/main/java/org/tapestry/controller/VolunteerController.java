@@ -218,7 +218,7 @@ public class VolunteerController {
 		else
 			model.addAttribute("hasNoUpComingVisits", true);
 		
-		List<SurveyResult> surveys = surveyManager.getVolunteerSurveyResultsById(id);
+		List<SurveyResult> surveys = surveyManager.getVolunteerSurveyResultsByVolunteerId(id);
 		model.addAttribute("surveys", surveys);
 		
 		//get all activities
@@ -1367,7 +1367,8 @@ public class VolunteerController {
 		userManager.addUserLog(sb.toString(), user);
 		
    		int appointmentId = TapestryHelper.getAppointmentId(request);   		
-		return "redirect:/patient/" + patientId + "?appointmentId=" + appointmentId+"&showAuthenticationMsg="+ true;
+		return "redirect:"
+				+ "" + patientId + "?appointmentId=" + appointmentId+"&showAuthenticationMsg="+ true;
    	}
      
    	@RequestMapping(value="/authenticate_myoscar/{volunteerId}", method=RequestMethod.POST)
@@ -1453,18 +1454,22 @@ public class VolunteerController {
    		return "/admin/display_appointment";
    	}
    	
-   	@RequestMapping(value="/book_appointment", method=RequestMethod.GET)
-	public String goAddAppointment(SecurityContextHolderAwareRequestWrapper request, ModelMap model)
+   	
+   	@RequestMapping(value="/book_appointment/{patientId}", method=RequestMethod.GET)
+   	public String bookAppointment(@PathVariable("patientId") int id,SecurityContextHolderAwareRequestWrapper request, ModelMap model)
    	{
    		List<Patient> patients = new ArrayList<Patient>();
    		HttpSession  session = request.getSession();
    		User loggedInUser = TapestryHelper.getLoggedInUser(request, userManager);
+   		Patient patient = new Patient();
+   		if (id != 0)
+   			patient = patientManager.getPatientByID(id);
    		
 		if (session.getAttribute("unread_messages") != null)
 			model.addAttribute("unread", session.getAttribute("unread_messages"));
    		
    		if (request.isUserInRole("ROLE_USER"))
-   		{// for volunteer
+   		{// for volunteer   			
    			int loggedInVolunteer = TapestryHelper.getLoggedInVolunteerId(request);
    			patients = patientManager.getPatientsForVolunteer(loggedInVolunteer);   			
    			
@@ -1473,19 +1478,59 @@ public class VolunteerController {
    		}
    		else if (request.isUserInRole("ROLE_ADMIN"))// for central admin
    		{
-   			patients = TapestryHelper.getPatients(request, patientManager);
+   			if (id == 0)//Manage Appointment
+   				patients = TapestryHelper.getPatients(request, patientManager);
+   			else   			
+   				patients.add(patient);
    	   		model.addAttribute("patients", patients);
    	   		
    			return "/admin/admin_book_appointment";	 
    		}
    		else
    		{//for local admin/VC
-   			patients = TapestryHelper.getPatientsBySite(request, patientManager, loggedInUser.getSite());
+   			if (id==0)
+   				patients = TapestryHelper.getPatientsBySite(request, patientManager, loggedInUser.getSite());   			
+   			else
+   				patients.add(patient);
    	   		model.addAttribute("patients", patients);
    	   		
    			return "/admin/admin_book_appointment";	
    		}
-   	}
+   	}   	
+   	
+//   	@RequestMapping(value="/book_appointment", method=RequestMethod.GET)
+//	public String goAddAppointment(SecurityContextHolderAwareRequestWrapper request, ModelMap model)
+//   	{
+//   		List<Patient> patients = new ArrayList<Patient>();
+//   		HttpSession  session = request.getSession();
+//   		User loggedInUser = TapestryHelper.getLoggedInUser(request, userManager);
+//   		
+//		if (session.getAttribute("unread_messages") != null)
+//			model.addAttribute("unread", session.getAttribute("unread_messages"));
+//   		
+//   		if (request.isUserInRole("ROLE_USER"))
+//   		{// for volunteer
+//   			int loggedInVolunteer = TapestryHelper.getLoggedInVolunteerId(request);
+//   			patients = patientManager.getPatientsForVolunteer(loggedInVolunteer);   			
+//   			
+//   			model.addAttribute("patients", patients);
+//   			return "/volunteer/volunteer_book_appointment";
+//   		}
+//   		else if (request.isUserInRole("ROLE_ADMIN"))// for central admin
+//   		{
+//   			patients = TapestryHelper.getPatients(request, patientManager);
+//   	   		model.addAttribute("patients", patients);
+//   	   		
+//   			return "/admin/admin_book_appointment";	 
+//   		}
+//   		else
+//   		{//for local admin/VC
+//   			patients = TapestryHelper.getPatientsBySite(request, patientManager, loggedInUser.getSite());
+//   	   		model.addAttribute("patients", patients);
+//   	   		
+//   			return "/admin/admin_book_appointment";	
+//   		}
+//   	}
    	
    	@RequestMapping(value="/out_book_appointment", method=RequestMethod.GET)
 	public String outAppointment(SecurityContextHolderAwareRequestWrapper request, ModelMap model)
@@ -2330,33 +2375,13 @@ public class VolunteerController {
 				sb.append(patientName);
 				sb.append("'s hl7/PDF report is ready to be downloaded. ");			
 				                                                  
-				if (coordinators != null)			
-				{	//send message to all coordinators in the site					
-					for (int i = 0; i<coordinators.size(); i++)	
-						TapestryHelper.sendMessageToInbox("PDF/HL7 Report", sb.toString(), loggedInUser.getUserID(),
-								coordinators.get(i).getUserID(), messageManager);
-				}
-//				else{
-//					System.out.println("Can't find any coordinator in organization id# " + organizationId);
-//					logger.error("Can't find any coordinator in organization id# " + organizationId);
-//				}
-			}
-			else
-			{
-				//send alert to MRP
-				
-			}
-			
+				//send message to all coordinators in the site					
+				for (int i = 0; i<coordinators.size(); i++)	
+					TapestryHelper.sendMessageToInbox("PDF/HL7 Report", sb.toString(), loggedInUser.getUserID(),
+							coordinators.get(i).getUserID(), messageManager);
+
+			}			
 		}
-//		else //no alert
-//		{
-//			if (completed)
-//			{
-//				//generate report
-//				//send to MRP and message to patient in PHR
-//			}
-//	
-//		}
 		return "redirect:/";
 	}
 	

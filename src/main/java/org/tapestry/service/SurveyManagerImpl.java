@@ -304,8 +304,8 @@ public class SurveyManagerImpl implements SurveyManager {
 	}
 
 	@Override
-	public List<SurveyResult> getVolunteerSurveyResultsById(int volunteerId) {		
-		return surveyResultDao.getVolunteerSurveyResultsById(volunteerId);
+	public List<SurveyResult> getVolunteerSurveyResultsByVolunteerId(int volunteerId) {		
+		return surveyResultDao.getVolunteerSurveyResultsByVolunteerId(volunteerId);
 	}
 
 	@Override
@@ -336,6 +336,11 @@ public class SurveyManagerImpl implements SurveyManager {
 	@Override
 	public void deleteVolunteerSurvey(int id) {
 		surveyResultDao.deleteVolunteerSurvey(id);		
+	}
+
+	@Override
+	public int getSiteBySurveyResultID(int surveyResultId) {		
+		return surveyResultDao.getSiteBySurveyResultID(surveyResultId);
 	}
 
 	

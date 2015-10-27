@@ -327,6 +327,15 @@ public interface AppointmentManager {
 	 * @return
 	 */
 	@Transactional
-	public boolean hasAppointment(int volunteerId, String time);
+	public boolean hasAppointmentByVolunteer(int volunteerId, String time);
+	
+	/**
+	 * 
+	 * @param patientId
+	 * @param time
+	 * @return
+	 */
+	@Transactional
+	public boolean hasAppointmentByPatient(int patientId, String time);
 	
 }

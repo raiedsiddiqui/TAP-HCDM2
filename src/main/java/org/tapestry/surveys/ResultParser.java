@@ -135,32 +135,32 @@ public class ResultParser {
     		key = entry.getKey();        		
     		result = new DisplayedSurveyResult();  		
     		
-    		String seperator2 = "/answer/";
-    		int length2 = seperator2.length();	
+    		String separator2 = "/answer/";
+    		int length2 = separator2.length();	
     		
     		if (key.contains("surveyId"))
     		{
     			surveyId = entry.getValue();
-    			if (surveyId.indexOf(seperator2) != -1)
+    			if (surveyId.indexOf(separator2) != -1)
     				surveyId = surveyId.substring(length2);
     		}
     		//set question key, answer and observer notes
     		if (!key.contains("surveyId") && !key.equals("date") && !key.equals("title"))
     		{//all answer, observe note and question text are in the value of map  
-    			answer = entry.getValue();    	
-        			
+    			answer = entry.getValue();  
+    			
     			String separator1 = "/observernote/";
     			int index1 = answer.indexOf(separator1);
     			int length1 = separator1.length(); 
-    			int index2 = answer.indexOf(seperator2);
+    			int index2 = answer.indexOf(separator2);
     			
     			questionAnswer = answer.substring(index2 + length2);
     			if (!questionAnswer.startsWith("-"))//remove first non-question-answer pair, only information
     			{
     				if (index1 != -1)// has /observernote/...
     				{        				   
-    					qText = answer.substring(0,index1);        				
-    					observerNotes = answer.substring(index1 + length1, index2);        								
+    					qText = answer.substring(0,index1);   
+    					observerNotes = answer.substring(answer.lastIndexOf(separator1)+ length1, index2);
             		}
     				else //has no /observernote
     					qText = answer.substring(0,index2);
@@ -172,14 +172,17 @@ public class ResultParser {
     					if (qText.substring(0, 1).matches(regex))
     						qText = qText.substring(1);    						
     				}
+    				
+    				if(qText.contains("&rsquo;"))
+    					qText = qText.replace("&rsquo;", "'");
+    				
     				result.setQuestionId(key);
     				result.setQuestionAnswer(questionAnswer);
     				result.setObserverNotes(observerNotes);        	   
     				result.setTitle(title); 
     				result.setDate(date);
     				result.setQuestionText(qText);
-    				result.setSurveyId(surveyId);
-                		
+    				result.setSurveyId(surveyId);                		
     				resultList.add(result);
         		}    			       			
     		}

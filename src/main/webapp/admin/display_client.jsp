@@ -131,16 +131,17 @@
 			<th width="300">Visit #</th>
 			<th width="300"> Visit Date</th>		
 			<th>Assigned Volunteers</th>
-			<th>Report/PDF</th>
-			<th>Report/HL7</th>			
+			<c:if test="${site != 3}"> 
+				<th>Report/PDF</th>
+				<th>Report/HL7</th>		
+			</c:if>	
 		</tr>
 		<c:forEach items="${completedVisits}" var="cVistits">
 		<tr >
 			<td>${cVistits.appointmentID}</td>	
 			<td>${cVistits.date}</td>			
-			<td>${cVistits.volunteer},&nbsp &nbsp ${cVistits.partner}</td>		
-			
-			<c:if test="${showReport}">
+			<td>${cVistits.volunteer},&nbsp &nbsp ${cVistits.partner}</td>				
+			<c:if test="${site != 3}&&${showReport}">
 				<td><a href="<c:url value="/download_report/${patient.patientID}?appointmentId=${cVistits.appointmentID}"/>">DOWNLOAD</a> </td>
 				<td><a href="<c:url value="/generate_report_hl7/${patient.patientID}?appointmentId=${cVistits.appointmentID}"/>">DOWNLOAD</a> </td>
 				
@@ -154,8 +155,8 @@
 	<h2>Surveys</h2> 
 	<a style="float:right" class="btn btn-primary" href="<c:url value="/go_assign_survey/${patient.patientID}"/>">Assign Survey</a> 
 	
-	<a style="float:right" class="btn btn-primary" href="<c:url value="/download_clientSurveyReport/${patient.patientID}?name=${patient.displayName}"/>">Download Report</a>
-	
+	<a style="float:right" class="btn btn-primary" href="<c:url value="/download_clientSurveyReport/${patient.patientID}?name=${patient.displayName}&hasObservernotes=false"/>">Download Report</a><c:if test="${site == 3}"> 
+	<a style="float:right" class="btn btn-primary" href="<c:url value="/download_clientSurveyReport/${patient.patientID}?name=${patient.displayName}&hasObservernotes=true"/>">Download Report With Observernotes</a></c:if>
 
 	<table  class="table table-striped" width="970" border="1">
 		<tr>

@@ -43,7 +43,7 @@
 			<div class="col-md-3">
 				<a href="<c:url value="/go_scheduler"/>" class="btn btn-primary">Scheduler</a>
 		<!-- 		<a href="#bookAppointment" class="btn btn-primary" data-toggle="modal">Book Appointment</a>  -->
-		<a href="<c:url value="/book_appointment"/>" class="btn btn-primary">Book Appointment</a>
+		<a href="<c:url value="/book_appointment/0"/>" class="btn btn-primary">Book Appointment</a>
 			</div>
 		</div>
 		

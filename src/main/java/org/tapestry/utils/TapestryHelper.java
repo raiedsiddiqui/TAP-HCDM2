@@ -655,7 +655,7 @@ public class TapestryHelper {
 		{
 			availableTime = v.getAvailability();
 						
-			if (isAvailable(availableTime, time)&&(!aManager.hasAppointment(v.getVolunteerId(), dateTime)))
+			if (isAvailable(availableTime, time)&&(!aManager.hasAppointmentByVolunteer(v.getVolunteerId(), dateTime)))
 				vList.add(v);
 		}
 		return vList;
@@ -960,12 +960,8 @@ public class TapestryHelper {
 		model.addAttribute("fridayNull", fridayNull);	
 		
 		if (request.getSession().getAttribute("unread_messages") != null)
-			model.addAttribute("unread", request.getSession().getAttribute("unread_messages"));
-				
+			model.addAttribute("unread", request.getSession().getAttribute("unread_messages"));				
 	}
-	
-
-	
 	
 	// ==================== Survey =================================//
 	/**
@@ -1096,68 +1092,12 @@ public class TapestryHelper {
 				TapestryPHRSurvey blankSurvey = template;
 				blankSurvey.setQuestions(new ArrayList<SurveyQuestion>());// make blank survey
 				sr.setResults(SurveyAction.updateSurveyResult(blankSurvey));
-				surveyManager.assignSurvey(sr);
-				
+				surveyManager.assignSurvey(sr);				
 			}   			
-		}
-   		
+		}   		
    		session.setAttribute("assignSurveyTo", "C");
    	}
    	
-   	
-   	/**
-   	 * Assign selected surveys to selected clients
-   	 * @param surveyTemplates
-   	 * @param patientIds
-   	 * @param request
-   	 * @param surveyManager
-   	 * @throws JAXBException
-   	 * @throws DatatypeConfigurationException
-   	 * @throws Exception
-   	 */
-//   	public static void assignSurveysToClient(List<SurveyTemplate> surveyTemplates, int[] patientIds, 
-//   			SecurityContextHolderAwareRequestWrapper request, SurveyManager surveyManager) 
-//   					throws JAXBException, DatatypeConfigurationException, Exception{
-//		
-//		List<SurveyResult> surveyResults = surveyManager.getAllSurveyResults();
-//		
-//   		TapestrySurveyMap surveys = DoSurveyAction.getSurveyMapAndStoreInSession(request, surveyResults, surveyTemplates);
-//   		SurveyResult sr;
-//   		
-//   		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-//   		String startDate = sdf.format(new Date());   
-// 	
-//   		for(SurveyTemplate st: surveyTemplates) 
-//   		{
-//			List<TapestryPHRSurvey> specificSurveys = surveys.getSurveyListById(Integer.toString(st.getSurveyID()));
-//			
-//			SurveyFactory surveyFactory = new SurveyFactory();
-//			TapestryPHRSurvey template = surveyFactory.getSurveyTemplate(st);
-//			sr = new SurveyResult();
-//				
-//			for (int i = 0; i < patientIds.length; i++){
-//				sr.setPatientID(patientIds[i]);
-//				sr.setSurveyID(st.getSurveyID());
-//	            	
-//				//set today as startDate
-//				sr.setStartDate(startDate);	            	
-//				//if requested survey that's already done--removed if condition check, since a survey can be re-assign to a patient
-////				if (specificSurveys.size() < template.getMaxInstances() && 
-////						!isExistInSurveyResultList(surveyResults,st.getSurveyID(), patientIds[i]))
-////				{		    	
-//					TapestryPHRSurvey blankSurvey = template;
-//					blankSurvey.setQuestions(new ArrayList<SurveyQuestion>());// make blank survey
-//					sr.setResults(SurveyAction.updateSurveyResult(blankSurvey));
-//					String documentId = surveyManager.assignSurvey(sr);
-//					
-//					blankSurvey.setDocumentId(documentId);
-//					surveys.addSurvey(blankSurvey);
-//					specificSurveys = surveys.getSurveyListById(Integer.toString(st.getSurveyID())); //reload
-//	//	    	}
-//				
-//			}   			
-//		}
-//   	}
    	/**
    	 * Add new survey script
    	 * @param surveyId
@@ -1192,64 +1132,12 @@ public class TapestryHelper {
    					throws JAXBException, DatatypeConfigurationException, Exception{
    		try
    		{   			
-   			assignSurveysToClient(selectSurveyTemplats, patientIds, request, surveyManager);
- //  			assignSurveysToClient111(selectSurveyTemplats, patientIds, request, surveyManager);
+   			assignSurveysToClient(selectSurveyTemplats, patientIds, request, surveyManager);			
    			model.addAttribute("successful", true);
   		}catch (Exception e){
   			System.out.println("something wrong with assingn survey to client === " + e.getMessage());
   		} 
    	}
-   	
-   	
-   	/**
-   	 * Assign selected surveys to selected volunteer
-   	 * @param surveyTemplates
-   	 * @param patientIds
-   	 * @param request
-   	 * @param surveyManager
-   	 * @throws JAXBException
-   	 * @throws DatatypeConfigurationException
-   	 * @throws Exception
-   	 */
-//   	public static void assignSurveysToVolunteer(List<SurveyTemplate> surveyTemplates, int[] volunteerIds, 
-//   			SecurityContextHolderAwareRequestWrapper request, SurveyManager surveyManager) 
-//   					throws JAXBException, DatatypeConfigurationException, Exception{
-//		
-//		List<SurveyResult> surveyResults = surveyManager.getAllVolunteerSurveyResults();
-//		System.out.println("selected survey template  helper=== for volunteer" + surveyTemplates.get(0).getTitle());
-//		TapestrySurveyMap surveys = DoSurveyAction.getVolunteerSurveyMapAndStoreInSession(request, surveyResults, surveyTemplates);
-//   		SurveyResult sr;
-//   		
-//   		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-//   		String startDate = sdf.format(new Date());   
-//
-//   		for(SurveyTemplate st: surveyTemplates) 
-//   		{
-//			List<TapestryPHRSurvey> specificSurveys = surveys.getSurveyListById(Integer.toString(st.getSurveyID()));
-//			
-//			SurveyFactory surveyFactory = new SurveyFactory();
-//			TapestryPHRSurvey template = surveyFactory.getSurveyTemplate(st);
-//			sr = new SurveyResult();
-//				
-//			for (int i = 0; i < volunteerIds.length; i++)
-//			{
-//				sr.setVolunteerID(volunteerIds[i]);
-//				sr.setSurveyID(st.getSurveyID());
-//	            	
-//				//set today as startDate
-//				sr.setStartDate(startDate);	            	
-//			    	
-//				TapestryPHRSurvey blankSurvey = template;
-//				blankSurvey.setQuestions(new ArrayList<SurveyQuestion>());// make blank survey
-//				sr.setResults(SurveyAction.updateSurveyResult(blankSurvey));
-//				String documentId = surveyManager.assignVolunteerSurvey(sr);
-//					
-//				blankSurvey.setDocumentId(documentId);
-//				surveys.addSurvey(blankSurvey);
-//				specificSurveys = surveys.getSurveyListById(Integer.toString(st.getSurveyID())); //reload				
-//			}   			
-//		}
-//   	}
    	
    	public static void assignSurveysToVolunteer(List<SurveyTemplate> surveyTemplates, int[] volunteerIds, 
    			SecurityContextHolderAwareRequestWrapper request, SurveyManager surveyManager) 
@@ -1271,11 +1159,8 @@ public class TapestryHelper {
 			{
 				surveyFactory.reloadSurveyTemplate(st);
 				template = surveyFactory.getSurveyTemplate(st);
-			}
-			
-			
-			sr = new SurveyResult();
-			
+			}			
+			sr = new SurveyResult();			
 			for (int i = 0; i < volunteerIds.length; i++)
 			{
 				sr.setVolunteerID(volunteerIds[i]);
@@ -1289,11 +1174,8 @@ public class TapestryHelper {
 				sr.setResults(SurveyAction.updateSurveyResult(blankSurvey));
 				surveyManager.assignVolunteerSurvey(sr);
 			}   			
-		}
-   		
-   		
-   		session.setAttribute("assignSurveyTo", "V");
-   		
+		}   		
+   		session.setAttribute("assignSurveyTo", "V");   		
    	}
    	////
   	/**
@@ -1311,16 +1193,13 @@ public class TapestryHelper {
    			SecurityContextHolderAwareRequestWrapper request,ModelMap model, SurveyManager surveyManager) 
    					throws JAXBException, DatatypeConfigurationException, Exception{
    		try
-   		{   				
-   		//	assignSurveysToVolunteer(selectSurveyTemplats, volunteerIds, request, surveyManager);
+   		{    		
    			assignSurveysToVolunteer(selectSurveyTemplats, volunteerIds, request, surveyManager);
    			model.addAttribute("successful", true);
   		}catch (Exception e){
   			System.out.println("something wrong with assingn survey to volunteer === " + e.getMessage());
   		} 
    	}
-   	
-   	
    	////
    	/**
    	 * check if all surveys have been finished
@@ -1405,7 +1284,6 @@ public class TapestryHelper {
 				System.out.println("Error" + e);
 			}
 		}
-
 		return(results);
 	}
 	
@@ -4115,16 +3993,7 @@ public class TapestryHelper {
 								rData.setDla7(displayedResults.get(6).getQuestionAnswer());
 								rData.setDla7a(displayedResults.get(7).getQuestionAnswer());
 					 			break;
-					 }			
-//					rData.setDla1(displayedResults.get(0).getQuestionAnswer());
-//					rData.setDla2(displayedResults.get(1).getQuestionAnswer());
-//					rData.setDla3(displayedResults.get(2).getQuestionAnswer());
-//					rData.setDla4(displayedResults.get(3).getQuestionAnswer());
-//					rData.setDla5(displayedResults.get(4).getQuestionAnswer());
-//					rData.setDla6(displayedResults.get(5).getQuestionAnswer());
-//					rData.setDla7(displayedResults.get(6).getQuestionAnswer());
-//					if (displayedResults.size() > 7)
-//						rData.setDla7a(displayedResults.get(7).getQuestionAnswer());
+					 }	
 				}
 			}			
 			researchDatas.add(rData);
@@ -4174,6 +4043,11 @@ public class TapestryHelper {
 		Map<String, String> surveyResultMap = new LinkedHashMap<String, String>();
 		//Survey---  		
 		List<SurveyResult> surveyResultList = surveyManager.getCompletedVolunteerSurveys(volunteerId);
+		if (surveyResultList.size() == 0)
+		{
+			buildEmptyReport(response, name);
+			return;
+		}
 		SurveyResult sr;
 		String qText;
 		for (int i = 0; i < surveyResultList.size(); i++)
@@ -4205,11 +4079,7 @@ public class TapestryHelper {
 	   				break;
 	   			}
 	   			qText = removeObserverNotes(qText);
-	   			
-//	   			if (qText.startsWith("Question "))
-//	   				qText = qText.substring(16);
-	   			questionTextList.set(j,qText);
-	 
+	   			questionTextList.set(j,qText);	 
 	   		}
 	   		qSize = questionTextList.size();
 	   		if (qSize == qList.size())
@@ -4223,7 +4093,44 @@ public class TapestryHelper {
 	   			System.out.println("Please check survey result, number of question text is not match with answer");	
 		}
 		buildPDFReport(surveyResultMap, response, name);
-//		buildVolunteerPDFReport(surveyResultMap, response, name);
+	}
+	
+	static void buildEmptyReport(HttpServletResponse response, String displayName)
+	{
+		String orignalFileName= displayName +"_report.pdf";
+		try {
+			Document document = new Document();
+			document.setPageSize(PageSize.A4);
+			document.setMargins(36, 36, 60, 36);
+			document.setMarginMirroring(true);
+			response.setHeader("Content-Disposition", "outline;filename=\"" +orignalFileName+ "\"");
+			PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
+			//Font setup		
+			Font mFont = new Font(Font.FontFamily.HELVETICA, 12);		
+			Font blFont = new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD);	
+				
+			document.open(); 
+			//Volunteer info
+			PdfPTable table = new PdfPTable(2);
+			table.setWidthPercentage(100);
+			table.setWidths(new float[]{1f, 2f});
+			
+			PdfPCell cell = new PdfPCell(new Phrase("TAPESTRY REPORT: " + displayName, blFont));	
+			cell.setPadding(5);
+			cell.setColspan(2);
+			table.addCell(cell);			
+			document.add(table);	
+			
+			table = new PdfPTable(1);
+   			table.setWidthPercentage(100);
+   			cell = new PdfPCell(new Phrase("No Data", mFont));
+   			table.addCell(cell);	
+   			document.add(table);
+	   	
+			document.close();
+		} catch (Exception e) {
+			e.printStackTrace();			
+		}				
 	}
 	
 	public static void buildPDFReport(Map report, HttpServletResponse response, String displayName)
@@ -4298,119 +4205,332 @@ public class TapestryHelper {
 			e.printStackTrace();			
 		}				
 	}
-	
 	public static void generateClientSurveyReport(int patientId, SurveyManager surveyManager, 
 			HttpServletResponse response, String name )
-	{	
-		String xml, qText;
-		List<String> qList;
-   		List<String> questionTextList;
-   		LinkedHashMap<String, String> mSurvey;
-		Map<String, String> surveyResultMap = new LinkedHashMap<String, String>(); 		
-		List<SurveyResult> surveyResultList = surveyManager.getCompletedSurveysByPatientID(patientId);		
+	{
+		String xml, socialLifeTitle="";
+		List<String> qList = new ArrayList<String>();
+   		LinkedHashMap<String, String> mSurvey;	
+		Map<String, String> tMap = new LinkedHashMap<String, String>(); 		
+		List<SurveyResult> surveyResultList = surveyManager.getCompletedSurveysByPatientID(patientId);	
+		
+		if (surveyResultList.size() == 0)
+		{
+			buildEmptyReport(response, name);
+			return;
+		}
+		
 		SurveyResult sr;
-				
+		DisplayedSurveyResult dsr;
 		for (int i = 0; i < surveyResultList.size(); i++)
 		{
 			sr = new SurveyResult();
 			sr = surveyResultList.get(i);
 			String title = sr.getSurveyTitle();
-			surveyResultMap.put("SurveyTitle " + (i+1), title);
+			tMap.put("SurveyTitle " + (i+1), title);
 			try{
 	   			xml = new String(sr.getResults(), "UTF-8");
 	   		} catch (Exception e) {
 	   			xml = "";
 	   		}
 			mSurvey = ResultParser.getResults(xml);
-			qList = new ArrayList<String>();
-			qList = TapestryHelper.getQuestionList(mSurvey);
-	   		questionTextList = new ArrayList<String>();	   		
-	   		questionTextList = ResultParser.getSurveyQuestions(xml);  
+			
+			if (title.equals(socialLifeTitle))
+				qList = getQuestionList(mSurvey);
+				
+			List<DisplayedSurveyResult> displayedResults = ResultParser.getDisplayedSurveyResults(mSurvey);
 	   		
-	   		if (title.equalsIgnoreCase("Goals"))
-	   		{
-	   			for (int m = 0; m<questionTextList.size(); m++)
-		   		{
-		   			qText = questionTextList.get(m);
-		   			qText = removeString(qText, "<script");
-		   			qText = removeString(qText, "<span");
-		   			qText = removeString(qText, "<!--");
-		   			
-		   			questionTextList.set(m, qText);
-		   		}
-	   		}	   		
-	   		if (title.equals("EQ5D"))
-	   		{
-	   			int size = questionTextList.size();
-	   			for (int m = 0; m < size; m++)
-		   		{
-		   			qText = questionTextList.get(m);
-		   			qText = removeString(qText, "<script");
-		   			qText = replaceString(qText, "<div id=\"eq5dheader\">");
-		   			qText = replaceString(qText, "<div id=\"eq5dtitle\" style=\"float:left\">");
-		   			qText = replaceString(qText, "</div>");
-				   			
-		   			questionTextList.set(m, qText);
-		   		}
-	   			questionTextList.set(size-2, "You Health Today");	   	
-	   			questionTextList.remove(size-1);
-	   					
-	   		}
-	   		else 
-	   			questionTextList.remove(0);
-	   			   		
-	   		int qSize = questionTextList.size();
-	   		for (int j=0; j<qSize; j++)
-	   		{
-	   			qText = questionTextList.get(j);
-	   			if (qText.contains("Press NEXT to save"))
-	   			{
-	   				questionTextList.remove(j);
-	   				break;
-	   			}
-	   			qText = removeObserverNotes(qText);
-	   			
-//	   			if (qText.startsWith("Question "))
-//	   				qText = qText.substring(16);
-	   			questionTextList.set(j,qText);	 
-	   		}
-	   		
-	   		
-	   		
-	   		if (sr.getSurveyTitle().equals("Goals on server"))
-	   		{
-	   			System.out.println("size of text === "+questionTextList.size() );
-		   		System.out.println("size of ans === "+qList.size() );
-	   			for (int n = 0; n<questionTextList.size(); n++)
-	   				System.out.println("text is === "+ questionTextList.get(n));
-	   			
-	   			for (int n = 0; n<qList.size(); n++)
-	   				System.out.println("answer is === "+ qList.get(n));
-	   		}
-	   		qSize = questionTextList.size();
-	   		if (qSize == qList.size())
-	   		{
-	   			if (title.equalsIgnoreCase("Goals"))
-		   		{
-	   				String answer;
-	   				for (int j = 0; j < qList.size(); j++)
-	   				{
-	   					answer = qList.get(j);	
-	   					answer = removeString(answer, "-------");
-	   					answer = answer.replaceAll("goal\\d\\w", " ");
-	   					answer = answer.replaceAll("<br>", " \n ");
-	   					qList.set(j, answer);	   					
-	   				}
-		   		}
-	   			for (int m=0; m<qSize; m++)
-	   				surveyResultMap.put(questionTextList.get(m), qList.get(m));
-	   		}
-	   		else
-	   			System.out.println("Please check survey result, number of question text is not match with answer");	
+			displayedResults = getDetailedAnswerForSurvey(displayedResults, "mainSurveys.properties");				
+			for (int j =0; j<displayedResults.size(); j++)
+			{
+				dsr = new DisplayedSurveyResult();
+				dsr = displayedResults.get(j);	
+				
+				tMap.put(dsr.getQuestionText(), dsr.getQuestionAnswer());
+			}
 		}	
-		buildPDFReport(surveyResultMap, response, name);
+		buildPDFReport(tMap, response, name);
+	}	
+
+	public static void generateClientReportForUBC(int patientId, SurveyManager surveyManager, 
+			HttpServletResponse response, String name, boolean hasObservernotes)
+	{
+		String xml, socialLifeTitle="";
+		List<String> qList = new ArrayList<String>();
+   		LinkedHashMap<String, String> mSurvey;	
+   		List<DisplayedSurveyResult> displayedResults;
+		Map<String, String> tMap = new LinkedHashMap<String, String>(); 		
+		List<SurveyResult> surveyResultList = surveyManager.getCompletedSurveysByPatientID(patientId);	
+		if (surveyResultList.size() == 0)
+		{
+			buildEmptyReport(response, name);
+			return;
+		}
+		SurveyResult sr;
+		int satisfactionScore=0,  networkScore=0;
+		//get social life survey title from properties file
+		try{
+			socialLifeTitle = getProperties("ubcSurveys.properties", "socialLife_survey");
+		}catch (Exception e)
+		{
+			System.out.println("===========Has problem to read ubcSurveys.properties file============");
+		}		
+		for (int i = 0; i < surveyResultList.size(); i++)
+		{
+			sr = new SurveyResult();
+			sr = surveyResultList.get(i);
+			String title = sr.getSurveyTitle();
+			tMap.put("SurveyTitle " + (i+1), title);
+			try{
+	   			xml = new String(sr.getResults(), "UTF-8");
+	   		} catch (Exception e) {
+	   			xml = "";
+	   		}
+			mSurvey = ResultParser.getResults(xml);
+			
+			if (title.equals(socialLifeTitle))
+				qList = getQuestionList(mSurvey);
+				
+			displayedResults = ResultParser.getDisplayedSurveyResults(mSurvey);	   		
+			displayedResults = getDetailedAnswerForUBCSurveys(displayedResults);			
+			DisplayedSurveyResult dsr;
+			for (int j =0; j<displayedResults.size(); j++)
+			{
+				dsr = new DisplayedSurveyResult();
+				dsr = displayedResults.get(j);	
+				
+				if (hasObservernotes)
+				{
+					tMap.put(dsr.getQuestionText(), dsr.getQuestionAnswer()+ "||"+dsr.getObserverNotes());
+					System.out.println("value= "+ dsr.getQuestionAnswer()+ "||"+dsr.getObserverNotes());
+				}
+				else
+					tMap.put(dsr.getQuestionText(), dsr.getQuestionAnswer());
+			}
+		}		
+		if (qList != null && qList.size()>0)
+		{
+			int socialSupportSize = qList.size();
+			if ((qList != null)&&(socialSupportSize>0))
+			{
+				satisfactionScore = CalculationManager.getScoreByQuestionsList(qList.subList(0, 6));				
+				networkScore = CalculationManager.getSocialSupportNetworkScore(qList.subList(7, socialSupportSize));
+			}
+		}
+		if (hasObservernotes)
+			buildPDFUBCReport(tMap, response, name, satisfactionScore, networkScore, true);
+		else
+			buildPDFUBCReport(tMap, response, name, satisfactionScore, networkScore, false);
 	}
 	
+	static void buildPDFUBCReport(Map tMap, HttpServletResponse response, String displayName, int sScore, int nScore, boolean hasObservernotes)
+	{
+		String orignalFileName;
+		if(hasObservernotes)
+			orignalFileName= displayName +"_withObserverNotes_report.pdf";
+		else
+			orignalFileName= displayName +"_report.pdf";
+		
+		String key, value;
+		try {
+			Document document = new Document();
+			document.setPageSize(PageSize.A4);
+			document.setMargins(36, 36, 60, 36);
+			document.setMarginMirroring(true);
+			response.setHeader("Content-Disposition", "outline;filename=\"" +orignalFileName+ "\"");
+			PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
+			//Font setup		
+			Font mFont = new Font(Font.FontFamily.HELVETICA, 12);		
+			Font blFont = new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD);
+			Font sFont = new Font(Font.FontFamily.HELVETICA, 9);	
+			Font imFont = new Font(Font.FontFamily.HELVETICA , 12, Font.ITALIC );		
+			//white font			
+			Font wbLargeFont = new Font(Font.FontFamily.HELVETICA  , 20, Font.BOLD);
+			wbLargeFont.setColor(BaseColor.WHITE);
+			Font wMediumFont = new Font(Font.FontFamily.HELVETICA , 16, Font.BOLD);
+			wMediumFont.setColor(BaseColor.WHITE);
+			
+			document.open(); 
+			
+			PdfPTable table = new PdfPTable(2);
+			table.setWidthPercentage(110);			
+			table.setWidths(new float[]{1f, 2f});
+			
+			PdfPCell cell = new PdfPCell(new Phrase("TAPESTRY REPORT: " + displayName, blFont));	
+			cell.setPadding(5);
+			cell.setColspan(2);
+			table.addCell(cell);			
+			document.add(table);			
+			//Sumamary 
+			table = new PdfPTable(3);
+			table.setWidthPercentage(110);
+			table.setWidths(new float[]{1.2f, 2f, 2f});
+			cell = new PdfPCell(new Phrase("Summary of TAPESTRY Tools", wbLargeFont));
+			cell.setBackgroundColor(BaseColor.GRAY);
+			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setFixedHeight(28f);
+			cell.setColspan(3);
+			table.addCell(cell);
+	            
+			cell = new PdfPCell(new Phrase("DOMAIN", wMediumFont));
+			cell.setBackgroundColor(BaseColor.BLACK);
+			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setFixedHeight(28f);
+			table.addCell(cell);
+	            
+			cell = new PdfPCell(new Phrase("SCORE", wMediumFont));
+			cell.setBackgroundColor(BaseColor.BLACK);
+			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setFixedHeight(28f);
+			table.addCell(cell);
+	            
+			cell = new PdfPCell(new Phrase("DESCRIPTION", wMediumFont));
+			cell.setBackgroundColor(BaseColor.BLACK);
+			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setFixedHeight(28f);
+			table.addCell(cell);
+			            
+			cell = new PdfPCell(new Phrase("Social Support", mFont));     
+			cell.setVerticalAlignment(Element.ALIGN_TOP);
+			cell.setMinimumHeight(55f);
+			table.addCell(cell);            
+	    		
+			StringBuffer sb = new StringBuffer();
+			sb.append("Satisfaction score =  ");
+			if (sScore == 0)
+				sb.append("No Data");
+			else
+				sb.append(sScore);
+			sb.append("\n");	
+			sb.append("Network score = ");
+			if (nScore == 0)
+				sb.append("No Data");
+			else
+				sb.append(nScore);
+			sb.append("\n");	            
+			sb.append("\n");
+	            
+			cell = new PdfPCell(new Phrase(sb.toString(), imFont));
+			cell.setNoWrap(false);
+			table.addCell(cell);
+	            
+			Phrase p = new Phrase();	   
+			Chunk underline = new Chunk("Duke Social Support Index", mFont);
+			underline.setUnderline(0.1f, -1f); //0.1 thick, -1 y-location	  
+			p.add(underline); 	     
+			p.add(new Chunk("\n"));
+			p.add(new Chunk("(Score < 10 risk cut off), ranges from 6-18", sFont));
+	            
+			sb = new StringBuffer();
+			sb.append(" ");	            	            
+			sb.append("\n");
+			sb.append("Perceived satisfaction with behavioural or");
+			sb.append("\n");
+			sb.append("emotional support obtained from this network");
+			sb.append("\n");
+			p.add(new Chunk(sb.toString(), sFont));
+	            
+			underline = new Chunk("Network score range : 4-12", sFont);
+			underline.setUnderline(0.1f, -1f); //0.1 thick, -1 y-location
+			p.add(underline);
+	            	            
+			sb = new StringBuffer();
+			sb.append("\n");
+			sb.append("Size and structure of social network");
+			sb.append("\n");	
+			p.add(new Chunk(sb.toString(), sFont));
+	            
+			cell = new PdfPCell(p);
+			cell.setNoWrap(false);		
+			table.addCell(cell);	                  
+			document.add(table);
+			///
+			String answer, observernotes;
+			int index;
+	   		Iterator iterator = tMap.entrySet().iterator();
+	   		while (iterator.hasNext()) {
+	   			Map.Entry mapEntry = (Map.Entry) iterator.next();
+	   			
+	   			key = mapEntry.getKey().toString();
+	   			value = mapEntry.getValue().toString();
+	   			if(hasObservernotes)
+	   			{
+	   				table = new PdfPTable(3);
+	   				table.setWidthPercentage(110);
+		   			if (key.startsWith("SurveyTitle "))
+		   			{
+		   				cell = new PdfPCell(new Phrase(value, wbLargeFont));
+		   				cell.setBackgroundColor(BaseColor.BLACK);	   
+		   				cell.setColspan(3);
+		   				cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+		   				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);	
+		   				cell.setPaddingBottom(5);
+			   			table.addCell(cell);
+		   			}
+		   			else
+		   			{
+		   				index = value.indexOf("||");
+		   				answer = value.substring(0, index);
+		   				observernotes = value.substring(index +2);
+		   				if (Utils.isNullOrEmpty(observernotes))
+		   					observernotes = "No Observer notes";
+		   				cell = new PdfPCell(new Phrase(key, mFont));		            	
+						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+						cell.setPaddingBottom(5);
+						table.addCell(cell);
+						
+		   				cell = new PdfPCell(new Phrase(answer, mFont));		            	
+						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+						cell.setPaddingBottom(5);
+						table.addCell(cell);	            	
+			            	
+						cell = new PdfPCell(new Phrase(observernotes, mFont));
+						cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+						cell.setPaddingBottom(5);
+						table.addCell(cell); 
+		   			}	
+	   			}
+	   			else
+	   			{
+	   				table = new PdfPTable(2);
+	   				table.setWidthPercentage(110);
+		   			if (key.startsWith("SurveyTitle "))
+		   			{
+		   				cell = new PdfPCell(new Phrase(value, wbLargeFont));
+		   				cell.setBackgroundColor(BaseColor.BLACK);	   
+		   				cell.setColspan(2);
+		   				cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+		   				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);	
+		   				cell.setPaddingBottom(5);
+			   			table.addCell(cell);
+		   			}
+		   			else
+		   			{
+		   				cell = new PdfPCell(new Phrase(key, mFont));		            	
+						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+						cell.setPaddingBottom(5);
+						table.addCell(cell);	            	
+			            	
+						cell = new PdfPCell(new Phrase(value, mFont));
+						cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+						cell.setPaddingBottom(5);
+						table.addCell(cell); 
+		   			}	
+	   			}	   				 
+	   			document.add(table);
+	   		}
+			document.close();
+		} catch (Exception e) {
+			e.printStackTrace();			
+		}	
+	}
+
 	public static String removeString(String strSource, String strBeRemoved){		
 		int index = strSource.indexOf(strBeRemoved);
 		if (index != (-1))
@@ -4431,8 +4551,7 @@ public class TapestryHelper {
 		Properties props = new Properties();
 		try{
 			props.load(TapestryHelper.class.getClassLoader().getResourceAsStream("tapestry.properties"));
-//			String sos = props.getProperty("Admin");
-//			System.out.println("admin === " + sos);
+			
 		}catch(IOException e)
 		{
 			e.printStackTrace();
@@ -4444,6 +4563,19 @@ public class TapestryHelper {
 		String value = "";
 		try{
 			props.load(TapestryHelper.class.getClassLoader().getResourceAsStream("tapestry.properties"));
+			value = props.getProperty(key);			
+		}catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+		return value;
+	}
+	
+	public static String getProperties(String file, String key) throws Exception{
+		Properties props = new Properties();
+		String value = "";
+		try{
+			props.load(TapestryHelper.class.getClassLoader().getResourceAsStream(file));
 			value = props.getProperty(key);			
 		}catch(IOException e)
 		{
@@ -4464,5 +4596,173 @@ public class TapestryHelper {
 		}
 		
 		return pList;
+	}
+	
+	public static List<DisplayedSurveyResult> getDetailedAnswerForUBCSurveys(List<DisplayedSurveyResult> displayedResults)
+	{
+		String qId, answer, key;
+		for (int i = 0; i< displayedResults.size(); i++)
+		{
+			qId = displayedResults.get(i).getQuestionId();
+			///////////////////////
+			if (displayedResults.get(i).getTitle().equals("Caregiver_FollowUp"))//since caregiver background and caregiver follow up have same questionIds
+				qId = qId.replace("B","F");
+			////////////////////////
+			answer = displayedResults.get(i).getQuestionAnswer();
+			key = qId+answer;
+			try{
+				answer = TapestryHelper.getProperties("ubcSurveys.properties", key);
+									
+				if (!Utils.isNullOrEmpty(answer))
+					displayedResults.get(i).setQuestionAnswer(answer);
+			}catch (Exception e)
+			{
+				System.out.println("===========Has problem to read ubcSurveys.properties file============");
+			}
+		}
+		
+		return displayedResults;
+	}
+	//for Mcmaster, main site
+	public static List<DisplayedSurveyResult> getDetailedAnswerForSurveys(List<DisplayedSurveyResult> displayedResults)
+	{
+		return getDetailedAnswerForSurvey(displayedResults, "mainSurveys.properties");
+	}
+	
+	static List<DisplayedSurveyResult> getDetailedAnswerForSurvey(List<DisplayedSurveyResult> displayedResults, String propertyFile)
+	{
+		String qId, answer, key, key1, qText;
+		DisplayedSurveyResult sr;
+		for (int i = 0; i< displayedResults.size(); i++)
+		{
+			sr = displayedResults.get(i);
+			qId = sr.getQuestionId();			
+			answer = sr.getQuestionAnswer();
+			key = qId+answer;
+			try{
+				answer = TapestryHelper.getProperties(propertyFile, key);
+									
+				if (!Utils.isNullOrEmpty(answer))
+					sr.setQuestionAnswer(answer);
+				
+				if (propertyFile.contains("mainSurveys.properties")&&(sr.getTitle().contains("3 month follow up")))
+				{
+					key1 = qId + "QuestionText";					
+					qText = TapestryHelper.getProperties(propertyFile, key1);
+					
+					if (!Utils.isNullOrEmpty(qText))
+						sr.setQuestionText(qText);
+				}
+			}catch (Exception e)
+			{
+				System.out.println("===========Has problem to read " + propertyFile + " file============");
+			}
+		}		
+		return displayedResults;
+	}
+	
+	static void buildSummaryInReport(Document document, int sScore, int nScore)
+	{
+		try{
+		Font sFont = new Font(Font.FontFamily.HELVETICA, 9);	
+		Font imFont = new Font(Font.FontFamily.HELVETICA , 12, Font.ITALIC );		
+		Font mFont = new Font(Font.FontFamily.HELVETICA, 12);	
+		Font wbLargeFont = new Font(Font.FontFamily.HELVETICA  , 20, Font.BOLD);
+		wbLargeFont.setColor(BaseColor.WHITE);
+		Font wMediumFont = new Font(Font.FontFamily.HELVETICA , 16, Font.BOLD);
+		wMediumFont.setColor(BaseColor.WHITE);
+	
+		
+		PdfPTable table = new PdfPTable(3);
+		table.setWidthPercentage(110);
+		table.setWidths(new float[]{1.2f, 2f, 2f});
+		PdfPCell cell = new PdfPCell(new Phrase("Summary of TAPESTRY Tools", wbLargeFont));
+		cell.setBackgroundColor(BaseColor.GRAY);
+		cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+		cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+		cell.setFixedHeight(28f);
+		cell.setColspan(3);
+		table.addCell(cell);
+            
+		cell = new PdfPCell(new Phrase("DOMAIN", wMediumFont));
+		cell.setBackgroundColor(BaseColor.BLACK);
+		cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+		cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+		cell.setFixedHeight(28f);
+		table.addCell(cell);
+            
+		cell = new PdfPCell(new Phrase("SCORE", wMediumFont));
+		cell.setBackgroundColor(BaseColor.BLACK);
+		cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+		cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+		cell.setFixedHeight(28f);
+		table.addCell(cell);
+            
+		cell = new PdfPCell(new Phrase("DESCRIPTION", wMediumFont));
+		cell.setBackgroundColor(BaseColor.BLACK);
+		cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+		cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+		cell.setFixedHeight(28f);
+		table.addCell(cell);
+		            
+		cell = new PdfPCell(new Phrase("Social Support", mFont));
+		cell.setBackgroundColor(BaseColor.LIGHT_GRAY);	      
+		cell.setVerticalAlignment(Element.ALIGN_TOP);
+		cell.setMinimumHeight(55f);
+		table.addCell(cell);            
+           
+		StringBuffer sb = new StringBuffer();
+		sb.append("Satisfaction score =  ");
+		sb.append(sScore);
+		sb.append("\n");	
+		sb.append("Network score = ");
+		sb.append(nScore);
+		sb.append("\n");	            
+		sb.append("\n");
+            
+		cell = new PdfPCell(new Phrase(sb.toString(), imFont));
+		cell.setBackgroundColor(BaseColor.LIGHT_GRAY);	 
+		cell.setNoWrap(false);
+		table.addCell(cell);
+            
+		Phrase p = new Phrase();	   
+		Chunk underline = new Chunk("Duke Social Support Index", mFont);
+		underline.setUnderline(0.1f, -1f); //0.1 thick, -1 y-location	  
+		p.add(underline); 	     
+		p.add(new Chunk("\n"));
+		p.add(new Chunk("(Score < 10 risk cut off), ranges from 6-18", sFont));
+            
+		sb = new StringBuffer();
+		sb.append(" ");	            	            
+		sb.append("\n");
+		sb.append("Perceived satisfaction with behavioural or");
+		sb.append("\n");
+		sb.append("emotional support obtained from this network");
+		sb.append("\n");
+		p.add(new Chunk(sb.toString(), sFont));
+            
+		underline = new Chunk("Network score range : 4-12", sFont);
+		underline.setUnderline(0.1f, -1f); //0.1 thick, -1 y-location
+		p.add(underline);
+            	            
+		sb = new StringBuffer();
+		sb.append("\n");
+		sb.append("Size and structure of social network");
+		sb.append("\n");	
+		p.add(new Chunk(sb.toString(), sFont));
+            
+		cell = new PdfPCell(p);
+		cell.setNoWrap(false);
+		cell.setBackgroundColor(BaseColor.LIGHT_GRAY);	 
+		table.addCell(cell);
+                  
+		document.add(table);
+		document.add(new Phrase("    "));	
+		document.newPage();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			
+		}	
 	}
 }

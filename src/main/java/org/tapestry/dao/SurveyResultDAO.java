@@ -161,7 +161,7 @@ public interface SurveyResultDAO {
 	 * Ordered by title ascending
 	 * @return a list of SurveyResult objects
 	 */
-	public List<SurveyResult> getVolunteerSurveyResultsById(int volunteerId);
+	public List<SurveyResult> getVolunteerSurveyResultsByVolunteerId(int volunteerId);
 	
 	/**
 	 * Uploads a volunteer survey template to the database
@@ -209,5 +209,12 @@ public interface SurveyResultDAO {
 	 * @param id
 	 */
 	public void markAsCompleteForVolunteerSurvey(int id);
+	
+	/**
+	 * 
+	 * @param surveyResultId
+	 * @return
+	 */
+	public int getSiteBySurveyResultID(int surveyResultId);
 	
 }
