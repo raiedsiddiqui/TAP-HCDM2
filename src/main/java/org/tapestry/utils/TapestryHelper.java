@@ -3412,10 +3412,12 @@ public class TapestryHelper {
 						observerNote = displayedResults.get(j).getObserverNotes();
 						if (!Utils.isNullOrEmpty(observerNote))
 						{
-							sb.append(displayedResults.get(j).getObserverNotes());			
-							sb.append("\n");
+							sb.append(displayedResults.get(j).getObserverNotes());	
+							sb.append(".");
+		//					sb.append("\n");
 				   		}
 				   	}
+					
 					rData.setdSS_notes_TO(sb.toString());
 				}									
 			}		
@@ -3436,7 +3438,7 @@ public class TapestryHelper {
 			   		xml = "";
 			   	}
 				res = ResultParser.getResults(xml);
-				displayedResults = ResultParser.getDisplayedSurveyResults(res);					
+				displayedResults = ResultParser.getDisplayedSurveyResults(res);		
 				
 				if (!displayedResults.isEmpty())
 				{//if answer is empty, format it to 0
@@ -3512,7 +3514,8 @@ public class TapestryHelper {
 						if (!Utils.isNullOrEmpty(observerNote))
 						{
 							sb.append(displayedResults.get(j).getObserverNotes());
-							sb.append("\n");
+							sb.append(".");
+			//				sb.append("\n");
 				   		}
 				   	}
 					rData.setGoalsDiscussion_notes_TO(sb.toString());			
@@ -3583,7 +3586,7 @@ public class TapestryHelper {
 			   		xml = "";
 			   	}
 				res = ResultParser.getResults(xml);
-				displayedResults = ResultParser.getDisplayedSurveyResults(res);		
+				displayedResults = ResultParser.getDisplayedSurveyResults(res);	
 				
 				if (!displayedResults.isEmpty())
 				{
@@ -3667,7 +3670,7 @@ public class TapestryHelper {
 			   		xml = "";
 			   	}
 				res = ResultParser.getResults(xml);
-				displayedResults = ResultParser.getDisplayedSurveyResults(res);		
+				displayedResults = ResultParser.getDisplayedSurveyResults(res);	
 				
 				if (!displayedResults.isEmpty())
 				{//if answer is empty, format it to 0
@@ -3703,6 +3706,7 @@ public class TapestryHelper {
 			   	}
 				res = ResultParser.getResults(xml);
 				displayedResults = ResultParser.getDisplayedSurveyResults(res);		
+				
 				
 				if (!displayedResults.isEmpty())
 				{//if answer is empty, format it to 0
@@ -3943,7 +3947,7 @@ public class TapestryHelper {
 			   		xml = "";
 			   	}
 				res = ResultParser.getResults(xml);
-				displayedResults = ResultParser.getDisplayedSurveyResults(res);		
+				displayedResults = ResultParser.getDisplayedSurveyResults(res);	
 				
 				if (!displayedResults.isEmpty())
 				{						
@@ -4930,5 +4934,18 @@ public class TapestryHelper {
 			e.printStackTrace();
 			
 		}	
+	}
+	
+	public static boolean checkAvailability(String dTime, int id, String type, AppointmentManager aManager)
+	{
+		boolean available = false;
+		
+		if (type == "V")//volunteer
+			available = aManager.hasAppointmentByVolunteer(id, dTime);
+		else
+			available = aManager.hasAppointmentByPatient(id, dTime);
+		
+		return available;
+		
 	}
 }

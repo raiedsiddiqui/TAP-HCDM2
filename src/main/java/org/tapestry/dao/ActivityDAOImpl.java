@@ -62,18 +62,6 @@ public class ActivityDAOImpl extends JdbcDaoSupport implements ActivityDAO {
 		
 		return getJdbcTemplate().query(sql, new Object[]{id}, new ActivityMapper());	
 	}
-	
-//	@Override
-//	public List<Activity> getDetailedLog(int patientId, int appointmentId){
-//		String sql = "SELECT DATE(activities.event_timestamp) AS date, activities.description, "
-//				+ "TIME(activities.start_Time) AS sTime, TIME(activities.end_Time) AS eTime, "
-//				+ "activities.organization, activities.event_ID, "
-//				+ "volunteers.firstname, volunteers.lastname  FROM activities "
-//				+ "INNER JOIN volunteers ON activities.volunteer=volunteers.volunteer_ID"
-//				+ " WHERE patient = ? AND appointment = ? ORDER BY event_timestamp";
-//				
-//		return getJdbcTemplate().query(sql, new Object[]{patientId, appointmentId}, new ActivityMapper());	
-//	}
 
 	@Override
 	public void logActivity(String description, int volunteer) {
@@ -91,8 +79,7 @@ public class ActivityDAOImpl extends JdbcDaoSupport implements ActivityDAO {
 	}
 
 	@Override
-	public void updateActivity(Activity activity) {
-	
+	public void updateActivity(Activity activity) {	
 		String sql = "UPDATE activities SET event_timestamp=?,description=?, start_Time=?, end_Time=? WHERE event_ID=?";
 		getJdbcTemplate().update(sql, activity.getDate(), activity.getDescription(),activity.getStartTime(), 
 				activity.getEndTime(), activity.getActivityId());	

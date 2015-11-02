@@ -409,4 +409,28 @@ CREATE TABLE IF NOT EXISTS volunteer_survey_results (
 	PRIMARY KEY (result_ID)
 );
 
+CREATE TABLE IF NOT EXISTS activities_admin (
+	event_ID INT UNSIGNED NOT NULL AUTO_INCREMENT, /*Using UNSIGNED INT allows for 4,294,967,295 events, which should be enough*/
+	event_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	start_time TIMESTAMP NULL,
+	end_time TIMESTAMP NULL,
+	userId SMALLINT UNSIGNED NOT NULL,		
+	description TEXT,
+	siteId SMALLINT UNSIGNED NOT NULL,
+	PRIMARY KEY (event_ID)
+);
+
+CREATE TABLE IF NOT EXISTS activities_admin_archive (
+	id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	deleted_event_ID INT UNSIGNED NOT NULL , /*Using UNSIGNED INT allows for 4,294,967,295 events, which should be enough*/
+	start_time TIMESTAMP NOT NULL DEFAULT 0,
+	end_time TIMESTAMP NOT NULL DEFAULT 0,
+	userId VARCHAR(255) NOT NULL,	
+	description TEXT,
+	siteId VARCHAR(255) NOT NULL,
+	deleted_by VARCHAR(255) NOT NULL,
+	deleted_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+	
+	PRIMARY KEY (id)
+);
 COMMIT;

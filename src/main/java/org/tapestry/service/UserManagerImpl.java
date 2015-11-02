@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tapestry.dao.ActivityDAO;
+import org.tapestry.dao.AdminActivityDAO;
 import org.tapestry.dao.UserDAO;
+import org.tapestry.objects.AdminActivity;
 import org.tapestry.objects.User;
 import org.tapestry.objects.UserLog;
 
@@ -19,6 +21,8 @@ public class UserManagerImpl implements UserManager {
 	private UserDAO userDao;
 	@Autowired
 	private ActivityDAO activityDAO;
+	@Autowired
+	private AdminActivityDAO adminActivityDAO;
 	
 	@Override
 	public int countActiveUsers() {
@@ -169,6 +173,51 @@ public class UserManagerImpl implements UserManager {
 	@Override
 	public List<UserLog> getGroupedUserLogssByPartialName(String partialName, int organizationId) {
 		return activityDAO.getGroupedUserLogssByPartialName(partialName, organizationId);
+	}
+
+	@Override
+	public List<AdminActivity> getAllAdminActivities(int userId) {
+		return adminActivityDAO.getAllAdminActivities(userId);
+	}
+
+	@Override
+	public List<AdminActivity> getAllAdminActivities() {
+		return adminActivityDAO.getAllAdminActivities();
+	}
+
+	@Override
+	public List<AdminActivity> getAllActivitiesForLocalAdmin(int siteId) {
+		return adminActivityDAO.getAllActivitiesForLocalAdmin(siteId);
+	}
+
+	@Override
+	public void logAdminActivity(String description, int userId) {
+		adminActivityDAO.logAdminActivity(description, userId);		
+	}
+
+	@Override
+	public void logAdminActivity(AdminActivity activity) {
+		adminActivityDAO.logAdminActivity(activity);
+	}
+
+	@Override
+	public void updateActivity(AdminActivity activity) {
+		adminActivityDAO.updateActivity(activity);		
+	}
+
+	@Override
+	public AdminActivity getAdminActivityById(int activityId) {
+		return adminActivityDAO.getAdminActivityById(activityId);
+	}
+
+	@Override
+	public void deleteAdminActivityById(int id) {
+		adminActivityDAO.deleteAdminActivityById(id);
+	}
+
+	@Override
+	public void archiveAdmindActivity(AdminActivity activity, String deletedBy) {
+		adminActivityDAO.archiveAdmindActivity(activity, deletedBy);		
 	}
 
 	

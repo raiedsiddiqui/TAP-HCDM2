@@ -3,6 +3,7 @@ package org.tapestry.service;
 import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
+import org.tapestry.objects.AdminActivity;
 import org.tapestry.objects.User;
 import org.tapestry.objects.UserLog;
 
@@ -201,6 +202,7 @@ public interface UserManager {
 	 * @param organizationId
 	 * @return number of user logs
 	 */
+	@Transactional
 	public int countEntriesByGroup(int organizationId);
 
 	/**
@@ -210,6 +212,7 @@ public interface UserManager {
 	 * @param organizationId
 	 * @return
 	 */
+	@Transactional
 	public List<UserLog> getUserLogsPageByGroup(int start, int n, int organizationId);
 	
 	/**
@@ -218,6 +221,7 @@ public interface UserManager {
 	 * @param organizationId
 	 * @return
 	 */
+	@Transactional
 	public List<UserLog> getGroupedUserLogssByPartialName(String partialName, int organizationId);	
 	
 	/**
@@ -225,6 +229,7 @@ public interface UserManager {
 	 * @param id
 	 * @return list of local admins from a site
 	 */
+	@Transactional
 	public List<User> getLocalAdminBySite(int id);	
 	
 	/**
@@ -232,5 +237,64 @@ public interface UserManager {
 	 * @param id
 	 * @return
 	 */
+	@Transactional
 	public List<User> getUserBySIte(int id);
+	
+	//admin journal/activity
+	@Transactional
+	public List<AdminActivity> getAllAdminActivities(int userId);
+	
+	@Transactional
+	public List<AdminActivity> getAllAdminActivities();
+	/**
+	 * 
+	 * @param id siteId
+	 * @return a list of admin activities by central Admin 
+	 */
+	@Transactional
+	public List<AdminActivity> getAllActivitiesForLocalAdmin(int siteId);	
+	/**
+	 * Log admin activity with description by admin
+	 * @param description
+	 * @param user
+	 */
+	@Transactional
+	public void logAdminActivity(String description, int userId);
+	
+	/**
+	 * Log activity
+	 * @param activity
+	 */	
+	@Transactional
+	public void logAdminActivity(AdminActivity activity);
+	/**
+	 * update activity
+	 * @param activity
+	 */
+	@Transactional
+	public void updateActivity(AdminActivity activity);	
+	
+	/**
+	 * 
+	 * @param activityId
+	 * @return an activity by id
+	 */
+	@Transactional
+	public AdminActivity getAdminActivityById(int activityId);
+	
+	/**
+	 * delete activity by id
+	 * @param id
+	 */
+	@Transactional
+	public void deleteAdminActivityById(int id);		
+	
+	/**
+	 * Save a copy of deleted activity
+	 * @param activity
+	 * @param deletedBy
+	 * @param user
+	 */
+	@Transactional
+	public void archiveAdmindActivity(AdminActivity activity, String deletedBy);
 }

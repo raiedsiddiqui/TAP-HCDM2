@@ -154,8 +154,7 @@ public class ResultParser {
     			int length1 = separator1.length(); 
     			int index2 = answer.indexOf(separator2);
     			
-    			questionAnswer = answer.substring(index2 + length2);
-    			
+    			questionAnswer = answer.substring(index2 + length2);    			
 
     			//Void questions in mumps have a answer value "-". Check if a normal answer starts with "-" and remove the start and end void questions. 
     			if ((!questionAnswer.startsWith("-")) || (questionAnswer.startsWith("-") && questionAnswer.length()>1))//remove first non-question-answer pair, only information
@@ -179,6 +178,9 @@ public class ResultParser {
     				
     				if(qText.contains("&rsquo;"))
     					qText = qText.replace("&rsquo;", "'");
+    				
+    				if (questionAnswer.contains("\n"))//replace newline character(^M which is a carriage-return character) with "." for research requests
+    					questionAnswer = questionAnswer.replaceAll("\\p{Cntrl}", "."); 
     				
     				result.setQuestionId(key);
     				result.setQuestionAnswer(questionAnswer);

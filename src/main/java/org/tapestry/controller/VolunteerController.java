@@ -1504,41 +1504,7 @@ public class VolunteerController {
    	   		
    			return "/admin/admin_book_appointment";	
    		}
-   	}   	
-   	
-//   	@RequestMapping(value="/book_appointment", method=RequestMethod.GET)
-//	public String goAddAppointment(SecurityContextHolderAwareRequestWrapper request, ModelMap model)
-//   	{
-//   		List<Patient> patients = new ArrayList<Patient>();
-//   		HttpSession  session = request.getSession();
-//   		User loggedInUser = TapestryHelper.getLoggedInUser(request, userManager);
-//   		
-//		if (session.getAttribute("unread_messages") != null)
-//			model.addAttribute("unread", session.getAttribute("unread_messages"));
-//   		
-//   		if (request.isUserInRole("ROLE_USER"))
-//   		{// for volunteer
-//   			int loggedInVolunteer = TapestryHelper.getLoggedInVolunteerId(request);
-//   			patients = patientManager.getPatientsForVolunteer(loggedInVolunteer);   			
-//   			
-//   			model.addAttribute("patients", patients);
-//   			return "/volunteer/volunteer_book_appointment";
-//   		}
-//   		else if (request.isUserInRole("ROLE_ADMIN"))// for central admin
-//   		{
-//   			patients = TapestryHelper.getPatients(request, patientManager);
-//   	   		model.addAttribute("patients", patients);
-//   	   		
-//   			return "/admin/admin_book_appointment";	 
-//   		}
-//   		else
-//   		{//for local admin/VC
-//   			patients = TapestryHelper.getPatientsBySite(request, patientManager, loggedInUser.getSite());
-//   	   		model.addAttribute("patients", patients);
-//   	   		
-//   			return "/admin/admin_book_appointment";	
-//   		}
-//   	}
+   	}  
    	
    	@RequestMapping(value="/out_book_appointment", method=RequestMethod.GET)
 	public String outAppointment(SecurityContextHolderAwareRequestWrapper request, ModelMap model)
@@ -1570,20 +1536,38 @@ public class VolunteerController {
 		//format the date from yyyy/MM/dd to yyyy-MM-dd
 		if (date.contains("/"))
 			date = date.replace("/", "-");
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append(date);
+		sb.append(" ");
+		sb.append(time);
+		
+		if((TapestryHelper.checkAvailability(sb.toString(), p.getPatientID(), "P", appointmentManager))
+				||(TapestryHelper.checkAvailability(sb.toString(), volunteer1.getVolunteerId(), "V", appointmentManager))
+				||(TapestryHelper.checkAvailability(sb.toString(), volunteer2.getVolunteerId(), "V", appointmentManager)))
+		{
+			String msg = "Client or volunteer is not available at selected time.";
+			
+			if ("ROLE_USER".equalsIgnoreCase(user.getRole()))
+				return "redirect:/?noMachedTime=" + msg;	
+			else
+				return "redirect:/manage_appointments?noMachedTime=" +msg;
+		}
 				
 		int dayOfWeek = Utils.getDayOfWeekByDate(date);
-		StringBuffer sb = new StringBuffer();
+		sb = new StringBuffer();
 		sb.append(String.valueOf(dayOfWeek - 1));
 								
 		Map<String, String> m = TapestryHelper.getAvailabilityMap();
 				
 		Iterator iterator = m.entrySet().iterator();
-		while (iterator.hasNext()) {
+		while (iterator.hasNext()) 
+		{
 			Map.Entry mapEntry = (Map.Entry) iterator.next();
 					
 			if (mapEntry.getValue().toString().contains(time))
 				sb.append(mapEntry.getKey());
-			}
+		}
 		String availability = sb.toString();
 		
 		a.setVolunteerID(p.getVolunteer());
@@ -1680,6 +1664,43 @@ public class VolunteerController {
 		}
 		else //login as admin
 		{
+			if ((TapestryHelper.isAvailableForVolunteer(availability, vAvailability)) && 
+					(TapestryHelper.isAvailableForVolunteer(availability, pAvailability)))
+			{
+				a.setStatus("Approved");
+				if (appointmentManager.createAppointment(a))
+				{
+					TapestryHelper.sendMessageToInbox(inboxMsg, userId, userId, messageManager);//send message to login user 
+					TapestryHelper.sendMessageToInbox(inboxMsg, userId, volunteer1UserId, messageManager);//send message to volunteer1 
+					TapestryHelper.sendMessageToInbox(inboxMsg, userId, volunteer2UserId, messageManager);//send message to volunteer2
+					return "redirect:/manage_appointments?success=true";	
+				}
+				else
+				{
+					System.out.println("Can not create an appointment in DB");
+					return "redirect:/manage_appointments?success=false";
+				}				
+			}
+			else // one of volunteer's availability does not match
+			{										
+				String displayedVolunteerName = "";
+				
+				if(!(TapestryHelper.isAvailableForVolunteer(availability, vAvailability)))
+					displayedVolunteerName = volunteer1Name;
+				else
+					displayedVolunteerName = volunteer2Name;
+				sb = new StringBuffer();
+				sb.append("Warning: [ ");
+				sb.append(displayedVolunteerName);
+				sb.append("] is not available during this time slot, however the appointment has been booked. "
+						+ "Please ask the volunteer to update his/her availability.");
+									
+				noMatchedMsg = sb.toString();		
+				
+				return "redirect:/manage_appointments?noMachedTime=" + noMatchedMsg;
+			}
+		/*
+			////////////////////////////////
 			a.setStatus("Approved");
 			if (appointmentManager.createAppointment(a))
 			{
@@ -1688,11 +1709,8 @@ public class VolunteerController {
 				
 				if ((TapestryHelper.isAvailableForVolunteer(availability, vAvailability)) && 
 						(TapestryHelper.isAvailableForVolunteer(availability, pAvailability)))
-				{//send message to both volunteer and login user 					
-		//			TapestryHelper.sendMessageToInbox(inboxMsg, userId, volunteer1UserId, messageManager);//send message to volunteer1 
-		//			TapestryHelper.sendMessageToInbox(inboxMsg, userId, volunteer2UserId, messageManager);//send message to volunteer2	
-					TapestryHelper.sendMessageToInbox(inboxMsg, userId, userId, messageManager);//send message to login user 
-					
+				{
+					TapestryHelper.sendMessageToInbox(inboxMsg, userId, userId, messageManager);//send message to login user 					
 					return "redirect:/manage_appointments?success=true";					
 				}
 				else // one of volunteer's availability does not match
@@ -1718,7 +1736,9 @@ public class VolunteerController {
 			{
 				System.out.println("Can not create an appointment in DB");
 				return "redirect:/manage_appointments?success=false";
-			}				
+			}
+			
+			////////////////////  */
 		}
 	}	
 	
@@ -2061,10 +2081,25 @@ public class VolunteerController {
 	@RequestMapping(value="/schedule_appointment", method=RequestMethod.POST)
 	public String createAppointment(SecurityContextHolderAwareRequestWrapper request, ModelMap model)
 	{		
+		StringBuffer sb = new StringBuffer();	
 		//set up appointment
 		Appointment appointment = new Appointment();		
 		int patientId = Integer.parseInt(request.getParameter("patient"));
-		User user = TapestryHelper.getLoggedInUser(request, userManager);		
+		User user = TapestryHelper.getLoggedInUser(request, userManager);	
+		
+		//get Date and time for appointment		
+		String date = request.getParameter("appointmentDate");
+		String time = request.getParameter("appointmentTime");
+		
+		sb.append(date);
+		sb.append(" ");
+		sb.append(time);
+	
+		if(TapestryHelper.checkAvailability(sb.toString(), patientId, "P", appointmentManager))
+		{
+			String msg = "Client is not available at selected time.";
+			return "redirect:/manage_appointments?noMachedTime=" +msg;
+		}
 		
 		//retrieve volunteers id from session
 		HttpSession  session = request.getSession();			
@@ -2075,15 +2110,10 @@ public class VolunteerController {
 		
 		appointment.setVolunteerID(volunteerId);
 		appointment.setPatientID(patientId);
-
-		appointment.setPartnerId(partnerId);
+		appointment.setPartnerId(partnerId);	
 		
-		//get Date and time for appointment		
-		String date = request.getParameter("appointmentDate");
-		String time = request.getParameter("appointmentTime");
 		//format time, remove AM/PM
-		time = time.substring(0,8);
-		
+		time = time.substring(0,8);		
 		appointment.setDate(date);
 		appointment.setTime(time);		
 		
@@ -2110,14 +2140,10 @@ public class VolunteerController {
 			if ((volunteerId != patient.getVolunteer()) || (partnerId != patient.getPartner()))
 				patientManager.updatePatientVolunteers(patientId, volunteerId, partnerId);
 						
-			//send message to both volunteers
-			StringBuffer sb = new StringBuffer();			
+			//send message to both volunteers					
 			sb.append(user.getName());
 			sb.append(" has booked an appointment for ");
 			sb.append(patient.getDisplayName());
-//			sb.append(patient.getFirstName());
-//			sb.append(" ");
-//			sb.append(patient.getLastName());
 			sb.append( " at ");
 			sb.append(time);
 			sb.append(" on ");
@@ -2237,8 +2263,7 @@ public class VolunteerController {
 		}	
 		String plans = sb.toString();
 		appointmentManager.addPlans(appointmentId, plans);
-//		patientManager.addPlans(patientId, plans);
-		
+
 		//add logs
 		User loggedInUser = TapestryHelper.getLoggedInUser(request);
 		sb = new StringBuffer();
@@ -2251,7 +2276,7 @@ public class VolunteerController {
 		///////////////
 		User user = TapestryHelper.getLoggedInUser(request, userManager);
 		int userId = user.getUserID();	
-//		int patientId = TapestryHelper.getPatientId(request);
+
 		Appointment a = appointmentManager.getAppointmentById(appointmentId);
 		Patient p;
 		if (patientId != 0)
@@ -2614,7 +2639,6 @@ public class VolunteerController {
 		session.setAttribute("narrativeMessage","D");
 				
 		return "redirect:/view_narratives";
-	}		
-	
+	}	
 
 }
