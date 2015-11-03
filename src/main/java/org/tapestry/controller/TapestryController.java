@@ -49,6 +49,8 @@ import org.survey_component.data.SurveyQuestion;
 import org.tapestry.utils.TapestryHelper;
 import org.tapestry.utils.Utils;
 import org.tapestry.hl7.Hl7Utils;
+import org.tapestry.objects.Activity;
+import org.tapestry.objects.AdminActivity;
 import org.tapestry.objects.Appointment;
 import org.tapestry.objects.Clinic;
 import org.tapestry.objects.DisplayedSurveyResult;
@@ -1205,7 +1207,8 @@ public class TapestryController{
 		
 		int site = organizationManager.getSiteByClinic(patient.getClinic());
 		model.addAttribute("site", site);
-		if (surveyManager.hasCompletedAllSurveysForReport(id, site))
+	
+		if (site!=3 && surveyManager.hasCompletedAllSurveysForReport(id, site))
 			model.addAttribute("showReport", true);
 		
 		HttpSession session = request.getSession();				
@@ -1780,19 +1783,24 @@ public class TapestryController{
    		//last question in Daily life activity survey is about falling stuff
    		List<String> lAlert = new ArrayList<String>();   		
    		int size = qList.size();
-   		
+   		   		
    		if (size ==7) //No for fall question 
    		{
    			qList.set(6, "No"); //translate
-   			questionTextList.remove(8);//remove last question text
+   			if (questionTextList.size() == 9)//for new script of daily life survey
+   				questionTextList.remove(8);//remove last question text
    		}
    		else
    		{
    			qList.set(6, "Yes" + ". " + qList.get(7));
    			qList.remove(7);
-   			lAlert.add(AlertsInReport.DAILY_ACTIVITY_ALERT); //set alert   			
-   			questionTextList.remove(9);
-   			questionTextList.remove(8);
+   			lAlert.add(AlertsInReport.DAILY_ACTIVITY_ALERT); //set alert   		
+   			
+   			if (questionTextList.size() == 9)//for new script of daily life survey
+   			{
+	   			questionTextList.remove(9);
+	   			questionTextList.remove(8);
+   			}
    		}   		   		
    		//combine Q2 and Q3 answer
    		StringBuffer sb = new StringBuffer();
@@ -3696,5 +3704,173 @@ public class TapestryController{
 		return sb.toString();
 	}
 	
+	@RequestMapping(value="/view_adminActivities", method=RequestMethod.GET)
+	public String viewAdminActivity(SecurityContextHolderAwareRequestWrapper request, ModelMap model)
+	{	
+		List<AdminActivity> activities = new ArrayList<AdminActivity>();				
+		User loggedInUser = TapestryHelper.getLoggedInUser(request);
+		activities = userManager.getAllAdminActivities(loggedInUser.getUserID());
+			
+		if (activities.size() == 0 )  
+			model.addAttribute("emptyActivityLogs", true);			
+		
+		model.addAttribute("activityLogs", activities);	
+	
+		HttpSession session = request.getSession();
+		if (session.getAttribute("unread_messages") != null)
+			model.addAttribute("unread", session.getAttribute("unread_messages"));		
+			
+		return "/admin/view_adminActivities";
+	}
+	
+	@RequestMapping(value="/new_AdminActivity", method=RequestMethod.GET)
+	public String newAdminActivity(SecurityContextHolderAwareRequestWrapper request, ModelMap model)
+	{		
+		HttpSession  session = request.getSession();
+		if (session.getAttribute("unread_messages") != null)
+			model.addAttribute("unread", session.getAttribute("unread_messages"));
+		return "/admin/new_adminActivity";
+	}
+	
+	@RequestMapping(value="/add_adminActivity", method=RequestMethod.POST)
+	public String addAdminActivity(SecurityContextHolderAwareRequestWrapper request, ModelMap model)
+	{		
+		HttpSession  session = request.getSession();		
+		User loggedInUser = TapestryHelper.getLoggedInUser(request);	
+			
+		String date = request.getParameter("activityDate");
+		String startTime = request.getParameter("activityStartTime");	
+		String endTime = request.getParameter("activityEndTime");	
+		String description = request.getParameter("activityDesc");
+			
+		AdminActivity activity = new AdminActivity();
+		activity.setDescription(description);
+		activity.setUser(loggedInUser.getUserID());		
+		activity.setSiteId(loggedInUser.getSite());
+		activity.setDate(date);				
+			
+		//format start_Time and end_Time to match data type in DB
+		StringBuffer sb = new StringBuffer();
+		sb.append(date);
+		sb.append(" ");
+		sb.append(startTime);
+		startTime = sb.toString();
+		activity.setStartTime(startTime);
+			
+		sb = new StringBuffer();
+		sb.append(date);
+		sb.append(" ");
+		sb.append(endTime);
+		endTime = sb.toString();			
+		activity.setEndTime(endTime);
+		userManager.logAdminActivity(activity);
+		
+		//add log
+		sb = new StringBuffer();
+		sb.append(loggedInUser.getName());
+		sb.append(" has added an activity ");		
+		userManager.addUserLog(sb.toString(), loggedInUser);
+			
+		//update view activity page with new record		
+		session.setAttribute("ActivityMessage", "C");		
+		
+		return "redirect:/view_adminActivities";
+	}	
+	
+	@RequestMapping(value="/delete_adminActivity/{activityId}", method=RequestMethod.GET)
+	public String deleteActivityById(@PathVariable("activityId") int id, 
+			SecurityContextHolderAwareRequestWrapper request, ModelMap model)
+	{			
+		User loggedInUser = TapestryHelper.getLoggedInUser(request);		
+		AdminActivity activity = userManager.getAdminActivityById(id);		
+		userManager.deleteAdminActivityById(id);
+		userManager.archiveAdmindActivity(activity, loggedInUser.getName());
+		
+		//add logs		
+		StringBuffer sb = new StringBuffer();
+		sb.append(loggedInUser.getName());
+		sb.append(" has deleted the admin acitiviy #  ");
+		sb.append(id);		
+		userManager.addUserLog(sb.toString(), loggedInUser);
+					
+		HttpSession  session = request.getSession();		
+		session.setAttribute("ActivityMessage", "D");		
+		
+		return "redirect:/view_adminActivities";		
+	}
+		
+	@RequestMapping(value="/modify_adminActivity/{activityId}", method=RequestMethod.GET)
+	public String modifyAdminActivityLog(SecurityContextHolderAwareRequestWrapper request, 
+			@PathVariable("activityId") int id, ModelMap model)
+	{
+		AdminActivity activity = new AdminActivity();
+		activity = userManager.getAdminActivityById(id);			
+		/////
+		System.out.println("start time=" + activity.getStartTime());
+		System.out.println("end time=" + activity.getEndTime());
+		////
+		model.addAttribute("activityLog", activity);
+		
+		HttpSession  session = request.getSession();
+		if (session.getAttribute("unread_messages") != null)
+			model.addAttribute("unread", session.getAttribute("unread_messages"));
+		
+		
+		return "/admin/modify_adminActivity";
+	}
+		
+	@RequestMapping(value="/update_adminActivity", method=RequestMethod.POST)
+	public String updateAdminActivityById(SecurityContextHolderAwareRequestWrapper request, ModelMap model)
+	{
+		String activityId = null;
+		int iActivityId = 0;		
+		AdminActivity activity = new AdminActivity();			
+		HttpSession  session = request.getSession();		
+			
+		activityId = request.getParameter("activityId");
+		iActivityId = Integer.parseInt(activityId);
+			
+		activity = userManager.getAdminActivityById(iActivityId);			
+			
+		String date = null;
+		if(!Utils.isNullOrEmpty(request.getParameter("activityDate")))
+			date = request.getParameter("activityDate");
+		activity.setDate(date + " 00:00:00");
+			
+		String startTime = null;
+		if (!Utils.isNullOrEmpty(request.getParameter("activityStartTime")))
+			startTime = request.getParameter("activityStartTime");
+								
+		if (startTime.length() < 6)//format 
+			activity.setStartTime(date +" " + startTime + ":00"); 
+		else
+			activity.setStartTime(date +" " + startTime); 
+			
+		String endTime = null;
+		if (!Utils.isNullOrEmpty(request.getParameter("activityEndTime")))
+			endTime = request.getParameter("activityEndTime");
+						
+		if (endTime.length() < 6)//format
+			activity.setEndTime(date + " " + endTime + ":00");
+		else
+			activity.setEndTime(date + " " + endTime);
+		
+		String desc = null;
+		desc = request.getParameter("activityDesc");
+		if (!Utils.isNullOrEmpty(desc))
+			activity.setDescription(desc);		
+		userManager.updateActivity(activity);
+		
+		//add logs
+		User loggedInUser = TapestryHelper.getLoggedInUser(request);
+		StringBuffer sb = new StringBuffer();
+		sb.append(loggedInUser.getName());
+		sb.append(" has modified the  admin acitiviy #  ");
+		sb.append(activityId);				
+		userManager.addUserLog(sb.toString(), loggedInUser);
+			
+		session.setAttribute("ActivityMessage","U");
+		return "redirect:/view_adminActivities";	
+	}
 	
 }

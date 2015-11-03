@@ -316,13 +316,13 @@ public class SurveyManagerImpl implements SurveyManager {
 		
 		for (SurveyResult st : surveys)
 			completedSurveyTitles.add(st.getSurveyTitle());				
+		
 		//only all surveys except "3 Month Follow" are finished
 		int templateCount = countSurveyTemplateBySite(siteId);
 		int completedSurveyCount = surveys.size();
 		
-		if (templateCount == completedSurveyCount)
-			completed = true;	
-		else if (((templateCount - completedSurveyCount) == 1) && (!completedSurveyTitles.contains("3 Month Followup")))
+		if ((templateCount == completedSurveyCount)||((templateCount - completedSurveyCount) == 1) 
+				&& (!completedSurveyTitles.contains("3 Month Follow Up")))
 			completed = true;
 		
 		return completed;

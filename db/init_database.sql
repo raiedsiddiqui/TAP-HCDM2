@@ -423,11 +423,11 @@ CREATE TABLE IF NOT EXISTS activities_admin (
 CREATE TABLE IF NOT EXISTS activities_admin_archive (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	deleted_event_ID INT UNSIGNED NOT NULL , /*Using UNSIGNED INT allows for 4,294,967,295 events, which should be enough*/
-	start_time TIMESTAMP NOT NULL DEFAULT 0,
-	end_time TIMESTAMP NOT NULL DEFAULT 0,
-	userId VARCHAR(255) NOT NULL,	
+	start_time VARCHAR(25),
+	end_time VARCHAR(25),
+	userId SMALLINT UNSIGNED NOT NULL,	
 	description TEXT,
-	siteId VARCHAR(255) NOT NULL,
+	siteId SMALLINT UNSIGNED NOT NULL,
 	deleted_by VARCHAR(255) NOT NULL,
 	deleted_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
 	

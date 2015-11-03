@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Activity Logs/Admin</title>
+<title>Volunteer Activity Logs/Admin</title>
 <script type="text/javascript">
 function validateVolunteer(){
 	var selectedVolunteer = document.getElementById("search_volunteer");

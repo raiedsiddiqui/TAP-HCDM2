@@ -141,7 +141,7 @@
 			<td>${cVistits.appointmentID}</td>	
 			<td>${cVistits.date}</td>			
 			<td>${cVistits.volunteer},&nbsp &nbsp ${cVistits.partner}</td>				
-			<c:if test="${site != 3}&&${showReport}">
+			<c:if test="${showReport}">
 				<td><a href="<c:url value="/download_report/${patient.patientID}?appointmentId=${cVistits.appointmentID}"/>">DOWNLOAD</a> </td>
 				<td><a href="<c:url value="/generate_report_hl7/${patient.patientID}?appointmentId=${cVistits.appointmentID}"/>">DOWNLOAD</a> </td>
 				

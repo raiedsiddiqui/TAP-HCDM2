@@ -31,8 +31,8 @@ public class AdminActivityDAOImpl extends JdbcDaoSupport implements AdminActivit
 	public List<AdminActivity> getAllAdminActivities(int userId) {
 		String sql = "SELECT DATE(activity.event_timestamp) AS date, activity.description, "
 				+ "TIME(activity.start_Time) AS sTime, TIME(activity.end_Time) AS eTime, "
-				+ "activity.siteId, activity.event_ID, "
-				+ "users.firstname, users.lastname FROM activities_admin AS activity "
+				+ "activity.siteId, activity.event_ID, activity.userId,"
+				+ "users.name FROM activities_admin AS activity "
 				+ "INNER JOIN users ON activity.userId=users.user_ID"
 				+ " WHERE activity.userId=?";
 		
@@ -43,7 +43,7 @@ public class AdminActivityDAOImpl extends JdbcDaoSupport implements AdminActivit
 	public List<AdminActivity> getAllAdminActivities() {
 		String sql = "SELECT DATE(activity.event_timestamp) AS date, activity.description, "
 				+ "TIME(activity.start_Time) AS sTime, TIME(activity.end_Time) AS eTime, "
-				+ "activity.siteId, activity.event_ID, "
+				+ "activity.siteId, activity.event_ID, activity.userId,"
 				+ "users.firstname, users.lastname FROM activities_admin AS activity "
 				+ "INNER JOIN users ON activity.userId=users.user_ID";
 					
@@ -54,8 +54,8 @@ public class AdminActivityDAOImpl extends JdbcDaoSupport implements AdminActivit
 	public List<AdminActivity> getAllActivitiesForLocalAdmin(int siteId) {
 		String sql = "SELECT DATE(activity.event_timestamp) AS date, activity.description, "
 				+ "TIME(activity.start_Time) AS sTime, TIME(activity.end_Time) AS eTime, "
-				+ "activity.siteId, activity.event_ID, "
-				+ "users.firstname, users.lastname FROM activities_admin AS activity "
+				+ "activity.siteId, activity.event_ID, activity.userId, "
+				+ "users.name FROM activities_admin AS activity "
 				+ "INNER JOIN users ON activity.userId=users.user_ID"
 				+ " WHERE activity.siteId=?";
 		
@@ -89,8 +89,13 @@ public class AdminActivityDAOImpl extends JdbcDaoSupport implements AdminActivit
 
 	@Override
 	public AdminActivity getAdminActivityById(int activityId) {
-		String sql = "SELECT DATE(event_timestamp) AS date, description, event_ID, userId,"
-				+ " TIME(start_Time) AS sTime, TIME(end_Time) AS eTime, siteId FROM activities_admin WHERE event_ID = ?";		
+		String sql = "SELECT DATE(activity.event_timestamp) AS date, activity.description, "
+				+ "TIME(activity.start_Time) AS sTime, TIME(activity.end_Time) AS eTime, "
+				+ "activity.siteId, activity.event_ID, activity.userId, "
+				+ "users.name FROM activities_admin AS activity "
+				+ "INNER JOIN users ON activity.userId=users.user_ID"
+				+ " WHERE event_ID = ?";
+		
 		return getJdbcTemplate().queryForObject(sql, new Object[]{activityId}, new AdminActivityMapper());
 	}
 
@@ -116,25 +121,21 @@ public class AdminActivityDAOImpl extends JdbcDaoSupport implements AdminActivit
 			activity.setDate(rs.getString("date"));
 			activity.setDescription(rs.getString("description"));			
 			String sTime = rs.getString("sTime");
+			activity.setStartTime(sTime);
+			
 			sTime = sTime.substring(0, sTime.length() - 3);
 			String eTime = rs.getString("eTime");
+			activity.setEndTime(eTime);
 			eTime = eTime.substring(0, eTime.length() - 3);
 			
 			StringBuffer sb = new StringBuffer();
 			sb.append(sTime);
 			sb.append("--");
 			sb.append(eTime);
-			activity.setTime(sb.toString());
-				
-			if (!Utils.isNullOrEmpty(rs.getString("firstname")) && !Utils.isNullOrEmpty(rs.getString("lastname")))
-			{
-				sb = new StringBuffer();
-				sb.append(rs.getString("firstname"));
-				sb.append(" ");
-				sb.append(rs.getString("lastname"));
-					
-				activity.setUserName(sb.toString());	
-			}		
+			activity.setTime(sb.toString());				
+			activity.setUserName(rs.getString("name"));
+			activity.setUser(rs.getInt("userId"));
+			
 			return activity;			
 		}
 	}

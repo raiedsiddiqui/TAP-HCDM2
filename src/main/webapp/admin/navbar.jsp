@@ -61,7 +61,9 @@
 				
 				<li <c:if test="${pageContext.request.requestURI.contains('manage_volunteer_survey')}">class="active"</c:if>><a href="<c:url value="/manage_volunteer_survey"/>">Manage Volunteer Surveys </a></li> 
 
-				<li <c:if test="${pageContext.request.requestURI.contains('view_activity_admin')}">class="active"</c:if>><a href="<c:url value="/view_activity_admin"/>">Activity Log <span class="glyphicon glyphicon-pencil"></a></li>
+				<li <c:if test="${pageContext.request.requestURI.contains('view_activity_admin')}">class="active"</c:if>><a href="<c:url value="/view_activity_admin"/>">Volunteer Activity Log <span class="glyphicon glyphicon-pencil"></a></li>
+			
+				<li <c:if test="${pageContext.request.requestURI.contains('view_adminActivities')}">class="active"</c:if>><a href="<c:url value="/view_adminActivities"/>">Admin Activity Log <span class="glyphicon glyphicon-pencil"></a></li>
 			
 
 	          </ul>
