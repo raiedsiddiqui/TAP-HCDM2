@@ -154,8 +154,23 @@
 	</c:if>
 	<h2>Surveys</h2> 
 	<a style="float:right" class="btn btn-primary" href="<c:url value="/go_assign_survey/${patient.patientID}"/>">Assign Survey</a> 	
-	<a style="float:right" class="btn btn-primary" href="<c:url value="/download_clientSurveyReport/${patient.patientID}?name=${patient.displayName}&hasObservernotes=false"/>">Download Report</a><c:if test="${site == 3}"> 
-	<a style="float:right" class="btn btn-primary" href="<c:url value="/download_clientSurveyReport/${patient.patientID}?name=${patient.displayName}&hasObservernotes=true"/>">Download Report With Observernotes</a></c:if>
+	
+	<div style="float:right; width:180px;" class="container">                                        
+	  <div class="dropdown">
+	    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Download Report
+	    <span class="caret"></span></button>
+	    <ul class="dropdown-menu">
+	    	<li><a href="<c:url value="/download_clientSurveyReport/${patient.patientID}?name=${patient.displayName}&hasObservernotes=false"/>">Download Report</a></li>
+
+	      	<c:if test="${site == 3}"> 
+		      <li>
+		      	<a href="<c:url value="/download_clientSurveyReport/${patient.patientID}?name=${patient.displayName}&hasObservernotes=true"/>">Download Report with Observer Notes</a>
+		      </li>
+	  		</c:if>
+	    </ul>
+	  </div>
+	</div>
+
 
 	<table  class="table table-striped" width="970" border="1">
 		<tr>
