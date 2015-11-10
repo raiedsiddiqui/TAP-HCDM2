@@ -15,6 +15,7 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.tapestry.objects.Patient;
 
@@ -71,6 +72,14 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 				+ "LIKE UPPER('%" + partialName + "%') OR UPPER(p.lastname) LIKE UPPER('%" + partialName + "%')) AND p.enabled=1 ";
 		
 		return getJdbcTemplate().query(sql, new PatientMapper());
+	}	
+
+	@Override
+	public Patient getPatientByUserId(int userId) {
+		String sql = "SELECT p.* FROM patients AS p INNER JOIN users AS u ON p.tap_username = u.username "			
+				+ "WHERE p.enabled=1 AND u.user_ID = ?";
+		
+		return getJdbcTemplate().queryForObject(sql, new Object[]{userId}, new PMapper());
 	}
 
 	@Override
@@ -100,8 +109,8 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 	public int createPatient(final Patient p) {	
 		 final String sql = "INSERT INTO patients (firstname, lastname, preferredname, volunteer,"
 					+ " gender, notes, volunteer2, alerts, myoscar_verified, clinic, username, mrp, "
-					+ "mrp_firstname, mrp_lastname, research_ID, enabled) VALUES (?, ?, ?, ?, ?, ?, ?,"
-					+ " ?, ?, ?, ?, ?, ?, ?, ?, 1)";
+					+ "mrp_firstname, mrp_lastname, research_ID, enabled, tap_username, tap_password) "
+					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?,? )";
 		  
 		 JdbcTemplate jdbcTemplate = getJdbcTemplate();  
 		 KeyHolder keyHolder = new GeneratedKeyHolder();  
@@ -125,7 +134,9 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 				 ps.setString(13,  p.getMrpFirstName());
 				 ps.setString(14, p.getMrpLastName());
 				 ps.setString(15, p.getResearchID());
-			        
+			     ps.setString(16,  p.getTapUsername());
+			     ps.setString(17,  p.getTapPassword());
+			     
 				 return ps;  
 			 }  
 		 }, keyHolder);  		  
@@ -136,10 +147,12 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 	public void updatePatient(Patient p) {
 		String sql = "UPDATE patients SET firstname=?, lastname=?, preferredname=?, volunteer=?, "
 				+ "gender=?, notes=?, clinic=?, myoscar_verified=?, alerts=?, volunteer2=?, mrp=?, "
-				+ "mrp_firstname=?, mrp_lastname=?, research_ID=? WHERE patient_ID=?";
+				+ "mrp_firstname=?, mrp_lastname=?, research_ID=?, tap_username=? WHERE patient_ID=?";
+		
+		System.out.println("in dao tape user name =" + p.getTapUsername());
 		getJdbcTemplate().update(sql, p.getFirstName(),  p.getLastName(), p.getPreferredName(), p.getVolunteer(), 
 				p.getGender(), p.getNotes(), p.getClinic(), p.getMyoscarVerified(), p.getAlerts(), p.getPartner(), 
-				p.getMrp(), p.getMrpFirstName(), p.getMrpLastName(), p.getResearchID(), p.getPatientID());
+				p.getMrp(), p.getMrpFirstName(), p.getMrpLastName(), p.getResearchID(), p.getTapUsername(), p.getPatientID());
 
 	}
 	
@@ -254,6 +267,30 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 				patient.setEnabled(true);
 			else
 				patient.setEnabled(false);
+			patient.setTapUsername(rs.getString("tap_username"));			
+			
+			return patient;
+		}
+	}
+	
+	class PMapper implements RowMapper<Patient> {
+		public Patient mapRow(ResultSet rs, int rowNum) throws SQLException{
+			Patient patient = new Patient();			
+			
+			patient.setPatientID(rs.getInt("patient_ID"));
+			patient.setFirstName(rs.getString("firstname"));
+			patient.setLastName(rs.getString("lastname"));
+			patient.setPreferredName(rs.getString("preferredname"));
+			
+			//set clinic			
+			patient.setClinic(rs.getInt("clinic"));
+			
+			patient.setVolunteer(rs.getInt("volunteer"));			
+			patient.setResearchID(rs.getString("research_ID"));						
+			patient.setPartner(rs.getInt("volunteer2"));
+			
+			patient.setUserName(rs.getString("username"));//user name in MyOscar					
+			patient.setTapUsername(rs.getString("tap_username"));			
 			
 			return patient;
 		}
@@ -301,6 +338,15 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 				+ "WHERE c.site_ID =? AND p.enabled=0";
 		
 		return getJdbcTemplate().query(sql, new Object[]{site}, new PatientMapper());
+	}
+
+	@Override
+	public void setDefaultUsernameAndPassword(int patientId, String username) {
+		String sql = "UPDATE patients SET tap_username=?, tap_password=? WHERE patient_ID=? ";
+		ShaPasswordEncoder enc = new ShaPasswordEncoder();		
+		String tapPassword = enc.encodePassword("tap_client", null);
+		getJdbcTemplate().update(sql, username, tapPassword, patientId);
+		
 	}
 
 }

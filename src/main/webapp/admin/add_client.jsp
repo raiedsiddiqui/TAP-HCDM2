@@ -168,6 +168,23 @@
 					<input type="text" name="mrp_lastname" class="form-control" />
 				</div>				
 			</div>		
+			
+			<h2 class="pagetitleadmin">User Account </h2>
+			<div class="row form-group">
+				<div class="col-md-4">
+					<div class="input-group input-group-lg">
+						<span class="input-group-addon">Username</span>
+					 		<input name="tap_username" type="text" class="form-control"  required>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="input-group input-group-lg">
+				  		<span class="input-group-addon">Password</span>
+					  		<input type="password" name="tap_password" class="form-control" value="tapestry" required>
+					</div>
+				</div>
+			</div>
+			
 				<label>PHR verified? </label>
 				<input type="radio" name="myoscar_verified" value="1" />Yes
 				<input type="radio" name="myoscar_verified" value="0" checked/>No

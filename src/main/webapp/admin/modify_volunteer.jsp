@@ -358,7 +358,7 @@
 								<div class="col-md-4">
 									<div class="input-group input-group-lg">
 										<span class="input-group-addon">Username</span>
-								 		<input name="username" type="text" class="form-control" value="${volunteer.userName}">
+								 		<input name="username" type="text" class="form-control" value="${volunteer.userName}" readonly="readonly">
 									</div>
 								</div>
 								<div class="col-md-4">

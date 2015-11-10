@@ -149,8 +149,28 @@ public class PatientManagerImpl implements PatientManager {
 
 	@Override
 	public int getSiteByPatientId(int patientId) {
-		Patient p = this.getPatientByID(patientId);
+		Patient p = getPatientByID(patientId);
 		return clinicDao.getSiteByClinic(p.getClinic());
+	}
+
+	@Override
+	public Patient getPatientByUserId(int userId) {
+		return patientDao.getPatientByUserId(userId);
+	}
+
+	@Override
+	public void setDefaultUsernameAndPassword() 
+	{
+		List<Patient> patients = getAllPatients();
+		int patientId;
+		String tapUsername;
+		
+		for (Patient p: patients)
+		{
+			patientId = p.getPatientID();
+			tapUsername = p.getFirstName() + "."+ p.getLastName();
+			patientDao.setDefaultUsernameAndPassword(patientId, tapUsername);
+		}		
 	}
 
 }

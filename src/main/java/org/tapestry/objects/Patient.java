@@ -32,6 +32,8 @@ public class Patient{
 	private String postalCode;
 	private String researchID;
 	private boolean enabled;
+	private String tapUsername;
+	private String tapPassword;
 	
 	public int getGroup() {
 		return group;
@@ -358,5 +360,22 @@ public class Patient{
 	public void setEnabled(boolean enabled){
 		this.enabled = enabled;
 	}
+
+	public String getTapUsername() {
+		return tapUsername;
+	}
+
+	public void setTapUsername(String tapUsername) {
+		this.tapUsername = tapUsername;
+	}
+
+	public String getTapPassword() {
+		return tapPassword;
+	}
+
+	public void setTapPassword(String tapPassword) {
+		this.tapPassword = tapPassword;
+	}
+	
 	
 }

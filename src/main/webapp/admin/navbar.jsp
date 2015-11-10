@@ -64,6 +64,7 @@
 				<li <c:if test="${pageContext.request.requestURI.contains('view_activity_admin')}">class="active"</c:if>><a href="<c:url value="/view_activity_admin"/>">Volunteer Activity Log <span class="glyphicon glyphicon-pencil"></a></li>
 			
 				<li <c:if test="${pageContext.request.requestURI.contains('view_adminActivities')}">class="active"</c:if>><a href="<c:url value="/view_adminActivities"/>">Admin Activity Log <span class="glyphicon glyphicon-pencil"></a></li>
+				<li <c:if test="${pageContext.request.requestURI.contains('setDefault_existingClient')}">class="active"</c:if>><a href="<c:url value="/setDefault_existingClient"/>">Set Default Username and Password for Client <span class="glyphicon glyphicon-pencil"></a></li>
 			
 
 	          </ul>

@@ -37,7 +37,7 @@
 		<intercept-url pattern="/admin/*" access="ROLE_ADMIN" />
 		<intercept-url pattern="/surveys/*" access="ROLE_ADMIN" />
 		<intercept-url pattern="/caretaker/*" access="ROLE_USER" />
-		<intercept-url pattern="/logout" access="ROLE_USER, ROLE_ADMIN, ROLE_LOCAL_ADMIN, ROLE_CLINICIAN" />
+		<intercept-url pattern="/logout" access="ROLE_USER, ROLE_ADMIN, ROLE_LOCAL_ADMIN, ROLE_CLINICIAN, ROLE_CLIENT" />
 		<intercept-url pattern="/loginfailed" filters="none" />
 		
 		<intercept-url pattern="/resources/**" filters="none" />
@@ -80,9 +80,9 @@
 		<intercept-url pattern="/assign_survey/**" access="ROLE_USER" />
 		<intercept-url pattern="/assign_surveys" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN" />
 		<intercept-url pattern="/delete_survey/**" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN" />
-		<intercept-url pattern="/open_survey/**" access="ROLE_USER" />
-		<intercept-url pattern="/show_survey/**" access="ROLE_ADMIN, ROLE_USER, ROLE_LOCAL_ADMIN" />
-		<intercept-url pattern="/save_survey/**" access="ROLE_ADMIN, ROLE_USER, ROLE_LOCAL_ADMIN" />
+		<intercept-url pattern="/open_survey/**" access="ROLE_USER, ROLE_CLIENT" />
+		<intercept-url pattern="/show_survey/**" access="ROLE_ADMIN, ROLE_USER, ROLE_LOCAL_ADMIN, ROLE_CLIENT" />
+		<intercept-url pattern="/save_survey/**" access="ROLE_ADMIN, ROLE_USER, ROLE_LOCAL_ADMIN, ROLE_CLIENT" />
 		<intercept-url pattern="/user_logs/**" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN" />
 		<intercept-url pattern="/view_survey_results/**" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN, ROLE_CLINICIAN" />
 		<intercept-url pattern="/export_csv/**" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN, ROLE_CLINICIAN" />
@@ -91,6 +91,7 @@
 		<intercept-url pattern="/view_organizations" access="ROLE_ADMIN"/>
 		<intercept-url pattern="/manage_clinics" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN"/>
 		<intercept-url pattern="/view_research_data" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN"/>
+		<intercept-url pattern="/setDefault_existingClient" access="ROLE_ADMIN"/>
 		<form-login login-page="/login" authentication-failure-url="/loginfailed" default-target-url="/loginsuccess" always-use-default-target="true"/>
 	
 		<session-management invalid-session-url="/login">

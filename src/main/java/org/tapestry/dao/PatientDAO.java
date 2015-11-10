@@ -105,6 +105,12 @@ public interface PatientDAO {
     public String getPlanByPatientId(int id);
     
     /**
+     * @param id userId
+     * @return Patient 
+     */
+    public Patient getPatientByUserId(int userId);
+    
+    /**
      * Create Plan for a patient
      * @param int id patientId, String plan
      * @return if it is successful for creating new record in database
@@ -150,5 +156,7 @@ public interface PatientDAO {
 	 * @param partner
 	 */
 	public void updatePatientVolunteers(int id, int volunteer, int partner);
+	
+	public void setDefaultUsernameAndPassword(int patientId, String username);
 	
 }

@@ -3,8 +3,10 @@ package org.tapestry.controller;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +29,7 @@ import org.tapestry.hl7.Hl7Utils;
 import org.tapestry.objects.Activity;
 import org.tapestry.objects.Appointment;
 import org.tapestry.objects.Availability;
+import org.tapestry.objects.DisplayedSurveyResult;
 import org.tapestry.objects.HL7Report;
 import org.tapestry.objects.Message;
 import org.tapestry.objects.Narrative;
@@ -44,6 +47,7 @@ import org.tapestry.service.PatientManager;
 import org.tapestry.service.SurveyManager;
 import org.tapestry.service.UserManager;
 import org.tapestry.service.VolunteerManager;
+import org.tapestry.surveys.ResultParser;
 
 import ca.uhn.hl7v2.HL7Exception;
 
@@ -263,7 +267,7 @@ public class VolunteerController {
 			volunteer.setLastName(request.getParameter("lastname").trim());
 			volunteer.setGender(request.getParameter("gender"));
 			volunteer.setEmail(request.getParameter("email").trim());				
-	//		volunteer.setExperienceLevel(request.getParameter("level"));	
+	
 			//set experience level based on score calculation
 			String score = request.getParameter("totalcalculated");
 			if (!Utils.isNullOrEmpty(score))
@@ -381,7 +385,7 @@ public class VolunteerController {
 			sb.append(" ");
 			sb.append(volunteer.getLastName());
 			userManager.addUserLog(sb.toString(), loggedInUser);
-			//save in the table users
+			//save in the Users table
 			if (success)
 			{
 				User user = new User();
@@ -395,26 +399,10 @@ public class VolunteerController {
 						
 				user.setPassword(volunteer.getPassword());
 				user.setEmail(volunteer.getEmail());
-				user.setOrganization(volunteer.getOrganizationId());	
-				int site = loggedInUser.getSite();
-				if (site == 0)//login user is central admin
-					site = Integer.valueOf(request.getParameter("site"));
-				System.out.println("site = " +site);
-				user.setSite(site);
+				user.setOrganization(volunteer.getOrganizationId());									
+				user.setSite(Integer.valueOf(request.getParameter("site")));
 				
-				success = userManager.createUser(user);	
-								
-//				sb = new StringBuffer();
-//				sb.append("Thank you for volunteering with Tapestry. Your account has been successfully created.\n");
-//				sb.append("Your username and password are as follows:\n");
-//				sb.append("Username: ");
-//				sb.append(user.getUsername());
-//				sb.append("\n");
-//				sb.append("Password: password\n\n");
-//				String msg = sb.toString();
-//				String subject = "Welcome to Tapestry";
-//				
-//				TapestryHelper.sendMessageByEmail(user,subject, msg);					
+				success = userManager.createUser(user);				
 			}
 			else{
 				model.addAttribute("volunteerExist", true);
@@ -1201,14 +1189,12 @@ public class VolunteerController {
 		int unreadMessages;			
 		List<Appointment> remindingAppointments = new ArrayList<Appointment>();
 		HttpSession session = request.getSession();
+		User loggedInUser = TapestryHelper.getLoggedInUser(request);
 							
 		if (request.isUserInRole("ROLE_USER"))
 		{
-			User loggedInUser = TapestryHelper.getLoggedInUser(request);
-			String username = loggedInUser.getUsername();	
-			
-			int userId = loggedInUser.getUserID();
-			
+			String username = loggedInUser.getUsername();			
+			int userId = loggedInUser.getUserID();			
 			//get volunteer Id from login user
 			int volunteerId = volunteerManager.getVolunteerIdByUsername(username);		
 		
@@ -1219,14 +1205,14 @@ public class VolunteerController {
 			List<Appointment> approvedAppointments = new ArrayList<Appointment>();
 			List<Appointment> pendingAppointments = new ArrayList<Appointment>();
 			List<Appointment> declinedAppointments = new ArrayList<Appointment>();
-			if(patientId != null) {				
+			if(patientId != null) 
+			{				
 				approvedAppointments = appointmentManager.getAllApprovedAppointmentsForPatient(patientId, volunteerId);
 				pendingAppointments = appointmentManager.getAllPendingAppointmentsForPatient(patientId, volunteerId);
 				declinedAppointments = appointmentManager.getAllDeclinedAppointmentsForPatient(patientId, volunteerId);
 				
 				Patient patient = patientManager.getPatientByID(patientId);
-				model.addAttribute("patient", patient);
-				
+				model.addAttribute("patient", patient);				
 				//set patientId in the session for other screen, like narratives 
 				session.setAttribute("patientId", patientId);				
 			} 
@@ -1257,14 +1243,11 @@ public class VolunteerController {
 			
 			remindingAppointments = appointmentManager.getRemindingAppointmentList(volunteerId, -2);			
 			model.addAttribute("reminding_appointments", remindingAppointments);
-
 				
 			return "volunteer/index";
 		}
 		else if (request.isUserInRole("ROLE_ADMIN") || request.isUserInRole("ROLE_LOCAL_ADMIN"))
 		{			
-			User loggedInUser = TapestryHelper.getLoggedInUser(request);	
-			
 			unreadMessages = messageManager.countUnreadMessagesForRecipient(loggedInUser.getUserID());
 			model.addAttribute("unread", unreadMessages);
 			//save unreadMessages in sesion
@@ -1276,6 +1259,47 @@ public class VolunteerController {
 			model.addAttribute("appointments", remindingAppointments);
 
 			return "admin/index";
+		}
+		else if (request.isUserInRole("ROLE_CLIENT"))
+		{
+			Patient patient = patientManager.getPatientByUserId(loggedInUser.getUserID());
+			model.addAttribute("patient", patient);
+			
+			int pId = patient.getPatientID();
+			List<SurveyResult> completedSurveyResultList = surveyManager.getCompletedSurveysByPatientID(pId);
+			List<SurveyResult> incompleteSurveyResultList = surveyManager.getIncompleteSurveysByPatientID(pId);
+			
+			Collections.sort(completedSurveyResultList);
+			Collections.sort(incompleteSurveyResultList);		
+		
+			//get display survey result for displaying question text and answer
+			String xml;
+			LinkedHashMap<String, String> res;
+			List<DisplayedSurveyResult> displayedResults;
+			List<DisplayedSurveyResult> completedDisplayedResults = new ArrayList<DisplayedSurveyResult>();
+		
+			for (SurveyResult sr: completedSurveyResultList)
+			{
+		   		try{
+		   			xml = new String(sr.getResults(), "UTF-8");
+		   		} catch (Exception e) {
+		   			xml = "";
+		   		}
+		   		res = ResultParser.getResults(xml);
+		   		displayedResults = ResultParser.getDisplayedSurveyResults(res);
+		   		completedDisplayedResults.addAll(displayedResults);
+			}
+			//translate answers with full detailed information
+			int site = loggedInUser.getSite();
+			if (site == 3)//UBC
+				completedDisplayedResults = TapestryHelper.getDetailedAnswerForUBCSurveys(completedDisplayedResults);
+			else //Main site
+				completedDisplayedResults = TapestryHelper.getDetailedAnswerForSurveys(completedDisplayedResults);
+			
+			model.addAttribute("completedSurveys", completedSurveyResultList);
+			model.addAttribute("inProgressSurveys", incompleteSurveyResultList);
+			model.addAttribute("displayResults", completedDisplayedResults);
+			return "client/client-surveys";
 		}
 //		else if (request.isUserInRole("ROLE_CLINICIAN"))
 //		{

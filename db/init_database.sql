@@ -40,6 +40,8 @@ CREATE TABLE IF NOT EXISTS patients (
 	mrp_lastname VARCHAR(50) NOT NULL,
 	research_ID VARCHAR(10) NOT NULL, 
 	enabled BOOLEAN NOT NULL,
+	tap_username VARCHAR(50) NOT NULL,
+	tap_password VARCHAR(255) NOT NULL,	
 		
 	PRIMARY KEY (patient_ID)
 );

@@ -172,6 +172,14 @@ public interface PatientManager {
 	
 	/**
 	 * 
+	 * @param userId
+	 * @return
+	 */
+	@Transactional
+	public Patient getPatientByUserId(int userId);
+	
+	/**
+	 * 
 	 * @param patientId
 	 * @param volunteerId
 	 * @param partnerId
@@ -186,5 +194,7 @@ public interface PatientManager {
 	 */
 	@Transactional
 	public int getSiteByPatientId(int patientId);
+	
+	public void setDefaultUsernameAndPassword();
 	
 }

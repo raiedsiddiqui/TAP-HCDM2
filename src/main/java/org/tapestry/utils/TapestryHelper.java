@@ -4214,8 +4214,7 @@ public class TapestryHelper {
 	public static void generateClientSurveyReport(int patientId, SurveyManager surveyManager, 
 			HttpServletResponse response, String name )
 	{
-		String xml, socialLifeTitle="";
-		List<String> qList = new ArrayList<String>();
+		String xml;
    		LinkedHashMap<String, String> mSurvey;	
 		Map<String, String> tMap = new LinkedHashMap<String, String>(); 		
 		List<SurveyResult> surveyResultList = surveyManager.getCompletedSurveysByPatientID(patientId);	
@@ -4227,6 +4226,7 @@ public class TapestryHelper {
 		}
 		SurveyResult sr;
 		DisplayedSurveyResult dsr;
+					
 		for (int i = 0; i < surveyResultList.size(); i++)
 		{
 			sr = new SurveyResult();
@@ -4239,10 +4239,7 @@ public class TapestryHelper {
 	   			xml = "";
 	   		}
 			mSurvey = ResultParser.getResults(xml);
-			
-			if (title.equals(socialLifeTitle))
-				qList = getQuestionList(mSurvey);
-				
+							
 			List<DisplayedSurveyResult> displayedResults = ResultParser.getDisplayedSurveyResults(mSurvey);
 	   		
 			displayedResults = getDetailedAnswerForSurvey(displayedResults, "mainSurveys.properties");				

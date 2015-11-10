@@ -217,8 +217,6 @@ public class TapestryController{
 			session.setAttribute("organizations", organizations);
 		}
 		
-		
-		
 		return "admin/manage_users";
 	}
 	
@@ -818,91 +816,103 @@ public class TapestryController{
 		}		
 		Volunteer v1 = volunteerManager.getVolunteerById(vId1);
 		Volunteer v2 = volunteerManager.getVolunteerById(vId2);
+			
+		String firstName = request.getParameter("firstname").trim();
+		String lastName = request.getParameter("lastname").trim();
+		p.setFirstName(firstName);
+		p.setLastName(lastName);
+		if(request.getParameter("preferredname") != "") 
+			p.setPreferredName(request.getParameter("preferredname").trim());
+		p.setVolunteer(vId1);
+		p.setPartner(vId2);		
+		p.setMyoscarVerified(request.getParameter("myoscar_verified"));		
+		p.setGender(request.getParameter("gender"));
+		p.setNotes(request.getParameter("notes"));
+		p.setAlerts(request.getParameter("alerts"));
+		int clinic = Integer.parseInt(request.getParameter("clinic"));
+		p.setClinic(clinic);
+		p.setUserName(request.getParameter("username_myoscar"));
+		String tapUserName = request.getParameter("tap_username");
+		p.setTapUsername(tapUserName);		
+		ShaPasswordEncoder enc = new ShaPasswordEncoder();		
+		String tapPassword = enc.encodePassword(request.getParameter("tap_password"), null);	
+		p.setTapPassword(tapPassword);
+			
+		//If the string is blank, save as 0;
+		p.setMrp(StringUtils.isNotBlank(request.getParameter("mrp")) ? Integer.parseInt(request.getParameter("mrp")) : 0);
+		p.setMrpFirstName(request.getParameter("mrp_firstname"));
+		p.setMrpLastName(request.getParameter("mrp_lastname"));
+		//Get Research ID from JSP and set it. 
+		p.setResearchID(request.getParameter("researchid"));
+			
+		int newPatientID = patientManager.createPatient(p);	
+		int site = organizationManager.getSiteByClinic(clinic);
 		
+		StringBuffer sb = new StringBuffer();
 		
-			p.setFirstName(request.getParameter("firstname").trim());
-			p.setLastName(request.getParameter("lastname").trim());
-			if(request.getParameter("preferredname") != "") 
-				p.setPreferredName(request.getParameter("preferredname").trim());
-			p.setVolunteer(vId1);
-			p.setPartner(vId2);		
-			p.setMyoscarVerified(request.getParameter("myoscar_verified"));		
-			p.setGender(request.getParameter("gender"));
-			p.setNotes(request.getParameter("notes"));
-			p.setAlerts(request.getParameter("alerts"));
-			p.setClinic(Integer.parseInt(request.getParameter("clinic")));
-			p.setUserName(request.getParameter("username_myoscar"));
-			
-			//If the string is blank, save as 0;
-			p.setMrp(StringUtils.isNotBlank(request.getParameter("mrp")) ? Integer.parseInt(request.getParameter("mrp")) : 0);
-			p.setMrpFirstName(request.getParameter("mrp_firstname"));
-			p.setMrpLastName(request.getParameter("mrp_lastname"));
-			//Get Research ID from JSP and set it. 
-			p.setResearchID(request.getParameter("researchid"));
-			
-			int newPatientID = patientManager.createPatient(p);		
-//			HttpSession session = request.getSession();
-//			List<Patient> patients = (List<Patient>)session.getAttribute("allPatientWithFullInfos");
-//			patients.add(p);
-//			session.setAttribute("allPatientWithFullInfos", patients);
-			
-			//add logs
-			User loggedInUser = TapestryHelper.getLoggedInUser(request);
-			StringBuffer sb = new StringBuffer();
-			sb.append(loggedInUser.getName());
-			sb.append(" has added a new patient ");
-			sb.append(p.getFirstName());
+		//add new client to User table 
+		if (newPatientID != 0)
+		{
+			User user = new User();
+			sb = new StringBuffer();
+			sb.append(firstName);
 			sb.append(" ");
-			sb.append(p.getLastName());
-			userManager.addUserLog(sb.toString(), loggedInUser);
+			sb.append(lastName);
+			user.setName(sb.toString());
+			user.setUsername(tapUserName);
+			user.setRole("ROLE_CLIENT");						
+			user.setPassword(tapPassword);
+			user.setSite(site);
+			user.setEmail(" ");	
+			user.setOrganization(0);
 			
-			//Auto assign all existing surveys			
-			List<SurveyTemplate> surveyTemplates;
-			int site = loggedInUser.getSite();
-			if (site == 0)//central admin			{
-				site = Integer.parseInt(request.getParameter("site"));
+			userManager.createUser(user);	
+		}		
+		//add logs
+		User loggedInUser = TapestryHelper.getLoggedInUser(request);
 			
-			surveyTemplates = surveyManager.getDefaultSurveyTemplatesBySite(site);
+		sb.append(loggedInUser.getName());
+		sb.append(" has added a new patient ");
+		sb.append(p.getFirstName());
+		sb.append(" ");
+		sb.append(p.getLastName());
+		userManager.addUserLog(sb.toString(), loggedInUser);
+			
+		//Auto assign all existing surveys			
+		List<SurveyTemplate> surveyTemplates = surveyManager.getDefaultSurveyTemplatesBySite(site);
+	   	
+	   	for(SurveyTemplate st: surveyTemplates) 
+	   	{
+	   		SurveyResult sr = new SurveyResult();
+	   		sr.setSurveyID(st.getSurveyID());
+	   		sr.setPatientID(newPatientID);		            
+	   		//set today as startDate
+	   		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");		        	
+	   		sr.setStartDate(sdf.format(new Date()));
 	   		
-	   		for(SurveyTemplate st: surveyTemplates) 
-	   		{
-	   					
-	   			SurveyResult sr = new SurveyResult();
-	            sr.setSurveyID(st.getSurveyID());
-	            sr.setPatientID(newPatientID);		            
-	            //set today as startDate
-	            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");		        	
-	            sr.setStartDate(sdf.format(new Date()));
-	            
-	            TapestryPHRSurvey blankSurvey = new SurveyFactory().getSurveyTemplate(st);;
-    			blankSurvey.setQuestions(new ArrayList<SurveyQuestion>());// make blank survey
-    			sr.setResults(SurveyAction.updateSurveyResult(blankSurvey));
-    			String documentId = surveyManager.assignSurvey(sr);
-    			blankSurvey.setDocumentId(documentId);   
-	   		}
+	   		TapestryPHRSurvey blankSurvey = new SurveyFactory().getSurveyTemplate(st);
+	   		blankSurvey.setQuestions(new ArrayList<SurveyQuestion>());// make blank survey
+	   		sr.setResults(SurveyAction.updateSurveyResult(blankSurvey));
+	   		String documentId = surveyManager.assignSurvey(sr);
+	   		blankSurvey.setDocumentId(documentId);   
+	   	}
 
-	   	if (TapestryHelper.isMatchVolunteer(v1, v2))
-		{
-	   		model.addAttribute("createPatientSuccessfully",true);
-	   		TapestryHelper.loadPatientsAndVolunteers(model, volunteerManager, patientManager,  organizationManager,request);
-	   	}	
-	        
-	   	//If there is a mismatch in Volunteer experience level, send a warning message. 
-	    if (!TapestryHelper.isMatchVolunteer(v1, v2))
-		{
-			model.addAttribute("misMatchedVolunteer",true);
-			TapestryHelper.loadPatientsAndVolunteers(model, volunteerManager, patientManager,  organizationManager,request);
-		}
+	   	model.addAttribute("createPatientSuccessfully",true);
+   		TapestryHelper.loadPatientsAndVolunteers(model, volunteerManager, patientManager,  organizationManager,request);
+//	   	if (TapestryHelper.isMatchVolunteer(v1, v2))
+//		{
+//	   		model.addAttribute("createPatientSuccessfully",true);
+//	   		TapestryHelper.loadPatientsAndVolunteers(model, volunteerManager, patientManager,  organizationManager,request);
+//	   	}	
+//	        
+//	   	//If there is a mismatch in Volunteer experience level, send a warning message. 
+//	    if (!TapestryHelper.isMatchVolunteer(v1, v2))
+//		{
+//	    	model.addAttribute("misMatchedVolunteer",true);
+//			TapestryHelper.loadPatientsAndVolunteers(model, volunteerManager, patientManager,  organizationManager,request);
+//		}
 
 		return "admin/view_clients";
-//OLD CODE that did not allow for volunteer pairing with wrong exp level
-//		else
-//		{			
-//			model.addAttribute("misMatchedVolunteer",true);
-//			TapestryHelper.loadPatientsAndVolunteers(model, volunteerManager, patientManager,  organizationManager,request);
-//			
-//			return "admin/view_clients";
-//		}
 	}
    	
    	@RequestMapping(value="/edit_patient/{id}", method=RequestMethod.GET)
@@ -914,11 +924,9 @@ public class TapestryController{
 		else if ("Female".equalsIgnoreCase(p.getGender()))
 			p.setGender("F");
 		else 
-			p.setGender("O");
-		
+			p.setGender("O");		
 		model.addAttribute("patient", p);
 		
-//		List<Volunteer> volunteers = volunteerManager.getAllVolunteers();	
 		List<Volunteer> volunteers;
 		if (request.isUserInRole("ROLE_ADMIN"))
 			volunteers = volunteerManager.getAllVolunteers();				
@@ -968,6 +976,9 @@ public class TapestryController{
 			p.setMrpFirstName(request.getParameter("mrp_firstname"));
 			p.setMrpLastName(request.getParameter("mrp_lastname"));
 			p.setResearchID(request.getParameter("researchid"));
+			p.setTapUsername(request.getParameter("tap_username"));
+			
+			System.out.println("tap user name for this patient= "+ p.getTapUsername());
 			
 			patientManager.updatePatient(p);
 			model.addAttribute("updatePatientSuccessfully",true);
@@ -2596,7 +2607,7 @@ public class TapestryController{
 			}
 			surveyManager.updateSurveyResults(id, data);
 			surveyManager.markAsComplete(id);
-			System.out.println("complete...");
+			
 			//user logs
 			sb  = new StringBuffer();
 			sb.append(currentUser.getName());
@@ -2631,10 +2642,15 @@ public class TapestryController{
 		
 			userManager.addUserLog(sb.toString(), currentUser);
 		}
+				
+		if (request.isUserInRole("ROLE_CLIENT"))
+			return "redirect:/";
 		
 		if (!request.isUserInRole("ROLE_USER")){
    			return "redirect:/display_client/"+surveyResult.getPatientID();
-   		} else {
+   		}		
+		else
+		{
    			Appointment appointment = appointmentManager.getAppointmentByMostRecentIncomplete(currentPatient.getPatientID());
    			
    			if (isComplete) {
@@ -3804,17 +3820,12 @@ public class TapestryController{
 			@PathVariable("activityId") int id, ModelMap model)
 	{
 		AdminActivity activity = new AdminActivity();
-		activity = userManager.getAdminActivityById(id);			
-		/////
-		System.out.println("start time=" + activity.getStartTime());
-		System.out.println("end time=" + activity.getEndTime());
-		////
+		activity = userManager.getAdminActivityById(id);
 		model.addAttribute("activityLog", activity);
 		
 		HttpSession  session = request.getSession();
 		if (session.getAttribute("unread_messages") != null)
-			model.addAttribute("unread", session.getAttribute("unread_messages"));
-		
+			model.addAttribute("unread", session.getAttribute("unread_messages"));	
 		
 		return "/admin/modify_adminActivity";
 	}
@@ -3871,6 +3882,36 @@ public class TapestryController{
 			
 		session.setAttribute("ActivityMessage","U");
 		return "redirect:/view_adminActivities";	
+	}
+	
+	@RequestMapping(value="/setDefault_existingClient", method=RequestMethod.GET)
+	public String updateExistingClient(SecurityContextHolderAwareRequestWrapper request, ModelMap model)
+	{
+		List<Patient> patients = patientManager.getAllPatients();
+		patientManager.setDefaultUsernameAndPassword();
+		User user;
+		int site;
+		
+		ShaPasswordEncoder enc = new ShaPasswordEncoder();		
+		String tapPassword = enc.encodePassword("tap_client", null);
+		
+		for (Patient p: patients)
+		{
+			site = patientManager.getSiteByPatientId(p.getPatientID());
+			user = new User();
+			
+			user.setName(p.getFirstName() + " " + p.getLastName());
+			user.setUsername(p.getTapUsername());
+			user.setRole("ROLE_CLIENT");	
+			user.setPassword(tapPassword);
+			user.setSite(site);
+			user.setEmail(" ");	
+			user.setOrganization(0);
+			
+			userManager.createUser(user);	
+		}
+		
+		return "redirect:/";
 	}
 	
 }
