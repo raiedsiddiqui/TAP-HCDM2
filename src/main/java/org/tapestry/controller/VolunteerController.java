@@ -1638,12 +1638,15 @@ public class VolunteerController {
 		
 		if ("ROLE_USER".equalsIgnoreCase(user.getRole()))
 		{
+			a.setStatus("Awaiting Approval");
+			appointmentManager.createAppointment(a);
+			
 			if ((TapestryHelper.isAvailableForVolunteer(availability, pAvailability)) && 
 					(TapestryHelper.isAvailableForVolunteer(availability, vAvailability)))
 			{
-				a.setStatus("Awaiting Approval");
-				if (appointmentManager.createAppointment(a))
-				{					
+	//			a.setStatus("Awaiting Approval");
+//				if (appointmentManager.createAppointment(a))
+//				{					
 					//send message to local admin and volunteers
 					int organizationId = volunteer1.getOrganizationId();
 					List<User> coordinators = userManager.getVolunteerCoordinatorByOrganizationId(organizationId);
@@ -1669,12 +1672,12 @@ public class VolunteerController {
 					//log
 					userManager.addUserLog(logMsg, user);
 					return "redirect:/?booked=true";	
-				}// failed to create an appointment in DB
-				else
-				{
-					System.out.println("Can not create an appointment in DB");
-					return "redirect:/?booked=false";
-				}
+//				}// failed to create an appointment in DB
+//				else
+//				{
+//					System.out.println("Can not create an appointment in DB");
+//					return "redirect:/?booked=false";
+//				}
 			}
 			else // another volunteer's availability does not match
 			{
@@ -1688,22 +1691,25 @@ public class VolunteerController {
 		}
 		else //login as admin
 		{
+			a.setStatus("Approved");
+			appointmentManager.createAppointment(a);
 			if ((TapestryHelper.isAvailableForVolunteer(availability, vAvailability)) && 
 					(TapestryHelper.isAvailableForVolunteer(availability, pAvailability)))
 			{
-				a.setStatus("Approved");
-				if (appointmentManager.createAppointment(a))
-				{
-					TapestryHelper.sendMessageToInbox(inboxMsg, userId, userId, messageManager);//send message to login user 
-					TapestryHelper.sendMessageToInbox(inboxMsg, userId, volunteer1UserId, messageManager);//send message to volunteer1 
-					TapestryHelper.sendMessageToInbox(inboxMsg, userId, volunteer2UserId, messageManager);//send message to volunteer2
-					return "redirect:/manage_appointments?success=true";	
-				}
-				else
-				{
-					System.out.println("Can not create an appointment in DB");
-					return "redirect:/manage_appointments?success=false";
-				}				
+		//		a.setStatus("Approved");
+//				if (appointmentManager.createAppointment(a))
+//				{
+//					TapestryHelper.sendMessageToInbox(inboxMsg, userId, userId, messageManager);//send message to login user 
+//					TapestryHelper.sendMessageToInbox(inboxMsg, userId, volunteer1UserId, messageManager);//send message to volunteer1 
+//					TapestryHelper.sendMessageToInbox(inboxMsg, userId, volunteer2UserId, messageManager);//send message to volunteer2
+//					return "redirect:/manage_appointments?success=true";	
+//				}
+//				else
+//				{
+//					System.out.println("Can not create an appointment in DB");
+//					return "redirect:/manage_appointments?success=false";
+//				}	
+				return "redirect:/manage_appointments?success=true";
 			}
 			else // one of volunteer's availability does not match
 			{										

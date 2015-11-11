@@ -759,6 +759,8 @@ public class TapestryController{
 		model.addAttribute("clinics", clinics);
 		
 		List<String> existResearchIds = patientManager.getResearchIds(loggedInUser.getSite());
+		System.out.println("site ="+ loggedInUser.getSite());
+		System.out.println("size of list of existResearch ids="+ existResearchIds.size());
 		existResearchIds.removeAll(Collections.singleton(""));
 		String ids = existResearchIds.toString().trim();
 		model.addAttribute("researchIds", ids);
@@ -2908,8 +2910,7 @@ public class TapestryController{
 		{
 			sites = new ArrayList<Site>();
 			sites.add(organizationManager.getSiteById(user.getSite()));
-		}
-						
+		}						
 		model.addAttribute("sites", sites);
 
 		return "admin/manage_research_data";
@@ -2989,7 +2990,7 @@ public class TapestryController{
             }
         }   
         //Adjusts the each column width to fit the contents
-        for (int c=1; c<=100; c++)
+        for (int c=1; c<=120; c++)
         	sheet.autoSizeColumn(c);
        
         response.setContentType("application/vnd.ms-excel");

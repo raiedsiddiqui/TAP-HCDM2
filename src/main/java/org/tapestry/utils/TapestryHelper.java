@@ -3413,11 +3413,9 @@ public class TapestryHelper {
 						if (!Utils.isNullOrEmpty(observerNote))
 						{
 							sb.append(displayedResults.get(j).getObserverNotes());	
-							sb.append(".");
-		//					sb.append("\n");
+							sb.append(".");		
 				   		}
-				   	}
-					
+				   	}					
 					rData.setdSS_notes_TO(sb.toString());
 				}									
 			}		
@@ -3711,6 +3709,20 @@ public class TapestryHelper {
 				if (!displayedResults.isEmpty())
 				{//if answer is empty, format it to 0
 					displayedResults = formatEmptyResultAnswerToInt(displayedResults);
+					
+					/////
+//					for (int p=0; p<displayedResults.size(); p++)
+//					{
+//						if (displayedResults.get(p).getQuestionAnswer().contains(","))
+//						{
+//							System.out.println("/= "+displayedResults.get(p).getQuestionId());
+//							
+//							System.out.println("mobili text= "+displayedResults.get(p).getQuestionText());
+//							System.out.println("mobil ians= "+displayedResults.get(p).getQuestionAnswer());
+//						}
+//					
+//					}
+					////
 					
 					size = displayedResults.size();					
 					rData.setMob1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));

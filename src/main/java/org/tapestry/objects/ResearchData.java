@@ -84,10 +84,28 @@ public class ResearchData {
 	//mobility
 	private int mob1;
 	private String mob2;
+	private int mob21;
+	private int mob22;
+	private int mob23;
+	private int mob24;
+	private int mob25;
+	private int mob26;
 	private int mob3;
 	private String mob4;
+	private int mob41;
+	private int mob42;
+	private int mob43;
+	private int mob44;
+	private int mob45;
+	private int mob46;
 	private int mob5;
 	private String mob6;
+	private int mob61;
+	private int mob62;
+	private int mob63;
+	private int mob64;
+	private int mob65;
+	private int mob66;
 	//nutrition
 	private int nut1;
 	private int nut2;
@@ -677,6 +695,150 @@ public class ResearchData {
 
 	public void setMob6(String mob6) {
 		this.mob6 = mob6;
+	}	
+
+	public int getMob21() {
+		return mob21;
+	}
+
+	public void setMob21(int mob21) {
+		this.mob21 = mob21;
+	}
+
+	public int getMob22() {
+		return mob22;
+	}
+
+	public void setMob22(int mob22) {
+		this.mob22 = mob22;
+	}
+
+	public int getMob23() {
+		return mob23;
+	}
+
+	public void setMob23(int mob23) {
+		this.mob23 = mob23;
+	}
+
+	public int getMob24() {
+		return mob24;
+	}
+
+	public void setMob24(int mob24) {
+		this.mob24 = mob24;
+	}
+
+	public int getMob25() {
+		return mob25;
+	}
+
+	public void setMob25(int mob25) {
+		this.mob25 = mob25;
+	}
+
+	public int getMob26() {
+		return mob26;
+	}
+
+	public void setMob26(int mob26) {
+		this.mob26 = mob26;
+	}
+
+	public int getMob41() {
+		return mob41;
+	}
+
+	public void setMob41(int mob41) {
+		this.mob41 = mob41;
+	}
+
+	public int getMob42() {
+		return mob42;
+	}
+
+	public void setMob42(int mob42) {
+		this.mob42 = mob42;
+	}
+
+	public int getMob43() {
+		return mob43;
+	}
+
+	public void setMob43(int mob43) {
+		this.mob43 = mob43;
+	}
+
+	public int getMob44() {
+		return mob44;
+	}
+
+	public void setMob44(int mob44) {
+		this.mob44 = mob44;
+	}
+
+	public int getMob45() {
+		return mob45;
+	}
+
+	public void setMob45(int mob45) {
+		this.mob45 = mob45;
+	}
+
+	public int getMob46() {
+		return mob46;
+	}
+
+	public void setMob46(int mob46) {
+		this.mob46 = mob46;
+	}
+
+	public int getMob61() {
+		return mob61;
+	}
+
+	public void setMob61(int mob61) {
+		this.mob61 = mob61;
+	}
+
+	public int getMob62() {
+		return mob62;
+	}
+
+	public void setMob62(int mob62) {
+		this.mob62 = mob62;
+	}
+
+	public int getMob63() {
+		return mob63;
+	}
+
+	public void setMob63(int mob63) {
+		this.mob63 = mob63;
+	}
+
+	public int getMob64() {
+		return mob64;
+	}
+
+	public void setMob64(int mob64) {
+		this.mob64 = mob64;
+	}
+
+	public int getMob65() {
+		return mob65;
+	}
+
+	public void setMob65(int mob65) {
+		this.mob65 = mob65;
+	}
+
+	public int getMob66() {
+		return mob66;
+	}
+
+	public void setMob66(int mob66) {
+		this.mob66 = mob66;
 	}
 
 	public int getNut1() {
