@@ -3468,13 +3468,13 @@ public class TapestryHelper {
 			   	}
 				res = ResultParser.getResults(xml);
 				displayedResults = ResultParser.getDisplayedSurveyResults(res);		
-				
-				if (!displayedResults.isEmpty())
+																
+				if (!displayedResults.isEmpty())					
 				{
-					rData.setGoals1Matter_TO(displayedResults.get(0).getQuestionAnswer());
-					rData.setGoals2Life_TO(displayedResults.get(1).getQuestionAnswer());
-					rData.setGoals3Health_TO(displayedResults.get(2).getQuestionAnswer());
-					rData.setGoals4List_TO(displayedResults.get(3).getQuestionAnswer());
+					rData.setGoals1Matter_TO(displayedResults.get(0).getQuestionAnswer());													
+					rData.setGoals2Life_TO(trimGoalMsg(displayedResults.get(1).getQuestionAnswer()));
+					rData.setGoals3Health_TO(trimGoalMsg(displayedResults.get(2).getQuestionAnswer()));
+					rData.setGoals4List_TO(trimGoalMsg(displayedResults.get(3).getQuestionAnswer()));
 													
 					goalsArray = displayedResults.get(4).getQuestionAnswer().split("<br>");
 					size = goalsArray.length;
@@ -3512,8 +3512,7 @@ public class TapestryHelper {
 						if (!Utils.isNullOrEmpty(observerNote))
 						{
 							sb.append(displayedResults.get(j).getObserverNotes());
-							sb.append(".");
-			//				sb.append("\n");
+							sb.append(".");			
 				   		}
 				   	}
 					rData.setGoalsDiscussion_notes_TO(sb.toString());			
@@ -3704,111 +3703,72 @@ public class TapestryHelper {
 			   	}
 				res = ResultParser.getResults(xml);
 				displayedResults = ResultParser.getDisplayedSurveyResults(res);		
-				
-				
+				List<Integer> aList;
 				if (!displayedResults.isEmpty())
-				{//if answer is empty, format it to 0
-					displayedResults = formatEmptyResultAnswerToInt(displayedResults);
+				{
+					//if answer is empty, format it to 0
+					displayedResults = formatEmptyResultAnswerToInt(displayedResults);							
+					String qId,answer;
 					
-					/////
-//					for (int p=0; p<displayedResults.size(); p++)
-//					{
-//						if (displayedResults.get(p).getQuestionAnswer().contains(","))
-//						{
-//							System.out.println("/= "+displayedResults.get(p).getQuestionId());
-//							
-//							System.out.println("mobili text= "+displayedResults.get(p).getQuestionText());
-//							System.out.println("mobil ians= "+displayedResults.get(p).getQuestionAnswer());
-//						}
-//					
-//					}
-					////
-					
-					size = displayedResults.size();					
-					rData.setMob1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
-					if (size == 3)
-					{	//a2a, a3a, a4a					
-						rData.setMob3(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
-						rData.setMob5(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
-					}
-					else if (size == 4)
-					{						
-						if (displayedResults.get(0).getQuestionAnswer().equals("1"))
-						{	//a2a, a2b, a3a, a4a			
-							rData.setMob2(displayedResults.get(1).getQuestionAnswer());
-							rData.setMob3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
-							
-							if (displayedResults.get(3).getQuestionAnswer().equals(""))
-								rData.setMob5(0);
-							else
-								rData.setMob5(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));																					
-						}
-						else 
-						{
-							rData.setMob3(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));							
-							if(displayedResults.get(1).getQuestionAnswer().equals("1"))
-							{//a2a, a3a, a3b, a4a
-								rData.setMob4(displayedResults.get(2).getQuestionAnswer());
-								if (displayedResults.get(3).getQuestionAnswer().equals(""))
-									rData.setMob5(0);
-								else
-									rData.setMob5(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
-							}
-							else
-							{//a2a, a3a, a4a, a4b
-								rData.setMob5(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
-								rData.setMob6(displayedResults.get(3).getQuestionAnswer());
-							}							
-						}						
-					}
-					else if(size == 5)
+					for (DisplayedSurveyResult dsr: displayedResults)
 					{
-						if (displayedResults.get(0).getQuestionAnswer().equals("1"))
-						{
-							rData.setMob2(displayedResults.get(1).getQuestionAnswer());
-							rData.setMob3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
-							if (displayedResults.get(2).getQuestionAnswer().equals("1"))
-							{//a2a, a2b, a3a, a3b, a4a								
-								rData.setMob4(displayedResults.get(3).getQuestionAnswer());
-								
-								if (displayedResults.get(4).getQuestionAnswer().equals(""))
-									rData.setMob5(0);
-								else
-									rData.setMob5(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
-							}
-							else
-							{//a2a, a2b, a3a, a4a, a4b
-								if (displayedResults.get(3).getQuestionAnswer().equals(""))
-									rData.setMob5(0);
-								else
-									rData.setMob5(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
-								rData.setMob6(displayedResults.get(4).getQuestionAnswer());
-							}
-						}
-						else
-						{//a2a, a3a, a3b, a4a, a4b
-							rData.setMob3(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
-							rData.setMob4(displayedResults.get(2).getQuestionAnswer());
-							
-							if (displayedResults.get(3).getQuestionAnswer().equals(""))
-								rData.setMob5(0);
-							else
-								rData.setMob5(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
-							rData.setMob6(displayedResults.get(4).getQuestionAnswer());
-						}
-					}
-					else if(size == 6)
-					{						
-						rData.setMob2(displayedResults.get(1).getQuestionAnswer());
-						rData.setMob3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
-						rData.setMob4(displayedResults.get(3).getQuestionAnswer());
+						qId = dsr.getQuestionId();
+						answer = dsr.getQuestionAnswer();
 						
-						if (displayedResults.get(4).getQuestionAnswer().equals(""))
-							rData.setMob5(0);
-						else
-							rData.setMob5(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
-			
-						rData.setMob6(displayedResults.get(5).getQuestionAnswer());	
+						if (qId.equals("a2a"))
+							rData.setMob1(Integer.parseInt(answer));
+						if (qId.equals("a2b"))
+						{
+							if (answer.contains(","))
+							{							
+								aList = makeMobilityMultipleAnswerList(answer);
+								rData.setMob21(aList.get(0));
+								rData.setMob22(aList.get(1));
+								rData.setMob23(aList.get(2));
+								rData.setMob24(aList.get(3));
+								rData.setMob25(aList.get(4));
+								rData.setMob26(aList.get(5));
+							}
+							else
+								rData.setMob21(Integer.parseInt(answer));
+						}
+						
+						if (qId.equals("a3a"))
+							rData.setMob3(Integer.parseInt(answer));
+						if (qId.equals("a3b"))
+						{
+							if (answer.contains(","))
+							{								
+								aList = makeMobilityMultipleAnswerList(answer);
+								rData.setMob41(aList.get(0));
+								rData.setMob42(aList.get(1));
+								rData.setMob43(aList.get(2));
+								rData.setMob44(aList.get(3));
+								rData.setMob45(aList.get(4));
+								rData.setMob46(aList.get(5));
+							}
+							else
+								rData.setMob41(Integer.parseInt(answer));
+						}
+						
+						if (qId.equals("a4a"))
+							rData.setMob5(Integer.parseInt(answer));
+						if (qId.equals("a4b"))
+						{
+							if (answer.contains(","))
+							{								
+								aList = makeMobilityMultipleAnswerList(answer);							 
+								rData.setMob61(aList.get(0));
+								rData.setMob62(aList.get(1));
+								rData.setMob63(aList.get(2));
+								rData.setMob64(aList.get(3));
+								rData.setMob65(aList.get(4));
+								rData.setMob66(aList.get(5));
+							}
+							else
+								rData.setMob61(Integer.parseInt(answer));
+						}
+						
 					}
 				}
 			}
@@ -4033,6 +3993,23 @@ public class TapestryHelper {
 			result.setQuestionAnswer("000");		
 		return result;
 	}	
+	
+	private static List<Integer> makeMobilityMultipleAnswerList(String answer)
+	{
+		List<String> sList = new ArrayList<String>(Arrays.asList(answer.split(",")));			
+		List<Integer> iList = new ArrayList<Integer>();
+		int size = sList.size();
+		
+		for (int i=0; i<size; i++)
+			iList.add(Integer.valueOf(sList.get(i).trim()));
+		 
+		 while (size < 6)
+		 {
+			 iList.add(0);
+			 size++;
+		 }		 
+		 return iList;
+	}
 	
 	public static List<Site> getSites(SecurityContextHolderAwareRequestWrapper request, OrganizationManager organizationManager)
 	{
@@ -4721,6 +4698,24 @@ public class TapestryHelper {
 			strSource = strSource.replaceAll(strBeReplaced, ""); 
 				
 		return strSource;
+	}
+	
+	private static String replaceString(String strSource, String strBeReplaced, String placeHolder)
+	{		
+		if (strSource.indexOf(strBeReplaced) != (-1))
+			strSource = strSource.replaceAll(strBeReplaced, placeHolder); 
+				
+		return strSource;
+	}
+	
+	private static String trimGoalMsg(String goalsMsg)
+	{
+		if (goalsMsg.contains("-------<br>"))
+			goalsMsg = replaceString(goalsMsg, "-------<br>", ",");
+		if (goalsMsg.contains("<br>"))
+			goalsMsg = replaceString(goalsMsg, "<br>", ",");
+		
+		return goalsMsg;
 	}
 	
 	public void readProperties() throws Exception{		
