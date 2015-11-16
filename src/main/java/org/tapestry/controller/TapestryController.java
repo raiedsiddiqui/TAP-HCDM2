@@ -174,13 +174,13 @@ public class TapestryController{
 	{	
 		User loggedInUser = TapestryHelper.getLoggedInUser(request, userManager);
 		//get volunteer Id from login user		
-		int volunteerId= volunteerManager.getVolunteerIdByUsername(loggedInUser.getUsername());
-		List<Patient> clients = patientManager.getPatientsForVolunteer(volunteerId);		
+		int volunteerId= volunteerManager.getVolunteerIdByUsername(loggedInUser.getUsername());			
+		List<Patient> clients = patientManager.getPatientsForVolunteer(volunteerId);	
 		model.addAttribute("clients", clients);
 		
 		TapestryHelper.setUnreadMessage(request, model, messageManager);
 		
-		return "volunteer/client";
+		return "/volunteer/client";
 	}
 	
 	@RequestMapping(value="/manage_users", method=RequestMethod.GET)
@@ -759,8 +759,10 @@ public class TapestryController{
 		model.addAttribute("clinics", clinics);
 		
 		List<String> existResearchIds = patientManager.getResearchIds(loggedInUser.getSite());
-		System.out.println("site ="+ loggedInUser.getSite());
-		System.out.println("size of list of existResearch ids="+ existResearchIds.size());
+		System.out.println("hello add client..." + existResearchIds.size());
+		for (int i = 0; i < existResearchIds.size(); i++)
+			System.out.println("r Id "+ existResearchIds.get(i));
+		
 		existResearchIds.removeAll(Collections.singleton(""));
 		String ids = existResearchIds.toString().trim();
 		model.addAttribute("researchIds", ids);
@@ -3044,8 +3046,8 @@ public class TapestryController{
 			List<Site> sites = TapestryHelper.getSites(request, organizationManager);		
 			model.addAttribute("sites", sites);
 		}
-		
-		return "/admin/add_clinic";
+		return "admin/add_clinic";
+	//	return "/admin/add_clinic";
    	}
 	
 	@RequestMapping(value="/add_clinic", method=RequestMethod.POST)
