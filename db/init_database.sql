@@ -181,6 +181,21 @@ CREATE TABLE IF NOT EXISTS volunteers (
 	photo_received_date DATE NOT NULL DEFAULT '1900-01-01',	
 	source VARCHAR(100),
 	application_form_completion_date DATE NOT NULL DEFAULT '1900-01-01',
+	background_info TEXT NOT NULL,
+	vol_experience TEXT NOT NULL,
+	tech_comfort TINYINT(1) NOT NULL DEFAULT 2, /* 1--Yes, 2-No*/
+	language_info TINYINT NOT NULL DEFAULT 1, /* 1--Yes, 2-No*/
+	application_completed TINYINT(1) NOT NULL DEFAULT 2, /* 1--Yes, 2-No*/
+	interview_completed TINYINT(1) NOT NULL DEFAULT 2, /* 1--Yes, 2-No*/
+	reference_completed TINYINT(1) NOT NULL DEFAULT 2, /* 1--Yes, 2-No*/
+	police_completed TINYINT(1) NOT NULL DEFAULT 2, /* 1--Yes, 2-No*/
+	tb_completed TINYINT(1) NOT NULL DEFAULT 2, /* 1--Yes, 2-No*/
+	vlc_completed TINYINT(1) NOT NULL DEFAULT 2, /* 1--Yes, 2-No*/
+	confidentiality_completed TINYINT(1) NOT NULL DEFAULT 2, /* 1--Yes, 2-No*/
+	volagreement_completed TINYINT(1) NOT NULL DEFAULT 2, /* 1--Yes, 2-No*/
+	photo_received TINYINT(1) NOT NULL DEFAULT 2, /* 1--Yes, 2-No*/
+	current_status TINYINT(1) NOT NULL DEFAULT 2, /* 1--Yes, 2-No*/
+	reason_inactivity TEXT NOT NULL, 
 	
 	PRIMARY KEY (volunteer_ID)	
 );
