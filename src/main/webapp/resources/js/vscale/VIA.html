@@ -14,7 +14,7 @@ var names = ["1<br>Disagree", "2", "3", "4", "5", "6", "7", "8", "9", "10<br>Agr
 
 $(function populate() {
 // first we need a slider to work with
-var $slider2 = $("#awesome2").slider({ max: names.length-1 , change: function( event, ui ) {
+var $slider2 = $("#awesome2").slider({ min:1, max: names.length , change: function( event, ui ) {
                 $( "#score" ).html( ui.value);
                 $("#answer").html(ui.value);
             }});
