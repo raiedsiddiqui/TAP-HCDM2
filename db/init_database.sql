@@ -194,7 +194,7 @@ CREATE TABLE IF NOT EXISTS volunteers (
 	confidentiality_completed TINYINT(1) NOT NULL DEFAULT 2, /* 1--Yes, 2-No*/
 	volagreement_completed TINYINT(1) NOT NULL DEFAULT 2, /* 1--Yes, 2-No*/
 	photo_received TINYINT(1) NOT NULL DEFAULT 2, /* 1--Yes, 2-No*/
-	current_status TINYINT(1) NOT NULL DEFAULT 2, /* 1--Yes, 2-No*/
+	current_status TINYINT(1) NOT NULL DEFAULT 1, /* 1--Active, 2-Inactive*/
 	reason_inactivity TEXT NOT NULL, 
 	
 	PRIMARY KEY (volunteer_ID)	
