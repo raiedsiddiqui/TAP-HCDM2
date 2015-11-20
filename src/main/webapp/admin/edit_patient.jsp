@@ -114,7 +114,7 @@
 					
 				</div>
 				
-				<h2>User Account </h2>
+				<!-- <h2>User Account </h2>
 					<div class="row form-group">
 						<div class="col-md-4">
 							<div class="input-group input-group-lg">
@@ -125,7 +125,7 @@
 						<div class="col-md-4">
 							<label>Password</label>
 							<p>Go to Other > Manage Users to change client password. </p>
-						</div>
+						</div> -->
 						<!-- 
 						<div class="col-md-4">
 							<div class="input-group input-group-lg">
@@ -133,7 +133,7 @@
 						  		<input type="password" name="password" class="form-control" value="${volunteer.password}">
 							</div>
 						</div>-->
-					</div>
+					<!-- </div> -->
 				<div class="row form-group">	
 					<div class="col-md-6">
 						<label>PHR verified? </label>

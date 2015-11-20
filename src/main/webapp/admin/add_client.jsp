@@ -169,7 +169,7 @@
 				</div>				
 			</div>		
 			
-			<h2 class="pagetitleadmin">User Account </h2>
+			<!-- <h2 class="pagetitleadmin">User Account </h2>
 			<div class="row form-group">
 				<div class="col-md-4">
 					<div class="input-group input-group-lg">
@@ -183,7 +183,7 @@
 					  		<input type="password" name="tap_password" class="form-control" value="tapestry" required>
 					</div>
 				</div>
-			</div>
+			</div> -->
 			
 				<label>PHR verified? </label>
 				<input type="radio" name="myoscar_verified" value="1" />Yes
