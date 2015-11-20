@@ -621,6 +621,9 @@ ADDING COLLAPSIBLE END
 	  hiddenName: true
 	})
 
+$(window).bind("load", function() {
+   calctotalscore();
+});
 </script>	
 	</body>
 
