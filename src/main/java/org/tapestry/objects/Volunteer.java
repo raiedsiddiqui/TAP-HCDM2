@@ -49,7 +49,25 @@ public class Volunteer {
 	private String photoDate;
 	private String source;
 	private String applicationFormCompletionDate;
-
+	
+	private String background; 
+	private String volExperience;
+	private int techComfort;
+	private int language;
+	private int applicationCompleted;
+	private int interviewCompleted;
+	private int referenceCompleted;
+	private int policeCompleted;
+	private int tbCompleted;
+	private int vlcCompleted;
+	private int confidentialityCompleted;
+	private int volagreementCompleted;
+	private int photoReceived;
+	private int currentStatus;
+	private String reasonInactivity;
+	
+	
+	
 	public Volunteer(){
 		
 	}
@@ -430,6 +448,125 @@ public class Volunteer {
 			String applicationFormCompletionDate) {
 		this.applicationFormCompletionDate = applicationFormCompletionDate;
 	}
-
+	
+	public String getBackground() {
+		return background;
+	} 
+	
+	public void setBackground(String background) {
+		this.background = background;
+	} 
+	
+	public String getVolExperience() {
+		return volExperience;	
+	}
+	
+	public void setVolExperience(String volExperience) {
+		this.volExperience = volExperience;
+	}
+	
+	public int getTechComfort() {
+		return techComfort;
+	}
+	
+	public void setTechComfort(int techComfort) {
+		this.techComfort = techComfort;
+	}
+	
+	public int getLanguage() {
+		return language;
+	}
+	
+	public void setLanguage(int language) {
+		this.language = language;
+	}
+	
+	public int getApplicationCompleted() {
+		return applicationCompleted;
+	}
+	
+	public void setApplicationCompleted(int applicationCompleted) {
+		this.applicationCompleted = applicationCompleted;
+	}
+	
+	public int getInterviewCompleted() {
+		return interviewCompleted;
+	}
+	
+	public void setInterviewCompleted(int interviewCompleted) {
+		this.interviewCompleted = interviewCompleted;
+	}
+	
+	public int getReferenceCompleted() {
+		return referenceCompleted;
+	}
+	
+	public void setReferenceCompleted(int referenceCompleted) {
+		this.referenceCompleted = referenceCompleted;
+	}
+	
+	public int getPoliceCompleted() {
+		return policeCompleted;
+	}
+	
+	public void setPoliceCompleted(int policeCompleted) {
+		this.policeCompleted = policeCompleted;
+	}
+	
+	public int getTbCompleted() {
+		return tbCompleted;
+	}
+	
+	public void setTbCompleted(int tbCompleted) {
+		this.tbCompleted = tbCompleted;
+	}
+	
+	public int getVlcCompleted() {
+		return vlcCompleted;
+	}
+	
+	public void setVlcCompleted(int vlcCompleted) {
+		this.vlcCompleted = vlcCompleted;
+	}
+	
+	public int getConfidentialityCompleted() {
+		return confidentialityCompleted;
+	}
+	
+	public void setConfidentialityCompleted(int confidentialityCompleted) {
+		this.confidentialityCompleted = confidentialityCompleted;
+	}
+	
+	public int getVolagreementCompleted() {
+		return volagreementCompleted;
+	}
+	
+	public void setVolagreementCompleted(int volagreementCompleted) {
+		this.volagreementCompleted = volagreementCompleted;
+	}
+	
+	public int getPhotoReceived() {
+		return photoReceived;
+	}
+	
+	public void setPhotoReceived(int photoReceived) {
+		this.photoReceived = photoReceived;
+	}
+	
+	public int getCurrentStatus() {
+		return currentStatus;
+	}
+	
+	public void setCurrentStatus(int currentStatus) {
+		this.currentStatus = currentStatus;
+	}
+	
+	public String getReasonInactivity() {
+		return reasonInactivity;
+	}
+	
+	public void setReasonInactivity(String reasonInactivity) {
+		this.reasonInactivity = reasonInactivity;
+	}
 	
 }

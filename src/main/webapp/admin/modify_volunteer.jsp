@@ -130,11 +130,11 @@
 					<fieldset>
 							<div class="row form-group">
 								<div class="col-md-4">
-									<label>First Name:</label>
+									<label>First Name*</label>
 									<input type="text" name="firstname" class="form-control" value="${volunteer.firstName}" required/>
 								</div>
 								<div class="col-md-4">
-									<label>Last Name:</label>
+									<label>Last Name*</label>
 									<input type="text" name="lastname" class="form-control" value="${volunteer.lastName}" required/>
 								</div>
 								<div class="col-md-4">
@@ -223,15 +223,48 @@
 									<input name="emergencyphone" class="form-control" type="text" value="${volunteer.emergencyPhone}">
 								</div>
 							</div>	
-							<div class="row form-group">
-								<!-- div class="col-md-4">
+						<div class="row form-group">
+							<div class="col-md-4">
+									<label>Mature or Student:</label>
+									<!-- <input type="text" id="status" name="status" value="${volunteer.status}" class="form-control" /> -->	
+									<select name="status" id="status" form="modify_volunteer" class="form-control">
+										<option value=""> --- </option>
+										<option value="M" <c:if test="${volunteer.status eq 'M'}">selected</c:if>>Mature</option>
+										<option value="S" <c:if test="${volunteer.status eq 'S'}">selected</c:if>>Student</option>
+									</select>								
+								</div>	
+								<div class="col-md-4">
+									<label>Date of Birth (YYYY-MM-DD):</label>
+									<input id="dob" name="dob" value="${volunteer.dOB}" class="form-control" data-format="yyyy-MM-dd" > 				
+								</div>	
+
+								<div class="col-md-4">
+									<label>Language</label>
+									<select name="language" id="language" form="modify_volunteer" class="form-control">
+										<option value="1" selected>English</option>
+										<option value="2">Hindi</option>
+										<option value="3">Spanish</option>
+										<option value="4">French</option>
+										<option value="5">Mandarin</option>
+										<option value="6">Macedonian</option>
+										<option value="7">Punjabi</option>
+										<option value="8">Arabic</option>
+										<option value="9">Italian</option>
+										<option value="10">Chinese</option>
+										<option value="11">Dutch</option>
+									</select>	 								
+								</div>				
+
+							</div>
+						<!-- 	<div class="row form-group">
+								div class="col-md-4">
 									<label>Experience:</label>
 									<select class="form-control" name="level" form="modify_volunteer">
 										<option value='E' <c:if test="${volunteer.experienceLevel eq 'Experienced'}">selected</c:if>>Experienced</option>
 										<option value='I' <c:if test="${volunteer.experienceLevel eq 'Intermediate'}">selected</c:if>>Intermediate</option>
 										<option value='B' <c:if test="${volunteer.experienceLevel eq 'Beginer'}">selected</c:if> >Beginner</option>
 									</select>	
-								</div> -->
+								</div>
 								
 								<div class="col-md-4">
 									<label>Total VLC Score(.35):</label>
@@ -245,8 +278,8 @@
 									<label>Volunteer availability(hours/month)(.2):</label>
 									<input type="text" id="availabilityPerMonthe" name="availabilityPerMonthe" class="form-control" value="${volunteer.availabilityPerMonth}" onchange="checkNumericInput(this.id);calctotalscore();" required/>									
 								</div>
-							</div>	
-							<div class="row form-group">
+							</div>	-->
+						<!--	<div class="row form-group">
 							
 								<div class="col-md-4">
 									<label>Technology skills score(.25):</label>
@@ -260,7 +293,7 @@
 									<label>VLC ID:</label>
 									<input type="text" id="vlcId" name="vlcId" value="${volunteer.vLCID}" class="form-control" required/>									
 								</div>							
-							</div>
+							</div> -->
 							<div class="row form-group">
 								<div class="col-md-4">
 									<label>Organization:</label>
@@ -269,87 +302,262 @@
 												<option value="${o.organizationId}" <c:if test="${o.organizationId eq volunteer.organizationId}">selected</c:if>>${o.name}</option>
 											</c:forEach>
 										</select>
-								</div>
-								<div class="col-md-4">
-									<label>Total Calculated Score:</label>
-									<input type="text" id="totalcalculated" name ="totalcalculated" class="form-control" readonly="readonly"> <!--  /span>			-->					
-								</div>
-								<div class="col-md-4">
-									<label>Experience:</label>
-									<input type="text" id="experience_level" name ="experience_level" value="${volunteer.experienceLevel}" class="form-control" readonly="readonly"> <!--  /span>			-->					
-									<!-- input type="hidden" id="experience_db" name ="experience_db" value="${volunteer.experienceLevel}" class="form-control" >-->
-								</div>
-								
-														
+								</div>				
 							</div>
 							
-							<div class="row form-group">
-								<div class="col-md-4">
-									<label>Interview Date (YYYY-MM-DD):</label>
-									<input type="text" id="interviewDate" name="interviewDate" class="form-control" value="${volunteer.interviewDate}"> 																
-								</div>
-								<div class="col-md-4">
-									<label>Mature or Student:</label>
-									<input type="text" id="status" name="status" value="${volunteer.status}" class="form-control" />									
-								</div>	
-								<div class="col-md-4">
-									<label>Date of Birth (YYYY-MM-DD):</label>
-									<input id="dob" name="dob" value="${volunteer.dOB}" class="form-control" data-format="yyyy-MM-dd" > 				
-								</div>								
-							</div>
-							<div class="row form-group">
-								<div class="col-md-4">
-									<label>Reference 1:</label>
-									<input type="text" id="reference1" name="reference1" value="${volunteer.reference1}" class="form-control" > 								
-								</div>
-								<div class="col-md-4">
-									<label>Reference 2:</label>
-									<input type="text" id="reference2" name="reference2" value="${volunteer.reference2}" class="form-control" />									
-								</div>	
-								<div class="col-md-4">
-									<label>Reference Check - Date (YYYY-MM-DD):</label>
-									<input id="rDate" name="rDate" value="${volunteer.referenceCheckDate}" class="form-control" data-format="yyyy-MM-dd"> 				
-								</div>								
-							</div>
-							<div class="row form-group">
-								<div class="col-md-4">
-									<label>Police Check Date Received? (YYYY-MM-DD)</label>
-									<input type="text" id="pCheckDate" name="pCheckDate" value="${volunteer.policeCheckDate}" class="form-control" data-format="yyyy-MM-dd"> 								
-								</div>
-								<div class="col-md-4">
-									<label>TB Test Received/Date? (YYYY-MM-DD)</label>
-									<input type="text" id="tbTDate" name="tbTDate" value="${volunteer.tBTestDate}" class="form-control" data-format="yyyy-MM-dd"/>									
-								</div>	
-								<div class="col-md-4">
-									<label>VLC Completion Date (YYYY-MM-DD)</label>
-									<input id="vCDate" name="vCDate" value="${volunteer.vLCCompletionDate}" class="form-control" data-format="yyyy-MM-dd"> 				
-								</div>								
-							</div>
 							
-							<div class="row form-group">
-								<div class="col-md-4">
-									<label>Confidentiality Agreement Date Signed (YYYY-MM-DD)</label>
-									<input type="text" id="cAgreementDate" name="cAgreementDate" value="${volunteer.cAgreementDate}" class="form-control" data-format="yyyy-MM-dd"> 								
-								</div>
-								<div class="col-md-4">
-									<label>Volunteer Agreement Date Signed (YYYY-MM-DD)</label>
-									<input type="text" id="vAgreementDate" name="vAgreementDate" value="${volunteer.vAgreementDate}" class="form-control" data-format="yyyy-MM-dd"/>									
-								</div>	
-								<div class="col-md-4">
-									<label>Photo Date Received (YYYY-MM-DD)</label>
-									<input id="pDate" name="pDate" value="${volunteer.photoDate}" class="form-control" data-format="yyyy-MM-dd"> 				
-								</div>								
-							</div>
-							<div class="row form-group">
-								<div class="col-md-4">
-									<label>Application Form Completion Date (YYYY-MM-DD)</label>		
-									<input id="aCompleteDate" name="aCompleteDate" value="${volunteer.applicationFormCompletionDate}" class="form-control" data-format="yyyy-MM-dd"> 										
-								</div>	
-									<div class="col-md-4">
-									<label>Source - where they learned about Tapestry:</label>
-									<input type="text" id="source" name="source" value="${volunteer.source}" class="form-control" > 								
-								</div>								
-							</div>
+					
+							
+							
+							
+
+
+ADDING COLLAPSIBLE START
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingOne">
+      <h4 class="panel-title">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          Virtual Learning Center
+        </a>
+      </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body">
+        	<div class="row form-group">
+				<!-- div class="col-md-4">
+					<label>Experience:</label>
+					<select class="form-control" name="level" form="modify_volunteer">
+						<option value="E" selected>Experienced</option>
+						<option value="I" >Intermediate</option>
+						<option value="B" >Beginner</option>
+					</select>	
+				</div> -->
+				<div class="col-md-4">
+					<label>VLC ID:</label>
+					<input type="text" id="vlcId" name="vlcId" class="form-control" value="${volunteer.vLCID}"required/>									
+				</div>	
+				<div class="col-md-4">
+					<label>Total VLC Score(.35):</label>
+					<input type="text" id="totalVLCScore" name="totalVLCScore" class="form-control" onchange="checkNumericInput(this.id);calctotalscore();" value="${volunteer.totalVLCScore}" required/>									
+				</div>
+				<div class="col-md-4">
+					<label>Number years of experience(.1):</label>
+					<input type="text" id="numberYearsOfExperience" name="numberYearsOfExperience" class="form-control" onchange="checkNumericInput(this.id);calctotalscore();" value="${volunteer.numYearsOfExperience}" required/>									
+				</div>																
+			</div>
+							
+			<div class="row form-group">
+				<div class="col-md-4">
+					<label>Volunteer availability(hours/month)(.2):</label>
+					<input type="text" id="availabilityPerMonthe" name="availabilityPerMonthe"  class="form-control" onchange="checkNumericInput(this.id);calctotalscore();" value="${volunteer.availabilityPerMonth}" required/>									
+				</div>
+				<div class="col-md-4">
+					<label>Technology skills score(.25):</label>
+					<input type="text" id="technologySkillsScore" name="technologySkillsScore" class="form-control" onchange="checkNumericInput(this.id);calctotalscore();" value="${volunteer.technologySkillsScore}" required/>									
+				</div>
+				<div class="col-md-4">
+					<label>Perception of older adults score(.2):</label>
+					<input type="text" id="perceptionOfOlderAdultScore" name="perceptionOfOlderAdultScore" class="form-control" onchange="checkNumericInput(this.id);calctotalscore();" value="${volunteer.perceptionOfOlderAdultsScore}" required/>									
+				</div>						
+			</div>
+
+			<div class="row form-group"> <!-- form-group div start -->			
+				<div class="col-md-4">
+					<label>Total Calculated Score:</label>
+					<input type="text" id="totalcalculated" name ="totalcalculated" class="form-control" readonly="readonly"> <!--  /span>			-->					
+				</div>
+				<div class="col-md-4">
+					<label>Experience:</label>
+					<input type="text" id="experience_level" name ="experience_level" class="form-control" readonly="readonly"> <!--  /span>			-->					
+				</div>
+				<div class="col-md-4">
+					<label>VLC Completed</label>
+					<select name="vlcCompleted" id="vlcCompleted" form="modify_volunteer" class="form-control">
+						<option value="1" <c:if test="${volunteer.vlcCompleted eq '1'}">selected</c:if>>Yes</option>
+						<option value="2" <c:if test="${volunteer.vlcCompleted eq '2'}">selected</c:if>>No</option>
+					</select>	 								
+				</div>
+				<div class="col-md-4">
+					<label>VLC Completion Date (YYYY-MM-DD)</label>
+					<input id="vCDate" name="vCDate" class="datepickera form-control" data-format="yyyy-MM-dd" value="${volunteer.vLCCompletionDate}">	
+				</div>	
+			</div> <!-- form-group div end -->	
+
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingTwo">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+       	Volunteer Recruitment Information</a>
+      </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+      <div class="panel-body">
+        <div class="row form-group"> <!-- form-group div start -->
+			<div class="col-md-4">
+				<label>Source - where they learned about Tapestry:</label>
+				<input type="text" id="source" name="source" class="form-control" value="${volunteer.source}" >		
+			</div>
+			<div class="col-md-4">
+				<label>Interview Completed</label>
+				<select name="interviewCompleted" id="interviewCompleted" form="modify_volunteer" class="form-control">
+					<option value="1" <c:if test="${volunteer.interviewCompleted eq '1'}">selected</c:if>>Yes</option>
+					<option value="2" <c:if test="${volunteer.interviewCompleted eq '2'}">selected</c:if>>No</option>
+				</select>								
+			</div>		
+			<div class="col-md-4">
+				<label>Interview Date (YYYY-MM-DD)</label>
+				<input type="text" id="interviewDate" name="interviewDate" class="datepickera form-control" data-format="yyyy-MM-dd" value="${volunteer.interviewDate}"> 																
+			</div>
+		</div><!-- form-group div end -->
+		<div class="row form-group">
+			<div class="col-md-4">
+				<label>Reference Completed</label>
+				<select name="referenceCompleted" id="referenceCompleted" form="modify_volunteer" class="form-control">
+					<option value="1" <c:if test="${volunteer.referenceCompleted eq '1'}">selected</c:if>>Yes</option>
+					<option value="2" <c:if test="${volunteer.referenceCompleted eq '2'}">selected</c:if>>No</option>
+				</select>									
+			</div>	
+			<div class="col-md-4">
+				<label>Reference Check - Date (YYYY-MM-DD)</label>
+				<input id="rDate" name="rDate" class="datepickera form-control" data-format="yyyy-MM-dd" value="${volunteer.referenceCheckDate}"> 			
+			</div>
+			<div class="col-md-4">
+				<label>Reference 1:</label>
+				<input type="text" id="reference1" name="reference1" class="form-control" value="${volunteer.reference1}">
+			</div>
+			<div class="col-md-4">
+				<label>Reference 2:</label>
+				<input type="text" id="reference2" name="reference2" class="form-control" value="${volunteer.reference2}"/>
+			</div>	
+
+		</div>
+		<div class="row form-group">
+			<div class="col-md-4">
+				<label>Confidentiality Completed</label>
+				<select name="confidentialityCompleted" id="confidentialityCompleted" form="modify_volunteer" class="form-control">
+					<option value="1" <c:if test="${volunteer.confidentialityCompleted eq '1'}">selected</c:if>>Yes</option>
+					<option value="2" <c:if test="${volunteer.confidentialityCompleted eq '2'}">selected</c:if>>No</option>
+				</select>									
+			</div>
+			<div class="col-md-4">
+				<label>Confidentiality Agreement Date Signed (YYYY-MM-DD)</label>
+				<input type="text" id="cAgreementDate" name="cAgreementDate" class="datepickera form-control" data-format="yyyy-MM-dd" value="${volunteer.cAgreementDate}"> 								
+			</div>
+			<div class="col-md-4">
+				<label>Volunteer Agreement Completed</label>
+				<select name="volagreementCompleted" id="volagreementCompleted" form="modify_volunteer" class="form-control">
+					<option value="1" <c:if test="${volunteer.volagreementCompleted eq '1'}">selected</c:if>>Yes</option>
+					<option value="2" <c:if test="${volunteer.volagreementCompleted eq '2'}">selected</c:if>>No</option>
+				</select>								
+			</div>	
+			<div class="col-md-4">
+				<label>Volunteer Agreement Date Signed (YYYY-MM-DD)</label>
+				<input type="text" id="vAgreementDate" name="vAgreementDate" class="datepickera form-control" data-format="yyyy-MM-dd" value="${volunteer.vAgreementDate}"/>									
+			</div>	
+			<div class="col-md-4">
+				<label>Photo Received</label>
+				<select name="photoReceived" id="photoReceived" form="modify_volunteer" class="form-control">
+					<option value="1" <c:if test="${volunteer.photoReceived eq '1'}">selected</c:if>>Yes</option>
+					<option value="2" <c:if test="${volunteer.photoReceived eq '2'}">selected</c:if>>No</option>
+				</select>	 								
+			</div>
+			<div class="col-md-4">
+				<label>Photo Date Received (YYYY-MM-DD)</label>
+				<input id="pDate" name="pDate" class="datepickera form-control" data-format="yyyy-MM-dd" value="${volunteer.photoDate}"> 			
+			</div>
+		</div>
+			<div class="row form-group">
+				<div class="col-md-4">
+					<label>Police Completed</label>
+					<select name="policeCompleted" id="policeCompleted" form="modify_volunteer" class="form-control">
+						<option value="1" <c:if test="${volunteer.policeCompleted eq '1'}">selected</c:if>>Yes</option>
+						<option value="2" <c:if test="${volunteer.policeCompleted eq '2'}">selected</c:if>>No</option>
+					</select> 								
+				</div>
+				<div class="col-md-4">
+					<label>Police Check Date Received (YYYY-MM-DD)</label>
+					<input type="text" id="pCheckDate" name="pCheckDate" class="datepickera form-control" data-format="yyyy-MM-dd" value="${volunteer.policeCheckDate}"> 		
+				</div>
+				<div class="col-md-4">
+					<label>TB Test Completed</label>
+					<select name="tbCompleted" id="tbCompleted" form="modify_volunteer" class="form-control">
+						<option value="1" <c:if test="${volunteer.tbCompleted eq '1'}">selected</c:if>>Yes</option>
+						<option value="2" <c:if test="${volunteer.tbCompleted eq '2'}">selected</c:if>>No</option>
+					</select>								
+				</div>		
+				<div class="col-md-4">
+					<label>TB Test Received/Date (YYYY-MM-DD)</label>
+					<input type="text" id="tbTDate" name="tbTDate" class="datepickera form-control" data-format="yyyy-MM-dd" value="${volunteer.tBTestDate}"/>									
+				</div>
+				<div class="col-md-4">
+					<label>Application Completed</label>
+					<select name="applicationCompleted" id="applicationCompleted" form="modify_volunteer" class="form-control">
+						<option value="1" <c:if test="${volunteer.applicationCompleted eq '1'}">selected</c:if>>Yes</option>
+						<option value="2" <c:if test="${volunteer.applicationCompleted eq '2'}">selected</c:if>>No</option>
+					</select>									
+				</div>
+				<div class="col-md-4">
+					<label>Application Form Completion Date (YYYY-MM-DD)</label>		
+					<input id="aCompleteDate" name="aCompleteDate" class="datepickera form-control" data-format="yyyy-MM-dd" value="${volunteer.applicationFormCompletionDate}"> 										
+				</div>								
+			</div>	
+
+			<div class="row form-group">
+				<div class="col-md-12">
+					<label>Background Information</label>
+					<input type="textarea" class="form-control" maxlength="300" name="background" value="${volunteer.background}"/>
+				</div>
+				<div class="col-md-12">
+					<label>Volunteer Experience</label>
+					<input type="textarea" class="form-control" maxlength="300" name="volExperience" value="${volunteer.volExperience}"/>
+				</div>	
+				<div class="col-md-4">
+					<label>Comfortable with Technology</label>
+					<select name="techComfort" id="techComfort" form="modify_volunteer" class="form-control">
+						<option value="1" <c:if test="${volunteer.techComfort eq '1'}">selected</c:if>>Yes</option>
+						<option value="2" <c:if test="${volunteer.techComfort eq '2'}">selected</c:if>>No</option>
+					</select>				
+				</div>								
+			</div>							
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingThree">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          Current Status
+        </a>
+      </h4>
+    </div>
+    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+      <div class="panel-body">
+       <div class="row form-group">
+			<div class="col-md-4">
+				<label>Current Status</label>
+				<select name="currentStatus" id="currentStatus" form="modify_volunteer" class="form-control">
+					<option value="1" <c:if test="${volunteer.currentStatus eq '1'}">selected</c:if>>Active</option>
+					<option value="2" <c:if test="${volunteer.currentStatus eq '2'}">selected</c:if>>Inactive</option>
+					<option value="3" <c:if test="${volunteer.currentStatus eq '3'}">selected</c:if>>No Response</option>
+					<option value="4" <c:if test="${volunteer.currentStatus eq '4'}">selected</c:if>>Not Accepted</option>
+				</select>									
+			</div>	
+			<div class="col-md-4">
+				<label>Reason for Inactivity</label>
+				<input type="textarea" class="form-control" maxlength="300" name="reasonInactivity" value="${volunteer.reasonInactivity}"/>								
+			</div>								
+		</div>
+      </div>
+    </div>
+  </div>
+</div>
+ADDING COLLAPSIBLE END
+
+
 
 						<h2>User Account </h2>
 
@@ -408,9 +616,11 @@
 	  labelYearSelect: 'Pick a year from the dropdown',
 	  selectMonths: true,
 	  selectYears: true,
+	  yearSelector: 100,
 	  formatSubmit: 'yyyy-mm-dd',
 	  hiddenName: true
 	})
+
 </script>	
 	</body>
 

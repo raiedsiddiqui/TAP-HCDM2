@@ -301,6 +301,24 @@ public class VolunteerController {
 			volunteer.setNotes(request.getParameter("notes"));
 			volunteer.setOrganizationId(Integer.valueOf(request.getParameter("organization")));					
 			volunteer.setvLCID(Integer.valueOf(request.getParameter("vlcId")));	
+			
+			volunteer.setBackground(request.getParameter("background"));
+			volunteer.setVolExperience(request.getParameter("volExperience"));
+			volunteer.setTechComfort(Integer.valueOf(request.getParameter("techComfort")));
+			volunteer.setLanguage(Integer.valueOf(request.getParameter("language")));
+			volunteer.setApplicationCompleted(Integer.valueOf(request.getParameter("applicationCompleted")));
+			volunteer.setInterviewCompleted(Integer.valueOf(request.getParameter("interviewCompleted")));
+			volunteer.setReferenceCompleted(Integer.valueOf(request.getParameter("referenceCompleted")));
+			volunteer.setPoliceCompleted(Integer.valueOf(request.getParameter("policeCompleted")));
+			volunteer.setTbCompleted(Integer.valueOf(request.getParameter("tbCompleted")));
+			volunteer.setVlcCompleted(Integer.valueOf(request.getParameter("vlcCompleted")));
+			volunteer.setConfidentialityCompleted(Integer.valueOf(request.getParameter("confidentialityCompleted")));
+			volunteer.setVolagreementCompleted(Integer.valueOf(request.getParameter("volagreementCompleted")));
+			volunteer.setPhotoReceived(Integer.valueOf(request.getParameter("photoReceived")));
+			volunteer.setCurrentStatus(Integer.valueOf(request.getParameter("currentStatus")));
+			volunteer.setReasonInactivity(request.getParameter("reasonInactivity"));
+			
+			
 			volunteer.setUserName(request.getParameter("username").trim());		
 			ShaPasswordEncoder enc = new ShaPasswordEncoder();
 			String hashedPassword = enc.encodePassword(request.getParameter("password"), null);			
@@ -399,8 +417,13 @@ public class VolunteerController {
 						
 				user.setPassword(volunteer.getPassword());
 				user.setEmail(volunteer.getEmail());
-				user.setOrganization(volunteer.getOrganizationId());									
-				user.setSite(Integer.valueOf(request.getParameter("site")));
+				user.setOrganization(volunteer.getOrganizationId());
+				int site = loggedInUser.getSite();
+				if (site == 0)//login user is central admin
+					site = Integer.valueOf(request.getParameter("site"));
+				System.out.println("site = " +site);
+				user.setSite(site);
+//				user.setSite(Integer.valueOf(request.getParameter("site")));
 				
 				success = userManager.createUser(user);				
 			}
@@ -484,6 +507,27 @@ public class VolunteerController {
 		volunteer.setAvailabilityPerMonth(Double.parseDouble(request.getParameter("availabilityPerMonthe")));
 		volunteer.setTechnologySkillsScore(Double.parseDouble(request.getParameter("technologySkillsScore")));
 		volunteer.setPerceptionOfOlderAdultsScore(Double.parseDouble(request.getParameter("perceptionOfOlderAdultScore")));
+		
+		volunteer.setBackground(request.getParameter("background"));
+		volunteer.setVolExperience(request.getParameter("volExperience"));
+		volunteer.setTechComfort(Integer.valueOf(request.getParameter("techComfort")));
+		
+		volunteer.setLanguage(Integer.valueOf(request.getParameter("language")));
+		volunteer.setApplicationCompleted(Integer.valueOf(request.getParameter("applicationCompleted")));
+		volunteer.setInterviewCompleted(Integer.valueOf(request.getParameter("interviewCompleted")));
+		
+		volunteer.setReferenceCompleted(Integer.valueOf(request.getParameter("referenceCompleted")));
+		volunteer.setPoliceCompleted(Integer.valueOf(request.getParameter("policeCompleted")));
+		volunteer.setTbCompleted(Integer.valueOf(request.getParameter("tbCompleted")));
+		
+		volunteer.setVlcCompleted(Integer.valueOf(request.getParameter("vlcCompleted")));
+		volunteer.setConfidentialityCompleted(Integer.valueOf(request.getParameter("confidentialityCompleted")));
+		volunteer.setVolagreementCompleted(Integer.valueOf(request.getParameter("volagreementCompleted")));
+		
+		volunteer.setPhotoReceived(Integer.valueOf(request.getParameter("photoReceived")));
+		volunteer.setCurrentStatus(Integer.valueOf(request.getParameter("currentStatus")));
+		volunteer.setReasonInactivity(request.getParameter("reasonInactivity"));
+		
 		//set experience level based on score calculation
 		String score = request.getParameter("totalcalculated");		
 		if (!Utils.isNullOrEmpty(score))
