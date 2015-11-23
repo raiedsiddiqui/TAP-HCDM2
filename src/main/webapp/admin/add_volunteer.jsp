@@ -69,7 +69,7 @@
 			document.getElementById('totalcalculated').value = finalscore;
 			
 			if (finalscore <= 0.55)
-				document.getElementById('experience_level').value = 'Beginer';
+				document.getElementById('experience_level').value = 'Beginner';
 			else if(finalscore <= 0.85 && finalscore > 0.55)
 				document.getElementById('experience_level').value = 'Intermediate';
 			else

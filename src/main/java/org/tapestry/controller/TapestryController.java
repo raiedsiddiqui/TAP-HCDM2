@@ -178,8 +178,7 @@ public class TapestryController{
 		List<Patient> clients = patientManager.getPatientsForVolunteer(volunteerId);	
 		model.addAttribute("clients", clients);
 		
-		TapestryHelper.setUnreadMessage(request, model, messageManager);
-		
+		TapestryHelper.setUnreadMessage(request, model, messageManager);		
 		return "/volunteer/client";
 	}
 	
@@ -217,7 +216,7 @@ public class TapestryController{
 			session.setAttribute("organizations", organizations);
 		}
 		
-		return "admin/manage_users";
+		return "/admin/manage_users";
 	}
 	
 	
@@ -759,11 +758,7 @@ public class TapestryController{
 		model.addAttribute("clinics", clinics);
 		
 		List<String> existResearchIds = patientManager.getResearchIds(loggedInUser.getSite());
-		System.out.println("hello add client..." + existResearchIds.size());
-		for (int i = 0; i < existResearchIds.size(); i++)
-			System.out.println("r Id "+ existResearchIds.get(i));
-		
-		existResearchIds.removeAll(Collections.singleton(""));
+						
 		String ids = existResearchIds.toString().trim();
 		model.addAttribute("researchIds", ids);
 
@@ -836,10 +831,14 @@ public class TapestryController{
 		int clinic = Integer.parseInt(request.getParameter("clinic"));
 		p.setClinic(clinic);
 		p.setUserName(request.getParameter("username_myoscar"));
-		String tapUserName = request.getParameter("tap_username");
-		p.setTapUsername(tapUserName);		
-		ShaPasswordEncoder enc = new ShaPasswordEncoder();		
-		String tapPassword = enc.encodePassword(request.getParameter("tap_password"), null);	
+		String tapUserName;
+		if (request.getParameter("tap_username") == null)
+			tapUserName = " ";	
+		else
+			tapUserName = request.getParameter("tap_username");
+		p.setTapUsername(tapUserName);			
+		ShaPasswordEncoder enc = new ShaPasswordEncoder();
+		String tapPassword = enc.encodePassword(request.getParameter("tap_password"), null);
 		p.setTapPassword(tapPassword);
 			
 		//If the string is blank, save as 0;
@@ -1324,19 +1323,7 @@ public class TapestryController{
 		ScoresInReport scores = new ScoresInReport();
 		
 		HttpSession session = request.getSession();
-		List<Patient> patients = new ArrayList<Patient>();
-//		if (session.getAttribute("allPatientWithFullInfos") != null)
-//		{
-//			patients = (List<Patient>)session.getAttribute("allPatientWithFullInfos");
-//			
-//			for (Patient p: patients)
-//			{
-//				if (p.getPatientID() == id)
-//					patient = p;
-//			}	
-//		}
-//		else
-//			patient = TapestryHelper.getPatientWithFullInfos(patient);	
+//		List<Patient> patients = new ArrayList<Patient>();
 		report.setPatient(patient);
 		
 		// Key Observations
@@ -1579,9 +1566,7 @@ public class TapestryController{
    		}   	   		
    		//get answer list
 		qList = new ArrayList<String>();
-		qList = TapestryHelper.getQuestionList(ResultParser.getResults(xml));   	
-		
-		System.out.println("goal list size === " + qList.size());
+		qList = TapestryHelper.getQuestionList(ResultParser.getResults(xml));  
 		
 		if ((qList != null) && (qList.size()>0))
 		{					
@@ -1638,6 +1623,267 @@ public class TapestryController{
    		
    		return messageText;
 	}
+	@RequestMapping(value="/download_mgReport/{patientID}", method=RequestMethod.GET)
+	public String downloadMgReport(@PathVariable("patientID") int id,
+			@RequestParam(value="appointmentId", required=true) int appointmentId, 	
+			ModelMap model, HttpServletResponse response, SecurityContextHolderAwareRequestWrapper request)
+	{	
+		Appointment appointment = appointmentManager.getAppointmentById(appointmentId);
+		Report report = new Report();		
+		ScoresInReport scores = new ScoresInReport();	
+		Patient patient = patientManager.getPatientByID(id);
+		List<String> lAlert = new ArrayList<String>(); 
+		
+		report.setPatient(patient);
+		
+		//Key Observations
+		String keyObservation = appointmentManager.getKeyObservationByAppointmentId(appointmentId);
+		appointment.setKeyObservation(keyObservation);
+		report.setAppointment(appointment);
+
+		//Survey---  
+		List<SurveyResult> surveyResultList = surveyManager.getCompletedSurveysByPatientID(id);
+			
+		SurveyResult ssSurvey = new SurveyResult();	// mgDuke Social Support Index
+		SurveyResult nutritionSurvey = new SurveyResult(); //nutrition 
+		SurveyResult rAPASurvey = new SurveyResult(); // RAPA
+		SurveyResult eq5dSurvey = new SurveyResult();  //EQ5D
+		SurveyResult goalsSurvey = new SurveyResult(); //Goals
+		SurveyResult shSurvey = new SurveyResult(); //satisfactionHealthcare
+		SurveyResult pcSurvey = new SurveyResult(); //patient Centeredness 
+					
+		String ssTitle="";
+		String nutritionTitle = "";
+		String rAPATitle = "";
+		String eq5dTitle =""; 
+		String goalsTitle = "";
+		String shTitle = "";
+		String pcTitle="";
+		try{
+			ssTitle = TapestryHelper.getProperties("mgSurveys.properties", "socialLife_survey");
+			nutritionTitle = TapestryHelper.getProperties("mgSurveys.properties", "nutrition_survey");
+			rAPATitle = TapestryHelper.getProperties("mgSurveys.properties", "rapa_survey");
+			eq5dTitle = TapestryHelper.getProperties("mgSurveys.properties", "qualityOfLife_survey");
+			goalsTitle = TapestryHelper.getProperties("mgSurveys.properties", "goals_survey");
+			shTitle = TapestryHelper.getProperties("mgSurveys.properties", "satisfactionHealthcare_survey");
+			pcTitle = TapestryHelper.getProperties("mgSurveys.properties", "patientCenteredness_survey");
+		}catch (Exception e)
+		{
+			System.out.println("===========Has problem to read mgSurveys.properties file============");
+		}	
+		
+		List<String> displayedSurveyTitles = new ArrayList<String>();
+		displayedSurveyTitles.add(shTitle);
+		displayedSurveyTitles.add(eq5dTitle);
+		displayedSurveyTitles.add(rAPATitle);
+		displayedSurveyTitles.add(nutritionTitle);
+		displayedSurveyTitles.add(pcTitle);
+		displayedSurveyTitles.add(ssTitle);
+		
+		for(SurveyResult survey: surveyResultList){			
+			String title = survey.getSurveyTitle();
+			
+			//added second condition survey.getResultId == 0, for each survey, a patient could have multiple survey result
+			// only the first time is used for report
+			if (title.equalsIgnoreCase(ssTitle) && (ssSurvey.getResultID()==0))//Social Life(Duke Index of Social Support)
+				ssSurvey = survey;
+					
+			if (title.equalsIgnoreCase(nutritionTitle) && (nutritionSurvey.getResultID()==0))//Nutrition
+			{System.out.println("n survye...");
+				nutritionSurvey = survey;
+			}
+					
+			if (title.equalsIgnoreCase(rAPATitle) && (rAPASurvey.getResultID()==0))//RAPA survey
+				rAPASurvey = survey;
+					
+			if (title.equalsIgnoreCase(eq5dTitle) && (eq5dSurvey.getResultID()==0))//EQ5D
+				eq5dSurvey = survey;
+					
+			if (title.equalsIgnoreCase(goalsTitle) && (goalsSurvey.getResultID()==0)) //Goals
+				goalsSurvey = survey;
+					
+			if (title.equalsIgnoreCase(shTitle) && (shSurvey.getResultID()==0)) //satisfactionHealthcare
+				shSurvey = survey;
+					
+			if (title.equalsIgnoreCase(pcTitle) && (pcSurvey.getResultID()==0)) //patient centeredness Survey
+				pcSurvey = survey;
+		}
+		
+		String xml;
+		List<String> qList = new ArrayList<String>();
+   		List<String> questionTextList = new ArrayList<String>();
+   		Map<String, String> sMap = new TreeMap<String, String>();
+			
+		//Social Life
+		try{
+   			xml = new String(ssSurvey.getResults(), "UTF-8");
+   		} catch (Exception e) {
+   			xml = "";
+   		}		
+		LinkedHashMap<String, String> mSocialLifeSurvey = ResultParser.getResults(xml);
+		qList = new ArrayList<String>();   		
+   		//get answer list
+		qList = TapestryHelper.getQuestionList(mSocialLifeSurvey);
+			
+		
+			
+		//summary tools for social supports
+		int socialSupportSize = qList.size();
+		if ((qList != null)&&(socialSupportSize>0))
+		{
+			int socialLifeScore = CalculationManager.getScoreByQuestionsList(qList);
+			int satisfactionScore = CalculationManager.getScoreByQuestionsList(qList.subList(0, 6));
+			scores.setSocialSatisfication(satisfactionScore);
+			lAlert = AlertManager.getSocialLifeAlerts(socialLifeScore, lAlert);
+			
+			int networkScore = CalculationManager.getSocialSupportNetworkScore(qList.subList(7, socialSupportSize));
+	   		scores.setSocialNetwork(networkScore);
+		}		  		   		
+   		//Nutrition 			
+   		try{
+   			xml = new String(nutritionSurvey.getResults(), "UTF-8");
+   		} catch (Exception e) {
+   			xml = "";
+   		}   		
+   		LinkedHashMap<String, String> mNutritionSurvey = ResultParser.getResults(xml);
+   		qList = new ArrayList<String>();   		
+   		//get answer list
+		qList = TapestryHelper.getQuestionList(mNutritionSurvey);  
+
+		//get scores for nutrition survey based on answer list
+		if ((qList != null)&&(qList.size()>0))
+		{
+			int nutritionScore = CalculationManager.getNutritionScore(qList);
+			scores.setNutritionScreen(nutritionScore);			
+			//high nutrition risk alert			
+			lAlert = AlertManager.getNutritionAlerts(nutritionScore, lAlert, qList);
+		}
+		
+		//RAPA 
+		try{
+   			xml = new String(rAPASurvey.getResults(), "UTF-8");
+   		} catch (Exception e) {
+   			xml = "";
+   		}
+   		
+   		LinkedHashMap<String, String> mRAPASurvey = ResultParser.getResults(xml);
+   		qList = new ArrayList<String>();   		
+   		//get answer list
+		qList = TapestryHelper.getQuestionList(mRAPASurvey);  		
+
+		int rAPAScore = CalculationManager.getAScoreForRAPA(qList);
+		int sFPAScore = CalculationManager.getSFScoreForRAPA(qList);
+				
+		String aerobicMsg = CalculationManager.getAerobicMsg(rAPAScore);
+				
+		scores.setpAAerobic(rAPAScore);
+		scores.setpAStrengthAndFlexibility(sFPAScore);		
+		scores.setAerobicMessage(aerobicMsg);		
+		
+		if (rAPAScore < 6)
+			lAlert.add(AlertsInReport.PHYSICAL_ACTIVITY_ALERT);
+		
+		//set alerts in report bean
+		report.setScores(scores);
+		report.setAlerts(lAlert);
+				
+		//Goals
+		try{
+   			xml = new String(goalsSurvey.getResults(), "UTF-8");
+   		} catch (Exception e) {
+   			xml = "";
+   		}
+   		
+   		LinkedHashMap<String, String> mGoals = ResultParser.getResults(xml);
+   		questionTextList = new ArrayList<String>();
+   		questionTextList = ResultParser.getSurveyQuestions(xml);
+   	
+   		//get answer list
+		qList = TapestryHelper.getQuestionList(mGoals);   	
+							
+		if ((qList != null) && (qList.size()>0))
+		{					
+			report.setPatientGoals(CalculationManager.getPatientGoals(qList));
+			report.setLifeGoals(CalculationManager.getLifeOrHealthGoals(qList, 1));
+			report.setHealthGoals(CalculationManager.getLifeOrHealthGoals(qList, 2));
+		}
+		
+		//get volunteer information
+		String volunteer = appointment.getVolunteer();
+		String partner = appointment.getPartner();
+		String comments = appointment.getComments();
+				
+		Map<String, String> vMap = new TreeMap<String, String>();
+		
+		if (!Utils.isNullOrEmpty(volunteer))
+			vMap.put(" Volunteer 1", volunteer);
+		else
+			vMap.put(" Volunteer 1", "");
+		
+		if (!Utils.isNullOrEmpty(partner))
+			vMap.put(" Volunteer 2", partner);
+		else
+			vMap.put(" Volunteer2", "");
+		
+		if (!Utils.isNullOrEmpty(comments))
+			vMap.put(" Volunteer Notes", comments);					
+		else
+			vMap.put(" Volunteer Notes", " ");
+		
+		report.setVolunteerInformations(vMap);	
+	
+   		LinkedHashMap<String, String> mSurvey;	
+		Map<String, String> tMap = new LinkedHashMap<String, String>(); 		
+				
+		SurveyResult sr;
+		DisplayedSurveyResult dsr;
+		List<DisplayedSurveyResult> displayedResults;
+		String title;
+					
+		for (int i = 0; i < surveyResultList.size(); i++)
+		{
+			sr = new SurveyResult();
+			sr = surveyResultList.get(i);
+			title = sr.getSurveyTitle();
+			if (!displayedSurveyTitles.contains(title))
+				continue;
+			tMap.put("SurveyTitle " + (i+1), title);
+			try{
+	   			xml = new String(sr.getResults(), "UTF-8");
+	   		} catch (Exception e) {
+	   			xml = "";
+	   		}
+			mSurvey = ResultParser.getResults(xml);
+							
+			displayedResults = ResultParser.getDisplayedSurveyResults(mSurvey);	   		
+			displayedResults = TapestryHelper.getDetailedAnswerForSurveys(displayedResults, 2);			
+											  
+			for (int j =0; j<displayedResults.size(); j++)
+			{
+				dsr = new DisplayedSurveyResult();
+				dsr = displayedResults.get(j);	
+				
+				tMap.put(dsr.getQuestionText(), dsr.getQuestionAnswer());
+			}
+		}	
+		
+		TapestryHelper.buildMcGillPDFReport(report, tMap, response);
+		//add log
+		User loggedInUser = TapestryHelper.getLoggedInUser(request, userManager);
+		StringBuffer sb = new StringBuffer();
+		sb.append(loggedInUser.getName());
+		sb.append(" download/view ");
+		sb.append(patient.getFirstName());
+		sb.append(" ");
+		sb.append(patient.getLastName());
+		sb.append(" report at");		
+		java.util.Date date= new java.util.Date();		
+		sb.append(new Timestamp(date.getTime()));
+		userManager.addUserLog(sb.toString(), loggedInUser);	
+			
+		return null;
+	}
+	
 	@RequestMapping(value="/download_report/{patientID}", method=RequestMethod.GET)
 	public String downloadReport(@PathVariable("patientID") int id,
 			@RequestParam(value="appointmentId", required=true) int appointmentId, 	
@@ -1647,21 +1893,11 @@ public class TapestryController{
 		Report report = new Report();		
 		ScoresInReport scores = new ScoresInReport();	
 		Patient patient = patientManager.getPatientByID(id);
+		
+		int site = patientManager.getSiteByPatientId(id);
 		//call web service to get patient info from myoscar
-		HttpSession session = request.getSession();
-		List<Patient> patients = new ArrayList<Patient>();
-//		if (session.getAttribute("allPatientWithFullInfos") != null)
-//		{
-//			patients = (List<Patient>)session.getAttribute("allPatientWithFullInfos");
-//			
-//			for (Patient p: patients)
-//			{
-//				if (p.getPatientID() == id)
-//					patient = p;
-//			}	
-//		}
-//		else
-//			patient = TapestryHelper.getPatientWithFullInfos(patient);	
+//		HttpSession session = request.getSession();
+//		List<Patient> patients = new ArrayList<Patient>();
 		
 		report.setPatient(patient);
 		
@@ -1967,8 +2203,7 @@ public class TapestryController{
    		
    		report.setScores(scores);
 		report.setAlerts(lAlert);
-		//end of alert
-			
+		//end of alert			
 		//===================
 		try{
    			xml = new String(goals.getResults(), "UTF-8");
@@ -1984,7 +2219,7 @@ public class TapestryController{
 		qList = TapestryHelper.getQuestionList(mGoals);   	
 							
 		if ((qList != null) && (qList.size()>0))
-		{					System.out.println("wooohooo");
+		{					
 			report.setPatientGoals(CalculationManager.getPatientGoals(qList));
 			report.setLifeGoals(CalculationManager.getLifeOrHealthGoals(qList, 1));
 			report.setHealthGoals(CalculationManager.getLifeOrHealthGoals(qList, 2));
@@ -2012,9 +2247,10 @@ public class TapestryController{
 		else
 			vMap.put(" Volunteer Notes", " ");
 		
-		report.setVolunteerInformations(vMap);		
-
-		TapestryHelper.buildPDF(report, response);
+		report.setVolunteerInformations(vMap);
+		
+		TapestryHelper.buildMcMasterPDFReport(report, response);
+//			TapestryHelper.buildPDF(report, response);
 		
 		//add log
 		User loggedInUser = TapestryHelper.getLoggedInUser(request, userManager);
@@ -2032,34 +2268,7 @@ public class TapestryController{
 		return null;
 	}
 	
-	//====================== Survey ===================================//
-//	@RequestMapping(value="/manage_survey_templates", method=RequestMethod.GET)
-//	public String manageSurveyTemplates(@RequestParam(value="failed", required=false) Boolean deleteFailed, 
-//			SecurityContextHolderAwareRequestWrapper request, ModelMap model)
-//	{
-//		List<Site> sites = new ArrayList<Site>();
-//		User logginUser = TapestryHelper.getLoggedInUser(request);
-//		List<SurveyTemplate> surveyTemplateList = TapestryHelper.getSurveyTemplates(request, surveyManager);
-//		model.addAttribute("survey_templates", surveyTemplateList);
-//		if (deleteFailed != null)
-//			model.addAttribute("failed", deleteFailed);
-//		
-//		if (request.isUserInRole("ROLE_ADMIN"))
-//			sites = organizationManager.getAllSites();
-//		else
-//		{
-//			int siteId = logginUser.getSite();
-//			sites.add(organizationManager.getSiteById(siteId));
-//		}
-//		model.addAttribute("sites", sites);
-//		
-//		HttpSession session = request.getSession();		
-//		if (session.getAttribute("unread_messages") != null)
-//			model.addAttribute("unread", session.getAttribute("unread_messages"));		
-//		
-//		return "admin/manage_survey_templates";
-//	}
-	
+	//====================== Survey ===================================//	
 	@RequestMapping(value="/manage_survey", method=RequestMethod.GET)
 	public String manageSurvey(@RequestParam(value="failed", required=false) String failed, Boolean deleteFailed, 
 			ModelMap model, SecurityContextHolderAwareRequestWrapper request){
@@ -2297,8 +2506,7 @@ public class TapestryController{
 	   		else//user select SurveyManagement/Assign Survey
 	   		{ 	
 	   			patients = patientManager.getPatientsBySite(siteId);	   			
-//		   		if (request.getParameter("searchPatient") != null && 
-//		   				request.getParameter("searchPatientName") !=null )//search patient by name
+
 	   			if ("Search".equals(action))
 		   		{
 		   			String name = request.getParameter("searchPatientName");   
@@ -2355,64 +2563,7 @@ public class TapestryController{
 	   		}
 	   		return "admin/assign_survey";
 	   	}
-	}
-   	/*
-	@RequestMapping(value="/assign_surveys", method=RequestMethod.POST)
-	public String assignSurveys(SecurityContextHolderAwareRequestWrapper request) throws JAXBException, 
-		DatatypeConfigurationException, Exception
-	{
-		String[] patients = request.getParameterValues("patients[]");
-		if(patients == null) {
-			return "redirect:/manage_surveys?failed=true";
-		}
-		int siteId = TapestryHelper.getLoggedInUser(request).getSite();
-		List<SurveyResult> surveyResults;
-   		List<SurveyTemplate> surveyTemplates;
-		if (request.isUserInRole("ROLE_ADMIN"))//central admin 
-   		{
-			surveyResults = surveyManager.getAllSurveyResults();
-			surveyTemplates = surveyManager.getAllSurveyTemplates();
-   		}
-   		else //local admin/site admin
-   		{
-   			surveyResults = surveyManager.getAllSurveyResultsBySite(siteId);	
-   			surveyTemplates = surveyManager.getSurveyTemplatesBySite(siteId);
-   		} 
-
-   		TapestrySurveyMap surveys = DoSurveyAction.getSurveyMapAndStoreInSession(request, surveyResults, surveyTemplates);
-   		int surveyId = Integer.parseInt(request.getParameter("surveyID"));
-		SurveyTemplate st = surveyManager.getSurveyTemplateByID(surveyId);
-		List<TapestryPHRSurvey> specificSurveys = surveys.getSurveyListById(Integer.toString(surveyId));
-		
-		SurveyFactory surveyFactory = new SurveyFactory();
-		PHRSurvey template = (TapestryPHRSurvey)surveyFactory.getSurveyTemplate(st);
-		for(int i=0; i < patients.length; i++) {
-			SurveyResult sr = new SurveyResult();
-            sr.setSurveyID(surveyId);
-            sr.setPatientID(Integer.parseInt(patients[i]));
-            //set today as startDate
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");		        	
-            sr.setStartDate(sdf.format(new Date()));
-              
-            
-          //if requested survey that's already done---removed this condition check, since a survey can be re-assign to a patient
-//    		if (specificSurveys.size() < template.getMaxInstances() 
-//    				&& !TapestryHelper.isExistInSurveyResultList(surveyResults, surveyId, Integer.parseInt(patients[i])))
-//    		{
-    			TapestryPHRSurvey blankSurvey = (TapestryPHRSurvey)template;
-    			blankSurvey.setQuestions(new ArrayList<SurveyQuestion>());// make blank survey
-    			sr.setResults(SurveyAction.updateSurveyResult(blankSurvey));
-    			String documentId = surveyManager.assignSurvey(sr);
-    			blankSurvey.setDocumentId(documentId);
-    			surveys.addSurvey(blankSurvey);
-    			specificSurveys = surveys.getSurveyListById(Integer.toString(surveyId)); //reload
-//    		}
-//    		else
-//    			return "redirect:/manage_surveys";
-		}
-		return "redirect:/manage_surveys";
-	}
-	*/
+	}   	
 	
  	@RequestMapping(value = "/upload_survey_template", method=RequestMethod.POST)
 	public String addSurveyTemplate(HttpServletRequest request) throws Exception
@@ -3463,8 +3614,9 @@ public class TapestryController{
 		model.addAttribute("inProgressVolunteerSurveys", incompleteSurveyResultList);
 		model.addAttribute("displayResults", completedDisplayedResults);
 		model.addAttribute("volunteerName", loginUser.getName());
-				
-		return "volunteer/ubc/view_mySurveys";
+		
+		return "/volunteer/ubc/view_mySurveys";
+//		return "volunteer/ubc/view_mySurveys";
 	}
    	
 	@RequestMapping(value="/open_volunteerSurvey/{resultID}", method=RequestMethod.GET)
@@ -3482,8 +3634,6 @@ public class TapestryController{
 		
 		SurveyResult surveyResult = surveyManager.getVolunteerSurveyResultByID(id);				
 		TapestrySurveyMap userSurveys = TapestryHelper.getVolunteerSurveyMap(request);
-		
-		
 		
 		if ((userSurveys == null)||(userSurveys.getSurvey(String.valueOf(id)) == null))
 		{	

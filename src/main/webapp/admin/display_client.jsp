@@ -131,20 +131,25 @@
 			<th width="300">Visit #</th>
 			<th width="300"> Visit Date</th>		
 			<th>Assigned Volunteers</th>
-			<c:if test="${site != 3}"> 
+			<c:if test="${site == 1}"> 
 				<th>Report/PDF</th>
 				<th>Report/HL7</th>		
 			</c:if>	
+			<c:if test="${site == 2}"> 
+				<th>Report/PDF</th>
+			</c:if>
 		</tr>
 		<c:forEach items="${completedVisits}" var="cVistits">
 		<tr >
 			<td>${cVistits.appointmentID}</td>	
 			<td>${cVistits.date}</td>			
 			<td>${cVistits.volunteer},&nbsp &nbsp ${cVistits.partner}</td>				
-			<c:if test="${showReport}">
+			<c:if test="${showReport && (site == 1)}">
 				<td><a href="<c:url value="/download_report/${patient.patientID}?appointmentId=${cVistits.appointmentID}"/>">DOWNLOAD</a> </td>
-				<td><a href="<c:url value="/generate_report_hl7/${patient.patientID}?appointmentId=${cVistits.appointmentID}"/>">DOWNLOAD</a> </td>
-				
+				<td><a href="<c:url value="/generate_report_hl7/${patient.patientID}?appointmentId=${cVistits.appointmentID}"/>">DOWNLOAD</a> </td>				
+			</c:if>			
+			<c:if test="${showReport && (site == 2)}">
+				<td><a href="<c:url value="/download_mgReport/${patient.patientID}?appointmentId=${cVistits.appointmentID}"/>">DOWNLOAD</a> </td>
 			</c:if>
 		</tr>
 		</c:forEach>

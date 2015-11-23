@@ -714,7 +714,7 @@ public class VolunteerController {
 	@RequestMapping(value="/volunteerList.html")
 	@ResponseBody
 	public List<Volunteer> getVolunteerByOrganization(@RequestParam(value="volunteerId") int vId)
-	{System.out.println("hi");
+	{
 		Volunteer volunteer = volunteerManager.getVolunteerById(vId);	
 		List<Volunteer> vl = volunteerManager.getAllVolunteersByOrganization(volunteer.getOrganizationId());
 		
