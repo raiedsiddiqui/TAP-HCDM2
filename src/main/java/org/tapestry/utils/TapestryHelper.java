@@ -4647,7 +4647,7 @@ public class TapestryHelper {
 							sb.append(displayedResults.get(j).getObserverNotes());	
 							sb.append(".");		
 				   		}
-				   	}					
+				   	}										
 					rData.setdSS_notes_TO(sb.toString());
 				}									
 			}		
@@ -5433,7 +5433,7 @@ public class TapestryHelper {
 	}
 
 	public static void generateClientSurveyReport(int patientId, SurveyManager surveyManager, 
-			HttpServletResponse response, String name )
+			HttpServletResponse response, String name, int site )
 	{
 		String xml;
    		LinkedHashMap<String, String> mSurvey;	
@@ -5463,7 +5463,11 @@ public class TapestryHelper {
 							
 			List<DisplayedSurveyResult> displayedResults = ResultParser.getDisplayedSurveyResults(mSurvey);
 	   		
-			displayedResults = getDetailedAnswerForSurvey(displayedResults, "mainSurveys.properties");				
+			if (site==1) //McMaster
+				displayedResults = getDetailedAnswerForSurvey(displayedResults, "mainSurveys.properties");			
+			else //McGill
+				displayedResults = getDetailedAnswerForSurvey(displayedResults, "mgSurveys.properties");
+			
 			for (int j =0; j<displayedResults.size(); j++)
 			{
 				dsr = new DisplayedSurveyResult();
@@ -6009,10 +6013,9 @@ public class TapestryHelper {
 		{
 			qId = displayedResults.get(i).getQuestionId();
 
-			///////////////////////
-			if (displayedResults.get(i).getTitle().equals("Caregiver_FollowUp"))//since caregiver background and caregiver follow up have same questionIds
+			//caregiver background and caregiver follow up have same questionIds, have to make them different for reading value from properties file
+			if (displayedResults.get(i).getTitle().equals("Caregiver_FollowUp"))
 				qId = qId.replace("B","F");
-			////////////////////////
 
 			answer = displayedResults.get(i).getQuestionAnswer();
 			key = qId+answer;
@@ -6025,23 +6028,22 @@ public class TapestryHelper {
 			{
 				System.out.println("===========Has problem to read ubcSurveys.properties file============");
 			}
-		}
-		
+		}		
 		return displayedResults;
-	}
-
-	//for Mcmaster, main site
-	public static List<DisplayedSurveyResult> getDetailedAnswerForSurveys(List<DisplayedSurveyResult> displayedResults)
-	{
-		return getDetailedAnswerForSurvey(displayedResults, "mainSurveys.properties");
 	}
 	
 	public static List<DisplayedSurveyResult> getDetailedAnswerForSurveys(List<DisplayedSurveyResult> displayedResults, int site)
 	{
-		if (site == 1)//Mcmaster
-			return getDetailedAnswerForSurvey(displayedResults, "mainSurveys.properties");
-		else
-			return getDetailedAnswerForSurvey(displayedResults, "mgSurveys.properties");
+		List<DisplayedSurveyResult> sList = new ArrayList<DisplayedSurveyResult>();
+		switch (site){
+			case 1: sList = getDetailedAnswerForSurvey(displayedResults, "mainSurveys.properties"); //McMaster
+					break;
+			case 2: sList = getDetailedAnswerForSurvey(displayedResults, "mgSurveys.properties"); //McGill
+					break;
+			case 3: sList = getDetailedAnswerForUBCSurveys(displayedResults); //UBC
+					break;				
+		}
+		return sList;
 	}
 	
 	static List<DisplayedSurveyResult> getDetailedAnswerForSurvey(List<DisplayedSurveyResult> displayedResults, String propertyFile)
@@ -6051,27 +6053,57 @@ public class TapestryHelper {
 		for (int i = 0; i< displayedResults.size(); i++)
 		{
 			sr = displayedResults.get(i);
+			
 			qId = sr.getQuestionId();			
-			answer = sr.getQuestionAnswer();
-			key = qId+answer;
-			try{
-				answer = TapestryHelper.getProperties(propertyFile, key);
-									
-				if (!Utils.isNullOrEmpty(answer))
-					sr.setQuestionAnswer(answer);
-				
-				if (propertyFile.contains("mainSurveys.properties")&&(sr.getTitle().contains("3 month follow up")))
-				{
-					key1 = qId + "QuestionText";					
-					qText = TapestryHelper.getProperties(propertyFile, key1);
-					
-					if (!Utils.isNullOrEmpty(qText))
-						sr.setQuestionText(qText);
-				}
-			}catch (Exception e)
+			answer = sr.getQuestionAnswer();	
+			
+			if (answer.contains(",") && Utils.onlyDigitInString(answer.replaceAll(", ", "")))			
 			{
-				System.out.println("===========Has problem to read " + propertyFile + " file============");
+				String[] ans = answer.split(",");
+				StringBuffer sb = new StringBuffer();
+				
+				int length = ans.length;
+				for(int j=0; j< length; j++)
+				{
+					key = qId + ans[j].trim();
+					
+					try{
+						answer = TapestryHelper.getProperties(propertyFile, key);
+						sb.append(answer);
+						
+						if (j < length-1)
+							sb.append("<br>");
+					}catch (Exception e)
+					{
+						System.out.println("===========Has problem to read " + propertyFile + " file============");
+					}
+				}
+				System.out.println("ans= "+ sb.toString());
+				if (!Utils.isNullOrEmpty(sb.toString()))
+					sr.setQuestionAnswer(sb.toString());
 			}
+			else
+			{
+				key = qId+answer;
+				try{
+					answer = TapestryHelper.getProperties(propertyFile, key);
+										
+					if (!Utils.isNullOrEmpty(answer))
+						sr.setQuestionAnswer(answer);
+					
+					if (propertyFile.contains("mainSurveys.properties")&&(sr.getTitle().contains("3 month follow up")))
+					{
+						key1 = qId + "QuestionText";					
+						qText = TapestryHelper.getProperties(propertyFile, key1);
+						
+						if (!Utils.isNullOrEmpty(qText))
+							sr.setQuestionText(qText);
+					}
+				}catch (Exception e)
+				{
+					System.out.println("===========Has problem to read " + propertyFile + " file============");
+				}
+			}			
 		}		
 		return displayedResults;
 	}

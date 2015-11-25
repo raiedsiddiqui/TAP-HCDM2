@@ -446,4 +446,16 @@ public class Utils {
 		return NumberUtils.isNumber(str);
 	}
 	
+	//check if a string contains only digits
+	public static boolean onlyDigitInString (String str)
+	{		
+		return str.matches("\\d+");
+	}
+	
+	//replace newline character(^M which is a carriage-return character) 
+	public static String replaceNewlineChar(String str, String replacement)
+	{
+		return str.replaceAll("\\p{Cntrl}", replacement);
+	}
+	
 }

@@ -1335,10 +1335,7 @@ public class VolunteerController {
 			}
 			//translate answers with full detailed information
 			int site = loggedInUser.getSite();
-			if (site == 3)//UBC
-				completedDisplayedResults = TapestryHelper.getDetailedAnswerForUBCSurveys(completedDisplayedResults);
-			else //Main site
-				completedDisplayedResults = TapestryHelper.getDetailedAnswerForSurveys(completedDisplayedResults);
+			completedDisplayedResults = TapestryHelper.getDetailedAnswerForSurveys(completedDisplayedResults, site);
 			
 			model.addAttribute("completedSurveys", completedSurveyResultList);
 			model.addAttribute("inProgressSurveys", incompleteSurveyResultList);

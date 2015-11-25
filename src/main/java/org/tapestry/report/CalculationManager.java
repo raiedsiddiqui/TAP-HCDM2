@@ -36,7 +36,7 @@ public class CalculationManager {
 		for (int i = 0; i < qList.size(); i++)
 		{
 			try{
-				iAnswer = Integer.valueOf(qList.get(i).toString());
+				iAnswer = Integer.valueOf(qList.get(i).toString());				
 			}catch(NumberFormatException ex)
 			{
 				System.out.println("input is string or empty, not digit");
@@ -60,7 +60,14 @@ public class CalculationManager {
 		
 		for (int i = 0; i < qList.size(); i++)
 		{
-			iAnswer = Integer.valueOf(qList.get(i).toString());
+			try{
+				iAnswer = Integer.valueOf(qList.get(i).toString());				
+			}catch(NumberFormatException ex)
+			{
+				System.out.println("input is string or empty, not digit");
+				iAnswer = 0;
+			}
+			
 			if (i == 0 || i == 1 || i ==3 || i ==4)
 				score = score + countPoints(iAnswer,new int[]{0,1,2}, 3);				
 			else if (i == 2)
@@ -161,7 +168,13 @@ public class CalculationManager {
 		
 		for (int i = 0; i < qList.size(); i++)
 		{
-			iAnswer = Integer.valueOf(qList.get(i).toString());
+			try{
+				iAnswer = Integer.valueOf(qList.get(i).toString());				
+			}catch(NumberFormatException ex)
+			{
+				System.out.println("input is string or empty, not digit");
+				iAnswer = 0;
+			}
 			
 			if (i == 0)
 				score = score + countPoints(iAnswer,new int[]{4,0,0,1,2,0,1,2}, 8);		
@@ -374,22 +387,6 @@ public class CalculationManager {
 		return new ArrayList<String>(Arrays.asList(qList.get(index).split("-------<br>")));
 	}
 	
-//	public static String getPatientGoalsMsg(int iAnswer, List<String> qList)
-//	{
-//		String msg="";
-//				
-//		switch (iAnswer) {
-//			case 1: msg = getGoalMsg(qList.get(4));
-//					break;
-//			case 2: msg = getGoalMsg(qList.get(5));
-//					break;
-//			case 3: msg = getGoalMsg(qList.get(6));
-//					break;				
-//			default:break;
-//		}	
-//		
-//		return msg;
-//	}
 	
 	public static List<String> setPatientGoalsMsg(String answer, List<String> goals)
 	{
@@ -403,19 +400,6 @@ public class CalculationManager {
 		
 		return goals;
 	}
-	
-//	private static String getGoalMsg(String msg)
-//	{
-//		int index = msg.indexOf("<br>");
-//		
-//		if (index != 0)
-//			msg = msg.substring(0, index);
-//		
-//		msg = msg.substring(6);
-//		if (msg.equals(""))
-//			msg = "n/a";
-//		return msg;
-//	}
 	
 	private static StringBuffer getModificationInfo(StringBuffer sb, String bAnswer){
 		if("1".equals(bAnswer))

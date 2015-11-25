@@ -10,6 +10,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.tapestry.objects.DisplayedSurveyResult;
+import org.tapestry.utils.Utils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -64,8 +65,8 @@ public class ResultParser {
             results.put("title", title);
             Node dateNode = doc.getElementsByTagName("IssueDate").item(0);
             String date = dateNode.getTextContent().trim();
-            results.put("date", date);            
-                        
+            results.put("date", date);  
+           
             NodeList questions = doc.getElementsByTagName("IndivoSurveyQuestion");                      
             for (int i = 0; i < questions.getLength(); i++){
                 Element question = (Element) questions.item(i);
@@ -100,6 +101,7 @@ public class ResultParser {
                 		
                 		if (questionAnswer.getNextSibling() != null)
                 			questionAnswerString += ", ";
+    //            			questionAnswerString += "|";
                 	}
                 }                    
                 sb.append(questionAnswerString);
@@ -132,7 +134,7 @@ public class ResultParser {
 		String regex = "[0-9]"; 
 				
     	for (Map.Entry<String, String> entry: results.entrySet()){
-    		key = entry.getKey();        		
+    		key = entry.getKey();           		
     		result = new DisplayedSurveyResult();  		
     		
     		String separator2 = "/answer/";
@@ -180,16 +182,21 @@ public class ResultParser {
     					qText = qText.replace("&rsquo;", "'");
     				
     				if (questionAnswer.contains("\n"))//replace newline character(^M which is a carriage-return character) with "." for research requests
-    					questionAnswer = questionAnswer.replaceAll("\\p{Cntrl}", "."); 
-    				
+    					questionAnswer = Utils.replaceNewlineChar(questionAnswer,  ".");    					
+    			
+    				if (observerNotes.contains("\n"))//replace newline character(^M which is a carriage-return character) with "." for research requests
+    					observerNotes = Utils.replaceNewlineChar(observerNotes,  ".");
+    			    				
     				result.setQuestionId(key);
-    				result.setQuestionAnswer(questionAnswer);
+    				result.setQuestionAnswer(questionAnswer);			
     				result.setObserverNotes(observerNotes);        	   
     				result.setTitle(title); 
     				result.setDate(date);
     				result.setQuestionText(qText);
-    				result.setSurveyId(surveyId);                		
+    				result.setSurveyId(surveyId);    
+    		   				
     				resultList.add(result);
+    				
         		}
     		}
     	}    	

@@ -979,9 +979,11 @@ public class TapestryController{
 			p.setMrpFirstName(request.getParameter("mrp_firstname"));
 			p.setMrpLastName(request.getParameter("mrp_lastname"));
 			p.setResearchID(request.getParameter("researchid"));
-			p.setTapUsername(request.getParameter("tap_username"));
-			
-			System.out.println("tap user name for this patient= "+ p.getTapUsername());
+						
+			if (request.getParameter("tap_username") == null)
+				p.setTapUsername(" ");		
+			else
+				p.setTapUsername(request.getParameter("tap_username"));	
 			
 			patientManager.updatePatient(p);
 			model.addAttribute("updatePatientSuccessfully",true);
@@ -1080,11 +1082,8 @@ public class TapestryController{
 	   		completedDisplayedResults.addAll(displayedResults);
 		}
 		//translate answers with full detailed information
-		int site = u.getSite();
-		if (site == 3)//UBC
-			completedDisplayedResults = TapestryHelper.getDetailedAnswerForUBCSurveys(completedDisplayedResults);
-		else //Main site
-			completedDisplayedResults = TapestryHelper.getDetailedAnswerForSurveys(completedDisplayedResults);
+		int site = u.getSite();		
+		completedDisplayedResults = TapestryHelper.getDetailedAnswerForSurveys(completedDisplayedResults, site);
 
 		List<Patient> patientsForUser = patientManager.getPatientsForVolunteer(volunteerId);	
 		
@@ -2909,17 +2908,9 @@ public class TapestryController{
    		LinkedHashMap<String, String> res = ResultParser.getResults(xml);
    		List<DisplayedSurveyResult> displayedResults = ResultParser.getDisplayedSurveyResults(res);
    		
-   		int site;
-   		if (loggedInUser.getRole().equals("ROLE_ADMIN"))
-   			site = surveyManager.getSiteBySurveyResultID(id);
-   		else
-   			site = loggedInUser.getSite();
-   		
-   		//Substitute numbers with actual text answers
-   		if (site == 3)//UBC
-   			displayedResults = TapestryHelper.getDetailedAnswerForUBCSurveys(displayedResults);
-   		else
-   			displayedResults = TapestryHelper.getDetailedAnswerForSurveys(displayedResults);
+   		int site = surveyManager.getSiteBySurveyResultID(id);   		
+   		//Substitute numbers with actual text answers   	
+   		displayedResults = TapestryHelper.getDetailedAnswerForSurveys(displayedResults, site);
 
    		model.addAttribute("results", displayedResults);
    		model.addAttribute("id", id);
@@ -3782,8 +3773,10 @@ public class TapestryController{
    		int site = patientManager.getSiteByPatientId(id);   		
    		if (site == 3)//for UBC
    			TapestryHelper.generateClientReportForUBC(id, surveyManager, response, name, hasObservernotes);
-   		else   			
-   			TapestryHelper.generateClientSurveyReport(id, surveyManager, response, name); 		
+   		else if (site == 1)		//McMaster
+   			TapestryHelper.generateClientSurveyReport(id, surveyManager, response, name, 1); 	
+   		else  // McGill
+   			TapestryHelper.generateClientSurveyReport(id, surveyManager, response, name, 2); 	
  
 		return null;   	
    	}
