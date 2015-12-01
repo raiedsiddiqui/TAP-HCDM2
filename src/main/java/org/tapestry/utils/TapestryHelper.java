@@ -6078,7 +6078,7 @@ public class TapestryHelper {
 						System.out.println("===========Has problem to read " + propertyFile + " file============");
 					}
 				}
-				System.out.println("ans= "+ sb.toString());
+				
 				if (!Utils.isNullOrEmpty(sb.toString()))
 					sr.setQuestionAnswer(sb.toString());
 			}

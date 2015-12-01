@@ -1439,9 +1439,7 @@ public class VolunteerController {
 		sb.append(sdf.format(new Date()));
 		userManager.addUserLog(sb.toString(), user);
 		
-   		int appointmentId = TapestryHelper.getAppointmentId(request);   		
-		return "redirect:"
-				+ "" + patientId + "?appointmentId=" + appointmentId+"&showAuthenticationMsg="+ true;
+		return "redirect:/patient/" + patientId + "?appointmentId=" + TapestryHelper.getAppointmentId(request) +"&showAuthenticationMsg=true";
    	}
      
    	@RequestMapping(value="/authenticate_myoscar/{volunteerId}", method=RequestMethod.POST)
