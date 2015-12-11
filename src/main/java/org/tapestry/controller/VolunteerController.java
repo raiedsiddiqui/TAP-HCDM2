@@ -1446,8 +1446,7 @@ public class VolunteerController {
    	public String authenticateMyOscar(@PathVariable("volunteerId") int id, @RequestParam(value="patientId", required=true) int patientId,
    			SecurityContextHolderAwareRequestWrapper request, ModelMap model)
    	{
-   		int centralAdminId = 1;
- 
+   		int centralAdminId = 1; 
    		String clientFirstName = request.getParameter("client_first_name");
    		String clientLastName = request.getParameter("client_last_name");
    		String volunteerFirstName = request.getParameter("volunteer_first_name");

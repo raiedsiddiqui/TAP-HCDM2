@@ -1,6 +1,7 @@
 package org.tapestry.utils;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -98,6 +99,7 @@ import com.itextpdf.text.Font;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.ColumnText;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -1648,23 +1650,23 @@ public class TapestryHelper {
 			Font bMediumFont = new Font(Font.FontFamily.HELVETICA , 16, Font.BOLD);	
 			Font blFont = new Font(Font.FontFamily.HELVETICA, 20, Font.BOLD);	
 			//set multiple images as header
-//			List<Image> imageHeader = new ArrayList<Image>();      	
+			List<Image> imageHeader = new ArrayList<Image>();      	
 	            
-//			Image imageLogo = Image.getInstance("webapps/tapestry/resources/images/logo.png"); 
-//			imageLogo.scalePercent(25f);
-//			imageHeader.add(imageLogo);			
-//				            
-//			Image imageDegroote = Image.getInstance("webapps/tapestry/resources/images/degroote.png");
-//			imageDegroote.scalePercent(25f);
-//			imageHeader.add(imageDegroote);	
-//			
-//			Image imageFhs = Image.getInstance("webapps/tapestry/resources/images/fhs.png");
-//			imageFhs.scalePercent(25f);	
-//			imageHeader.add(imageFhs);
+			Image imageLogo = Image.getInstance("webapps/tapestry/resources/images/logo.png"); 
+			imageLogo.scalePercent(25f);
+			imageHeader.add(imageLogo);			
+				            
+			Image imageDegroote = Image.getInstance("webapps/tapestry/resources/images/degroote.png");
+			imageDegroote.scalePercent(25f);
+			imageHeader.add(imageDegroote);	
+			
+			Image imageFhs = Image.getInstance("webapps/tapestry/resources/images/fhs.png");
+			imageFhs.scalePercent(25f);	
+			imageHeader.add(imageFhs);
 						
-//			ReportHeader event = new ReportHeader();
-	//		event.setHeader(imageHeader);
-	//		writer.setPageEvent(event);			
+			ReportHeader event = new ReportHeader();
+			event.setHeader(imageHeader);
+			writer.setPageEvent(event);			
 			
 			document.open(); 
 			//Patient info
@@ -2361,7 +2363,7 @@ public class TapestryHelper {
 		try {
 			Document document = new Document();
 			document.setPageSize(PageSize.A4);
-			document.setMargins(36, 36, 60, 36);
+			document.setMargins(36, 36, 80, 36);
 			document.setMarginMirroring(true);
 			response.setHeader("Content-Disposition", "outline;filename=\"" +orignalFileName+ "\"");
 			PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
@@ -2399,25 +2401,24 @@ public class TapestryHelper {
 			Font bMediumFont = new Font(Font.FontFamily.HELVETICA , 16, Font.BOLD);	
 			Font blFont = new Font(Font.FontFamily.HELVETICA, 20, Font.BOLD);	
 			//set multiple images as header
-//			List<Image> imageHeader = new ArrayList<Image>();      	
+			List<Image> imageHeader = new ArrayList<Image>();  		
 	            
-//			Image imageLogo = Image.getInstance("webapps/tapestry/resources/images/logo.png"); 
-//			imageLogo.scalePercent(25f);
-//			imageHeader.add(imageLogo);			
-//				            
-//			Image imageDegroote = Image.getInstance("webapps/tapestry/resources/images/degroote.png");
-//			imageDegroote.scalePercent(25f);
-//			imageHeader.add(imageDegroote);	
-//			
-//			Image imageFhs = Image.getInstance("webapps/tapestry/resources/images/fhs.png");
-//			imageFhs.scalePercent(25f);	
-//			imageHeader.add(imageFhs);
-						
-//			ReportHeader event = new ReportHeader();
-	//		event.setHeader(imageHeader);
-	//		writer.setPageEvent(event);			
+			Image imageLogo = Image.getInstance("webapps/tapestry/resources/images/logo.png");	
+	//		imageLogo.setAlignment(Element.ALIGN_TOP);  				
+			imageHeader.add(imageLogo);			
 			
+			Image imageBlank = Image.getInstance("webapps/tapestry/resources/images/blank_spacer.png");
+			imageHeader.add(imageBlank);
+			
+			Image mgGillLogo = Image.getInstance("webapps/tapestry/resources/images/mcGill_logo.png"); 
+//			mgGillLogo.scalePercent(30f);
+			imageHeader.add(mgGillLogo);			
+						
+			ReportHeader event = new ReportHeader();
+			event.setHeader(imageHeader);
+			writer.setPageEvent(event);				
 			document.open(); 
+	//		document.add(new Phrase("    ")); 
 			//Patient info
 			PdfPTable table = new PdfPTable(2);
 			table.setWidthPercentage(100);
@@ -2458,9 +2459,9 @@ public class TapestryHelper {
 			cell.setBorderWidthLeft(0);
 			cell.setBorderWidthBottom(1f);
 			cell.setPadding(5);
-			table.addCell(cell);
-	        
-			document.add(table);		   	        
+			table.addCell(cell);	        
+			document.add(table);
+			document.add(new Phrase("    ")); 
 			//Patient Info	
 			table = new PdfPTable(1);
 			table.setWidthPercentage(100);
@@ -2471,7 +2472,7 @@ public class TapestryHelper {
 			cell.setBorder(0);
 			table.addCell(cell);
 			document.add(table);
-			
+		//	document.add(new Phrase("    ")); 
 			//message
 			table = new PdfPTable(1);
 			table.setWidthPercentage(100);
@@ -2546,7 +2547,24 @@ public class TapestryHelper {
 			}
 					
 			document.add(table);
-	//		document.add(new Phrase("    "));   
+			//Key observation
+			table = new PdfPTable(1);
+			table.setWidthPercentage(100);
+
+			cell = new PdfPCell(new Phrase("Social Context", wbLargeFont));
+			cell.setBackgroundColor(BaseColor.BLACK);
+			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);	 
+	            
+			table.addCell(cell);
+			
+			String keyObservation = report.getAppointment().getKeyObservation();
+			if (keyObservation == null || keyObservation.equals(""))
+				cell = new PdfPCell(new Phrase(" "));
+			else
+				cell = new PdfPCell(new Phrase(keyObservation));
+			table.addCell(cell);
+			document.add(table);
 			document.newPage();	
 			
 			//Summary of Tapestry tools
@@ -2840,7 +2858,26 @@ public class TapestryHelper {
 			document.setMarginMirroring(true);
 			response.setHeader("Content-Disposition", "outline;filename=\"" +orignalFileName+ "\"");
 			PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());		
+			//////////////////////////////////
+			//set multiple images as header
+			List<Image> imageHeader = new ArrayList<Image>();      	
+	            
+			Image imageLogo = Image.getInstance("webapps/tapestry/resources/images/logo.png"); 
+			imageLogo.scalePercent(25f);
+			imageHeader.add(imageLogo);			
+				            
+			Image imageDegroote = Image.getInstance("webapps/tapestry/resources/images/degroote.png");
+			imageDegroote.scalePercent(25f);
+			imageHeader.add(imageDegroote);	
 			
+			Image imageFhs = Image.getInstance("webapps/tapestry/resources/images/fhs.png");
+			imageFhs.scalePercent(25f);	
+			imageHeader.add(imageFhs);
+						
+			ReportHeader event = new ReportHeader();
+			event.setHeader(imageHeader);
+			writer.setPageEvent(event);			
+			/////////////////////////////////
 			document.open(); 
 			//set main part of report
 			buildMainPartReportPDF(report, response, document);
@@ -2892,7 +2929,7 @@ public class TapestryHelper {
 		Font ibMediumFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLDITALIC);
 		Font bMediumFont = new Font(Font.FontFamily.HELVETICA , 16, Font.BOLD);	
 		Font blFont = new Font(Font.FontFamily.HELVETICA, 20, Font.BOLD);	
-				
+		
 //		document.open(); 
 		//Patient info
 		PdfPTable table = new PdfPTable(2);
@@ -5992,6 +6029,23 @@ public class TapestryHelper {
 		return value;
 	}	
 	
+	public static void setProperties(String file, String key, String value) throws Exception{
+		
+		Properties props = new Properties();		
+		String dir = "webapp/WEB-INF/classes/" + file;	
+		String dir1 ="/var/lib/tomcat7/webapps/tapestry/" + file;
+		try{
+			props.setProperty(key, value);		
+			props.store(new FileOutputStream(dir1), "it works!");
+	
+			
+		}catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+	
+	}
+	
 	public static List<Patient> getPatientsByPartialName(List<Patient> patients, String partialName)
 	{
 		List<Patient> pList = new ArrayList<Patient>();
@@ -6224,4 +6278,5 @@ public class TapestryHelper {
 		return available;
 		
 	}
+
 }

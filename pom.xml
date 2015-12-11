@@ -268,7 +268,7 @@
 		<!-- itex for PDF file generator -->
 		<dependency>
 			<groupId>com.itextpdf</groupId>
-			<artifactId>itextpdf</artifactId>
+			<artifactId>itextpdf</artifactId>					
 			<version>5.5.2</version>
 		</dependency>      
         	

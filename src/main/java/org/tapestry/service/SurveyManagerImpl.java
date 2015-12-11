@@ -11,6 +11,7 @@ import org.tapestry.dao.SurveyResultDAO;
 import org.tapestry.dao.SurveyTemplateDAO;
 import org.tapestry.objects.SurveyResult;
 import org.tapestry.objects.SurveyTemplate;
+import org.tapestry.utils.TapestryHelper;
 /**
  * Implementation for service SurveyManager
  * @author lxie 
@@ -313,26 +314,49 @@ public class SurveyManagerImpl implements SurveyManager {
 		boolean completed = false;		
 		List<SurveyResult> surveys = getCompletedSurveysByPatientID(patientId);		
 		List<String> completedSurveyTitles = new ArrayList<String>();
+		List<String> notInReportSurveyTitle = new ArrayList<String>();
+		String sTitle;
+		
+		if (siteId == 1)
+		{
+			try{
+				sTitle = TapestryHelper.getProperties("mainSurveys.properties", "3MonthFollowUp_survey");
+				notInReportSurveyTitle.add(sTitle);
+				
+			}catch (Exception e)
+			{
+				System.out.println("===========Has problem to read mainSurveys.properties file============");
+			}
+		}
+		else if (siteId ==2)
+		{
+			try{
+				sTitle = TapestryHelper.getProperties("mgSurveys.properties", "iam_survey");
+				notInReportSurveyTitle.add(sTitle);
+				
+				sTitle = TapestryHelper.getProperties("mgSurveys.properties", "nationalHouseHold_survey");
+				notInReportSurveyTitle.add(sTitle);
+				
+				sTitle = TapestryHelper.getProperties("mgSurveys.properties", "via_survey");
+				notInReportSurveyTitle.add(sTitle);
+				
+			}catch (Exception e)
+			{
+				System.out.println("===========Has problem to read mgSurveys.properties file============");
+			}
+		}
 		
 		for (SurveyResult st : surveys)
 			completedSurveyTitles.add(st.getSurveyTitle());				
-		
-		//all surveys except "3 Month Follow" are finished
-//		int templateCount = countSurveyTemplateBySite(siteId);
-//		int completedSurveyCount = surveys.size();
-//		
-//		if ((templateCount == completedSurveyCount)||((templateCount - completedSurveyCount) == 1) 
-//				&& (!completedSurveyTitles.contains("3 Month Follow Up")))
-//			completed = true;		
-		
+			
 		List<SurveyTemplate> stList = getSurveyTemplatesBySite(siteId);
 		List<String> titles = new ArrayList<String>();
+		
 		for (SurveyTemplate st: stList)
 		{
-			if (!"3 Month Follow Up".equals(st.getTitle()))
+			if (!notInReportSurveyTitle.contains(st.getTitle()))
 				titles.add(st.getTitle());
 		}
-		
 		if (completedSurveyTitles.containsAll(titles))
 			completed = true;
 		

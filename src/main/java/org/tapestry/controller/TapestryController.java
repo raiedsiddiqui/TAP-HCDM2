@@ -21,6 +21,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -58,6 +59,7 @@ import org.tapestry.objects.HL7Report;
 import org.tapestry.objects.Message;
 import org.tapestry.objects.Organization;
 import org.tapestry.objects.Patient;
+import org.tapestry.objects.Preference;
 //import org.tapestry.objects.Picture;
 import org.tapestry.objects.Report;
 import org.tapestry.objects.ResearchData;
@@ -75,6 +77,7 @@ import org.tapestry.service.AppointmentManager;
 import org.tapestry.service.MessageManager;
 import org.tapestry.service.PatientManager;
 import org.tapestry.service.PictureManager;
+import org.tapestry.service.PreferenceManager;
 import org.tapestry.service.SurveyManager;
 import org.tapestry.service.UserManager;
 import org.tapestry.service.VolunteerManager;
@@ -115,6 +118,8 @@ public class TapestryController{
    	private AppointmentManager appointmentManager;
    	@Autowired 
    	private OrganizationManager organizationManager;
+   	@Autowired
+   	private PreferenceManager preferenceManager;
    	
    	@PostConstruct
    	public void readConfig(){
@@ -1037,7 +1042,7 @@ public class TapestryController{
 	{	
 		Patient patient = patientManager.getPatientByID(id);
 		//Find the name of the current user
-		User u = TapestryHelper.getLoggedInUser(request);
+		User u = TapestryHelper.getLoggedInUser(request);		
 		HttpSession session = request.getSession();
 		
 		int volunteerId =0;
@@ -1106,6 +1111,9 @@ public class TapestryController{
 			model.addAttribute("goalsMsg", goalsMsg);
 //		ArrayList<Picture> pics = pictureDao.getPicturesForPatient(id);
 //		model.addAttribute("pictures", pics);
+		//get preference for SOS 
+		Preference preference = preferenceManager.getPreferenceBySite(site);		
+		model.addAttribute("preference", preference);
 		
 		//user logs
 		StringBuffer sb = new StringBuffer();
@@ -1285,7 +1293,7 @@ public class TapestryController{
 		
 		//send message to Marianne Hannon and Katharine May, their's userId are stored in tapestry.properties 
 		try
-		{
+		{//to be changed... get sos receiver from DB instead of properties
 			String sosReceiver = TapestryHelper.getProperties("SOSReceiver");
 						
 			List<String> receivers = new ArrayList<String>(Arrays.asList(sosReceiver.split(",")));
@@ -1688,9 +1696,7 @@ public class TapestryController{
 				ssSurvey = survey;
 					
 			if (title.equalsIgnoreCase(nutritionTitle) && (nutritionSurvey.getResultID()==0))//Nutrition
-			{System.out.println("n survye...");
 				nutritionSurvey = survey;
-			}
 					
 			if (title.equalsIgnoreCase(rAPATitle) && (rAPASurvey.getResultID()==0))//RAPA survey
 				rAPASurvey = survey;
@@ -2246,10 +2252,8 @@ public class TapestryController{
 		else
 			vMap.put(" Volunteer Notes", " ");
 		
-		report.setVolunteerInformations(vMap);
-		
+		report.setVolunteerInformations(vMap);		
 		TapestryHelper.buildMcMasterPDFReport(report, response);
-//			TapestryHelper.buildPDF(report, response);
 		
 		//add log
 		User loggedInUser = TapestryHelper.getLoggedInUser(request, userManager);
@@ -4060,9 +4064,72 @@ public class TapestryController{
 			user.setOrganization(0);
 			
 			userManager.createUser(user);	
-		}
-		
+		}		
 		return "redirect:/";
 	}
 	
+	@RequestMapping(value="/setSOS_settings", method=RequestMethod.GET)
+	public String getSOSSettingTemplate(SecurityContextHolderAwareRequestWrapper request, ModelMap model)
+	{ 
+		int site = TapestryHelper.getLoggedInUser(request).getSite();
+		List<User> localAdmins = userManager.getLocalAdminBySite(site) ;
+		model.addAttribute("localAdmins", localAdmins);	
+		 
+		try{
+			Preference preference = preferenceManager.getPreferenceBySite(site);
+			model.addAttribute("preference", preference);
+			
+		}catch(Exception ex)
+		{
+			model.addAttribute("sos_setting_action", "new");			
+		}	
+		
+		return "admin/sos_setting";
+	}
+	
+	
+	@RequestMapping(value="/set_sosSettings", method=RequestMethod.POST)
+	public String saveSOSSetting(SecurityContextHolderAwareRequestWrapper request, ModelMap model)
+	{ 
+		String action = request.getParameter("settingAction");
+		
+		Preference preference = new Preference();
+		int site = TapestryHelper.getLoggedInUser(request).getSite();
+		if (site != 0)
+			preference.setSiteId(site);
+		else
+			return "";
+		
+		preference.setElderAbuseButton(request.getParameter("elder_abuse_button"));
+		preference.setElderAbuseContent(request.getParameter("elder_abuse_content"));
+		preference.setCrisisLinesButton(request.getParameter("crisis_lines_button"));
+		preference.setCrisisLinesContent(request.getParameter("crisis_lines_content"));
+		preference.setSelfHarmButton(request.getParameter("self_harm_button"));
+		preference.setSelfHarmContent(request.getParameter("self_harm_content"));
+		
+		if (Utils.isNullOrEmpty(request.getParameter("sos_button")))
+			preference.setSosButton(0);
+		else
+			preference.setSosButton(Integer.valueOf(request.getParameter("sos_button")));
+		
+		String[] arrayLocalAdmins = request.getParameterValues("local_admin");
+		String strLocalAdmins;
+		if (arrayLocalAdmins != null)
+		{
+			strLocalAdmins = Arrays.toString(arrayLocalAdmins);
+			//remove "[" and "]"
+			strLocalAdmins = strLocalAdmins.replace("[", "");
+			strLocalAdmins = strLocalAdmins.replace("]", "");
+			preference.setSosReceiver(strLocalAdmins);
+		}
+		else
+			preference.setSosReceiver("999");		
+		
+		if (action.equals("New"))
+			preferenceManager.addPreference(preference);
+		else
+			preferenceManager.updatePreference(preference);
+		
+		return "redirect:/";
+	}
 }

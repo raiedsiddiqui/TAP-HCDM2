@@ -92,6 +92,7 @@
 		<intercept-url pattern="/manage_clinics" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN"/>
 		<intercept-url pattern="/view_research_data" access="ROLE_ADMIN, ROLE_LOCAL_ADMIN"/>
 		<intercept-url pattern="/setDefault_existingClient" access="ROLE_ADMIN"/>
+		<intercept-url pattern="/setSOS_settings" access="ROLE_LOCAL_ADMIN"/>
 		<form-login login-page="/login" authentication-failure-url="/loginfailed" default-target-url="/loginsuccess" always-use-default-target="true"/>
 	
 		<session-management invalid-session-url="/login">

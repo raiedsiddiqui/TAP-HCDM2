@@ -450,4 +450,20 @@ CREATE TABLE IF NOT EXISTS activities_admin_archive (
 	
 	PRIMARY KEY (id)
 );
+
+CREATE TABLE IF NOT EXISTS site_preferences(
+	preference_ID SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
+	site_ID SMALLINT UNSIGNED NOT NULL UNIQUE,
+	sos_button TINYINT(1) NOT NULL, /* 0--Disable, 1--Enable*/
+	elder_abuse_button VARCHAR(255),
+	elder_abuse_content Text,
+	self_harm_button VARCHAR(255),
+	self_harm_content Text,
+	crisis_lines_button VARCHAR(255),
+	crisis_lines_content Text,
+	sos_receiver VARCHAR(255),
+	UNIQUE (site_ID),
+	
+	PRIMARY KEY (preference_ID)		
+);
 COMMIT;

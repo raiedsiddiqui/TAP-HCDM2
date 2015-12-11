@@ -95,7 +95,7 @@
 	<%@include file="volunteer/subNavi.jsp" %>
 	<div id="displayAuthenticationDiv" class ="alert alert-info" style="display:none">
 		<spring:message code="message_authenticatePHR"/>
-	</div>
+	</div>	
 	<c:if test="${not empty showAuthenticationMsg}">
 			<div class ="alert alert-info"><spring:message code="message_authenticatePHR"/></div>
 	</c:if>	
@@ -117,8 +117,9 @@
 					</c:otherwise>
 				</c:choose>
 			</c:if>
-			<a id="SOSbtn" href="#modalSOS" role="button" class="lgbtn" data-toggle="modal">SOS</a>
-
+			<c:if test="${preference.sosButton == 1 }">
+				<a id="SOSbtn" href="#modalSOS" role="button" class="lgbtn" data-toggle="modal">SOS</a>
+			</c:if>
 			<c:if test="${not empty patient.notes}">
 				<a id="alertsbox" href="#modalNotes" class="btn btn-large btn-inverse lgbtn" role="button" data-toggle="modal"><i class="icon-info-sign icon-white"></i></a>
 			</c:if>
@@ -389,12 +390,15 @@
         </h4>
       </div>
       <div class="modal-body">
-    	<a class="lgbtn" href="<c:url value="/call_coordinator_SOS/${patient.displayName}?type=1"/>" Onclick="return confirmSOS()">Elder Abuse</a>
-    	<a class="lgbtn" href="<c:url value="/call_coordinator_SOS/${patient.displayName}?type=2"/>" Onclick="return confirmSOS()">Self Harm</a>
-    	<a class="lgbtn" href="<c:url value="/call_coordinator_SOS/${patient.displayName}?type=3"/>" Onclick="return confirmSOS()">Crisis Lines</a>
+    	<a class="lgbtn" href="<c:url value="/call_coordinator_SOS/${patient.displayName}?type=1"/>" Onclick="return confirmSOS()">${preference.elderAbuseButton}</a>
+    	<a class="lgbtn" href="<c:url value="/call_coordinator_SOS/${patient.displayName}?type=2"/>" Onclick="return confirmSOS()">${preference.selfHarmButton}</a>
+    	<a class="lgbtn" href="<c:url value="/call_coordinator_SOS/${patient.displayName}?type=3"/>" Onclick="return confirmSOS()">${preference.crisisLinesButton}</a>
 
-
-      <h3 id="elderabuse">If You Suspect Elder Abuse</h3>
+		<div id="elderabuse_content">${preference.elderAbuseContent}</div><hr/>
+		<div id="selfharm_content">${preference.selfHarmContent}</div><hr/>
+		<div id="crisislines_content">${preference.crisisLinesContent}</div><hr/>
+<!-- 
+      <h3 id="elderabuse">If You Suspect Elder Abuse---UBC</h3>
       <h4>CALL the Volunteer Coordinator immediately.</h4>
 
 		<h4>WARNING SIGNS:</h4>
@@ -409,10 +413,10 @@
 			<li>Sexual abuse</li>
 			<li>Neglect or abandonment by a caretaker</li>
 			<li>Financial exploitation (e.g. misusing an elder's checks, credit  cards, or accounts; forging an elder's signature; stealing) </li>
-		</ul> 
+		</ul>  
 		<hr>
 
-		<h3 id="selfharm">If You Suspect a Client is At Risk of Harming Themselves </h3>
+		<h3 id="selfharm">If You Suspect a Client is At Risk of Harming Themselves-McGill </h3>
 
 			<h4>CALL the Volunteer Coordinator immediately.</h4>
 
@@ -447,7 +451,7 @@
 			<li>Crisis Outreach and Response Team (COAST), St Joseph's Healthcare - 905-972-8338 - also has a mobile team that can respond to calls from 8am-1am daily</li>
 			<li>Good Shepherd Barrett Centre for Crisis Support - 905-529-7878 - also has a 10-bed centre for brief stays for individuals in mental health crisis</li>
 			<li>Sexual Assault Centre Hamilton &amp; Area (SACHA) - 905-525-4162 - sexual assault specific, also has other counselling and advocacy services</li>
-			</ul>
+			</ul>-->
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
