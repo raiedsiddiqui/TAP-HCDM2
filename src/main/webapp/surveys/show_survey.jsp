@@ -388,17 +388,17 @@
 		    <div class="modal fade" id="modalObserverNotes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			  <div class="modal-dialog">
 	  			  <div class="modal-content">
-						<div class="modal-header">
+						<div class="modal-header" style="border-bottom:none">
     						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
 						<h3 class="pull-left">Observer Note</h3>
 				 </div>
 				 <div class="modal-body">
 					<div class="col-md-12">
-						
+						<p class="pull-left" style="color:darkred">Note: Observer Notes are for program staff only. This information will <b>NOT</b> go to clinic</p>
 						<textarea class="form-control" id="observerNote"><%=observernotes%></textarea><br />		
 					</div>	
 				</div>				
-				<div class="modal-footer">
+				<div class="modal-footer" style="border-top:none">
 					<input type="button"  class="btn lgbtn" data-dismiss="modal" value="Save"  onclick="saveObserverNotes();" />
   				</div>
 			</div>

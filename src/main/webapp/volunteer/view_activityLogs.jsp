@@ -32,7 +32,7 @@
 
 	<div class="row">
 		<div class="col-md-8">
-			<h3 class="pagetitle">Activity Journal <span class="pagedesc">You can add a new journal entry or edit an existing one</span> </h3>
+			<h3 class="pagetitle">Activity Log <span class="pagedesc">You can add a new activity log or edit an existing one</span> </h3>
 		</div>
 		<div class="col-md-4">	
 			<a href="<c:url value="/new_activity"/>" class="pull-right lgbtn" data-toggle="modal">New Entry</a>
