@@ -30,4 +30,9 @@ public class PreferenceServiceImpl implements PreferenceManager {
 		preferenceDao.updatePreference(preference);
 	}
 
+	@Override
+	public String getSosReciversBySite(int site) {
+		return preferenceDao.getSosReciversBySite(site);
+	}
+
 }

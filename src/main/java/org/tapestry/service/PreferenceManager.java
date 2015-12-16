@@ -16,4 +16,6 @@ public interface PreferenceManager {
 	@Transactional
 	public void updatePreference(Preference preference);
 
+	@Transactional
+	public String getSosReciversBySite(int site);
 }

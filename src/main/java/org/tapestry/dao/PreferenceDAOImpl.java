@@ -27,6 +27,13 @@ public class PreferenceDAOImpl extends JdbcDaoSupport implements PreferenceDAO {
 	}
 	
 	@Override
+	public String getSosReciversBySite(int site) {
+		String sql = "SELECT sos_receiver FROM site_preferences WHERE site_ID=?";
+		String sosReceivers = getJdbcTemplate().queryForObject(sql, new Object[]{site}, String.class);
+		return sosReceivers;
+	}
+	
+	@Override
 	public void addPreference(Preference preference) {
 		String sql = "INSERT INTO site_preferences (site_ID, sos_receiver, elder_abuse_button,elder_abuse_content,"
 				+ "self_harm_button, self_harm_content, crisis_lines_button, crisis_lines_content, sos_button) "
@@ -66,6 +73,8 @@ public class PreferenceDAOImpl extends JdbcDaoSupport implements PreferenceDAO {
 			return preference;			
 		}
 	}
+
+	
 
 
 }

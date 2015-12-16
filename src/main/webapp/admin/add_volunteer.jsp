@@ -640,8 +640,8 @@
 					<option value="${o.organizationId}">${o.name}</option>
 				</c:forEach>
 			</select>
-		</div>
-		<c:if test="${showSites}">
+		</div>	
+		<c:if test="${site == 0}">
 			<div class="col-md-4">
 				<label>Site:</label>									
 				<select name="site" id="site" form="add_volunteer" class="form-control">

@@ -1290,27 +1290,18 @@ public class TapestryController{
 			sb.append("CRISIS LINES");
 		sb.append(" for patient ");
 		sb.append(patientName);
-		
-		//send message to Marianne Hannon and Katharine May, their's userId are stored in tapestry.properties 
-		try
-		{//to be changed... get sos receiver from DB instead of properties
-			String sosReceiver = TapestryHelper.getProperties("SOSReceiver");
-						
-			List<String> receivers = new ArrayList<String>(Arrays.asList(sosReceiver.split(",")));
-			int rID;
-			for (int i=0; i< receivers.size(); i++)
-			{
-				rID = Integer.valueOf(receivers.get(i));
-				TapestryHelper.sendMessageToInbox("SOS alert", sb.toString(), loggedInUser.getUserID(), rID, messageManager);			
-			}
-			
-		}catch(Exception e)
+				
+		//	String sosReceiver = TapestryHelper.getProperties("SOSReceiver");
+		String sosReceiver = preferenceManager.getSosReciversBySite(loggedInUser.getSite());	
+		List<String> receivers = new ArrayList<String>(Arrays.asList(sosReceiver.split(",")));
+		int rID;
+		for (int i=0; i< receivers.size(); i++)
 		{
-			e.printStackTrace();
+			rID = Integer.valueOf(receivers.get(i).trim());
+			TapestryHelper.sendMessageToInbox("SOS alert", sb.toString(), loggedInUser.getUserID(), rID, messageManager);			
 		}
 		//log
 		userManager.addUserLog(sb.toString(), loggedInUser);
-//		return "redirect:/";
 		
 		int patientId = TapestryHelper.getPatientId(request);
 		int appointmentId = TapestryHelper.getAppointmentId(request);

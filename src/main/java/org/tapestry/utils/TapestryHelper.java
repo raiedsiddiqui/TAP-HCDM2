@@ -483,6 +483,8 @@ public class TapestryHelper {
 		String wednesdayNull = request.getParameter("wednesdayNull");
 		String thursdayNull = request.getParameter("thursdayNull");
 		String fridayNull = request.getParameter("fridayNull");		
+		String saturdayNull = request.getParameter("saturdayNull");
+		String sundayNull = request.getParameter("sundayNull");
 		String from1, from2, to1, to2;		
 		
 		//get availability for Monday
@@ -579,6 +581,44 @@ public class TapestryHelper {
 		}
 		else
 			availability.add("5non");
+		
+		//get availability for Saturday
+		if(!"non".equals(saturdayNull))
+		{			
+			from1 = request.getParameter("satFrom1");
+			from2 = request.getParameter("satFrom2");
+			to1 = request.getParameter("satTo1");
+			to2 = request.getParameter("satTo2");	
+			
+			if ((from1.equals(from2))&&(from1.equals("0")))
+				availability.add("6non");	
+			else
+			{
+				availability = Utils.getAvailablePeriod(from1, to1, availability);
+				availability = Utils.getAvailablePeriod(from2, to2, availability);
+			}
+		}
+		else
+			availability.add("6non");
+		
+		//get availability for Sunday
+		if(!"non".equals(sundayNull))
+		{			
+			from1 = request.getParameter("sunFrom1");
+			from2 = request.getParameter("sunFrom2");
+			to1 = request.getParameter("sunTo1");
+			to2 = request.getParameter("sunTo2");	
+			
+			if ((from1.equals(from2))&&(from1.equals("0")))
+				availability.add("7non");	
+			else
+			{
+				availability = Utils.getAvailablePeriod(from1, to1, availability);
+				availability = Utils.getAvailablePeriod(from2, to2, availability);
+			}
+		}
+		else
+			availability.add("7non");
 	
 		//convert arrayList to string for matching data type in DB
 		if (availability != null)
@@ -651,27 +691,13 @@ public class TapestryHelper {
 		
 		for (Volunteer v: list)
 		{
-			availableTime = v.getAvailability();
-						
-			if (isAvailable(availableTime, time)&&(!aManager.hasAppointmentByVolunteer(v.getVolunteerId(), dateTime)))
+			availableTime = v.getAvailability();		
+			if ((availableTime.contains(time))&&(!aManager.hasAppointmentByVolunteer(v.getVolunteerId(), dateTime)))
 				vList.add(v);
 		}
 		return vList;
 	}
-	
-	public static boolean isAvailable(String availableTime, String time)
-	{
-		boolean available = false;
-		String[] strArray = availableTime.split(",");
-		
-		for (int i=0; i<strArray.length; i++)
-		{
-			if (strArray[i].equals(time))
-				available=true;
-		}		
-		return available;
-		
-	}
+
 	/**
 	 * 
 	 * @param list1
@@ -857,6 +883,8 @@ public class TapestryHelper {
 		List<String> lWednesday = new ArrayList<String>();
 		List<String> lThursday = new ArrayList<String>();
 		List<String> lFriday = new ArrayList<String>();	
+		List<String> lSaturday = new ArrayList<String>();
+		List<String> lSunday = new ArrayList<String>();
 			
 		Map<String, String> showAvailableTime = getAvailabilityMap();		
 		aList = Arrays.asList(availability.split(","));		
@@ -875,7 +903,13 @@ public class TapestryHelper {
 				lThursday = getFormatedTimeList(l, showAvailableTime, lThursday);	
 						
 			if (l.startsWith("5"))
-				lFriday = getFormatedTimeList(l, showAvailableTime, lFriday);							
+				lFriday = getFormatedTimeList(l, showAvailableTime, lFriday);		
+			
+			if (l.startsWith("6"))
+				lSaturday = getFormatedTimeList(l, showAvailableTime, lSaturday);	
+						
+			if (l.startsWith("7"))
+				lSunday = getFormatedTimeList(l, showAvailableTime, lSunday);		
 		}	
 		
 		if ((lMonday == null)||(lMonday.size() == 0))
@@ -888,12 +922,18 @@ public class TapestryHelper {
 			lThursday.add("4non");
 		if ((lFriday == null)||(lFriday.size() == 0))
 			lFriday.add("5non");
+		if ((lSaturday == null)||(lSaturday.size() == 0))
+			lSaturday.add("6non");
+		if ((lSunday == null)||(lSunday.size() == 0))
+			lSunday.add("7non");
 		
 		model.addAttribute("monAvailability", lMonday);		
 		model.addAttribute("tueAvailability", lTuesday);
 		model.addAttribute("wedAvailability", lWednesday);
 		model.addAttribute("thuAvailability", lThursday);
 		model.addAttribute("friAvailability", lFriday);		
+		model.addAttribute("satAvailability", lSaturday);
+		model.addAttribute("sunAvailability", lSunday);	
 	}
 	
 	public static List<String> getFormatedTimeList(String str, Map<String, String> map, List<String> list){
@@ -930,6 +970,8 @@ public class TapestryHelper {
 		boolean wednesdayNull = false;
 		boolean thursdayNull = false;
 		boolean fridayNull = false;
+		boolean saturdayNull = false;
+		boolean sundayNull = false;
 		
 		if (strAvailibilities.contains("1non"))
 			mondayNull = true;
@@ -941,6 +983,10 @@ public class TapestryHelper {
 			thursdayNull = true;
 		if (strAvailibilities.contains("5non"))
 			fridayNull = true;
+		if (strAvailibilities.contains("6non"))
+			saturdayNull = true;
+		if (strAvailibilities.contains("7non"))
+			sundayNull = true;
 		
 		String[] arrayAvailibilities = strAvailibilities.split(",");
 		
@@ -949,6 +995,8 @@ public class TapestryHelper {
 		Utils.getPosition("3","wedDropPosition",arrayAvailibilities,wednesdayNull, model);
 		Utils.getPosition("4","thuDropPosition",arrayAvailibilities,thursdayNull, model);
 		Utils.getPosition("5","friDropPosition",arrayAvailibilities,fridayNull, model);
+		Utils.getPosition("6","satDropPosition",arrayAvailibilities,saturdayNull, model);
+		Utils.getPosition("7","sunDropPosition",arrayAvailibilities,sundayNull, model);
 		
 		model.addAttribute("volunteer", volunteer);
 		model.addAttribute("mondayNull", mondayNull);
@@ -956,6 +1004,8 @@ public class TapestryHelper {
 		model.addAttribute("wednesdayNull", wednesdayNull);
 		model.addAttribute("thursdayNull", thursdayNull);
 		model.addAttribute("fridayNull", fridayNull);	
+		model.addAttribute("satursdayNull", saturdayNull);
+		model.addAttribute("sundayNull", sundayNull);
 		
 		if (request.getSession().getAttribute("unread_messages") != null)
 			model.addAttribute("unread", request.getSession().getAttribute("unread_messages"));				

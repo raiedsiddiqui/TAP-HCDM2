@@ -216,6 +216,37 @@
 					</c:choose>
 				</table>
 			</td>
+			<td width ="200" valign="top">
+				<table>
+					<tr><th>Satursday</th></tr>
+					<c:choose>
+						<c:when test="${fn:contains(satAvailability, 'non') }">
+							<tr><td>N/A</td></tr>		
+						</c:when>
+						<c:otherwise >
+						    <c:forEach items="${satAvailability}" var="satA">	
+						    	<tr><td align="center">${satA}</td></tr>		
+						    </c:forEach>							
+						</c:otherwise>
+					</c:choose>
+				</table>
+			</td>
+			<td width ="200" valign="top">
+			
+				<table>
+					<tr><th>Sunday</th></tr>		
+					<c:choose>
+						<c:when test="${fn:contains(sunAvailability, 'non')}">
+							<tr><td>N/A</td></tr>		
+						</c:when>
+						<c:otherwise >
+						    <c:forEach items="${sunAvailability}" var="sunA">	
+						    	<tr><td align="center">${sunA}</td></tr>		
+						    </c:forEach>							
+						</c:otherwise>
+					</c:choose>
+				</table>
+			</td>
 		
 		</tr>
 		

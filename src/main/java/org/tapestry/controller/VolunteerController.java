@@ -44,6 +44,7 @@ import org.tapestry.service.AppointmentManager;
 import org.tapestry.service.MessageManager;
 import org.tapestry.service.OrganizationManager;
 import org.tapestry.service.PatientManager;
+import org.tapestry.service.PreferenceManager;
 import org.tapestry.service.SurveyManager;
 import org.tapestry.service.UserManager;
 import org.tapestry.service.VolunteerManager;
@@ -68,6 +69,9 @@ public class VolunteerController {
 	private SurveyManager surveyManager;
 	@Autowired
 	private OrganizationManager organizationManager;
+	@Autowired
+   	private PreferenceManager preferenceManager;
+   	
    	
 	//display all volunteers
 	@RequestMapping(value="/view_volunteers", method=RequestMethod.GET)
@@ -166,8 +170,10 @@ public class VolunteerController {
 		List<Site> sites = organizationManager.getAllSites();
 		model.addAttribute("sites", sites);
 		
-		if (request.isUserInRole("ROLE_ADMIN"))		
-			model.addAttribute("showSites", true);
+//		if (request.isUserInRole("ROLE_ADMIN"))		
+//			model.addAttribute("showSites", true);
+//		else
+			model.addAttribute("site", logginUser.getSite());
 		
 		if (session.getAttribute("unread_messages") != null)
 			model.addAttribute("unread", session.getAttribute("unread_messages"));
@@ -1902,7 +1908,7 @@ public class VolunteerController {
 	//display scheduler page
 	@RequestMapping(value="/view_scheduler", method=RequestMethod.GET)
 	public String viewScheduler( SecurityContextHolderAwareRequestWrapper request, ModelMap model)
-	{
+	{System.out.println("hi");
 		List<Patient> patients = TapestryHelper.getPatients(request, patientManager);	
 		List<Volunteer> allVolunteers = TapestryHelper.getAllVolunteers(volunteerManager);
 		
@@ -1915,7 +1921,7 @@ public class VolunteerController {
 		HttpSession  session = request.getSession();
 		if (session.getAttribute("unread_messages") != null)
 			model.addAttribute("unread", session.getAttribute("unread_messages"));
-	
+		
 		return "/admin/view_scheduler";
 	}
 	
@@ -2040,8 +2046,7 @@ public class VolunteerController {
 		//when date pick up from calendar, format is different, need to change from yyyy/mm/dd to yyyy-MM-dd
 		date = date.replace("/", "-");
 		
-		int dayOfWeek = Utils.getDayOfWeekByDate(date);
-		
+		int dayOfWeek = Utils.getDayOfWeekByDate(date);		
 		Map<String, String> map = TapestryHelper.getAvailabilityMap();
 		String fullDateTime = map.get(time);
 		fullDateTime = fullDateTime.substring(0, 8);
@@ -2053,7 +2058,10 @@ public class VolunteerController {
 		fullDateTime = sb.toString();
 		
 		sb = new StringBuffer();
-		sb.append(String.valueOf(dayOfWeek -1));
+		if (dayOfWeek == 1)// for Sunday
+			sb.append(String.valueOf(7));
+		else
+			sb.append(String.valueOf(dayOfWeek -1));
 		sb.append(time);
 		String timeSlot = sb.toString();
 		
@@ -2064,87 +2072,38 @@ public class VolunteerController {
 		
 		String action = request.getParameter("hhAction");		
 		if ("Find Avalable Volunteers".equals(action))
-		{
-				
+		{// find ...				
 			volunteers = volunteerManager.getVolunteersByAvailibility(timeSlot, volunteers);
 			model.addAttribute("showVolunteers", true);		
 			model.addAttribute("volunteers", volunteers);	
 			return "/admin/go_scheduler";
 		}
 		else
-			return getVolunteerByScheduler(request, model, volunteers, timeSlot, fullDateTime);
-//		
-//		if (volunteers.size() == 0)
-//			model.addAttribute("noAvailableTime",true);	
-//		else
-//		{
-//			List<Volunteer> availableVolunteers = TapestryHelper.getAllMatchedVolunteers(volunteers, timeSlot);
-//			if (availableVolunteers.size() == 0)
-//				model.addAttribute("noAvailableVolunteers",true);	
-//			else
-//			{
-//				List<Availability> matchList = TapestryHelper.getAllAvailablilities(availableVolunteers, timeSlot, day);
-//				if (matchList.size() == 0)
-//					model.addAttribute("noFound",true);	
-//				else
-//					model.addAttribute("matcheList",matchList);	
-//			}
-//		}		
-//		HttpSession  session = request.getSession();
-//		if (session.getAttribute("unread_messages") != null)
-//			model.addAttribute("unread", session.getAttribute("unread_messages"));
-//		
-//		return "/admin/view_scheduler";
-	}
-	private String getVolunteerByScheduler(SecurityContextHolderAwareRequestWrapper request, ModelMap model, 
-			List<Volunteer> volunteers, String timeSlot, String dateTime)
-	{
-//		User loggedInUser = TapestryHelper.getLoggedInUser(request, userManager);
-//		List<Volunteer> volunteers = new ArrayList<Volunteer>();
-//		
-//		//get Date and time for appointment		
-//		String day = request.getParameter("appointmentDate");
-//		//when date pick up from calendar, format is different, need to change from yyyy/mm/dd to yyyy-MM-dd
-//		day = day.replace("/", "-");
-//		
-//		int dayOfWeek = Utils.getDayOfWeekByDate(day);
-//		String time = request.getParameter("appointmentTime");				
-//		
-//		StringBuffer sb = new StringBuffer();
-//		sb.append(String.valueOf(dayOfWeek -1));
-//		sb.append(time);
-//		String date_time = sb.toString();
-//		
-//		if (request.isUserInRole("ROLE_ADMIN"))//for central admin
-//			volunteers = TapestryHelper.getAllVolunteers(volunteerManager);
-//		else // local admin/VC
-//			volunteers = volunteerManager.getAllVolunteersByOrganization(loggedInUser.getOrganization());	
-		String day = request.getParameter("appointmentDate");
-		//when date pick up from calendar, format is different, need to change from yyyy/mm/dd to yyyy-MM-dd
-		day = day.replace("/", "-");
-		
-		if (volunteers.size() == 0)
-			model.addAttribute("noAvailableTime",true);	
-		else
-		{
-			List<Volunteer> availableVolunteers = TapestryHelper.getAllMatchedVolunteers(volunteers, timeSlot, dateTime, appointmentManager);
-			if (availableVolunteers.size() == 0)
-				model.addAttribute("noAvailableVolunteers",true);	
+		{	// go scheduler		
+			if (volunteers.size() == 0)
+				model.addAttribute("noAvailableTime",true);	
 			else
 			{
-				List<Availability> matchList = TapestryHelper.getAllAvailablilities(availableVolunteers, timeSlot, day);
-				if (matchList.size() == 0)
-					model.addAttribute("noFound",true);	
+				List<Volunteer> availableVolunteers = TapestryHelper.getAllMatchedVolunteers(volunteers, timeSlot, fullDateTime, appointmentManager);			
+				
+				if (availableVolunteers.size() == 0)
+					model.addAttribute("noAvailableVolunteers",true);	
 				else
-					model.addAttribute("matcheList",matchList);	
-			}
-		}		
-		HttpSession  session = request.getSession();
-		if (session.getAttribute("unread_messages") != null)
-			model.addAttribute("unread", session.getAttribute("unread_messages"));
-		
-		return "/admin/view_scheduler";
-	}
+				{
+					List<Availability> matchList = TapestryHelper.getAllAvailablilities(availableVolunteers, timeSlot, date);
+					if (matchList.size() == 0)
+						model.addAttribute("noFound",true);	
+					else
+						model.addAttribute("matcheList",matchList);	
+				}
+			}		
+			HttpSession  session = request.getSession();
+			if (session.getAttribute("unread_messages") != null)
+				model.addAttribute("unread", session.getAttribute("unread_messages"));
+			
+			return "/admin/view_scheduler";
+		}
+	}	
 	
 	@RequestMapping(value="/schedule_appointment", method=RequestMethod.POST)
 	public String createAppointment(SecurityContextHolderAwareRequestWrapper request, ModelMap model)
@@ -2203,7 +2162,7 @@ public class VolunteerController {
 			int userId = user.getUserID();
 			int volunteer1UserId = volunteerManager.getUserIdByVolunteerId(volunteerId);	
 			int volunteer2UserId = volunteerManager.getUserIdByVolunteerId(partnerId);
-			
+		
 			//update volunteer and partner for patient if choose different from scheduler
 			if ((volunteerId != patient.getVolunteer()) || (partnerId != patient.getPartner()))
 				patientManager.updatePatientVolunteers(patientId, volunteerId, partnerId);
@@ -2216,16 +2175,14 @@ public class VolunteerController {
 			sb.append(time);
 			sb.append(" on ");
 			sb.append(date);
-			sb.append(".\n");			
-						
-			String msg = sb.toString();
+			sb.append(".\n");	
 			
-			TapestryHelper.sendMessageToInbox(msg, userId, volunteer1UserId, messageManager); //send message to volunteer
-			TapestryHelper.sendMessageToInbox(msg, userId, volunteer2UserId, messageManager); //send message to volunteer
-			TapestryHelper.sendMessageToInbox(msg, userId, userId, messageManager); //send message to admin her/his self	
+			TapestryHelper.sendMessageToInbox(sb.toString(), userId, volunteer1UserId, messageManager); //send message to volunteer
+			TapestryHelper.sendMessageToInbox(sb.toString(), userId, volunteer2UserId, messageManager); //send message to volunteer
+			TapestryHelper.sendMessageToInbox(sb.toString(), userId, userId, messageManager); //send message to admin her/his self	
 			model.addAttribute("successToCreateAppointment",true);
 			//log activity
-			userManager.addUserLog(msg, user);
+			userManager.addUserLog(sb.toString(), user);
 		}
 		else
 			model.addAttribute("failedToCreateAppointment",true);
