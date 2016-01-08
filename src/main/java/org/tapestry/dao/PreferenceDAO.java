@@ -28,11 +28,22 @@ public interface PreferenceDAO {
 	 */
 	public void updatePreference(Preference preference);
 	
-	/**
-	 * 
+	/**	
 	 * @param site
 	 * @return
 	 */
 	public String getSosReciversBySite(int site);
+	
+	/** 
+	 * @param site
+	 * @return
+	 */
+	public String getApptNotiReceiversBySite(int site);
+	
+	/**
+	 * @param site
+	 * @return
+	 */
+	public String getReportNotiReceiversBySite(int site);
 
 }

@@ -35,4 +35,14 @@ public class PreferenceServiceImpl implements PreferenceManager {
 		return preferenceDao.getSosReciversBySite(site);
 	}
 
+	@Override
+	public String getApptNotiReceiversBySite(int site) {		
+		return preferenceDao.getApptNotiReceiversBySite(site);
+	}
+
+	@Override
+	public String getReportNotiReceiversBySite(int site) {
+		return preferenceDao.getReportNotiReceiversBySite(site);
+	}
+
 }

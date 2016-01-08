@@ -463,6 +463,8 @@ CREATE TABLE IF NOT EXISTS site_preferences(
 	crisis_lines_content Text,
 	sos_receiver VARCHAR(255),
 	UNIQUE (site_ID),
+	appt_notification_receiver VARCHAR(255),
+	report_notification_receiver VARCHAR(255),
 	
 	PRIMARY KEY (preference_ID)		
 );

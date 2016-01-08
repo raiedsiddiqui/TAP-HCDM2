@@ -6328,5 +6328,20 @@ public class TapestryHelper {
 		return available;
 		
 	}
+	
+	public static String getValuesFromCheckboxList(String[] strArray)
+	{		
+		String str;
+		if (strArray != null)
+		{
+			str = Arrays.toString(strArray);
+			//remove "[" and "]"
+			str = str.replace("[", "");
+			str = str.replace("]", "");
+			return str;
+		}
+		else
+			return "999";	
+	}
 
 }

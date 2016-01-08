@@ -18,4 +18,10 @@ public interface PreferenceManager {
 
 	@Transactional
 	public String getSosReciversBySite(int site);
+	
+	@Transactional
+	public String getApptNotiReceiversBySite(int site);
+	
+	@Transactional
+	public String getReportNotiReceiversBySite(int site);
 }

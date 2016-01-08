@@ -3,6 +3,7 @@ package org.tapestry.controller;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -1684,44 +1685,77 @@ public class VolunteerController {
 		{
 			a.setStatus("Awaiting Approval");
 			appointmentManager.createAppointment(a);
+			// send message to local admins(selected in preference) and both volunteers
+			String apptReceivers = preferenceManager.getApptNotiReceiversBySite(user.getSite());			
+			
+			if (Utils.isNullOrEmpty(apptReceivers))
+			{
+				int organizationId = volunteer1.getOrganizationId();
+				List<User> coordinators = userManager.getVolunteerCoordinatorByOrganizationId(organizationId);
+				
+				sb = new StringBuffer();
+				sb.append(inboxMsg);
+				sb.append("This appointment is awaiting for confirmation.");
+				inboxMsg = sb.toString();
+				
+				if (coordinators != null)
+				{	//send message to all coordinators in the organization						
+					for (int i = 0; i<coordinators.size(); i++)		
+						TapestryHelper.sendMessageToInbox(inboxMsg, volunteer1UserId, coordinators.get(i).getUserID(), messageManager);			
+				}
+				else
+				{
+					System.out.println("Can't find any coordinator in organization id# " + organizationId);
+					logger.error("Can't find any coordinator in organization id# " + organizationId);
+				}
+			}
+			else
+			{
+				List<String> receivers = new ArrayList<String>(Arrays.asList(apptReceivers.split(",")));
+				int rID;
+				for (int i=0; i< receivers.size(); i++)
+				{
+					rID = Integer.valueOf(receivers.get(i).trim());					
+					TapestryHelper.sendMessageToInbox(inboxMsg, userId, rID, messageManager);			
+				}
+				
+				TapestryHelper.sendMessageToInbox(inboxMsg, userId, volunteer1UserId, messageManager);//send message to volunteer1 
+				TapestryHelper.sendMessageToInbox(inboxMsg, userId, volunteer2UserId, messageManager);//send message to volunteer2
+			}
+			
+			//log
+			userManager.addUserLog(logMsg, user);
 			
 			if ((TapestryHelper.isAvailableForVolunteer(availability, pAvailability)) && 
 					(TapestryHelper.isAvailableForVolunteer(availability, vAvailability)))
+				return "redirect:/?booked=true";	
+			else // another volunteer's availability does not match
+				return "redirect:/?noMachedTime=" + noMatchedMsg;	
+			
+	/*		if ((TapestryHelper.isAvailableForVolunteer(availability, pAvailability)) && 
+					(TapestryHelper.isAvailableForVolunteer(availability, vAvailability)))
 			{
-	//			a.setStatus("Awaiting Approval");
-//				if (appointmentManager.createAppointment(a))
-//				{					
-					//send message to local admin and volunteers
-					int organizationId = volunteer1.getOrganizationId();
-					List<User> coordinators = userManager.getVolunteerCoordinatorByOrganizationId(organizationId);
-					
-					sb = new StringBuffer();
-					sb.append(inboxMsg);
-					sb.append("This appointment is awaiting for confirmation.");
-					inboxMsg = sb.toString();
-					
-					if (coordinators != null)
-					{	//send message to all coordinators in the organization						
-						for (int i = 0; i<coordinators.size(); i++)		
-							TapestryHelper.sendMessageToInbox(inboxMsg, volunteer1UserId, coordinators.get(i).getUserID(), messageManager);			
-					}
-					else
-					{
-						System.out.println("Can't find any coordinator in organization id# " + organizationId);
-						logger.error("Can't find any coordinator in organization id# " + organizationId);
-					}
-					TapestryHelper.sendMessageToInbox(inboxMsg, userId, volunteer1UserId, messageManager);//send message to volunteer1 
-					TapestryHelper.sendMessageToInbox(inboxMsg, userId, volunteer2UserId, messageManager);//send message to volunteer2
-					
-					//log
-					userManager.addUserLog(logMsg, user);
-					return "redirect:/?booked=true";	
-//				}// failed to create an appointment in DB
-//				else
-//				{
-//					System.out.println("Can not create an appointment in DB");
-//					return "redirect:/?booked=false";
-//				}
+				send message to local admin and volunteers
+				int organizationId = volunteer1.getOrganizationId();
+				List<User> coordinators = userManager.getVolunteerCoordinatorByOrganizationId(organizationId);
+				
+				sb = new StringBuffer();
+				sb.append(inboxMsg);
+				sb.append("This appointment is awaiting for confirmation.");
+				inboxMsg = sb.toString();
+				
+				if (coordinators != null)
+				{	//send message to all coordinators in the organization						
+					for (int i = 0; i<coordinators.size(); i++)		
+						TapestryHelper.sendMessageToInbox(inboxMsg, volunteer1UserId, coordinators.get(i).getUserID(), messageManager);			
+				}
+				else
+				{
+					System.out.println("Can't find any coordinator in organization id# " + organizationId);
+					logger.error("Can't find any coordinator in organization id# " + organizationId);
+				}
+								
+				return "redirect:/?booked=true";	
 			}
 			else // another volunteer's availability does not match
 			{
@@ -1731,7 +1765,7 @@ public class VolunteerController {
 				noMatchedMsg = sb.toString();
 				
 				return "redirect:/?noMachedTime=" + noMatchedMsg;		
-			}			
+			}	*/		
 		}
 		else //login as admin
 		{
@@ -1739,20 +1773,7 @@ public class VolunteerController {
 			appointmentManager.createAppointment(a);
 			if ((TapestryHelper.isAvailableForVolunteer(availability, vAvailability)) && 
 					(TapestryHelper.isAvailableForVolunteer(availability, pAvailability)))
-			{
-		//		a.setStatus("Approved");
-//				if (appointmentManager.createAppointment(a))
-//				{
-//					TapestryHelper.sendMessageToInbox(inboxMsg, userId, userId, messageManager);//send message to login user 
-//					TapestryHelper.sendMessageToInbox(inboxMsg, userId, volunteer1UserId, messageManager);//send message to volunteer1 
-//					TapestryHelper.sendMessageToInbox(inboxMsg, userId, volunteer2UserId, messageManager);//send message to volunteer2
-//					return "redirect:/manage_appointments?success=true";	
-//				}
-//				else
-//				{
-//					System.out.println("Can not create an appointment in DB");
-//					return "redirect:/manage_appointments?success=false";
-//				}	
+			{		
 				return "redirect:/manage_appointments?success=true";
 			}
 			else // one of volunteer's availability does not match
@@ -1772,47 +1793,7 @@ public class VolunteerController {
 				noMatchedMsg = sb.toString();		
 				
 				return "redirect:/manage_appointments?noMachedTime=" + noMatchedMsg;
-			}
-		/*
-			////////////////////////////////
-			a.setStatus("Approved");
-			if (appointmentManager.createAppointment(a))
-			{
-				//log
-				userManager.addUserLog(logMsg, user);
-				
-				if ((TapestryHelper.isAvailableForVolunteer(availability, vAvailability)) && 
-						(TapestryHelper.isAvailableForVolunteer(availability, pAvailability)))
-				{
-					TapestryHelper.sendMessageToInbox(inboxMsg, userId, userId, messageManager);//send message to login user 					
-					return "redirect:/manage_appointments?success=true";					
-				}
-				else // one of volunteer's availability does not match
-				{										
-					String displayedVolunteerName = "";
-					
-					if(!(TapestryHelper.isAvailableForVolunteer(availability, vAvailability)))
-						displayedVolunteerName = volunteer1Name;
-					else
-						displayedVolunteerName = volunteer2Name;
-					sb = new StringBuffer();
-					sb.append("Warning: [ ");
-					sb.append(displayedVolunteerName);
-					sb.append("] is not available during this time slot, however the appointment has been booked. "
-							+ "Please ask the volunteer to update his/her availability.");
-										
-					noMatchedMsg = sb.toString();		
-					
-					return "redirect:/manage_appointments?noMachedTime=" + noMatchedMsg;
-				}
-			}
-			else
-			{
-				System.out.println("Can not create an appointment in DB");
-				return "redirect:/manage_appointments?success=false";
-			}
-			
-			////////////////////  */
+			}		
 		}
 	}	
 	
@@ -2426,18 +2407,36 @@ public class VolunteerController {
 			
 			if (completed)
 			{	//for temporary use, send a message to coordinator, hl7 report is ready to donwload on Admin side					
-				String patientName = patient.getDisplayName();
-				List<User> coordinators = userManager.getLocalAdminBySite(siteId);
-								
-				sb = new StringBuffer();
-				sb.append(patientName);
-				sb.append("'s hl7/PDF report is ready to be downloaded. ");			
-				                                                  
-				//send message to all coordinators in the site					
-				for (int i = 0; i<coordinators.size(); i++)	
-					TapestryHelper.sendMessageToInbox("PDF/HL7 Report", sb.toString(), loggedInUser.getUserID(),
-							coordinators.get(i).getUserID(), messageManager);
-
+				String patientName = patient.getDisplayName();				
+				String reportReceivers = preferenceManager.getSosReciversBySite(siteId);	
+				
+				if (Utils.isNullOrEmpty(reportReceivers))
+				{
+					List<User> coordinators = userManager.getLocalAdminBySite(siteId);
+					
+					sb = new StringBuffer();
+					sb.append(patientName);
+					sb.append("'s HL7/PDF report is ready to be downloaded. ");			
+					                                                  
+					//send message to all coordinators in the site					
+					for (int i = 0; i<coordinators.size(); i++)	
+						TapestryHelper.sendMessageToInbox("PDF/HL7 Report", sb.toString(), loggedInUser.getUserID(),
+								coordinators.get(i).getUserID(), messageManager);
+				}
+				else
+				{
+					List<String> receivers = new ArrayList<String>(Arrays.asList(reportReceivers.split(",")));
+					int rID;					
+					sb = new StringBuffer();
+					sb.append(patientName);
+					sb.append("'s HL7/PDF report is ready to be downloaded. ");		
+					
+					for (int i=0; i< receivers.size(); i++)
+					{
+						rID = Integer.valueOf(receivers.get(i).trim());
+						TapestryHelper.sendMessageToInbox("PDF/HL7 Report", sb.toString(), loggedInUser.getUserID(), rID, messageManager);			
+					}
+				}
 			}			
 		}
 		return "redirect:/";

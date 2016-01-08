@@ -57,14 +57,27 @@
 				<label>Button 3 - Content</label>
 				<textarea name="crisis_lines_content" rows="5" cols="100"></textarea><br/>				
 				<input type="hidden" name="settingAction" value="New"/>
+				<h2>Notification Settings</h2>
+				<h4>Appointment Notifications</h4>
+				<label>2 Select which local administrator should receive a message when volunteer books a new appointment</label>	<br/>					
+				<c:forEach items="${localAdmins}" var="la">										 
+					 <input type="checkbox" name="local_admin_appointment"  value=${la.userID} />${la.name}	<br/>
+				</c:forEach>
+				<br/>
+				<h4>Report Notifications</h4>
+				<label>2 Select which local administrator should receive a message when a new report is generated</label>	<br/>					
+				<c:forEach items="${localAdmins}" var="la">										 
+					 <input type="checkbox" name="local_admin_report"  value=${la.userID} />${la.name}	<br/>
+				</c:forEach>
+				<br/>
 			</form>	   
 			<div class="row">
-				<input class="btn btn-primary" form="newSosSettingsFm" type="submit" name ="setSOS" value="Save SOS Settings" />
+				<input class="btn btn-primary" form="newSosSettingsFm" type="submit" name ="setSOS" value="Add Preference Settings" />
 			</div> 
 	      </c:when>	
 	      <c:otherwise>
 	      	<form name = "updateSosSettingsFm" id="updateSosSettingsFm" method="post" action="<c:url value="/set_sosSettings"/>" >		
-				<label>Up1 SOS button: </label>
+				<label>1 SOS button: </label>
 				<input type="radio" name="sos_button" value="1" <c:if test="${preference.sosButton == 1}">checked</c:if> />Enable
 				<input type="radio" name="sos_button" value="0" <c:if test="${preference.sosButton == 0}">checked</c:if>/>Disable
 				<br/>
@@ -80,28 +93,99 @@
 				<label>Button 1 </label>
 				<input type="text" name="elder_abuse_button" value="${preference.elderAbuseButton}"/><br/>
 				<label>Button 1 - Content</label>
-				<textarea name="elder_abuse_content" rows="5" cols="100" >${preference.elderAbuseContent}</textarea><br/>		
-				<label>${preference.elderAbuseContent}</label><br/>
+				<textarea name="elder_abuse_content" rows="3" cols="100" >${preference.elderAbuseContent}</textarea>
+				<a id="alertsbox" href="#modalElderAbuse" class="btn btn-large btn-inverse lgbtn" role="button" data-toggle="modal">?</a>	<br/>	
+				
 				<label>Button 2 </label>	
 				<input type="text" name="self_harm_button" value="${preference.selfHarmButton}"/><br/>
 				<label>Button 2 - Content</label>
-				<textarea name="self_harm_content" rows="5" cols="100">${preference.selfHarmContent}</textarea><br/>
-				<label>${preference.selfHarmContent}</label><br/>
+				<textarea name="self_harm_content" rows="3" cols="100">${preference.selfHarmContent}</textarea>
+				<a id="alertsbox" href="#modalSelfHarm" class="btn btn-large btn-inverse lgbtn" role="button" data-toggle="modal">?</a><br/>
+				
 				<label>Button 3</label>
 				<input type="text" name="crisis_lines_button" value="${preference.crisisLinesButton}"/><br/>
 				<label>Button 3 - Content</label>				
-				<textarea name="crisis_lines_content" rows="5" cols="100">${preference.crisisLinesContent}</textarea><br/>		
-				<label>${preference.crisisLinesContent}</label>
+				<textarea name="crisis_lines_content" rows="3" cols="100">${preference.crisisLinesContent}</textarea>	
+				<a id="alertsbox" href="#modalCrisisLines" class="btn btn-large btn-inverse lgbtn" role="button" data-toggle="modal">?</a><br/>	
+				
+				<h2>Notification Settings</h2>
+				<h4>Appointment Notifications</h4>
+				<label>Select which local administrator should receive a message when volunteer books a new appointment</label>	<br/>					
+				<c:forEach items="${localAdmins}" var="la">										 
+					 <input type="checkbox" name="local_admin_appointment"  value=${la.userID} />${la.name}	<br/>
+				</c:forEach>
+				<br/>
+				<h4>Report Notifications</h4>
+				<label>Select which local administrator should receive a message when a new report is generated</label>	<br/>					
+				<c:forEach items="${localAdmins}" var="la">										 
+					 <input type="checkbox" name="local_admin_report"  value=${la.userID} />${la.name}	<br/>
+				</c:forEach>
+				<br/>
+				
 				<input type="hidden" name="settingAction" value="Update"/>		
 			</form>	    
 			<div class="row">
-				<input class="btn btn-primary" form="updateSosSettingsFm" type="submit" name ="setSOS" value="Save SOS Settings" />
+				<input class="btn btn-primary" form="updateSosSettingsFm" type="submit" name ="setSOS" value="Update Preference Settings" />
 			</div>
-      </c:otherwise>
-</c:choose>
-		
+      	</c:otherwise>
+	</c:choose>		
+</div>
+	<div class="modal fade" id="modalElderAbuse" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+	  		<div class="modal-content">
+	      		<div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        <h4 class="modal-title" id="myModalLabel">
+						Elder Abuse
+			        </h4>
+	      		</div>
+	      		<div class="modal-body">
+	       			<p class="text-warning">${preference.elderAbuseContent}</p>
+	      		</div>
+	      		<div class="modal-footer">
+	        		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	      		</div>
+	    	</div>
+  		</div>
 	</div>
 	
+	<div class="modal fade" id="modalCrisisLines" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+	  		<div class="modal-content">
+	      		<div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        <h4 class="modal-title" id="myModalLabel">
+						Crisis Lines
+			        </h4>
+	      		</div>
+	      		<div class="modal-body">
+	       			<p class="text-warning">${preference.crisisLinesContent}</p>
+	      		</div>
+	      		<div class="modal-footer">
+	        		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	      		</div>
+	    	</div>
+  		</div>
+	</div>
+	
+	<div class="modal fade" id="modalSelfHarm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+	  		<div class="modal-content">
+	      		<div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        <h4 class="modal-title" id="myModalLabel">
+						Self Harm
+			        </h4>
+	      		</div>
+	      		<div class="modal-body">
+	       			<p class="text-warning">${preference.selfHarmContent}</p>
+	      		</div>
+	      		<div class="modal-footer">
+	        		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	      		</div>
+	    	</div>
+  		</div>
+	</div>
 	
 </div>
 </body>

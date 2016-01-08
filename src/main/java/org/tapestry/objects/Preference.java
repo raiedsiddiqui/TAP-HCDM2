@@ -11,6 +11,8 @@ public class Preference {
 	private String selfHarmContent;
 	private String crisisLinesButton;
 	private String crisisLinesContent;	
+	private String apptNotiReceiver;
+	private String reportNotiReceiver;
 	
 	public Preference(){}
 
@@ -84,5 +86,22 @@ public class Preference {
 
 	public void setCrisisLinesContent(String crisisLinesContent) {
 		this.crisisLinesContent = crisisLinesContent;
-	}	
+	}
+
+	public String getApptNotiReceiver() {
+		return apptNotiReceiver;
+	}
+
+	public void setApptNotiReceiver(String apptNotiReceiver) {
+		this.apptNotiReceiver = apptNotiReceiver;
+	}
+
+	public String getReportNotiReceiver() {
+		return reportNotiReceiver;
+	}
+
+	public void setReportNotiReceiver(String reportNotiReceiver) {
+		this.reportNotiReceiver = reportNotiReceiver;
+	}		
+	
 }

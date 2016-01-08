@@ -3047,7 +3047,7 @@ public class TapestryController{
 			sites = organizationManager.getAllSites();
 		else
 		{
-			sites = new ArrayList<Site>();
+			sites = new ArrayList<Site>();			
 			sites.add(organizationManager.getSiteById(user.getSite()));
 		}						
 		model.addAttribute("sites", sites);
@@ -4103,19 +4103,15 @@ public class TapestryController{
 		else
 			preference.setSosButton(Integer.valueOf(request.getParameter("sos_button")));
 		
-		String[] arrayLocalAdmins = request.getParameterValues("local_admin");
-		String strLocalAdmins;
-		if (arrayLocalAdmins != null)
-		{
-			strLocalAdmins = Arrays.toString(arrayLocalAdmins);
-			//remove "[" and "]"
-			strLocalAdmins = strLocalAdmins.replace("[", "");
-			strLocalAdmins = strLocalAdmins.replace("]", "");
-			preference.setSosReceiver(strLocalAdmins);
-		}
-		else
-			preference.setSosReceiver("999");		
+		String[] sosReceivers = request.getParameterValues("local_admin");
+		preference.setSosReceiver(TapestryHelper.getValuesFromCheckboxList(sosReceivers));
 		
+		String[] apptNotiReceivers = request.getParameterValues("local_admin_appointment");
+		preference.setApptNotiReceiver(TapestryHelper.getValuesFromCheckboxList(apptNotiReceivers));
+		
+		String[] reportNotiReceivers = request.getParameterValues("local_admin_report");
+		preference.setReportNotiReceiver(TapestryHelper.getValuesFromCheckboxList(reportNotiReceivers));
+	
 		if (action.equals("New"))
 			preferenceManager.addPreference(preference);
 		else
