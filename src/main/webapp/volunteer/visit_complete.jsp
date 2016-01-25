@@ -107,8 +107,10 @@
 	 		<!--<h2> Date: ${appointment.date} </h2>  <br /> 
  	 		<input id="contactedcheck" type="radio" name="contacted_admin" id="contacted_admin" value="true" /> Contacted Ernie
 	 		<br />-->
+	 		<div> ${alertsLabel}</div>
+	 		<!-- 
 	 		<h4> What does the clinic need to know about today's visit?
-			<br/>Example: unsafe walking, poor access to food, patient not behaving appropriately </h4><br />
+			<br/>Example: unsafe walking, poor access to food, patient not behaving appropriately </h4><br /> -->
 	 		<textarea  name="visitAlerts" id="visitAlerts"></textarea><br />
 	 		
 	 		<div class="row">

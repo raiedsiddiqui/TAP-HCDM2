@@ -341,6 +341,15 @@ public interface SurveyManager {
 	* @return A List of SurveyResult objects
 	*/
 	@Transactional
+	public List<SurveyResult> getCompletedSurveyResultByVolunteertAndTitle(int volunteerId, String title);
+	
+	
+	/**
+	* a List of completed volunteer Survey results for a volunteer 
+	* @param volunteerId
+	* @return A List of SurveyResult objects
+	*/
+	@Transactional
 	public List<SurveyResult> getIncompleteVolunteerSurveys(int volunteerId);
 	
 	/**

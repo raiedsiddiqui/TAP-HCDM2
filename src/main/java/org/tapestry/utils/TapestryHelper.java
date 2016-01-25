@@ -25,6 +25,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.TreeMap;
 
 import javax.mail.MessagingException;
@@ -40,6 +41,14 @@ import javax.xml.bind.JAXBException;
 import javax.xml.datatype.DatatypeConfigurationException;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.oscarehr.myoscar_server.ws.PersonTransfer3;
 import org.springframework.core.io.ClassPathResource;
@@ -60,6 +69,8 @@ import org.tapestry.utils.Utils;
 import org.tapestry.myoscar.utils.ClientManager;
 import org.tapestry.objects.Appointment;
 import org.tapestry.objects.Availability;
+import org.tapestry.objects.CareGiverResearchData;
+import org.tapestry.objects.CaregiverResearchData1;
 import org.tapestry.objects.Clinic;
 import org.tapestry.objects.DisplayedSurveyResult;
 import org.tapestry.objects.HL7Report;
@@ -70,6 +81,7 @@ import org.tapestry.objects.ResearchData;
 import org.tapestry.objects.Site;
 import org.tapestry.objects.SurveyResult;
 import org.tapestry.objects.SurveyTemplate;
+import org.tapestry.objects.UBCClientResearchData;
 import org.tapestry.objects.User;
 import org.tapestry.objects.Volunteer;
 import org.tapestry.report.AlertManager;
@@ -4672,6 +4684,301 @@ public class TapestryHelper {
 	}
 
 	//======================Research Data Download===================================//
+	public static List<CaregiverResearchData1> getCareGiverResearchData1(SurveyManager surveyManager, List<Volunteer> volunteers)
+	{
+		List<CaregiverResearchData1> researchDatas = new ArrayList<CaregiverResearchData1>();
+		CaregiverResearchData1 rData;
+		SurveyResult sr;
+		int vId, size;
+		String xml, observerNote;
+		LinkedHashMap<String, String> res;
+		List<DisplayedSurveyResult> displayedResults;
+		List<SurveyResult> srList = new ArrayList<SurveyResult>();
+		StringBuffer sb;
+		Volunteer vol;
+		Map<String, String> mResults = new HashMap<String, String>();
+		
+		for (int i = 0; i<volunteers.size(); i++ )
+		{
+			vol = volunteers.get(i);
+			vId = vol.getVolunteerId();
+			rData = new CaregiverResearchData1();			
+			rData.setVolunteerId(vId);
+			
+			
+			//Care QoL
+			try{
+				srList = surveyManager.getCompletedSurveyResultByVolunteertAndTitle(vId, "CarerQol");
+				
+			}catch (Exception e) {
+				System.out.println("throws exception on Care QoL === volunteer id == " + vId);
+				sr = null;
+			}
+			
+			if (srList != null && srList.size()>1 )
+			{
+				sr = srList.get(1);
+				sb = new StringBuffer();				
+				try{
+					xml = new String(sr.getResults(), "UTF-8");
+			   	} catch (Exception e) {
+			   		xml = "";
+			   	}
+				res = ResultParser.getResults(xml);
+				displayedResults = ResultParser.getDisplayedSurveyResults(res);		
+				rData.setCql1_sleep_T1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
+				rData.setCql2_inc0n_T1(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
+				rData.setCql3_appre_T1(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+				rData.setCql4_phystr_T1(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+				rData.setCql5_confin_T1(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
+				rData.setCql6_time_T1(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
+				rData.setCql7_famad_T1(Integer.parseInt(displayedResults.get(6).getQuestionAnswer()));
+				rData.setCql8_persolan_T1(Integer.parseInt(displayedResults.get(7).getQuestionAnswer()));
+				rData.setCql9_demtime_T1(Integer.parseInt(displayedResults.get(8).getQuestionAnswer()));
+				rData.setCql10_emad_T1(Integer.parseInt(displayedResults.get(9).getQuestionAnswer()));
+				rData.setCql11_handcare_T1(Integer.parseInt(displayedResults.get(10).getQuestionAnswer()));
+				rData.setCql12_behupset_T1(Integer.parseInt(displayedResults.get(11).getQuestionAnswer()));
+				rData.setCql13_change_T1(Integer.parseInt(displayedResults.get(12).getQuestionAnswer()));
+				rData.setCql14_hapcare_T1(Integer.parseInt(displayedResults.get(13).getQuestionAnswer()));
+				rData.setCql15_workad_T1(Integer.parseInt(displayedResults.get(14).getQuestionAnswer()));
+				rData.setCql16_comover_T1(Integer.parseInt(displayedResults.get(15).getQuestionAnswer()));
+				rData.setCql17_finstrain_T1(Integer.parseInt(displayedResults.get(16).getQuestionAnswer()));
+				rData.setCql18_import_T1(Integer.parseInt(displayedResults.get(17).getQuestionAnswer()));
+				rData.setCql19_fulfil_T1(Integer.parseInt(displayedResults.get(18).getQuestionAnswer()));
+				rData.setCql20_relprob_T1(Integer.parseInt(displayedResults.get(19).getQuestionAnswer()));
+				rData.setCql21_menh_T1(Integer.parseInt(displayedResults.get(20).getQuestionAnswer()));
+				rData.setCql22_ownday_T1(Integer.parseInt(displayedResults.get(21).getQuestionAnswer()));
+				rData.setCql23_finpro_T1(Integer.parseInt(displayedResults.get(22).getQuestionAnswer()));
+				rData.setCql24_support_T1(Integer.parseInt(displayedResults.get(23).getQuestionAnswer()));
+				rData.setCql25_physhel_T1(Integer.parseInt(displayedResults.get(24).getQuestionAnswer()));
+				rData.setCql26_happy_T1(Integer.parseInt(displayedResults.get(25).getQuestionAnswer()));
+	
+			}
+			researchDatas.add(rData);
+		}		
+		return researchDatas;
+	}
+	public static List<CareGiverResearchData> getCareGiverResearchData(SurveyManager surveyManager,List<Volunteer> volunteers)
+	{
+		
+		List<CareGiverResearchData> researchDatas = new ArrayList<CareGiverResearchData>();
+		CareGiverResearchData rData;
+		SurveyResult sr;
+		int vId, size;
+		String xml, observerNote;
+		LinkedHashMap<String, String> res;
+		List<DisplayedSurveyResult> displayedResults;
+		List<SurveyResult> srList = new ArrayList<SurveyResult>();
+		StringBuffer sb;
+		Volunteer vol;
+		Map<String, String> mResults = new HashMap<String, String>();
+		
+		for (int i = 0; i<volunteers.size(); i++ )
+		{
+			vol = volunteers.get(i);
+			vId = vol.getVolunteerId();
+			rData = new CareGiverResearchData();			
+			rData.setVolunteerId(vId);
+			rData.setName(vol.getFirstName() + " " + vol.getLastName());
+			
+			//Care_giver background
+			try{
+				srList = surveyManager.getCompletedSurveyResultByVolunteertAndTitle(vId, "Caregiver Background");
+				
+			}catch (Exception e) {
+				System.out.println("throws exception on Caregiver Background === volunteer id == " + vId);
+				sr = null;
+			}
+			
+			if (srList != null && srList.size()>0 )
+			{
+				sr = srList.get(0);
+				sb = new StringBuffer();				
+				try{
+					xml = new String(sr.getResults(), "UTF-8");
+			   	} catch (Exception e) {
+			   		xml = "";
+			   	}
+				res = ResultParser.getResults(xml);
+				displayedResults = ResultParser.getDisplayedSurveyResults(res);				
+				mResults = mapSurveyResults(displayedResults);
+				
+				rData.setCb1_ed_T0(Integer.parseInt(mResults.get("CB1")));
+				if (mResults.get("CB1a") != null)
+					rData.setCb1a_ed_T0(mResults.get("CB1a"));
+				else
+					rData.setCb1a_ed_T0("");
+					
+				rData.setCb2_empl_T0(Integer.parseInt(mResults.get("CB2")));
+				rData.setCb3_livewith_T0(Integer.parseInt(mResults.get("CB3")));
+				rData.setCb4_children_T0(Integer.parseInt(mResults.get("CB4")));
+				if(mResults.get("CB4a") != null)
+					rData.setCb4a_T0(Integer.parseInt(mResults.get("CB4a")));
+				else
+					rData.setCb4a_T0(0);
+				rData.setCb5_partner_T0(Integer.parseInt(mResults.get("CB5")));
+				rData.setCb6_agegr_T0(Integer.parseInt(mResults.get("CB6")));
+				rData.setCb7_gender_T0(Integer.parseInt(mResults.get("CB7")));
+				if(mResults.get("CB7a") != null)
+					rData.setCb7a_T0((mResults.get("CB7a")));
+				else
+					rData.setCb7a_T0("");
+					
+				rData.setCb8_lang_T0(mResults.get("CB8"));
+				rData.setCb9_born_T0(mResults.get("CB9"));
+			
+				if(mResults.get("CB9a") != null)
+					rData.setCb9a_bornwhere((mResults.get("CB9a")));
+				else
+					rData.setCb9a_bornwhere("");
+			
+				rData.setCb10_ethnic_T0(mResults.get("CB10"));
+					
+				if(mResults.get("CB10b") != null)
+					rData.setCb10a((mResults.get("CB10b")));
+				else
+					rData.setCb10a("");
+					
+				rData.setCb11_relation_T0(Integer.parseInt(mResults.get("CB11")));
+				if(mResults.get("CB11b") != null)
+					rData.setCb11a_T0((mResults.get("CB11b")));
+				else
+					rData.setCb11a_T0("");
+					
+				rData.setCb12_startcg_T0(mResults.get("CB12"));
+				rData.setCb13_physcare_T0(Integer.parseInt(mResults.get("CB13")));
+				rData.setCb14_emot_T0(Integer.parseInt(mResults.get("CB14")));
+				rData.setCb15_other_T0(Integer.parseInt(mResults.get("CB15")));
+				rData.setCb16_howlong_T0(mResults.get("CB16"));
+				rData.setCb17_onlycg_T0(Integer.parseInt(mResults.get("CB17")));
+					
+				if(mResults.get("CB17c") != null)
+					rData.setCb17a_T0((mResults.get("CB7a")));
+				else
+					rData.setCb17a_T0("");
+					
+				if(mResults.get("CB17d") != null)
+					rData.setCb17b_T0((mResults.get("CB17d")));
+				else
+					rData.setCb17b_T0("");
+					
+				rData.setCb18_healthcon_T0(mResults.get("CB18"));
+				rData.setCb19_cgotherpl_T0(mResults.get("CB19"));
+				rData.setCb20_yourhealth_T0(mResults.get("CB20"));
+			}
+			//Care QoL
+			try{
+				srList = surveyManager.getCompletedSurveyResultByVolunteertAndTitle(vId, "CarerQol");
+				
+			}catch (Exception e) {
+				System.out.println("throws exception on Care QoL === volunteer id == " + vId);
+				sr = null;
+			}
+			
+			if (srList != null && srList.size()>=1 )
+			{
+				sr = srList.get(0);
+				sb = new StringBuffer();				
+				try{
+					xml = new String(sr.getResults(), "UTF-8");
+			   	} catch (Exception e) {
+			   		xml = "";
+			   	}
+				res = ResultParser.getResults(xml);
+				displayedResults = ResultParser.getDisplayedSurveyResults(res);		
+				rData.setCql1_sleep_T0(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
+				rData.setCql2_inc0n_T0(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
+				rData.setCql3_appre_T0(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+				rData.setCql4_phystr_T0(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+				rData.setCql5_confin_T0(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
+				rData.setCql6_time_T0(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
+				rData.setCql7_famad_T0(Integer.parseInt(displayedResults.get(6).getQuestionAnswer()));
+				rData.setCql8_persolan_T0(Integer.parseInt(displayedResults.get(7).getQuestionAnswer()));
+				rData.setCql9_demtime_T0(Integer.parseInt(displayedResults.get(8).getQuestionAnswer()));
+				rData.setCql10_emad_T0(Integer.parseInt(displayedResults.get(9).getQuestionAnswer()));
+				rData.setCql11_handcare_T0(Integer.parseInt(displayedResults.get(10).getQuestionAnswer()));
+				rData.setCql12_behupset_T0(Integer.parseInt(displayedResults.get(11).getQuestionAnswer()));
+				rData.setCql13_change_T0(Integer.parseInt(displayedResults.get(12).getQuestionAnswer()));
+				rData.setCql14_hapcare_T0(Integer.parseInt(displayedResults.get(13).getQuestionAnswer()));
+				rData.setCql15_workad_T0(Integer.parseInt(displayedResults.get(14).getQuestionAnswer()));
+				rData.setCql16_comover_T0(Integer.parseInt(displayedResults.get(15).getQuestionAnswer()));
+				rData.setCql17_finstrain_T0(Integer.parseInt(displayedResults.get(16).getQuestionAnswer()));
+				rData.setCql18_import_T0(Integer.parseInt(displayedResults.get(17).getQuestionAnswer()));
+				rData.setCql19_fulfil_T0(Integer.parseInt(displayedResults.get(18).getQuestionAnswer()));
+				rData.setCql20_relprob_T0(Integer.parseInt(displayedResults.get(19).getQuestionAnswer()));
+				rData.setCql21_menh_T0(Integer.parseInt(displayedResults.get(20).getQuestionAnswer()));
+				rData.setCql22_ownday_T0(Integer.parseInt(displayedResults.get(21).getQuestionAnswer()));
+				rData.setCql23_finpro_T0(Integer.parseInt(displayedResults.get(22).getQuestionAnswer()));
+				rData.setCql24_support_T0(Integer.parseInt(displayedResults.get(23).getQuestionAnswer()));
+				rData.setCql25_physhel_T0(Integer.parseInt(displayedResults.get(24).getQuestionAnswer()));
+				rData.setCql26_happy_T0(Integer.parseInt(displayedResults.get(25).getQuestionAnswer()));	
+			}
+			//Zarit
+			try{
+				srList = surveyManager.getCompletedSurveyResultByVolunteertAndTitle(vId, "Zarit");
+				
+			}catch (Exception e) {
+				System.out.println("throws exception on Zarit === volunteer id == " + vId);
+				sr = null;
+			}
+			
+			if (srList != null && srList.size()>=1 )
+			{
+				sr = srList.get(0);
+				sb = new StringBuffer();				
+				try{
+					xml = new String(sr.getResults(), "UTF-8");
+			   	} catch (Exception e) {
+			   		xml = "";
+			   	}
+				res = ResultParser.getResults(xml);
+				displayedResults = ResultParser.getDisplayedSurveyResults(res);		
+				rData.setZarit1_time_T0(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
+				rData.setZarit2_stress_T0(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
+				rData.setZarit3_angry_T0(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+				rData.setZarit4_other_T0(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+				rData.setZarit5_strain_T0(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
+				rData.setZarit6_health_T0(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
+				rData.setZarit7_priv_T0(Integer.parseInt(displayedResults.get(6).getQuestionAnswer()));
+				rData.setCql8_persolan_T0(Integer.parseInt(displayedResults.get(7).getQuestionAnswer()));
+				rData.setCql9_demtime_T0(Integer.parseInt(displayedResults.get(8).getQuestionAnswer()));
+				rData.setCql10_emad_T0(Integer.parseInt(displayedResults.get(9).getQuestionAnswer()));
+				rData.setCql11_handcare_T0(Integer.parseInt(displayedResults.get(10).getQuestionAnswer()));
+				rData.setCql12_behupset_T0(Integer.parseInt(displayedResults.get(11).getQuestionAnswer()));
+				rData.setCql13_change_T0(Integer.parseInt(displayedResults.get(12).getQuestionAnswer()));
+				rData.setCql14_hapcare_T0(Integer.parseInt(displayedResults.get(13).getQuestionAnswer()));
+				rData.setCql15_workad_T0(Integer.parseInt(displayedResults.get(14).getQuestionAnswer()));
+				rData.setCql16_comover_T0(Integer.parseInt(displayedResults.get(15).getQuestionAnswer()));
+				rData.setCql17_finstrain_T0(Integer.parseInt(displayedResults.get(16).getQuestionAnswer()));
+				rData.setCql18_import_T0(Integer.parseInt(displayedResults.get(17).getQuestionAnswer()));
+				rData.setCql19_fulfil_T0(Integer.parseInt(displayedResults.get(18).getQuestionAnswer()));
+				rData.setCql20_relprob_T0(Integer.parseInt(displayedResults.get(19).getQuestionAnswer()));
+				rData.setCql21_menh_T0(Integer.parseInt(displayedResults.get(20).getQuestionAnswer()));
+				rData.setCql22_ownday_T0(Integer.parseInt(displayedResults.get(21).getQuestionAnswer()));
+				rData.setCql23_finpro_T0(Integer.parseInt(displayedResults.get(22).getQuestionAnswer()));
+				rData.setCql24_support_T0(Integer.parseInt(displayedResults.get(23).getQuestionAnswer()));
+				rData.setCql25_physhel_T0(Integer.parseInt(displayedResults.get(24).getQuestionAnswer()));
+				rData.setCql26_happy_T0(Integer.parseInt(displayedResults.get(25).getQuestionAnswer()));	
+			}
+			
+			researchDatas.add(rData);
+		}		
+		return researchDatas;
+	}
+	
+	private static Map<String, String> mapSurveyResults(List<DisplayedSurveyResult>  results)
+	{
+		//set questionId as key, and answer as value in the map
+		Map<String, String> mResults = new HashMap<String, String>();
+		for (int i=0; i<results.size(); i++)
+		{
+			mResults.put(results.get(i).getQuestionId(), results.get(i).getQuestionAnswer());			
+		}
+		
+		return mResults;
+	}
+	
+	
 	public static List<ResearchData> getResearchDatas(PatientManager patientManager, SurveyManager surveyManager, int siteId)
 	{
 		List<Patient> patients = patientManager.getPatientsBySite(siteId);	
@@ -5295,6 +5602,376 @@ public class TapestryHelper {
 		}		
 		return researchDatas;
 	}
+	private static List<UBCClientResearchData> getUBCClientResearchDatas(List<Patient> patients, SurveyManager surveyManager){
+		List<UBCClientResearchData> researchDatas = new ArrayList<UBCClientResearchData>();
+		UBCClientResearchData rData;
+		SurveyResult sr;
+		int pId, size;
+		String xml;
+		LinkedHashMap<String, String> res;
+		List<DisplayedSurveyResult> displayedResults;
+		List<SurveyResult> srList = new ArrayList<SurveyResult>();
+		StringBuffer sb;
+		Patient p;
+		
+		Map<String, String> mResults = new HashMap<String, String>();
+		
+		for (int i = 0; i<patients.size(); i++ )
+		{			
+			p = patients.get(i);
+			pId = p.getPatientID();
+			rData = new UBCClientResearchData();			
+			rData.setResearchId(p.getResearchID());			
+			
+			//Goals
+			try{
+				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(pId, "1. Goals");					
+			}catch (Exception e) {
+				System.out.println("throws exception on Goals === patient id == " + pId);
+				sr = null;
+			}
+			
+			if (sr != null)
+			{			
+				try{
+					xml = new String(sr.getResults(), "UTF-8");
+			   	} catch (Exception e) {
+			   		xml = "";
+			   	}
+				res = ResultParser.getResults(xml);
+				displayedResults = ResultParser.getDisplayedSurveyResults(res);	
+				
+				rData.setGoal1(displayedResults.get(0).getQuestionAnswer());
+				rData.setGoal2(displayedResults.get(1).getQuestionAnswer());
+				rData.setGoal3(displayedResults.get(2).getQuestionAnswer());
+				rData.setGoal4(displayedResults.get(3).getQuestionAnswer());
+				rData.setGoal5(displayedResults.get(4).getQuestionAnswer());
+			}			
+			//EQ5D
+			try{
+				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(pId, "2. Quality of Life");					
+			}catch (Exception e) {
+				System.out.println("throws exception on 2. Quality of Life === patient id == " + pId);
+				sr = null;
+			}
+			
+			if (sr != null)
+			{
+				try{
+					xml = new String(sr.getResults(), "UTF-8");
+			   	} catch (Exception e) {
+			   		xml = "";
+			   	}
+				res = ResultParser.getResults(xml);
+				displayedResults = ResultParser.getDisplayedSurveyResults(res);	
+				
+				rData.setqOL1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
+				rData.setqOL2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
+				rData.setqOL3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+				rData.setqOL4(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+				rData.setqOL5(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
+				//in case last quesetion has no value
+				if (Utils.isNullOrEmpty(displayedResults.get(5).getQuestionAnswer()))
+						rData.setqOL6(999);
+				else
+					rData.setqOL6(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
+			}
+			//Daily Life Activity
+			try{
+				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(pId, "3. Daily Life Activities");					
+			}catch (Exception e) {
+				System.out.println("throws exception on 3. Daily Life Activities === patient id == " + pId);
+				sr = null;
+			}
+			
+			if (sr != null)
+			{
+				try{
+					xml = new String(sr.getResults(), "UTF-8");
+			   	} catch (Exception e) {
+			   		xml = "";
+			   	}
+				res = ResultParser.getResults(xml);
+				displayedResults = ResultParser.getDisplayedSurveyResults(res);	
+				
+				rData.setdLA1(displayedResults.get(0).getQuestionAnswer());
+				rData.setdLA2(displayedResults.get(1).getQuestionAnswer());
+				rData.setdLA3(displayedResults.get(2).getQuestionAnswer());
+				rData.setdLA4(displayedResults.get(3).getQuestionAnswer());
+				rData.setdLA5(displayedResults.get(4).getQuestionAnswer());
+				rData.setdLA6(displayedResults.get(5).getQuestionAnswer());
+			}
+			//General Health/4. Get Up & Go
+			try{
+				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(pId, "4. Get Up & Go");					
+			}catch (Exception e) {
+				System.out.println("throws exception on 4. Get Up & Go === patient id == " + pId);
+				sr = null;
+			}
+			
+			if (sr != null)
+			{
+				try{
+					xml = new String(sr.getResults(), "UTF-8");
+			   	} catch (Exception e) {
+			   		xml = "";
+			   	}
+				res = ResultParser.getResults(xml);
+				displayedResults = ResultParser.getDisplayedSurveyResults(res);	
+				if (Utils.isNullOrEmpty(displayedResults.get(0).getQuestionAnswer()))
+					rData.setgH1(999);
+				else
+					rData.setgH1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));				
+			}
+			//Social life
+			try{
+				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(pId, "5. Social Life");					
+			}catch (Exception e) {
+				System.out.println("throws exception on 5. Social Life === patient id == " + pId);
+				sr = null;
+			}
+			
+			if (sr != null)
+			{
+				try{
+					xml = new String(sr.getResults(), "UTF-8");
+			   	} catch (Exception e) {
+			   		xml = "";
+			   	}
+				res = ResultParser.getResults(xml);
+				displayedResults = ResultParser.getDisplayedSurveyResults(res);	
+				
+				rData.setsL1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
+				rData.setsL2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
+				rData.setsL3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+				rData.setsL4(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+				rData.setsL5(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
+				rData.setsL6(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
+				rData.setsL7(Integer.parseInt(displayedResults.get(6).getQuestionAnswer()));
+				rData.setsL8(Integer.parseInt(displayedResults.get(7).getQuestionAnswer()));
+				rData.setsL9(Integer.parseInt(displayedResults.get(8).getQuestionAnswer()));
+				rData.setsL10(Integer.parseInt(displayedResults.get(9).getQuestionAnswer()));
+				if (Utils.isNullOrEmpty(displayedResults.get(10).getQuestionAnswer()))
+					rData.setsL11(999);
+				else				
+					rData.setsL11(Integer.parseInt(displayedResults.get(10).getQuestionAnswer()));
+			}
+			//Nutrition
+			try{
+				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(pId, "6. Nutrition");					
+			}catch (Exception e) {
+				System.out.println("throws exception on 6. Nutrition === patient id == " + pId);
+				sr = null;
+			}
+			
+			if (sr != null)
+			{
+				try{
+					xml = new String(sr.getResults(), "UTF-8");
+			   	} catch (Exception e) {
+			   		xml = "";
+			   	}
+				res = ResultParser.getResults(xml);
+				displayedResults = ResultParser.getDisplayedSurveyResults(res);	
+				
+				rData.setNut1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
+				rData.setNut2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));				
+				//in case last question has no value 
+				if (Utils.isNullOrEmpty(displayedResults.get(2).getQuestionAnswer()))
+					rData.setNut3(999);
+				else
+					rData.setNut3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+			}
+			//Advance Care Planning
+			try{
+				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(pId, "7. Advance Care Planning");					
+			}catch (Exception e) {
+				System.out.println("throws exception on 7. Advance Care Planning === patient id == " + pId);
+				sr = null;
+			}
+			
+			if (sr != null)
+			{
+				try{
+					xml = new String(sr.getResults(), "UTF-8");
+			   	} catch (Exception e) {
+			   		xml = "";
+			   	}
+				res = ResultParser.getResults(xml);
+				displayedResults = ResultParser.getDisplayedSurveyResults(res);	
+				
+				rData.setaCP1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
+				rData.setaCP2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
+				rData.setaCP3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+				rData.setaCP4(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+				rData.setaCP5(displayedResults.get(4).getQuestionAnswer());
+			}
+			//Memory
+			try{
+				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(pId, "8. Your Memory");					
+			}catch (Exception e) {
+				System.out.println("throws exception on 8. Your Memory === patient id == " + pId);
+				sr = null;
+			}
+			if (sr != null)
+			{
+				try{
+					xml = new String(sr.getResults(), "UTF-8");
+			   	} catch (Exception e) {
+			   		xml = "";
+			   	}
+				res = ResultParser.getResults(xml);
+				displayedResults = ResultParser.getDisplayedSurveyResults(res);	
+				mResults = mapSurveyResults(displayedResults);
+				
+				rData.setMem1(Integer.parseInt(mResults.get("Mem1_worse")));	
+				if (mResults.get("Mem2_explain") != null)
+					rData.setMem2(mResults.get("Mem2_explain"));
+				else
+					rData.setMem2("");
+				rData.setMem3(Integer.parseInt(mResults.get("Mem3_worry")));
+				if (mResults.get("Mem4_whywor") != null)
+					rData.setMem4(mResults.get("Mem4_whywor"));
+				else
+					rData.setMem4("");				
+			}			
+			//Pain
+			try{
+				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(pId, "9. Pain");					
+			}catch (Exception e) {
+				System.out.println("throws exception on 9. Pain === patient id == " + pId);
+				sr = null;
+			}
+			
+			if (sr != null)
+			{
+				try{
+					xml = new String(sr.getResults(), "UTF-8");
+			   	} catch (Exception e) {
+			   		xml = "";
+			   	}
+				res = ResultParser.getResults(xml);
+				displayedResults = ResultParser.getDisplayedSurveyResults(res);	
+				
+				if (Utils.isNullOrEmpty(displayedResults.get(0).getQuestionAnswer()))
+					rData.setPain1(999);
+				else
+					rData.setPain1(Float.parseFloat(displayedResults.get(0).getQuestionAnswer()));				
+			}
+			//Mobility
+			try{
+				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(pId, "10. Mobility");					
+			}catch (Exception e) {
+				System.out.println("throws exception on 10. Mobility === patient id == " + pId);
+				sr = null;
+			}
+			
+			if (sr != null)
+			{
+				try{
+					xml = new String(sr.getResults(), "UTF-8");
+			   	} catch (Exception e) {
+			   		xml = "";
+			   	}
+				res = ResultParser.getResults(xml);
+				displayedResults = ResultParser.getDisplayedSurveyResults(res);	
+				
+				rData.setMob1(displayedResults.get(0).getQuestionAnswer());		
+				rData.setMob2(displayedResults.get(1).getQuestionAnswer());	
+				rData.setMob3(displayedResults.get(2).getQuestionAnswer());
+				rData.setMob4(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));		
+				rData.setMob5(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));	
+				rData.setMob6(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));	
+				rData.setMob7(displayedResults.get(6).getQuestionAnswer());
+				rData.setMob8(Integer.parseInt(displayedResults.get(7).getQuestionAnswer()));	
+				rData.setMob9(displayedResults.get(8).getQuestionAnswer());
+			}
+			//Medication Use
+			try{
+				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(pId, "11. Medication Use");					
+			}catch (Exception e) {
+				System.out.println("throws exception on 11. Medication Use === patient id == " + pId);
+				sr = null;
+			}
+			
+			if (sr != null)
+			{
+				try{
+					xml = new String(sr.getResults(), "UTF-8");
+			   	} catch (Exception e) {
+			   		xml = "";
+			   	}
+				res = ResultParser.getResults(xml);
+				displayedResults = ResultParser.getDisplayedSurveyResults(res);	
+				
+				rData.setmU1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
+				rData.setmU2(displayedResults.get(1).getQuestionAnswer());
+				rData.setmU3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+				rData.setmU4(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+				if (Utils.isNullOrEmpty(displayedResults.get(4).getQuestionAnswer()))
+					rData.setmU5(999);
+				else
+					rData.setmU5(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
+			}
+			//Last Question
+			try{
+				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(pId, "12. Last Question");					
+			}catch (Exception e) {
+				System.out.println("throws exception on 12. Last Question === patient id == " + pId);
+				sr = null;
+			}
+			
+			if (sr != null)
+			{
+				try{
+					xml = new String(sr.getResults(), "UTF-8");
+			   	} catch (Exception e) {
+			   		xml = "";
+			   	}
+				res = ResultParser.getResults(xml);
+				displayedResults = ResultParser.getDisplayedSurveyResults(res);					
+				
+				rData.setlQ(displayedResults.get(0).getQuestionAnswer());
+			}			
+			researchDatas.add(rData);
+		}		
+		return researchDatas;	
+	}
+	
+	public static void downloadUBCClientDatas(List<Patient> patients, SurveyManager surveyManager, HttpServletResponse response ){
+		//This data needs to be written (Object[])
+        List<UBCClientResearchData> results = getUBCClientResearchDatas(patients, surveyManager);   
+        //Blank workbook
+        XSSFWorkbook workbook = new XSSFWorkbook();         
+        //Create a blank sheet
+        XSSFSheet sheet = workbook.createSheet("UBC Client Research Data");   
+              
+        Map<Integer, Object[]> data = new TreeMap<Integer, Object[]>();
+        data.put(1, new Object[] {"Research_ID","Goal1_matter", "Goal2_stop", "Goal3_help", "Goal4_afraid", "Goal5_joy", "EQ5D1_Mobil", 
+        		"EQ5D2_SelCar", "EQ5D3_UsAct", "EQ5D4_Pain", "EQ5D5_AnxDep", "EQ5D6_HeSt", "DLA1_TyDay", "DLA2_Counton", "DLA3_Cope", 
+        		"DLA4_PressHe", "DLA5_Fall", "DLA6_Bowel", "GH11_TUG", "DSS1_role", "DSS2_under", "DSS3_useful", "DSS4_listen", 
+        		"DSS5_happen", "DSS6_talk", "DSS7_satisfied", "DSS8_nofam", "DSS9_timesnotiving", "DSS10_timesphone", "DSS11_timesclubs", 
+        		"Nut1_app", "Nut2_choke", "Nut3_enough", "ACD1_have", "ACD2_spoke", "ACD3_interest", "ACD4_import", "ACD5_decis", 
+        		"Mem1_worse", "Mem2_explain", "Mem3_worry", "Mem4_whywor", "Pain1_level", "Mob1_leave", "Mob2_howfar", "Mob3_aid", 
+        		"Mob4_difwalk", "Mob5_difclimb", "Mob6_difPA", "Mob7_limits", "Mob8_PA", "Mob9_PADes", "Med1_preswhat", "Med2_healthcon", 
+        		"Med3_famwhat", "Med4_sideff", "Med5_conmed", "LastQue"});
+        UBCClientResearchData r;
+        for (int i=0; i< results.size(); i++)
+        {        	
+        	r = results.get(i);      	
+        	data.put(Integer.valueOf(i+2), new Object[]{r.getResearchId(), r.getGoal1(), r.getGoal2(), r.getGoal3(), r.getGoal4(), 
+        		r.getGoal5(), r.getqOL1(), r.getqOL2(), r.getqOL3(), r.getqOL4(), r.getqOL5(), r.getqOL6(), r.getdLA1(), r.getdLA2(),
+        		r.getdLA3(), r.getdLA4(), r.getdLA5(), r.getdLA6(), r.getgH1(), r.getsL1(), r.getsL2(), r.getsL3(), r.getsL4(), 
+        		r.getsL5(), r.getsL6(), r.getsL7(), r.getsL8(), r.getsL9(), r.getsL10(), r.getsL11(), r.getNut1(), r.getNut2(), 
+        		r.getNut3(), r.getaCP1(), r.getaCP2(), r.getaCP3(), r.getaCP4(), r.getaCP5(), r.getMem1(), r.getMem2(), r.getMem3(), 
+        		r.getMem4() ,r.getPain1(), r.getMob1(), r.getMob2(), r.getMob3(), r.getMob4(), r.getMob5(), r.getMob6(), r.getMob7(),
+        		r.getMob8(), r.getMob9() ,r.getmU1(), r.getmU2(),r.getmU3(), r.getmU4(), r.getmU5(), r.getlQ()});
+        }     
+        
+        generateExcelSheet(data, sheet, workbook, response);		
+	}
+	
+ 
 	
 	public static List<DisplayedSurveyResult> formatEmptyResultAnswerToInt(List<DisplayedSurveyResult> results)
 	{
@@ -5328,6 +6005,45 @@ public class TapestryHelper {
 			 size++;
 		 }		 
 		 return iList;
+	}
+	
+	public static void generateExcelSheet(Map<Integer, Object[]> data, XSSFSheet sheet, XSSFWorkbook workbook, HttpServletResponse response)
+	{
+		//Iterate over data and write to sheet
+		Set<Integer> keyset = data.keySet();
+        int rownum = 0;
+        int cellnum;  
+        Row row;
+        Object [] objArr;
+        for (Integer key : keyset)
+        {
+            row = sheet.createRow(rownum++);           
+            objArr = data.get(key);            
+            cellnum = 0;
+            for (Object obj : objArr)
+            {
+               Cell cell = row.createCell(cellnum++);               
+               if(obj instanceof String)
+                    cell.setCellValue((String)obj);
+               else if(obj instanceof Integer)
+                    cell.setCellValue((Integer)obj);
+               else if(obj instanceof Float)
+            	   cell.setCellValue((Float)obj);
+            }
+        }   
+        //Adjusts the each column width to fit the contents
+        for (int c=1; c<=120; c++)
+        	sheet.autoSizeColumn(c);
+       
+        response.setContentType("application/vnd.ms-excel");
+        response.setHeader("Content-Disposition", "attachment; filename=\"results.xlsx\"");
+     
+        try{// Write workbook to response.
+            workbook.write(response.getOutputStream()); 
+            response.getOutputStream().close();
+   		} catch (Exception e) {
+   			e.printStackTrace();
+   		}
 	}
 	
 	public static List<Site> getSites(SecurityContextHolderAwareRequestWrapper request, OrganizationManager organizationManager)
@@ -5720,8 +6436,7 @@ public class TapestryHelper {
 					table.addCell(cell); 
 	   			}		 
 	   			document.add(table);
-	   		}
-	   		
+	   		}	   		
 			document.close();
 		} catch (Exception e) {
 			e.printStackTrace();			

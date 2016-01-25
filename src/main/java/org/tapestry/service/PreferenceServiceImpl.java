@@ -45,4 +45,24 @@ public class PreferenceServiceImpl implements PreferenceManager {
 		return preferenceDao.getReportNotiReceiversBySite(site);
 	}
 
+	@Override
+	public String getSocialContextOnReportBySite(int site) {
+		return preferenceDao.getSocialContextOnReportBySite(site);
+	}
+
+	@Override
+	public String getSocialContextTemplateBySite(int site) {
+		return preferenceDao.getSocialContextTemplateBySite(site);
+	}
+
+	@Override
+	public String getAlertsOnReportBySite(int site) {
+		return preferenceDao.getAlertsOnReportBySite(site);
+	}
+
+	@Override
+	public String getAlertsContentBySite(int site) {
+		return preferenceDao.getAlertsContentBySite(site);
+	}
+
 }

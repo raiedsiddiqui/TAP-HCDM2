@@ -31,7 +31,7 @@ public class VolunteerDAOImpl extends JdbcDaoSupport implements VolunteerDAO {
 				+ "ON v.organization=o.organization_ID ORDER BY v.firstname DESC";
 		return getJdbcTemplate().query(sql, new VolunteerMapper());
 	}
-
+	
 	@Override
 	public List<Volunteer> getVolunteersWithAvailability() {
 		String sql = "SELECT v.*, o.name FROM volunteers AS v INNER JOIN organizations AS o "
@@ -403,6 +403,7 @@ public class VolunteerDAOImpl extends JdbcDaoSupport implements VolunteerDAO {
 			
 		}
 	}
+
 
 	
 //	private String truncateDate(String date)

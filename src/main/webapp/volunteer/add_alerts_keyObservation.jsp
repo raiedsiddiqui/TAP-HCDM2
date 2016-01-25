@@ -133,7 +133,11 @@
 		</div>
 
 		<div class="row">
+			
 			<div class="col-md-12">
+			${socialContext}
+			</div>
+			<!-- div class="col-md-12">
 				<h4>Follow the example below </h4>
 
 				<p><b>[client firstname]</b> is <b>[age]</b> years old. He/She has ____ children and is <b>(employed/volunteering/retired/homemaker/etc)</b>. He/She is living <b>(alone/with partner/with child(ren)/with family/etc)</b>. 
@@ -148,8 +152,8 @@
 					<li>___________</li>
 				</ol>
 					
-			</div>
-		</div>
+			</div>-->
+		</div> 
 
 		<div class="row">
 			<div class="col-md-12">

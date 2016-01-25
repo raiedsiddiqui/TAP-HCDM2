@@ -26,6 +26,13 @@ public interface UserDAO {
 	 * @return number of Users
 	 */
 	public int countAllUsers();
+	
+	/**
+	 * 
+	 * @param site
+	 * @return
+	 */
+	public int getOrganizationIdBySite(int site);
 	/**
 	 * 
 	 * @param id

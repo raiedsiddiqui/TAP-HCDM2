@@ -378,6 +378,11 @@ public class SurveyManagerImpl implements SurveyManager {
 		return surveyResultDao.getSiteBySurveyResultID(surveyResultId);
 	}
 
+	@Override
+	public List<SurveyResult> getCompletedSurveyResultByVolunteertAndTitle(int volunteerId, String title) {
+		return surveyResultDao.getCompletedSurveyResultByVolunteertAndTitle(volunteerId, title);
+	}
+
 	
 
 }

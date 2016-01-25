@@ -45,5 +45,29 @@ public interface PreferenceDAO {
 	 * @return
 	 */
 	public String getReportNotiReceiversBySite(int site);
+	
+	/**
+	 * @param site
+	 * @return
+	 */
+	public String getSocialContextOnReportBySite(int site);
+	
+	/**
+	 * @param site
+	 * @return
+	 */
+	public String getSocialContextTemplateBySite(int site);
+	
+	/**
+	 * @param site
+	 * @return
+	 */
+	public String getAlertsOnReportBySite(int site);
+	
+	/**
+	 * @param site
+	 * @return
+	 */
+	public String getAlertsContentBySite(int site);
 
 }

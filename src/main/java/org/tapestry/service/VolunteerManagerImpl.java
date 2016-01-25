@@ -9,6 +9,7 @@ import org.tapestry.dao.ActivityDAO;
 import org.tapestry.dao.AppointmentDAO;
 import org.tapestry.dao.NarrativeDAO;
 import org.tapestry.dao.PatientDAO;
+import org.tapestry.dao.UserDAO;
 import org.tapestry.dao.VolunteerDAO;
 import org.tapestry.objects.Activity;
 import org.tapestry.objects.Appointment;
@@ -23,19 +24,21 @@ import org.tapestry.objects.Volunteer;
 @Service
 public class VolunteerManagerImpl implements VolunteerManager {
 	@Autowired
-	private VolunteerDAO volunteerDao;
+	private VolunteerDAO volunteerDAO;
 	@Autowired
 	private ActivityDAO activityDAO;
 	@Autowired
-	private NarrativeDAO narrativeDao;
+	private NarrativeDAO narrativeDAO;
 	@Autowired
-	private AppointmentDAO appointmentDao;
+	private AppointmentDAO appointmentDAO;
 	@Autowired
-	private PatientDAO patientDao;
+	private PatientDAO patientDAO;
+	@Autowired
+	private UserDAO userDAO;
 	
 	@Override
 	public List<Volunteer> getAllVolunteers() {
-		return volunteerDao.getAllVolunteers();
+		return volunteerDAO.getAllVolunteers();
 	}
 
 	@Override
@@ -48,8 +51,8 @@ public class VolunteerManagerImpl implements VolunteerManager {
 		for (Volunteer v: volunteers)
 		{
 			vId = v.getVolunteerId();
-			appointments = appointmentDao.getAllUpcomingAppointmentsForVolunteer(vId);
-			patients = patientDao.getPatientsForVolunteer(vId);
+			appointments = appointmentDAO.getAllUpcomingAppointmentsForVolunteer(vId);
+			patients = patientDAO.getPatientsForVolunteer(vId);
 			
 			if (((appointments != null) && (appointments.size()>0)) || ((patients != null)
 					&& (patients.size()>0)))
@@ -70,8 +73,8 @@ public class VolunteerManagerImpl implements VolunteerManager {
 		for (Volunteer v: volunteers)
 		{
 			vId = v.getVolunteerId();
-			appointments = appointmentDao.getAllUpcomingAppointmentsForVolunteer(vId);
-			patients = patientDao.getPatientsForVolunteer(vId);
+			appointments = appointmentDAO.getAllUpcomingAppointmentsForVolunteer(vId);
+			patients = patientDAO.getPatientsForVolunteer(vId);
 			
 			
 			if (((appointments != null) && (appointments.size()>0)) || ((patients != null)
@@ -94,8 +97,8 @@ public class VolunteerManagerImpl implements VolunteerManager {
 		for (Volunteer v: volunteers)
 		{
 			vId = v.getVolunteerId();
-			appointments = appointmentDao.getAllUpcomingAppointmentsForVolunteer(vId);
-			patients = patientDao.getPatientsForVolunteer(vId);
+			appointments = appointmentDAO.getAllUpcomingAppointmentsForVolunteer(vId);
+			patients = patientDAO.getPatientsForVolunteer(vId);
 			
 			
 			if (((appointments != null) && (appointments.size()>0)) || ((patients != null)
@@ -110,58 +113,58 @@ public class VolunteerManagerImpl implements VolunteerManager {
 
 	@Override
 	public List<Volunteer> getVolunteersWithAvailability() {
-		return volunteerDao.getVolunteersWithAvailability();
+		return volunteerDAO.getVolunteersWithAvailability();
 	}
 
 	@Override
 	public List<Volunteer> getVolunteersByName(String partialName) {
-		return volunteerDao.getVolunteersByName(partialName);
+		return volunteerDAO.getVolunteersByName(partialName);
 	}
 
 	@Override
 	public List<Volunteer> getAllVolunteersByOrganization(int id) {
-		return volunteerDao.getAllVolunteersByOrganization(id);
+		return volunteerDAO.getAllVolunteersByOrganization(id);
 	}
 
 	@Override
 	public Volunteer getVolunteerById(int id) {
-		return volunteerDao.getVolunteerById(id);
+		return volunteerDAO.getVolunteerById(id);
 	}
 
 	@Override
 	public int getVolunteerIdByUsername(String username) {
-		return volunteerDao.getVolunteerIdByUsername(username);
+		return volunteerDAO.getVolunteerIdByUsername(username);
 	}
 
 	@Override
 	public List<String> getAllExistUsernames() {
-		return volunteerDao.getAllExistUsernames();
+		return volunteerDAO.getAllExistUsernames();
 	}
 
 	@Override
 	public boolean addVolunteer(Volunteer volunteer) {
-		return volunteerDao.addVolunteer(volunteer);
+		return volunteerDAO.addVolunteer(volunteer);
 	}
 
 	@Override
 	public void updateVolunteer(Volunteer volunteer) {
-		volunteerDao.updateVolunteer(volunteer);
+		volunteerDAO.updateVolunteer(volunteer);
 	}
 	
 	@Override
 	public void updateVolunteerAvalability(int volunteerId, String availability) {
-		volunteerDao.updateVolunteerAvalability(volunteerId, availability);
+		volunteerDAO.updateVolunteerAvalability(volunteerId, availability);
 		
 	}
 
 	@Override
 	public void deleteVolunteerById(int id) {
-		volunteerDao.deleteVolunteerById(id);
+		volunteerDAO.deleteVolunteerById(id);
 	}
 
 	@Override
 	public int countAllVolunteers() {
-		return volunteerDao.countAllVolunteers();
+		return volunteerDAO.countAllVolunteers();
 	}
 
 	@Override
@@ -172,27 +175,17 @@ public class VolunteerManagerImpl implements VolunteerManager {
 
 	@Override
 	public int getUserIdByVolunteerId(int volunteerId) {
-		return volunteerDao.getUserIdByVolunteerId(volunteerId);
+		return volunteerDAO.getUserIdByVolunteerId(volunteerId);
 	}
 	
 	@Override
 	public List<Volunteer> getVolunteersByAvailibility(String time, int organization) {
 		List<Volunteer> volunteers;
-//		List<Volunteer>  new_volunteer_list = new ArrayList<Volunteer>();
-//		String availibility;
+
 		if (organization == 0)
 			volunteers = this.getAllVolunteers();
 		else
 			volunteers = this.getAllVolunteersByOrganization(organization);
-		
-//		for (Volunteer v: volunteers)
-//		{
-//			availibility = v.getAvailability();
-//			if (availibility.contains(time))
-//				new_volunteer_list.add(v);			
-//		}
-//		
-//		return new_volunteer_list;
 		
 		return getVolunteersByAvailibility(time, volunteers);
 	}
@@ -215,7 +208,7 @@ public class VolunteerManagerImpl implements VolunteerManager {
 
 	@Override
 	public List<Organization> getAllOrganizations() {			
-		return volunteerDao.getAllOrganizations();
+		return volunteerDAO.getAllOrganizations();
 	}
 	
 	@Override
@@ -226,7 +219,7 @@ public class VolunteerManagerImpl implements VolunteerManager {
 		
 		for(Organization o: organizations){
 			id = o.getOrganizationId();
-			vols = volunteerDao.getAllVolunteersByOrganization(id);
+			vols = volunteerDAO.getAllVolunteersByOrganization(id);
 			if ((vols != null) && (vols.size()>0))
 				o.setHasVolunteer(true);
 			else
@@ -238,37 +231,37 @@ public class VolunteerManagerImpl implements VolunteerManager {
 
 	@Override
 	public Organization getOrganizationById(int id) {
-		return volunteerDao.getOrganizationById(id);
+		return volunteerDAO.getOrganizationById(id);
 	}
 
 	@Override
 	public List<Organization> getOrganizationsByName(String partialName) {
-		return volunteerDao.getOrganizationsByName(partialName);
+		return volunteerDAO.getOrganizationsByName(partialName);
 	}
 	
 	@Override
 	public List<Volunteer> getGroupedVolunteersByName(String partialName,int organizationId) {
-		return volunteerDao.getGroupedVolunteersByName(partialName, organizationId);
+		return volunteerDAO.getGroupedVolunteersByName(partialName, organizationId);
 	}
 
 	@Override
 	public boolean addOrganization(Organization organization) {
-		return volunteerDao.addOrganization(organization);
+		return volunteerDAO.addOrganization(organization);
 	}
 
 	@Override
 	public void updateOrganization(Organization organization) {
-		volunteerDao.updateOrganization(organization);
+		volunteerDAO.updateOrganization(organization);
 	}
 
 	@Override
 	public void deleteOrganizationById(int id) {
-		volunteerDao.deleteOrganizationById(id);
+		volunteerDAO.deleteOrganizationById(id);
 	}
 
 	@Override
 	public void archiveOrganization(Organization organization, String deletedBy) {
-		volunteerDao.archiveOrganization(organization, deletedBy);
+		volunteerDAO.archiveOrganization(organization, deletedBy);
 		
 	}
 	
@@ -303,11 +296,6 @@ public class VolunteerManagerImpl implements VolunteerManager {
 		activityDAO.updateActivity(activity);
 	}
 
-//	@Override
-//	public List<Activity> getActivities(int patientId, int appointmentId) {
-//		return activityDAO.getDetailedLog(patientId, appointmentId);
-//	}
-
 	@Override
 	public void deleteActivity(int id) {
 		activityDAO.deleteActivityById(id);
@@ -332,48 +320,54 @@ public class VolunteerManagerImpl implements VolunteerManager {
 	//=============Narrative ======//
 	@Override
 	public List<Narrative> getAllNarrativesByUser(int volunteerId) {
-		return narrativeDao.getAllNarrativesByUser(volunteerId);
+		return narrativeDAO.getAllNarrativesByUser(volunteerId);
 	}
 
 	@Override
 	public List<Narrative> getNarrativesByVolunteer(int volunteerId,int patientId, int appointmentId) {
-		return narrativeDao.getNarrativesByVolunteer(volunteerId, patientId, appointmentId);
+		return narrativeDAO.getNarrativesByVolunteer(volunteerId, patientId, appointmentId);
 	}
 
 	@Override
 	public Narrative getNarrativeById(int narrativeId) {
-		return narrativeDao.getNarrativeById(narrativeId);
+		return narrativeDAO.getNarrativeById(narrativeId);
 	}
 
 	@Override
 	public void addNarrative(Narrative narrative) {
-		narrativeDao.addNarrative(narrative);
+		narrativeDAO.addNarrative(narrative);
 	}
 
 	@Override
 	public void updateNarrative(Narrative narrative) {
-		narrativeDao.updateNarrative(narrative);
+		narrativeDAO.updateNarrative(narrative);
 	}
 
 	@Override
 	public void deleteNarrativeById(int narrativeId) {
-		narrativeDao.deleteNarrativeById(narrativeId);
+		narrativeDAO.deleteNarrativeById(narrativeId);
 	}	
 
 	@Override
 	public void archiveNarrative(Narrative n, String updatedBy,	String whatAction) {
-		narrativeDao.archiveNarrative(n, updatedBy, whatAction);		
+		narrativeDAO.archiveNarrative(n, updatedBy, whatAction);		
 	}
 
 
 	@Override
 	public void archiveVolunteer(Volunteer volunteer, String deletedBy) {
-		volunteerDao.archiveVolunteer(volunteer, deletedBy);
+		volunteerDAO.archiveVolunteer(volunteer, deletedBy);
 	}
 
 	@Override
 	public Narrative getNarrativeByAppointmentId(int appointmentId) {
-		return narrativeDao.getNarrativeByAppointmentId(appointmentId);
+		return narrativeDAO.getNarrativeByAppointmentId(appointmentId);
+	}
+
+	@Override
+	public List<Volunteer> getVolunteersBySite(int site) {
+		int organizationId = userDAO.getOrganizationIdBySite(site);		
+		return volunteerDAO.getAllVolunteersByOrganization(organizationId);
 	}
 
 }

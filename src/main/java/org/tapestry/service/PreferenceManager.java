@@ -24,4 +24,16 @@ public interface PreferenceManager {
 	
 	@Transactional
 	public String getReportNotiReceiversBySite(int site);
+	
+	@Transactional
+	public String getSocialContextOnReportBySite(int site);
+	
+	@Transactional
+	public String getSocialContextTemplateBySite(int site);
+	
+	@Transactional
+	public String getAlertsOnReportBySite(int site);
+	
+	@Transactional
+	public String getAlertsContentBySite(int site);
 }

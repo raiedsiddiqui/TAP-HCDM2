@@ -35,6 +35,7 @@ import org.tapestry.objects.HL7Report;
 import org.tapestry.objects.Message;
 import org.tapestry.objects.Narrative;
 import org.tapestry.objects.Patient;
+import org.tapestry.objects.Preference;
 import org.tapestry.objects.Site;
 import org.tapestry.objects.SurveyResult;
 import org.tapestry.objects.SurveyTemplate;
@@ -2195,6 +2196,10 @@ public class VolunteerController {
 		if (session.getAttribute("unread_messages") != null)
 			model.addAttribute("unread", session.getAttribute("unread_messages"));
 		
+		String socialContext = preferenceManager.getSocialContextTemplateBySite(TapestryHelper.getLoggedInUser(request).getSite());		
+		model.addAttribute("socialContext", socialContext);
+		
+		
 		return "/volunteer/add_alerts_keyObservation";
 	}
 	
@@ -2222,6 +2227,9 @@ public class VolunteerController {
 		Patient patient = patientManager.getPatientByID(appointment.getPatientID());
 		model.addAttribute("appointment", appointment);
 		model.addAttribute("patient", patient);
+		
+		String alertsLabel = preferenceManager.getAlertsContentBySite(loggedInUser.getSite());
+		model.addAttribute("alertsLabel", alertsLabel);
 		return "/volunteer/visit_complete";
 	
 	}
@@ -2342,8 +2350,43 @@ public class VolunteerController {
 	@RequestMapping(value="/visit_complete/{appointment_id}", method=RequestMethod.GET)
 	public String viewVisitComplete(@PathVariable("appointment_id") int id, SecurityContextHolderAwareRequestWrapper request, 
 			ModelMap model) 
-	{		
-		if (TapestryHelper.isFirstVisit(id, appointmentManager))// for first visit, go to Social Context page which is only for first visit
+	{	
+		int site = TapestryHelper.getLoggedInUser(request).getSite();		
+		Preference preference = preferenceManager.getPreferenceBySite(site);
+		try{
+			int showSocialContext = preference.getSocialContextOnReport();
+			if ((showSocialContext == 1) && TapestryHelper.isFirstVisit(id, appointmentManager))
+				return "redirect:/open_alerts_keyObservations/" + id;	
+			else
+			{
+				int showAlert = preference.getAlertsOnReport();
+				Appointment appointment = appointmentManager.getAppointmentById(id);
+				Patient patient = patientManager.getPatientByID(appointment.getPatientID());
+				if (showAlert == 1)
+				{
+					model.addAttribute("appointment", appointment);
+					model.addAttribute("patient", patient);
+					
+					HttpSession  session = request.getSession();
+					if (session.getAttribute("unread_messages") != null)
+						model.addAttribute("unread", session.getAttribute("unread_messages"));
+					
+					String alertsLabel = preference.getAlertsText();						
+					model.addAttribute("alertsLabel", alertsLabel);
+					return "/volunteer/visit_complete";
+				}
+				else		
+				{
+					appointmentManager.completeAppointment(id);
+					return "redirect:/?patientId=" + patient.getPatientID();
+				}
+			}
+		}catch(Exception ex)
+		{
+			return "/volunteer/visit_complete";
+		}	
+		
+/*		if (TapestryHelper.isFirstVisit(id, appointmentManager))// for first visit, go to Social Context page which is only for first visit
 			return "redirect:/open_alerts_keyObservations/" + id;	
 		else
 		{
@@ -2356,7 +2399,7 @@ public class VolunteerController {
 			model.addAttribute("appointment", appointment);
 			model.addAttribute("patient", patient);
 			return "/volunteer/visit_complete";
-		}		
+		}	*/	
 	}
 	
 	@RequestMapping(value="/complete_visit_byAdmin/{appointmentId}", method=RequestMethod.GET)

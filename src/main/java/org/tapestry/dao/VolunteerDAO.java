@@ -17,6 +17,7 @@ public interface VolunteerDAO {
      */
 	public List<Volunteer> getAllVolunteers();
 	
+	
 	/**
      * @return all volunteers who has availability set up in a list
      */

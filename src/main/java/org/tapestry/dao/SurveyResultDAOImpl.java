@@ -371,4 +371,15 @@ public class SurveyResultDAOImpl extends JdbcDaoSupport implements SurveyResultD
 		}
 	}
 
+	@Override
+	public List<SurveyResult> getCompletedSurveyResultByVolunteertAndTitle(
+			int volunteerId, String title) {
+		String sql = "SELECT vsr.*, vs.title, vs.description, v.firstname, v.lastname FROM volunteer_survey_results "
+				+ "AS vsr INNER JOIN volunteer_surveys AS vs ON vsr.volunteer_survey_ID = vs.survey_ID INNER JOIN volunteers "
+				+ "AS v ON vsr.volunteer_ID=v.volunteer_ID WHERE vsr.volunteer_ID=? AND vs.title=? AND vsr.completed=1 "
+				+ "ORDER BY vsr.startDate ";
+		return getJdbcTemplate().query(sql, new Object[]{volunteerId, title}, new VolunteerSurveyResultMapper());
+		
+	}
+
 }

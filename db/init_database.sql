@@ -465,6 +465,10 @@ CREATE TABLE IF NOT EXISTS site_preferences(
 	UNIQUE (site_ID),
 	appt_notification_receiver VARCHAR(255),
 	report_notification_receiver VARCHAR(255),
+	social_context_report TINYINT(1), /* 0--Disable, 1--Enable*/
+	social_context_template Text,
+	alerts_report TINYINT(1), /* 0--Disable, 1--Enable*/
+	alerts_content Text,	
 	
 	PRIMARY KEY (preference_ID)		
 );

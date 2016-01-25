@@ -44,26 +44,55 @@ public class PreferenceDAOImpl extends JdbcDaoSupport implements PreferenceDAO {
 	}
 	
 	@Override
+	public String getSocialContextOnReportBySite(int site) {
+		String sql = "SELECT social_context_report FROM site_preferences WHERE site_ID=?";
+		return getJdbcTemplate().queryForObject(sql, new Object[]{site}, String.class);
+	}
+
+	@Override
+	public String getSocialContextTemplateBySite(int site) {
+		String sql = "SELECT social_context_template FROM site_preferences WHERE site_ID=?";
+		return getJdbcTemplate().queryForObject(sql, new Object[]{site}, String.class);
+	}
+
+	@Override
+	public String getAlertsOnReportBySite(int site) {
+		String sql = "SELECT alerts_report FROM site_preferences WHERE site_ID=?";
+		return getJdbcTemplate().queryForObject(sql, new Object[]{site}, String.class);
+	}
+
+	@Override
+	public String getAlertsContentBySite(int site) {
+		String sql = "SELECT alerts_content FROM site_preferences WHERE site_ID=?";
+		return getJdbcTemplate().queryForObject(sql, new Object[]{site}, String.class);
+	}
+
+	
+	@Override
 	public void addPreference(Preference preference) {
 		String sql = "INSERT INTO site_preferences (site_ID, sos_receiver, elder_abuse_button,elder_abuse_content,"
 				+ "self_harm_button, self_harm_content, crisis_lines_button, crisis_lines_content, sos_button, "
-				+ "appt_notification_receiver, report_notification_receiver) "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";			
+				+ "appt_notification_receiver, report_notification_receiver, alerts_report, alerts_content, "
+				+ "social_context_report, social_context_template) "
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";			
 		getJdbcTemplate().update(sql, preference.getSiteId(), preference.getSosReceiver(), preference.getElderAbuseButton(), 
 				preference.getElderAbuseContent(), preference.getSelfHarmButton(), preference.getSelfHarmContent(), 
 				preference.getCrisisLinesButton(), preference.getCrisisLinesContent(), preference.getSosButton(), 
-				preference.getApptNotiReceiver(), preference.getReportNotiReceiver());		
+				preference.getApptNotiReceiver(), preference.getReportNotiReceiver(), preference.getAlertsOnReport(), 
+				preference.getAlertsText(), preference.getSocialContextOnReport(), preference.getSocialContextContent());		
 	}
 	
 	@Override
 	public void updatePreference(Preference preference) {
 		String sql = "UPDATE site_preferences SET sos_receiver=?, elder_abuse_button=?, elder_abuse_content=?,"
 				+ " self_harm_button=?, self_harm_content=?, crisis_lines_button=?, crisis_lines_content=?, "
-				+ "sos_button=?, appt_notification_receiver=?, report_notification_receiver=? WHERE site_ID=?";
+				+ "sos_button=?, appt_notification_receiver=?, report_notification_receiver=?, alerts_report=?, alerts_content=?, "
+				+ "social_context_report=?, social_context_template=? WHERE site_ID=?";
 		getJdbcTemplate().update(sql, preference.getSosReceiver(), preference.getElderAbuseButton(), 
 				preference.getElderAbuseContent(), preference.getSelfHarmButton(), preference.getSelfHarmContent(), 
 				preference.getCrisisLinesButton(), preference.getCrisisLinesContent(), preference.getSosButton(), 
-				preference.getApptNotiReceiver(), preference.getReportNotiReceiver(), preference.getSiteId());			
+				preference.getApptNotiReceiver(), preference.getReportNotiReceiver(), preference.getAlertsOnReport(), 
+				preference.getAlertsText(), preference.getSocialContextOnReport(), preference.getSocialContextContent(), preference.getSiteId());			
 	}
 	
 	//RowMapper
@@ -81,9 +110,14 @@ public class PreferenceDAOImpl extends JdbcDaoSupport implements PreferenceDAO {
 			preference.setCrisisLinesContent(rs.getString("crisis_lines_content"));
 			preference.setApptNotiReceiver(rs.getString("appt_notification_receiver"));
 			preference.setReportNotiReceiver(rs.getString("report_notification_receiver"));
+			preference.setAlertsOnReport(rs.getInt("alerts_report"));
+			preference.setAlertsText(rs.getString("alerts_content"));
+			preference.setSocialContextOnReport(rs.getInt("social_context_report"));
+			preference.setSocialContextContent(rs.getString("social_context_template"));
 				
 			return preference;			
 		}
 	}
+
 
 }

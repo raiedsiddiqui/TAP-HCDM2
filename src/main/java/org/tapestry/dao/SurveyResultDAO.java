@@ -217,4 +217,12 @@ public interface SurveyResultDAO {
 	 */
 	public int getSiteBySurveyResultID(int surveyResultId);
 	
+	/**
+	 * 
+	 * @param volunteerId
+	 * @param title
+	 * @return
+	 */
+	public List<SurveyResult> getCompletedSurveyResultByVolunteertAndTitle(int volunteerId, String title);
+	
 }

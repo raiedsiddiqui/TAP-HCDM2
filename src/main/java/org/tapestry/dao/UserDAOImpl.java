@@ -2,7 +2,9 @@ package org.tapestry.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -44,6 +46,14 @@ public class UserDAOImpl extends JdbcDaoSupport implements UserDAO {
 		String sql = "SELECT COUNT(*) as c FROM users";		
 		return getJdbcTemplate().queryForInt(sql);
 	}
+	
+
+	@Override
+	public int getOrganizationIdBySite(int site) {
+		List<User> users = getUserBySIte(site);			
+		return users.get(0).getOrganization();	
+	}
+
 	
 	/**
 	* Selects a user based off the user ID

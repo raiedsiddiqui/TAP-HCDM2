@@ -13,6 +13,10 @@ public class Preference {
 	private String crisisLinesContent;	
 	private String apptNotiReceiver;
 	private String reportNotiReceiver;
+	private int socialContextOnReport;
+	private String socialContextContent;
+	private int alertsOnReport;
+	private String alertsText;
 	
 	public Preference(){}
 
@@ -102,6 +106,38 @@ public class Preference {
 
 	public void setReportNotiReceiver(String reportNotiReceiver) {
 		this.reportNotiReceiver = reportNotiReceiver;
-	}		
+	}
+
+	public int getSocialContextOnReport() {
+		return socialContextOnReport;
+	}
+
+	public void setSocialContextOnReport(int socialContextOnReport) {
+		this.socialContextOnReport = socialContextOnReport;
+	}
+
+	public String getSocialContextContent() {
+		return socialContextContent;
+	}
+
+	public void setSocialContextContent(String socialContextContent) {
+		this.socialContextContent = socialContextContent;
+	}
+
+	public int getAlertsOnReport() {
+		return alertsOnReport;
+	}
+
+	public void setAlertsOnReport(int alertsOnReport) {
+		this.alertsOnReport = alertsOnReport;
+	}
+
+	public String getAlertsText() {
+		return alertsText;
+	}
+
+	public void setAlertsText(String alertsText) {
+		this.alertsText = alertsText;
+	}	
 	
 }
