@@ -17,6 +17,7 @@ import java.util.TreeMap;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -55,7 +56,6 @@ import org.tapestry.objects.Activity;
 import org.tapestry.objects.AdminActivity;
 import org.tapestry.objects.Appointment;
 import org.tapestry.objects.CareGiverResearchData;
-import org.tapestry.objects.CaregiverResearchData1;
 import org.tapestry.objects.Clinic;
 import org.tapestry.objects.DisplayedSurveyResult;
 import org.tapestry.objects.HL7Report;
@@ -63,7 +63,6 @@ import org.tapestry.objects.Message;
 import org.tapestry.objects.Organization;
 import org.tapestry.objects.Patient;
 import org.tapestry.objects.Preference;
-//import org.tapestry.objects.Picture;
 import org.tapestry.objects.Report;
 import org.tapestry.objects.ResearchData;
 import org.tapestry.objects.Site;
@@ -3058,7 +3057,7 @@ public class TapestryController{
 		return "admin/manage_research_data";
    	}
 	
-	@RequestMapping(value="/download_caregiver_researchData_merge/{siteID}", method=RequestMethod.GET)
+	@RequestMapping(value="/download_caregiver_researchData/{siteID}", method=RequestMethod.GET)
 	public String downloadCareGiverResearchDataTest(@PathVariable("siteID") int id, HttpServletRequest request, HttpServletResponse response)
 	{
 		List<Volunteer> volunteers = volunteerManager.getVolunteersBySite(id);
@@ -3069,19 +3068,35 @@ public class TapestryController{
 			}
 		});
 		//Blank workbook
-		XSSFWorkbook workbook = new XSSFWorkbook();  
-	
+		XSSFWorkbook workbook = new XSSFWorkbook();  	
 		//Create a blank sheet
-		XSSFSheet sheet1 = workbook.createSheet("UBC Caregiver background Research Data");   
-		XSSFSheet sheet2 = workbook.createSheet("UBC Caregiver care QoL Research Data");   
-		Map<Integer, Object[]> data = new TreeMap<Integer, Object[]>();
-		
+		//First sheet fore T0
+		XSSFSheet sheet = workbook.createSheet("UBC Caregiver background Research Data");   
+		Map<Integer, Object[]> data = new TreeMap<Integer, Object[]>();		
 		//first sheet with care giver background_T0
 		List<CareGiverResearchData> results1 = TapestryHelper.getCareGiverResearchData(surveyManager, volunteers);
 		data.put(1, new Object[]{"Vol ID", "vol_name", "CB1_ed_T0", "CB1a_T0", "CB2_empl_T0", "CB3_livewith_T0", "CB4_children_T0", "CB4a_T0", "CB5_partner_T0",
 				"CB6_anger_T0", "CB7_gender_T0", "CB7a_T0", "CB8_lang_T0", "CB9_born_T0", "CB9a_bornwhere_T0", "CB10_ethnic_T0", "CB10a_T0",
 				"CB11_relation_T0", "CB11a_T0", "CB12_startcg_T0", "CB13_physcare_T0", "CB14_emot_T0", "CB15_other_T0", "CB16_howlong_T0", "CB17_onlycg_T0", 
-				"CB17a_T0", "CB17b_T0", "CB18_healthcon_T0", "CB19_cgotherppl_T0", "CB20_yourhealth_T0"});
+				"CB17a_T0", "CB17b_T0", "CB18_healthcon_T0", "CB19_cgotherppl_T0", "CB20_yourhealth_T0", "CQL1_sleep_T0", "CQL2_incon_T0",  "CQL3_appre_T0", 
+				"CQL4_phystr_T0",  "CQL5_confin_T0", "CQL6_time_T0", "CQL7_famad_T0", "CQL8_persolan_T0", "CQL9_demtime_T0",  "CQL10_emad_T0", "CQL11_handcare_T0",  
+				"CQL12_behupset_T0", "CQL13_change_T0", "CQL14_hapcare_T0", "CQL15_other_T0", "CQL16_workad_T0", "CQL17_finstrain_T0", "CQL18_import_T0", 
+				"CQL19_fulfil_T0", "CQL20_reprob_T0", "CQL21_menh_T0", "CQL22_ownday_T0", "CQL23_pinpro_T0", "CQL24_support_T0", "CQL25_physhel_T0", "CQL26_happy_T0",
+				"Zarit1_time_T0", "Zarit2_stress_T0", "Zarit3_angry_T0", "Zarit4_other_T0", "Zarit5_strain_T0", "Zarit6_health_T0", "Zarit7_priv_T0", "Zarit8_social_T0",
+				"Zarit9_control_T0", "Zarit10_uncert_T0", "Zarit11_more_T0", "Zarit12_better_T0", "CB2_empl_T1", "CB3_livewith_T1", "CB4_children_T1", "CB4a_T1", 
+				"CB5_partner_T1", "CB13_physcare_T1", "CB14_emot_T1", "CB15_other_T1", "CB16_howlong_T1", "CB12_startcg_T1", "CB17_onlycg_T1", "CB17a_T1", "CB17b_T1", "CB18_healthcon_T1", 
+				"CB19_cgotherppl_T1", "CB20_yourhealth_T1",	"CQL1_sleep_T1", "CQL2_incon_T1",  "CQL3_appre_T1", "CQL4_phystr_T1",  "CQL5_confin_T1", "CQL6_time_T1", 
+				"CQL7_famad_T1", "CQL8_persolan_T1", "CQL9_demtime_T1", "CQL10_emad_T1", "CQL11_handcare_T1",  "CQL12_behupset_T1", "CQL13_change_T1", "CQL14_hapcare_T1", 
+				"CQL15_other_T1", "CQL16_workad_T1", "CQL17_finstrain_T1", "CQL18_import_T1", "CQL19_fulfil_T1", "CQL20_reprob_T1", "CQL21_menh_T1", "CQL22_ownday_T1",
+				"CQL23_pinpro_T1", "CQL24_support_T1", "CQL25_physhel_T1", "CQL26_happy_T1", "Zarit1_time_T1", "Zarit2_stress_T1", "Zarit3_angry_T1", "Zarit4_other_T1", 
+				"Zarit5_strain_T1", "Zarit6_health_T1", "Zarit7_priv_T1", "Zarit8_social_T1", "Zarit9_control_T1", "Zarit10_uncert_T1", "Zarit11_more_T1", "Zarit12_better_T1", 
+				"CB2_empl_T2", "CB3_livewith_T2", "CB4_children_T2", "CB4a_T2", "CB5_partner_T2", "CB13_physcare_T2", "CB14_emot_T2", "CB15_other_T2",
+				"CB16_howlong_T2", "CB12_startcg_T2", "CB17_onlycg_T2", "CB17a_T2", "CB17b_T2", "CB18_healthcon_T2", "CB19_cgotherppl_T2", "CB20_yourhealth_T2",
+				"CQL1_sleep_T2", "CQL2_incon_T2",  "CQL3_appre_T2", "CQL4_phystr_T2",  "CQL5_confin_T2", "CQL6_time_T2", "CQL7_famad_T2", "CQL8_persolan_T2", "CQL9_demtime_T2", 
+				"CQL10_emad_T2", "CQL11_handcare_T2",  "CQL12_behupset_T2", "CQL13_change_T2", "CQL14_hapcare_T2", "CQL15_other_T2", "CQL16_workad_T2", "CQL17_finstrain_T2", 
+				"CQL18_import_T2", "CQL19_fulfil_T2", "CQL20_reprob_T2", "CQL21_menh_T2", "CQL22_ownday_T2", "CQL23_pinpro_T2", "CQL24_support_T2", "CQL25_physhel_T2", 
+				"CQL26_happy_T2", "Zarit1_time_T2", "Zarit2_stress_T2", "Zarit3_angry_T2", "Zarit4_other_T2", "Zarit5_strain_T2", "Zarit6_health_T2", "Zarit7_priv_T2", 
+				"Zarit8_social_T2",	"Zarit9_control_T2", "Zarit10_uncert_T2", "Zarit11_more_T2", "Zarit12_better_T2"});
 		
 		CareGiverResearchData r;
 		for (int i=0; i< results1.size(); i++)
@@ -3091,34 +3106,36 @@ public class TapestryController{
 				r.getCb3_livewith_T0(), r.getCb4_children_T0(), r.getCb4a_T0(), r.getCb5_partner_T0(), r.getCb6_agegr_T0(), r.getCb7_gender_T0(),
 				r.getCb7a_T0(), r.getCb8_lang_T0(), r.getCb9_born_T0(), r.getCb9a_bornwhere(), r.getCb10_ethnic_T0(), r.getCb10a(), r.getCb11_relation_T0(),
 				r.getCb11a_T0(), r.getCb12_startcg_T0(), r.getCb13_physcare_T0(), r.getCb14_emot_T0(), r.getCb15_other_T0(), r.getCb16_howlong_T0(),
-				r.getCb17_onlycg_T0(), r.getCb17a_T0(), r.getCb17b_T0(), r.getCb18_healthcon_T0(), r.getCb19_cgotherpl_T0(), r.getCb20_yourhealth_T0()});
-		}
-	
-		sheet1 = fillSheet(data, sheet1);
-		
-		List<CaregiverResearchData1> results2 = TapestryHelper.getCareGiverResearchData1(surveyManager, volunteers);
-		data.put(1, new Object[]{"Vol ID", "CQL1_sleep_T1", "CQL2_incon_T1",  "CQL3_appre_T1", "CQL4_phystr_T1",  "CQL5_confin_T1",
-		"CQL6_time_T1", "CQL7_famad_T1", "CQL8_persolan_T1", "CQL9_demtime_T1",  "CQL10_emad_T1", "CQL11_handcare_T1",  
-		"CQL12_behupset_T1", "CQL13_change_T1", "CQL14_hapcare_T1", "CQL15_other_T1", "CQL16_workad_T1", "CQL17_finstrain_T1", 
-		"CQL18_import_T1", "CQL19_fulfil_T1", "CQL20_reprob_T1", "CQL21_menh_T1", "CQL22_ownday_T1", "CQL23_pinpro_T1", 
-		"CQL24_support_T1", "CQL25_physhel_T1", "CQL26_happy_T1"});
-
-		CaregiverResearchData1 rr;
-		for (int i=0; i< results2.size(); i++)
-		{
-			rr = results2.get(i);        	
-			data.put(Integer.valueOf(i+2), new Object[]{rr.getVolunteerId(), rr.getCql1_sleep_T1(), rr.getCql2_incon_T1(), rr.getCql3_appre_T1(),
-				rr.getCql4_phystr_T1(), rr.getCql5_confin_T1(), rr.getCql6_time_T1(), rr.getCql7_famad_T1(), rr.getCql8_persolan_T1(), 
-				rr.getCql9_demtime_T1(), rr.getCql10_emad_T1(), rr.getCql11_handcare_T1(), rr.getCql12_behupset_T1(), rr.getCql13_change_T1(), 
-				rr.getCql14_hapcare_T1(), rr.getCql15_workad_T1(), rr.getCql16_comover_T1(), rr.getCql17_finstrain_T1(), rr.getCql18_import_T1(),
-				rr.getCql19_fulfil_T1(), rr.getCql20_relprob_T1(), rr.getCql21_menh_T1(), rr.getCql22_ownday_T1(), rr.getCql23_finpro_T1(), 
-				rr.getCql24_support_T1(), rr.getCql25_physhel_T1(), rr.getCql26_happy_T1()});
-		}
-		sheet2 = fillSheet(data, sheet2);	
-		
+				r.getCb17_onlycg_T0(), r.getCb17a_T0(), r.getCb17b_T0(), r.getCb18_healthcon_T0(), r.getCb19_cgotherppl_T0(), r.getCb20_yourhealth_T0(), r.getCql1_sleep_T0(), 
+				r.getCql2_inc0n_T0(), r.getCql3_appre_T0(), r.getCql4_phystr_T0(), r.getCql5_confin_T0(), r.getCql6_time_T0(), r.getCql7_famad_T0(), r.getCql8_persolan_T0(), 
+				r.getCql9_demtime_T0(), r.getCql10_emad_T0(), r.getCql11_handcare_T0(), r.getCql12_behupset_T0(), r.getCql13_change_T0(), r.getCql14_hapcare_T0(), 
+				r.getCql15_workad_T0(), r.getCql16_comover_T0(), r.getCql17_finstrain_T0(), r.getCql18_import_T0(), r.getCql19_fulfil_T0(), r.getCql20_relprob_T0(),
+				r.getCql21_menh_T0(), r.getCql22_ownday_T0(), r.getCql23_finpro_T0(), r.getCql24_support_T0(), r.getCql25_physhel_T0(), r.getCql26_happy_T0(),
+				r.getZarit1_time_T0(), r.getZarit2_stress_T0(), r.getZarit3_angry_T0(), r.getZarit4_other_T0(), r.getZarit5_strain_T0(), r.getZarit6_health_T0(), 
+				r.getZarit7_priv_T0(), r.getZarit8_social_T0(), r.getZarit9_control_T0(), r.getZarit10_uncert_T0(), r.getZarit11_more_T0(), r.getZarit12_better_T0(), 
+				r.getCb2_empl_T1(), r.getCb3_livewith_T1(), r.getCb4_children_T1(), r.getCb4a_T1(), r.getCb5_partner_T1(), r.getCb13_physcare_T1(), r.getCb14_emot_T1(),
+				r.getCb15_other_T1(), r.getCb16_howlong_T1(), r.getCb12_startcg_T1(), r.getCb17_onlycg_T1(), r.getCb17a_T1(), r.getCb17b_T1(), r.getCb18_healthcon_T1(),
+				r.getCb19_cgotherppl_T1(), r.getCb20_yourhealth_T1(), r.getCql1_sleep_T1(), r.getCql2_inc0n_T1(), r.getCql3_appre_T1(), r.getCql4_phystr_T1(), 
+				r.getCql5_confin_T1(), r.getCql6_time_T1(), r.getCql7_famad_T1(), r.getCql8_persolan_T1(), 
+				r.getCql9_demtime_T1(), r.getCql10_emad_T1(), r.getCql11_handcare_T1(), r.getCql12_behupset_T1(), r.getCql13_change_T1(), r.getCql14_hapcare_T1(), 
+				r.getCql15_workad_T1(), r.getCql16_comover_T1(), r.getCql17_finstrain_T1(), r.getCql18_import_T1(), r.getCql19_fulfil_T1(), r.getCql20_relprob_T1(),
+				r.getCql21_menh_T1(), r.getCql22_ownday_T1(), r.getCql23_finpro_T1(), r.getCql24_support_T1(), r.getCql25_physhel_T1(), r.getCql26_happy_T1(),
+				r.getZarit1_time_T1(), r.getZarit2_stress_T1(), r.getZarit3_angry_T1(), r.getZarit4_other_T1(), r.getZarit5_strain_T1(), r.getZarit6_health_T1(), 
+				r.getZarit7_priv_T1(), r.getZarit8_social_T1(), r.getZarit9_control_T1(), r.getZarit10_uncert_T1(), r.getZarit11_more_T1(), r.getZarit12_better_T1(),
+				r.getCb2_empl_T2(), r.getCb3_livewtih_T2() , r.getCb4_children_T2(), r.getCb4a_T2(), r.getCb5_partner_T2(), r.getCb13_physcare_T2(), r.getCb14_emot_T2(),
+				r.getCb15_other_T2(), r.getCb16_howlong_T2(), r.getCb12_startcg_T2(), r.getCb17_onlycg_T2(), r.getCb17a_T2(), r.getCb17b_T2(), r.getCb18_healthcon_T2(),
+				r.getCb19_cgotherppl_T2(), r.getCb20_yourhealth_T2(), r.getCql1_sleep_T2(), r.getCql2_inc0n_T2(), r.getCql3_appre_T2(), r.getCql4_phystr_T2(), 
+				r.getCql5_confin_T2(), r.getCql6_time_T2(), r.getCql7_famad_T2(), r.getCql8_persolan_T2(), 
+				r.getCql9_demtime_T2(), r.getCql10_emad_T2(), r.getCql11_handcare_T2(), r.getCql12_behupset_T2(), r.getCql13_change_T2(), r.getCql14_hapcare_T2(), 
+				r.getCql15_workad_T2(), r.getCql16_comover_T2(), r.getCql17_finstrain_T2(), r.getCql18_import_T2(), r.getCql19_fulfil_T2(), r.getCql20_relprob_T2(),
+				r.getCql21_menh_T2(), r.getCql22_ownday_T2(), r.getCql23_finpro_T2(), r.getCql24_support_T2(), r.getCql25_physhel_T2(), r.getCql26_happy_T2(),
+				r.getZarit1_time_T2(), r.getZarit2_stress_T2(), r.getZarit3_angry_T2(), r.getZarit4_other_T2(), r.getZarit5_strain_T2(), r.getZarit6_health_T2(), 
+				r.getZarit7_priv_T2(), r.getZarit8_social_T2(), r.getZarit9_control_T2(), r.getZarit10_uncert_T2(), r.getZarit11_more_T2(), r.getZarit12_better_T2()});
+		}	
+		sheet = fillSheet(data, sheet, workbook);
 		
 		response.setContentType("application/vnd.ms-excel");
-		response.setHeader("Content-Disposition", "attachment; filename=\"result.xlsx\"");
+		response.setHeader("Content-Disposition", "attachment; filename=\"vonlunteer_result.xlsx\"");
 	     
 		try{// Write workbook to response.
 			workbook.write(response.getOutputStream()); 
@@ -3127,138 +3144,47 @@ public class TapestryController{
 			e.printStackTrace();
 	    }
 		
-		return null;
-	
-	}
-	private XSSFSheet fillSheet(Map<Integer, Object[]> data, XSSFSheet sheet)
-	{
-		//Iterate over data and write to sheet
-		Set<Integer> keyset = data.keySet();
-		int rownum = 0;
-		int cellnum;  
-		Row row;
-		Object [] objArr;
-		for (Integer key : keyset)
-		{
-			row = sheet.createRow(rownum++);           
-			objArr = data.get(key);            
-			cellnum = 0;
-			for (Object obj : objArr)
-			{
-				Cell cell = row.createCell(cellnum++);               
-				if(obj instanceof String)
-					cell.setCellValue((String)obj);
-				else if(obj instanceof Integer)
-					cell.setCellValue((Integer)obj);              
-			}
-		}   
-		//Adjusts the each column width to fit the contents
-		for (int c=1; c<=120; c++)
-			sheet.autoSizeColumn(c);
-		
-		return sheet;
-	}
-	
-	@RequestMapping(value="/download_caregiver_researchData/{siteID}", method=RequestMethod.GET)
-	public String downloadCareGiverResearchData(@PathVariable("siteID") int id, HttpServletRequest request, HttpServletResponse response)
-	{
-		List<Volunteer> volunteers = volunteerManager.getVolunteersBySite(id);
-		//sort volunteer list by volunteer ID
-		Collections.sort(volunteers, new Comparator<Volunteer>(){
-			public int compare(Volunteer v1, Volunteer v2){
-				return Integer.valueOf(v1.getVolunteerId()).compareTo(Integer.valueOf(v2.getVolunteerId()));				
-			}
-		});
-		
-		List<CareGiverResearchData> results = TapestryHelper.getCareGiverResearchData(surveyManager, volunteers);
-		//		List<CaregiverResearchData1> results = TapestryHelper.getCareGiverResearchData1(surveyManager, volunteers);
-		//Blank workbook
-		XSSFWorkbook workbook = new XSSFWorkbook();         
-	        //Create a blank sheet
-		XSSFSheet sheet = workbook.createSheet("UBC Caregiver Research Data");   
-		Map<Integer, Object[]> data = new TreeMap<Integer, Object[]>();
-	     
-		//for care QoL
-//		data.put(1, new Object[]{"Vol ID", "CQL1_sleep_T0", "CQL2_incon_T0",  "CQL3_appre_T0", "CQL4_phystr_T0",  "CQL5_confin_T0",
-//				"CQL6_time_T0", "CQL7_famad_T0", "CQL8_persolan_T0", "CQL9_demtime_T0",  "CQL10_emad_T0", "CQL11_handcare_T0",  
-//				"CQL12_behupset_T0", "CQL13_change_T0", "CQL14_hapcare_T0", "CQL15_other_T0", "CQL16_workad_T0", "CQL17_finstrain_T0", 
-//				"CQL18_import_T0", "CQL19_fulfil_T0", "CQL20_reprob_T0", "CQL21_menh_T0", "CQL22_ownday_T0", "CQL23_pinpro_T0", 
-//				"CQL24_support_T0", "CQL25_physhel_T0", "CQL26_happy_T0"});
-//		data.put(1, new Object[]{"Vol ID", "CQL1_sleep_T1", "CQL2_incon_T1",  "CQL3_appre_T1", "CQL4_phystr_T1",  "CQL5_confin_T1",
-//				"CQL6_time_T1", "CQL7_famad_T1", "CQL8_persolan_T1", "CQL9_demtime_T1",  "CQL10_emad_T1", "CQL11_handcare_T1",  
-//				"CQL12_behupset_T1", "CQL13_change_T1", "CQL14_hapcare_T1", "CQL15_other_T1", "CQL16_workad_T1", "CQL17_finstrain_T1", 
-//				"CQL18_import_T1", "CQL19_fulfil_T1", "CQL20_reprob_T1", "CQL21_menh_T1", "CQL22_ownday_T1", "CQL23_pinpro_T1", 
-//				"CQL24_support_T1", "CQL25_physhel_T1", "CQL26_happy_T1"});
-		
-//		CaregiverResearchData1 r;
-//		for (int i=0; i< results.size(); i++)
-//		{
-//			r = results.get(i);        	
-//			data.put(Integer.valueOf(i+2), new Object[]{r.getVolunteerId(), r.getCql1_sleep_T1(), r.getCql2_incon_T1(), r.getCql3_appre_T1(),
-//				r.getCql4_phystr_T1(), r.getCql5_confin_T1(), r.getCql6_time_T1(), r.getCql7_famad_T1(), r.getCql8_persolan_T1(), 
-//				r.getCql9_demtime_T1(), r.getCql10_emad_T1(), r.getCql11_handcare_T1(), r.getCql12_behupset_T1(), r.getCql13_change_T1(), 
-//				r.getCql14_hapcare_T1(), r.getCql15_workad_T1(), r.getCql16_comover_T1(), r.getCql17_finstrain_T1(), r.getCql18_import_T1(),
-//				r.getCql19_fulfil_T1(), r.getCql20_relprob_T1(), r.getCql21_menh_T1(), r.getCql22_ownday_T1(), r.getCql23_finpro_T1(), 
-//				r.getCql24_support_T1(), r.getCql25_physhel_T1(), r.getCql26_happy_T1()});
-//		}
-		
-		//for caregiver background
-		data.put(1, new Object[]{"Vol ID", "vol_name", "CB1_ed_T0", "CB1a_T0", "CB2_empl_T0", "CB3_livewith_T0", "CB4_children_T0", "CB4a_T0", "CB5_partner_T0",
-				"CB6_anger_T0", "CB7_gender_T0", "CB7a_T0", "CB8_lang_T0", "CB9_born_T0", "CB9a_bornwhere_T0", "CB10_ethnic_T0", "CB10a_T0",
-				"CB11_relation_T0", "CB11a_T0", "CB12_startcg_T0", "CB13_physcare_T0", "CB14_emot_T0", "CB15_other_T0", "CB16_howlong_T0", "CB17_onlycg_T0", 
-				"CB17a_T0", "CB17b_T0", "CB18_healthcon_T0", "CB19_cgotherppl_T0", "CB20_yourhealth_T0"});
-		
-		CareGiverResearchData r;
-		for (int i=0; i< results.size(); i++)
-		{
-			r = results.get(i);        	
-			data.put(Integer.valueOf(i+2), new Object[]{r.getVolunteerId(), r.getName(), r.getCb1_ed_T0(), r.getCb1a_ed_T0(), r.getCb2_empl_T0(),
-				r.getCb3_livewith_T0(), r.getCb4_children_T0(), r.getCb4a_T0(), r.getCb5_partner_T0(), r.getCb6_agegr_T0(), r.getCb7_gender_T0(),
-				r.getCb7a_T0(), r.getCb8_lang_T0(), r.getCb9_born_T0(), r.getCb9a_bornwhere(), r.getCb10_ethnic_T0(), r.getCb10a(), r.getCb11_relation_T0(),
-				r.getCb11a_T0(), r.getCb12_startcg_T0(), r.getCb13_physcare_T0(), r.getCb14_emot_T0(), r.getCb15_other_T0(), r.getCb16_howlong_T0(),
-				r.getCb17_onlycg_T0(), r.getCb17a_T0(), r.getCb17b_T0(), r.getCb18_healthcon_T0(), r.getCb19_cgotherpl_T0(), r.getCb20_yourhealth_T0()});
-		}
-		//Iterate over data and write to sheet
-		Set<Integer> keyset = data.keySet();
-		int rownum = 0;
-		int cellnum;  
-		Row row;
-		Object [] objArr;
-		for (Integer key : keyset)
-		{
-			row = sheet.createRow(rownum++);           
-			objArr = data.get(key);            
-			cellnum = 0;
-			for (Object obj : objArr)
-			{
-				Cell cell = row.createCell(cellnum++);               
-				if(obj instanceof String)
-					cell.setCellValue((String)obj);
-				else if(obj instanceof Integer)
-					cell.setCellValue((Integer)obj);              
-			}
-		}   
-		//Adjusts the each column width to fit the contents
-		for (int c=1; c<=120; c++)
-			sheet.autoSizeColumn(c);
-	       
-		response.setContentType("application/vnd.ms-excel");
-		response.setHeader("Content-Disposition", "attachment; filename=\"result.xlsx\"");
-	     
-		try{// Write workbook to response.
-			workbook.write(response.getOutputStream()); 
-			response.getOutputStream().close();
-		} catch (Exception e) {
-			e.printStackTrace();
-	    }
-	        
 		StringBuffer sb = new StringBuffer();
 		User loggedInUser = TapestryHelper.getLoggedInUser(request);
 		sb.append(loggedInUser.getName());
 		sb.append("has Downloaded UBC Caregiver Research Data");		
 		userManager.addUserLog(sb.toString(), loggedInUser);	
-	    
-		return "";
+		
+		return null;	
+	}
+	private XSSFSheet fillSheet(Map<Integer, Object[]> data, XSSFSheet sheet, XSSFWorkbook book)
+	{
+		//Iterate over data and write to sheet
+		Set<Integer> keyset = data.keySet();
+		int rownum = 0;
+		int cellnum;  
+		Row row;
+		Object [] objArr;
+		XSSFCellStyle cStyle = book.createCellStyle();		
+		cStyle.setAlignment(XSSFCellStyle.ALIGN_RIGHT);
+		
+		for (Integer key : keyset)
+		{
+			row = sheet.createRow(rownum++);           
+			objArr = data.get(key);            
+			cellnum = 0;
+			for (Object obj : objArr)
+			{
+				Cell cell = row.createCell(cellnum++);               
+				if(obj instanceof String)
+				{
+					cell.setCellValue((String)obj);
+					cell.setCellStyle(cStyle);
+				}
+				else if(obj instanceof Integer)
+					cell.setCellValue((Integer)obj);              
+			}
+		}   
+		//Adjusts the each column width to fit the contents
+		for (int c=1; c<=250; c++)
+			sheet.autoSizeColumn(c);
+		
+		return sheet;
 	}
 	
 	@RequestMapping(value="/download_researchData/{siteID}", method=RequestMethod.GET)
@@ -3268,7 +3194,7 @@ public class TapestryController{
 		{
 			List<Patient> patients = patientManager.getPatientsBySite(3);
 			TapestryHelper.downloadUBCClientDatas(patients, surveyManager, response);
-			
+					
 			StringBuffer sb = new StringBuffer();
 			User loggedInUser = TapestryHelper.getLoggedInUser(request);
 			sb.append(loggedInUser.getName());
@@ -3332,30 +3258,9 @@ public class TapestryController{
         		r.getFu2(), r.getFu3(), r.getFu5(), r.getFu6(), r.getFu7(), r.getFu8(), r.getFu9(), r.getFu11(), r.getFu12(), r.getFu13(), 
         		r.getFu14(), r.getFu15(), r.getFu16(), r.getFu17(), r.getFu18(), r.getFu19(), r.getFu20(), 
         		r.getFu21(), r.getFu22()});
-        }          
-        //Iterate over data and write to sheet
-        Set<Integer> keyset = data.keySet();
-        int rownum = 0;
-        int cellnum;  
-        Row row;
-        Object [] objArr;
-        for (Integer key : keyset)
-        {
-            row = sheet.createRow(rownum++);           
-            objArr = data.get(key);            
-            cellnum = 0;
-            for (Object obj : objArr)
-            {
-               Cell cell = row.createCell(cellnum++);               
-               if(obj instanceof String)
-                    cell.setCellValue((String)obj);
-                else if(obj instanceof Integer)
-                    cell.setCellValue((Integer)obj);              
-            }
-        }   
-        //Adjusts the each column width to fit the contents
-        for (int c=1; c<=120; c++)
-        	sheet.autoSizeColumn(c);
+        }  
+        
+        sheet = fillSheet(data, sheet, workbook);
        
         response.setContentType("application/vnd.ms-excel");
         response.setHeader("Content-Disposition", "attachment; filename=\"result.xlsx\"");
@@ -3374,9 +3279,7 @@ public class TapestryController{
 		userManager.addUserLog(sb.toString(), loggedInUser);
 		
 		return null;
-	}
-
-	
+	}	
 	//============================ Clinic ==================================
 	
 	@RequestMapping(value="/manage_clinics", method=RequestMethod.GET)

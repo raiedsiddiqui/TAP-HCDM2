@@ -31,7 +31,7 @@ public class CareGiverResearchData {
 	private String cb17a_T0;
 	private String cb17b_T0;
 	private String cb18_healthcon_T0;
-	private String cb19_cgotherpl_T0;
+	private String cb19_cgotherppl_T0;
 	private String cb20_yourhealth_T0;
 	//CareQ0l
 	private int cql1_sleep_T0;
@@ -73,11 +73,10 @@ public class CareGiverResearchData {
 	private int zarit10_uncert_T0;
 	private int zarit11_more_T0;
 	private int zarit12_better_T0;
-	/*
+	
 	//Caregiver Background FollowUp
-	private String cb1a_ed_T1;
 	private int cb2_empl_T1;
-	private int cb3_livewih_T1;
+	private int cb3_livewith_T1;
 	private int cb4_children_T1;
 	private int cb4a_T1;
 	private int cb5_partner_T1;
@@ -87,10 +86,11 @@ public class CareGiverResearchData {
 	private int cb15_other_T1;
 	private String cb16_howlong_T1;
 	private int cb17_onlycg_T1;
-	private String cb17_T1;
+	private String cb17a_T1;
+	private String cb17b_T1;
 	private String cb18_healthcon_T1;
-	private String cb19_cgotherpl_T1;
-	private String cb20yourhealth_T1;
+	private String cb19_cgotherppl_T1;
+	private String cb20_yourhealth_T1;
 	//CareQ0l second round
 	private int cql1_sleep_T1;
 	private int cql2_inc0n_T1;
@@ -118,7 +118,7 @@ public class CareGiverResearchData {
 	private int cql24_support_T1;
 	private int cql25_physhel_T1;
 	private int cql26_happy_T1;
-	//Zait
+	//Zait second round
 	private int zarit1_time_T1;
 	private int zarit2_stress_T1;
 	private int zarit3_angry_T1;
@@ -131,7 +131,65 @@ public class CareGiverResearchData {
 	private int zarit10_uncert_T1;
 	private int zarit11_more_T1;
 	private int zarit12_better_T1;
-	*/
+	
+	//Caregiver Background FollowUp second
+	private int cb2_empl_T2;
+	private int cb3_livewith_T2;
+	private int cb4_children_T2;
+	private int cb4a_T2;
+	private int cb5_partner_T2;
+	private String cb12_startcg_T2;
+	private int cb13_physcare_T2;
+	private int cb14_emot_T2;
+	private int cb15_other_T2;
+	private String cb16_howlong_T2;
+	private int cb17_onlycg_T2;
+	private String cb17a_T2;
+	private String cb17b_T2;
+	private String cb18_healthcon_T2;
+	private String cb19_cgotherppl_T2;
+	private String cb20_yourhealth_T2;
+	//CareQ0l third round
+	private int cql1_sleep_T2;
+	private int cql2_inc0n_T2;
+	private int cql3_appre_T2;
+	private int cql4_phystr_T2;
+	private int cql5_confin_T2;
+	private int cql6_time_T2;
+	private int cql7_famad_T2;
+	private int cql8_persolan_T2;
+	private int cql9_demtime_T2;
+	private int cql10_emad_T2;
+	private int cql11_handcare_T2;
+	private int cql12_behupset_T2;
+	private int cql13_change_T2;
+	private int cql14_hapcare_T2;
+	private int cql15_workad_T2;
+	private int cql16_comover_T2;
+	private int cql17_finstrain_T2;
+	private int cql18_import_T2;
+	private int cql19_fulfil_T2;
+	private int cql20_relprob_T2;
+	private int cql21_menh_T2;
+	private int cql22_ownday_T2;
+	private int cql23_finpro_T2;
+	private int cql24_support_T2;
+	private int cql25_physhel_T2;
+	private int cql26_happy_T2;
+	//Zait third round
+	private int zarit1_time_T2;
+	private int zarit2_stress_T2;
+	private int zarit3_angry_T2;
+	private int zarit4_other_T2;
+	private int zarit5_strain_T2;
+	private int zarit6_health_T2;
+	private int zarit7_priv_T2;
+	private int zarit8_social_T2;
+	private int zarit9_control_T2;
+	private int zarit10_uncert_T2;
+	private int zarit11_more_T2;
+	private int zarit12_better_T2;
+	
 	public CareGiverResearchData(){}
 
 	public int getVolunteerId() {
@@ -358,12 +416,12 @@ public class CareGiverResearchData {
 		this.cb18_healthcon_T0 = cb18_healthcon_T0;
 	}
 
-	public String getCb19_cgotherpl_T0() {
-		return cb19_cgotherpl_T0;
+	public String getCb19_cgotherppl_T0() {
+		return cb19_cgotherppl_T0;
 	}
 
-	public void setCb19_cgotherpl_T0(String cb19_cgotherpl_T0) {
-		this.cb19_cgotherpl_T0 = cb19_cgotherpl_T0;
+	public void setCb19_cgotherppl_T0(String cb19_cgotherppl_T0) {
+		this.cb19_cgotherppl_T0 = cb19_cgotherppl_T0;
 	}
 
 	public String getCb20_yourhealth_T0() {
@@ -676,6 +734,870 @@ public class CareGiverResearchData {
 
 	public void setZarit12_better_T0(int zarit12_better_T0) {
 		this.zarit12_better_T0 = zarit12_better_T0;
+	}
+
+	public int getCb2_empl_T1() {
+		return cb2_empl_T1;
+	}
+
+	public void setCb2_empl_T1(int cb2_empl_T1) {
+		this.cb2_empl_T1 = cb2_empl_T1;
+	}
+
+	public int getCb3_livewith_T1() {
+		return cb3_livewith_T1;
+	}
+
+	public void setCb3_livewith_T1(int cb3_livewith_T1) {
+		this.cb3_livewith_T1 = cb3_livewith_T1;
+	}
+
+	public int getCb4_children_T1() {
+		return cb4_children_T1;
+	}
+
+	public void setCb4_children_T1(int cb4_children_T1) {
+		this.cb4_children_T1 = cb4_children_T1;
+	}
+
+	public int getCb4a_T1() {
+		return cb4a_T1;
+	}
+
+	public void setCb4a_T1(int cb4a_T1) {
+		this.cb4a_T1 = cb4a_T1;
+	}
+
+	public int getCb5_partner_T1() {
+		return cb5_partner_T1;
+	}
+
+	public void setCb5_partner_T1(int cb5_partner_T1) {
+		this.cb5_partner_T1 = cb5_partner_T1;
+	}
+
+	public String getCb12_startcg_T1() {
+		return cb12_startcg_T1;
+	}
+
+	public void setCb12_startcg_T1(String cb12_startcg_T1) {
+		this.cb12_startcg_T1 = cb12_startcg_T1;
+	}
+
+	public int getCb13_physcare_T1() {
+		return cb13_physcare_T1;
+	}
+
+	public void setCb13_physcare_T1(int cb13_physcare_T1) {
+		this.cb13_physcare_T1 = cb13_physcare_T1;
+	}
+
+	public int getCb14_emot_T1() {
+		return cb14_emot_T1;
+	}
+
+	public void setCb14_emot_T1(int cb14_emot_T1) {
+		this.cb14_emot_T1 = cb14_emot_T1;
+	}
+
+	public int getCb15_other_T1() {
+		return cb15_other_T1;
+	}
+
+	public void setCb15_other_T1(int cb15_other_T1) {
+		this.cb15_other_T1 = cb15_other_T1;
+	}
+
+	public String getCb16_howlong_T1() {
+		return cb16_howlong_T1;
+	}
+
+	public void setCb16_howlong_T1(String cb16_howlong_T1) {
+		this.cb16_howlong_T1 = cb16_howlong_T1;
+	}
+
+	public int getCb17_onlycg_T1() {
+		return cb17_onlycg_T1;
+	}
+
+	public void setCb17_onlycg_T1(int cb17_onlycg_T1) {
+		this.cb17_onlycg_T1 = cb17_onlycg_T1;
+	}
+
+	public String getCb17a_T1() {
+		return cb17a_T1;
+	}
+
+	public void setCb17a_T1(String cb17a_T1) {
+		this.cb17a_T1 = cb17a_T1;
+	}
+
+	public String getCb17b_T1() {
+		return cb17b_T1;
+	}
+
+	public void setCb17b_T1(String cb17b_T1) {
+		this.cb17b_T1 = cb17b_T1;
+	}
+
+	public String getCb18_healthcon_T1() {
+		return cb18_healthcon_T1;
+	}
+
+	public void setCb18_healthcon_T1(String cb18_healthcon_T1) {
+		this.cb18_healthcon_T1 = cb18_healthcon_T1;
+	}
+
+	public String getCb19_cgotherppl_T1() {
+		return cb19_cgotherppl_T1;
+	}
+
+	public void setCb19_cgotherppl_T1(String cb19_cgotherppl_T1) {
+		this.cb19_cgotherppl_T1 = cb19_cgotherppl_T1;
+	}
+
+	public String getCb20_yourhealth_T1() {
+		return cb20_yourhealth_T1;
+	}
+
+	public void setCb20_yourhealth_T1(String cb20yourhealth_T1) {
+		this.cb20_yourhealth_T1 = cb20yourhealth_T1;
+	}
+
+	public int getCql1_sleep_T1() {
+		return cql1_sleep_T1;
+	}
+
+	public void setCql1_sleep_T1(int cql1_sleep_T1) {
+		this.cql1_sleep_T1 = cql1_sleep_T1;
+	}
+
+	public int getCql2_inc0n_T1() {
+		return cql2_inc0n_T1;
+	}
+
+	public void setCql2_inc0n_T1(int cql2_inc0n_T1) {
+		this.cql2_inc0n_T1 = cql2_inc0n_T1;
+	}
+
+	public int getCql3_appre_T1() {
+		return cql3_appre_T1;
+	}
+
+	public void setCql3_appre_T1(int cql3_appre_T1) {
+		this.cql3_appre_T1 = cql3_appre_T1;
+	}
+
+	public int getCql4_phystr_T1() {
+		return cql4_phystr_T1;
+	}
+
+	public void setCql4_phystr_T1(int cql4_phystr_T1) {
+		this.cql4_phystr_T1 = cql4_phystr_T1;
+	}
+
+	public int getCql5_confin_T1() {
+		return cql5_confin_T1;
+	}
+
+	public void setCql5_confin_T1(int cql5_confin_T1) {
+		this.cql5_confin_T1 = cql5_confin_T1;
+	}
+
+	public int getCql6_time_T1() {
+		return cql6_time_T1;
+	}
+
+	public void setCql6_time_T1(int cql6_time_T1) {
+		this.cql6_time_T1 = cql6_time_T1;
+	}
+
+	public int getCql7_famad_T1() {
+		return cql7_famad_T1;
+	}
+
+	public void setCql7_famad_T1(int cql7_famad_T1) {
+		this.cql7_famad_T1 = cql7_famad_T1;
+	}
+
+	public int getCql8_persolan_T1() {
+		return cql8_persolan_T1;
+	}
+
+	public void setCql8_persolan_T1(int cql8_persolan_T1) {
+		this.cql8_persolan_T1 = cql8_persolan_T1;
+	}
+
+	public int getCql9_demtime_T1() {
+		return cql9_demtime_T1;
+	}
+
+	public void setCql9_demtime_T1(int cql9_demtime_T1) {
+		this.cql9_demtime_T1 = cql9_demtime_T1;
+	}
+
+	public int getCql10_emad_T1() {
+		return cql10_emad_T1;
+	}
+
+	public void setCql10_emad_T1(int cql10_emad_T1) {
+		this.cql10_emad_T1 = cql10_emad_T1;
+	}
+
+	public int getCql11_handcare_T1() {
+		return cql11_handcare_T1;
+	}
+
+	public void setCql11_handcare_T1(int cql11_handcare_T1) {
+		this.cql11_handcare_T1 = cql11_handcare_T1;
+	}
+
+	public int getCql12_behupset_T1() {
+		return cql12_behupset_T1;
+	}
+
+	public void setCql12_behupset_T1(int cql12_behupset_T1) {
+		this.cql12_behupset_T1 = cql12_behupset_T1;
+	}
+
+	public int getCql13_change_T1() {
+		return cql13_change_T1;
+	}
+
+	public void setCql13_change_T1(int cql13_change_T1) {
+		this.cql13_change_T1 = cql13_change_T1;
+	}
+
+	public int getCql14_hapcare_T1() {
+		return cql14_hapcare_T1;
+	}
+
+	public void setCql14_hapcare_T1(int cql14_hapcare_T1) {
+		this.cql14_hapcare_T1 = cql14_hapcare_T1;
+	}
+
+	public int getCql15_workad_T1() {
+		return cql15_workad_T1;
+	}
+
+	public void setCql15_workad_T1(int cql15_workad_T1) {
+		this.cql15_workad_T1 = cql15_workad_T1;
+	}
+
+	public int getCql16_comover_T1() {
+		return cql16_comover_T1;
+	}
+
+	public void setCql16_comover_T1(int cql16_comover_T1) {
+		this.cql16_comover_T1 = cql16_comover_T1;
+	}
+
+	public int getCql17_finstrain_T1() {
+		return cql17_finstrain_T1;
+	}
+
+	public void setCql17_finstrain_T1(int cql17_finstrain_T1) {
+		this.cql17_finstrain_T1 = cql17_finstrain_T1;
+	}
+
+	public int getCql18_import_T1() {
+		return cql18_import_T1;
+	}
+
+	public void setCql18_import_T1(int cql18_import_T1) {
+		this.cql18_import_T1 = cql18_import_T1;
+	}
+
+	public int getCql19_fulfil_T1() {
+		return cql19_fulfil_T1;
+	}
+
+	public void setCql19_fulfil_T1(int cql19_fulfil_T1) {
+		this.cql19_fulfil_T1 = cql19_fulfil_T1;
+	}
+
+	public int getCql20_relprob_T1() {
+		return cql20_relprob_T1;
+	}
+
+	public void setCql20_relprob_T1(int cql20_relprob_T1) {
+		this.cql20_relprob_T1 = cql20_relprob_T1;
+	}
+
+	public int getCql21_menh_T1() {
+		return cql21_menh_T1;
+	}
+
+	public void setCql21_menh_T1(int cql21_menh_T1) {
+		this.cql21_menh_T1 = cql21_menh_T1;
+	}
+
+	public int getCql22_ownday_T1() {
+		return cql22_ownday_T1;
+	}
+
+	public void setCql22_ownday_T1(int cql22_ownday_T1) {
+		this.cql22_ownday_T1 = cql22_ownday_T1;
+	}
+
+	public int getCql23_finpro_T1() {
+		return cql23_finpro_T1;
+	}
+
+	public void setCql23_finpro_T1(int cql23_finpro_T1) {
+		this.cql23_finpro_T1 = cql23_finpro_T1;
+	}
+
+	public int getCql24_support_T1() {
+		return cql24_support_T1;
+	}
+
+	public void setCql24_support_T1(int cql24_support_T1) {
+		this.cql24_support_T1 = cql24_support_T1;
+	}
+
+	public int getCql25_physhel_T1() {
+		return cql25_physhel_T1;
+	}
+
+	public void setCql25_physhel_T1(int cql25_physhel_T1) {
+		this.cql25_physhel_T1 = cql25_physhel_T1;
+	}
+
+	public int getCql26_happy_T1() {
+		return cql26_happy_T1;
+	}
+
+	public void setCql26_happy_T1(int cql26_happy_T1) {
+		this.cql26_happy_T1 = cql26_happy_T1;
+	}
+
+	public int getZarit1_time_T1() {
+		return zarit1_time_T1;
+	}
+
+	public void setZarit1_time_T1(int zarit1_time_T1) {
+		this.zarit1_time_T1 = zarit1_time_T1;
+	}
+
+	public int getZarit2_stress_T1() {
+		return zarit2_stress_T1;
+	}
+
+	public void setZarit2_stress_T1(int zarit2_stress_T1) {
+		this.zarit2_stress_T1 = zarit2_stress_T1;
+	}
+
+	public int getZarit3_angry_T1() {
+		return zarit3_angry_T1;
+	}
+
+	public void setZarit3_angry_T1(int zarit3_angry_T1) {
+		this.zarit3_angry_T1 = zarit3_angry_T1;
+	}
+
+	public int getZarit4_other_T1() {
+		return zarit4_other_T1;
+	}
+
+	public void setZarit4_other_T1(int zarit4_other_T1) {
+		this.zarit4_other_T1 = zarit4_other_T1;
+	}
+
+	public int getZarit5_strain_T1() {
+		return zarit5_strain_T1;
+	}
+
+	public void setZarit5_strain_T1(int zarit5_strain_T1) {
+		this.zarit5_strain_T1 = zarit5_strain_T1;
+	}
+
+	public int getZarit6_health_T1() {
+		return zarit6_health_T1;
+	}
+
+	public void setZarit6_health_T1(int zarit6_health_T1) {
+		this.zarit6_health_T1 = zarit6_health_T1;
+	}
+
+	public int getZarit7_priv_T1() {
+		return zarit7_priv_T1;
+	}
+
+	public void setZarit7_priv_T1(int zarit7_priv_T1) {
+		this.zarit7_priv_T1 = zarit7_priv_T1;
+	}
+
+	public int getZarit8_social_T1() {
+		return zarit8_social_T1;
+	}
+
+	public void setZarit8_social_T1(int zarit8_social_T1) {
+		this.zarit8_social_T1 = zarit8_social_T1;
+	}
+
+	public int getZarit9_control_T1() {
+		return zarit9_control_T1;
+	}
+
+	public void setZarit9_control_T1(int zarit9_control_T1) {
+		this.zarit9_control_T1 = zarit9_control_T1;
+	}
+
+	public int getZarit10_uncert_T1() {
+		return zarit10_uncert_T1;
+	}
+
+	public void setZarit10_uncert_T1(int zarit10_uncert_T1) {
+		this.zarit10_uncert_T1 = zarit10_uncert_T1;
+	}
+
+	public int getZarit11_more_T1() {
+		return zarit11_more_T1;
+	}
+
+	public void setZarit11_more_T1(int zarit11_more_T1) {
+		this.zarit11_more_T1 = zarit11_more_T1;
+	}
+
+	public int getZarit12_better_T1() {
+		return zarit12_better_T1;
+	}
+
+	public void setZarit12_better_T1(int zarit12_better_T1) {
+		this.zarit12_better_T1 = zarit12_better_T1;
+	}
+
+	public int getCb2_empl_T2() {
+		return cb2_empl_T2;
+	}
+
+	public void setCb2_empl_T2(int cb2_empl_T2) {
+		this.cb2_empl_T2 = cb2_empl_T2;
+	}
+
+	public int getCb3_livewtih_T2() {
+		return cb3_livewith_T2;
+	}
+
+	public void setCb3_livewith_T2(int cb3_livewith_T2) {
+		this.cb3_livewith_T2 = cb3_livewith_T2;
+	}
+
+	public int getCb4_children_T2() {
+		return cb4_children_T2;
+	}
+
+	public void setCb4_children_T2(int cb4_children_T2) {
+		this.cb4_children_T2 = cb4_children_T2;
+	}
+
+	public int getCb4a_T2() {
+		return cb4a_T2;
+	}
+
+	public void setCb4a_T2(int cb4a_T2) {
+		this.cb4a_T2 = cb4a_T2;
+	}
+
+	public int getCb5_partner_T2() {
+		return cb5_partner_T2;
+	}
+
+	public void setCb5_partner_T2(int cb5_partner_T2) {
+		this.cb5_partner_T2 = cb5_partner_T2;
+	}
+
+	public String getCb12_startcg_T2() {
+		return cb12_startcg_T2;
+	}
+
+	public void setCb12_startcg_T2(String cb12_startcg_T2) {
+		this.cb12_startcg_T2 = cb12_startcg_T2;
+	}
+
+	public int getCb13_physcare_T2() {
+		return cb13_physcare_T2;
+	}
+
+	public void setCb13_physcare_T2(int cb13_physcare_T2) {
+		this.cb13_physcare_T2 = cb13_physcare_T2;
+	}
+
+	public int getCb14_emot_T2() {
+		return cb14_emot_T2;
+	}
+
+	public void setCb14_emot_T2(int cb14_emot_T2) {
+		this.cb14_emot_T2 = cb14_emot_T2;
+	}
+
+	public int getCb15_other_T2() {
+		return cb15_other_T2;
+	}
+
+	public void setCb15_other_T2(int cb15_other_T2) {
+		this.cb15_other_T2 = cb15_other_T2;
+	}
+
+	public String getCb16_howlong_T2() {
+		return cb16_howlong_T2;
+	}
+
+	public void setCb16_howlong_T2(String cb16_howlong_T2) {
+		this.cb16_howlong_T2 = cb16_howlong_T2;
+	}
+
+	public int getCb17_onlycg_T2() {
+		return cb17_onlycg_T2;
+	}
+
+	public void setCb17_onlycg_T2(int cb17_onlycg_T2) {
+		this.cb17_onlycg_T2 = cb17_onlycg_T2;
+	}
+
+	public String getCb17a_T2() {
+		return cb17a_T2;
+	}
+
+	public void setCb17a_T2(String cb17a_T2) {
+		this.cb17a_T2 = cb17a_T2;
+	}
+
+	public String getCb17b_T2() {
+		return cb17b_T2;
+	}
+
+	public void setCb17b_T2(String cb17b_T2) {
+		this.cb17b_T2 = cb17b_T2;
+	}
+
+	public String getCb18_healthcon_T2() {
+		return cb18_healthcon_T2;
+	}
+
+	public void setCb18_healthcon_T2(String cb18_healthcon_T2) {
+		this.cb18_healthcon_T2 = cb18_healthcon_T2;
+	}
+
+	public String getCb19_cgotherppl_T2() {
+		return cb19_cgotherppl_T2;
+	}
+
+	public void setCb19_cgotherppl_T2(String cb19_cgotherppl_T2) {
+		this.cb19_cgotherppl_T2 = cb19_cgotherppl_T2;
+	}
+
+	public String getCb20_yourhealth_T2() {
+		return cb20_yourhealth_T2;
+	}
+
+	public void setCb20_yourhealth_T2(String cb20yourhealth_T2) {
+		this.cb20_yourhealth_T2 = cb20yourhealth_T2;
+	}
+
+	public int getCql1_sleep_T2() {
+		return cql1_sleep_T2;
+	}
+
+	public void setCql1_sleep_T2(int cql1_sleep_T2) {
+		this.cql1_sleep_T2 = cql1_sleep_T2;
+	}
+
+	public int getCql2_inc0n_T2() {
+		return cql2_inc0n_T2;
+	}
+
+	public void setCql2_inc0n_T2(int cql2_inc0n_T2) {
+		this.cql2_inc0n_T2 = cql2_inc0n_T2;
+	}
+
+	public int getCql3_appre_T2() {
+		return cql3_appre_T2;
+	}
+
+	public void setCql3_appre_T2(int cql3_appre_T2) {
+		this.cql3_appre_T2 = cql3_appre_T2;
+	}
+
+	public int getCql4_phystr_T2() {
+		return cql4_phystr_T2;
+	}
+
+	public void setCql4_phystr_T2(int cql4_phystr_T2) {
+		this.cql4_phystr_T2 = cql4_phystr_T2;
+	}
+
+	public int getCql5_confin_T2() {
+		return cql5_confin_T2;
+	}
+
+	public void setCql5_confin_T2(int cql5_confin_T2) {
+		this.cql5_confin_T2 = cql5_confin_T2;
+	}
+
+	public int getCql6_time_T2() {
+		return cql6_time_T2;
+	}
+
+	public void setCql6_time_T2(int cql6_time_T2) {
+		this.cql6_time_T2 = cql6_time_T2;
+	}
+
+	public int getCql7_famad_T2() {
+		return cql7_famad_T2;
+	}
+
+	public void setCql7_famad_T2(int cql7_famad_T2) {
+		this.cql7_famad_T2 = cql7_famad_T2;
+	}
+
+	public int getCql8_persolan_T2() {
+		return cql8_persolan_T2;
+	}
+
+	public void setCql8_persolan_T2(int cql8_persolan_T2) {
+		this.cql8_persolan_T2 = cql8_persolan_T2;
+	}
+
+	public int getCql9_demtime_T2() {
+		return cql9_demtime_T2;
+	}
+
+	public void setCql9_demtime_T2(int cql9_demtime_T2) {
+		this.cql9_demtime_T2 = cql9_demtime_T2;
+	}
+
+	public int getCql10_emad_T2() {
+		return cql10_emad_T2;
+	}
+
+	public void setCql10_emad_T2(int cql10_emad_T2) {
+		this.cql10_emad_T2 = cql10_emad_T2;
+	}
+
+	public int getCql11_handcare_T2() {
+		return cql11_handcare_T2;
+	}
+
+	public void setCql11_handcare_T2(int cql11_handcare_T2) {
+		this.cql11_handcare_T2 = cql11_handcare_T2;
+	}
+
+	public int getCql12_behupset_T2() {
+		return cql12_behupset_T2;
+	}
+
+	public void setCql12_behupset_T2(int cql12_behupset_T2) {
+		this.cql12_behupset_T2 = cql12_behupset_T2;
+	}
+
+	public int getCql13_change_T2() {
+		return cql13_change_T2;
+	}
+
+	public void setCql13_change_T2(int cql13_change_T2) {
+		this.cql13_change_T2 = cql13_change_T2;
+	}
+
+	public int getCql14_hapcare_T2() {
+		return cql14_hapcare_T2;
+	}
+
+	public void setCql14_hapcare_T2(int cql14_hapcare_T2) {
+		this.cql14_hapcare_T2 = cql14_hapcare_T2;
+	}
+
+	public int getCql15_workad_T2() {
+		return cql15_workad_T2;
+	}
+
+	public void setCql15_workad_T2(int cql15_workad_T2) {
+		this.cql15_workad_T2 = cql15_workad_T2;
+	}
+
+	public int getCql16_comover_T2() {
+		return cql16_comover_T2;
+	}
+
+	public void setCql16_comover_T2(int cql16_comover_T2) {
+		this.cql16_comover_T2 = cql16_comover_T2;
+	}
+
+	public int getCql17_finstrain_T2() {
+		return cql17_finstrain_T2;
+	}
+
+	public void setCql17_finstrain_T2(int cql17_finstrain_T2) {
+		this.cql17_finstrain_T2 = cql17_finstrain_T2;
+	}
+
+	public int getCql18_import_T2() {
+		return cql18_import_T2;
+	}
+
+	public void setCql18_import_T2(int cql18_import_T2) {
+		this.cql18_import_T2 = cql18_import_T2;
+	}
+
+	public int getCql19_fulfil_T2() {
+		return cql19_fulfil_T2;
+	}
+
+	public void setCql19_fulfil_T2(int cql19_fulfil_T2) {
+		this.cql19_fulfil_T2 = cql19_fulfil_T2;
+	}
+
+	public int getCql20_relprob_T2() {
+		return cql20_relprob_T2;
+	}
+
+	public void setCql20_relprob_T2(int cql20_relprob_T2) {
+		this.cql20_relprob_T2 = cql20_relprob_T2;
+	}
+
+	public int getCql21_menh_T2() {
+		return cql21_menh_T2;
+	}
+
+	public void setCql21_menh_T2(int cql21_menh_T2) {
+		this.cql21_menh_T2 = cql21_menh_T2;
+	}
+
+	public int getCql22_ownday_T2() {
+		return cql22_ownday_T2;
+	}
+
+	public void setCql22_ownday_T2(int cql22_ownday_T2) {
+		this.cql22_ownday_T2 = cql22_ownday_T2;
+	}
+
+	public int getCql23_finpro_T2() {
+		return cql23_finpro_T2;
+	}
+
+	public void setCql23_finpro_T2(int cql23_finpro_T2) {
+		this.cql23_finpro_T2 = cql23_finpro_T2;
+	}
+
+	public int getCql24_support_T2() {
+		return cql24_support_T2;
+	}
+
+	public void setCql24_support_T2(int cql24_support_T2) {
+		this.cql24_support_T2 = cql24_support_T2;
+	}
+
+	public int getCql25_physhel_T2() {
+		return cql25_physhel_T2;
+	}
+
+	public void setCql25_physhel_T2(int cql25_physhel_T2) {
+		this.cql25_physhel_T2 = cql25_physhel_T2;
+	}
+
+	public int getCql26_happy_T2() {
+		return cql26_happy_T2;
+	}
+
+	public void setCql26_happy_T2(int cql26_happy_T2) {
+		this.cql26_happy_T2 = cql26_happy_T2;
+	}
+
+	public int getZarit1_time_T2() {
+		return zarit1_time_T2;
+	}
+
+	public void setZarit1_time_T2(int zarit1_time_T2) {
+		this.zarit1_time_T2 = zarit1_time_T2;
+	}
+
+	public int getZarit2_stress_T2() {
+		return zarit2_stress_T2;
+	}
+
+	public void setZarit2_stress_T2(int zarit2_stress_T2) {
+		this.zarit2_stress_T2 = zarit2_stress_T2;
+	}
+
+	public int getZarit3_angry_T2() {
+		return zarit3_angry_T2;
+	}
+
+	public void setZarit3_angry_T2(int zarit3_angry_T2) {
+		this.zarit3_angry_T2 = zarit3_angry_T2;
+	}
+
+	public int getZarit4_other_T2() {
+		return zarit4_other_T2;
+	}
+
+	public void setZarit4_other_T2(int zarit4_other_T2) {
+		this.zarit4_other_T2 = zarit4_other_T2;
+	}
+
+	public int getZarit5_strain_T2() {
+		return zarit5_strain_T2;
+	}
+
+	public void setZarit5_strain_T2(int zarit5_strain_T2) {
+		this.zarit5_strain_T2 = zarit5_strain_T2;
+	}
+
+	public int getZarit6_health_T2() {
+		return zarit6_health_T2;
+	}
+
+	public void setZarit6_health_T2(int zarit6_health_T2) {
+		this.zarit6_health_T2 = zarit6_health_T2;
+	}
+
+	public int getZarit7_priv_T2() {
+		return zarit7_priv_T2;
+	}
+
+	public void setZarit7_priv_T2(int zarit7_priv_T2) {
+		this.zarit7_priv_T2 = zarit7_priv_T2;
+	}
+
+	public int getZarit8_social_T2() {
+		return zarit8_social_T2;
+	}
+
+	public void setZarit8_social_T2(int zarit8_social_T2) {
+		this.zarit8_social_T2 = zarit8_social_T2;
+	}
+
+	public int getZarit9_control_T2() {
+		return zarit9_control_T2;
+	}
+
+	public void setZarit9_control_T2(int zarit9_control_T2) {
+		this.zarit9_control_T2 = zarit9_control_T2;
+	}
+
+	public int getZarit10_uncert_T2() {
+		return zarit10_uncert_T2;
+	}
+
+	public void setZarit10_uncert_T2(int zarit10_uncert_T2) {
+		this.zarit10_uncert_T2 = zarit10_uncert_T2;
+	}
+
+	public int getZarit11_more_T2() {
+		return zarit11_more_T2;
+	}
+
+	public void setZarit11_more_T2(int zarit11_more_T2) {
+		this.zarit11_more_T2 = zarit11_more_T2;
+	}
+
+	public int getZarit12_better_T2() {
+		return zarit12_better_T2;
+	}
+
+	public void setZarit12_better_T2(int zarit12_better_T2) {
+		this.zarit12_better_T2 = zarit12_better_T2;
 	}
 
 
