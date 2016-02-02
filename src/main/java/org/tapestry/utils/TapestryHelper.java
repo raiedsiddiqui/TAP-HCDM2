@@ -4911,7 +4911,7 @@ public class TapestryHelper {
 		if(mResults.get("CB4a") != null)
 			rData.setCb4a_T0(Integer.parseInt(mResults.get("CB4a")));
 		else
-			rData.setCb4a_T0(0);
+			rData.setCb4a_T0(999);
 		rData.setCb5_partner_T0(Integer.parseInt(mResults.get("CB5")));
 		rData.setCb6_agegr_T0(Integer.parseInt(mResults.get("CB6")));
 		rData.setCb7_gender_T0(Integer.parseInt(mResults.get("CB7")));
@@ -5313,6 +5313,88 @@ public class TapestryHelper {
 		return mResults;
 	}	
 	
+	public static XSSFSheet fillSheet(Map<Integer, Object[]> data, XSSFSheet sheet, XSSFWorkbook book)
+	{
+		//Iterate over data and write to sheet
+		Set<Integer> keyset = data.keySet();
+		int rownum = 0;
+		int cellnum;  
+		Row row;
+		Object [] objArr;
+		XSSFCellStyle cStyle = book.createCellStyle();		
+		cStyle.setAlignment(XSSFCellStyle.ALIGN_RIGHT);
+		
+		for (Integer key : keyset)
+		{
+			row = sheet.createRow(rownum++);           
+			objArr = data.get(key);   
+			
+			cellnum = 0;
+			for (Object obj : objArr)
+			{
+				Cell cell = row.createCell(cellnum++);               
+				if(obj instanceof String)
+				{
+					cell.setCellValue((String)obj);
+					cell.setCellStyle(cStyle);
+				}
+				else if(obj instanceof Integer)
+				{
+					if ((Integer)obj == 0 )
+						cell.setCellValue(999);
+					else
+						cell.setCellValue((Integer)obj);    
+				}
+			}
+		}   
+		//Adjusts the each column width to fit the contents
+		for (int c=1; c<=250; c++)
+			sheet.autoSizeColumn(c);
+		
+		return sheet;
+	}
+	
+	private static void setSocialLife(SurveyResult sr, ResearchData rData)
+	{		
+		String xml, observerNote;		
+		int size;
+		StringBuffer sb = new StringBuffer();
+		try{
+			xml = new String(sr.getResults(), "UTF-8");
+	   	} catch (Exception e) {
+	   		xml = "";
+	   	}
+		List<DisplayedSurveyResult> displayedResults = ResultParser.getDisplayedSurveyResults(ResultParser.getResults(xml));	
+		
+		if (!displayedResults.isEmpty())
+		{
+			rData.setdSS1_role_TO(displayedResults.get(0).getQuestionAnswer());
+			rData.setdSS2_under_TO(displayedResults.get(1).getQuestionAnswer());
+			rData.setdSS3_useful_TO(displayedResults.get(2).getQuestionAnswer());
+			rData.setdSS4_listen_TO(displayedResults.get(3).getQuestionAnswer());
+			rData.setdSS5_happen_TO(displayedResults.get(4).getQuestionAnswer());
+			rData.setdSS6_talk_TO(displayedResults.get(5).getQuestionAnswer());
+			rData.setdSS7_satisfied_TO(displayedResults.get(6).getQuestionAnswer());
+			rData.setdSS8_nofam_TO(displayedResults.get(7).getQuestionAnswer());		   		
+			rData.setdSS9_timesnotliving_TO(displayedResults.get(8).getQuestionAnswer());
+			rData.setdSS10_timesphone_TO(displayedResults.get(9).getQuestionAnswer());	
+			size = displayedResults.size();
+			if (size == 11)
+				rData.setdSS11_timesclubs_TO(displayedResults.get(10).getQuestionAnswer());
+		   		
+			for (int j=0; j<size; j++)
+			{
+				observerNote = displayedResults.get(j).getObserverNotes();
+				if (!Utils.isNullOrEmpty(observerNote))
+				{
+					sb.append(displayedResults.get(j).getObserverNotes());	
+					sb.append(".");		
+		   		}
+		   	}										
+			rData.setdSS_notes_TO(sb.toString());
+		}		
+	}
+	
 	public static List<ResearchData> getResearchDatas(PatientManager patientManager, SurveyManager surveyManager, int siteId)
 	{
 		List<Patient> patients = patientManager.getPatientsBySite(siteId);	
@@ -5335,50 +5417,10 @@ public class TapestryHelper {
 			//Social life
 			try{
 				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "4. Social Life");
+				setSocialLife(sr, rData);
 			}catch (Exception e) {
-				System.out.println("throws exception on Social life === patient id == " + patientId);
-				sr = null;
+				System.out.println("throws exception on Social life === patient id == " + patientId);				
 			}
-			
-			if (sr != null)
-			{
-				sb = new StringBuffer();				
-				try{
-					xml = new String(sr.getResults(), "UTF-8");
-			   	} catch (Exception e) {
-			   		xml = "";
-			   	}
-				res = ResultParser.getResults(xml);
-				displayedResults = ResultParser.getDisplayedSurveyResults(res);	
-				
-				if (!displayedResults.isEmpty())
-				{
-					rData.setdSS1_role_TO(displayedResults.get(0).getQuestionAnswer());
-					rData.setdSS2_under_TO(displayedResults.get(1).getQuestionAnswer());
-					rData.setdSS3_useful_TO(displayedResults.get(2).getQuestionAnswer());
-					rData.setdSS4_listen_TO(displayedResults.get(3).getQuestionAnswer());
-					rData.setdSS5_happen_TO(displayedResults.get(4).getQuestionAnswer());
-					rData.setdSS6_talk_TO(displayedResults.get(5).getQuestionAnswer());
-					rData.setdSS7_satisfied_TO(displayedResults.get(6).getQuestionAnswer());
-					rData.setdSS8_nofam_TO(displayedResults.get(7).getQuestionAnswer());		   		
-					rData.setdSS9_timesnotliving_TO(displayedResults.get(8).getQuestionAnswer());
-					rData.setdSS10_timesphone_TO(displayedResults.get(9).getQuestionAnswer());	
-					size = displayedResults.size();
-					if (size == 11)
-						rData.setdSS11_timesclubs_TO(displayedResults.get(10).getQuestionAnswer());
-				   		
-					for (int j=0; j<size; j++)
-					{
-						observerNote = displayedResults.get(j).getObserverNotes();
-						if (!Utils.isNullOrEmpty(observerNote))
-						{
-							sb.append(displayedResults.get(j).getObserverNotes());	
-							sb.append(".");		
-				   		}
-				   	}										
-					rData.setdSS_notes_TO(sb.toString());
-				}									
-			}		
 			//EQ5D
 			try{
 				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "3. Quality of Life");
@@ -6301,11 +6343,19 @@ public class TapestryHelper {
         		r.getMob8(), r.getMob9() ,r.getmU1(), r.getmU2(),r.getmU3(), r.getmU4(), r.getmU5(), r.getlQ()});
         }     
         
-        generateExcelSheet(data, sheet, workbook, response);		
+        fillSheet(data, sheet, workbook);
+        
+        response.setContentType("application/vnd.ms-excel");
+        response.setHeader("Content-Disposition", "attachment; filename=\"result.xlsx\"");
+     
+        try{// Write workbook to response.
+            workbook.write(response.getOutputStream()); 
+            response.getOutputStream().close();
+   		} catch (Exception e) {
+   			e.printStackTrace();
+   		}
 	}
-	
- 
-	
+		
 	public static List<DisplayedSurveyResult> formatEmptyResultAnswerToInt(List<DisplayedSurveyResult> results)
 	{
 		for (int i =0; i<results.size(); i++)
@@ -6338,45 +6388,6 @@ public class TapestryHelper {
 			 size++;
 		 }		 
 		 return iList;
-	}
-	
-	public static void generateExcelSheet(Map<Integer, Object[]> data, XSSFSheet sheet, XSSFWorkbook workbook, HttpServletResponse response)
-	{
-		//Iterate over data and write to sheet
-		Set<Integer> keyset = data.keySet();
-        int rownum = 0;
-        int cellnum;  
-        Row row;
-        Object [] objArr;
-        for (Integer key : keyset)
-        {
-            row = sheet.createRow(rownum++);           
-            objArr = data.get(key);            
-            cellnum = 0;
-            for (Object obj : objArr)
-            {
-               Cell cell = row.createCell(cellnum++);               
-               if(obj instanceof String)
-                    cell.setCellValue((String)obj);
-               else if(obj instanceof Integer)
-                    cell.setCellValue((Integer)obj);
-               else if(obj instanceof Float)
-            	   cell.setCellValue((Float)obj);
-            }
-        }   
-        //Adjusts the each column width to fit the contents
-        for (int c=1; c<=120; c++)
-        	sheet.autoSizeColumn(c);
-       
-        response.setContentType("application/vnd.ms-excel");
-        response.setHeader("Content-Disposition", "attachment; filename=\"results.xlsx\"");
-     
-        try{// Write workbook to response.
-            workbook.write(response.getOutputStream()); 
-            response.getOutputStream().close();
-   		} catch (Exception e) {
-   			e.printStackTrace();
-   		}
 	}
 	
 	public static List<Site> getSites(SecurityContextHolderAwareRequestWrapper request, OrganizationManager organizationManager)

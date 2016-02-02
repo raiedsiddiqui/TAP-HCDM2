@@ -3043,15 +3043,12 @@ public class TapestryController{
 	@RequestMapping(value="/view_research_data", method=RequestMethod.GET)
 	public String getResearchDataDownload( SecurityContextHolderAwareRequestWrapper request, ModelMap model)
    	{ 		
-		List<Site> sites;
+		List<Site> sites = new ArrayList<Site>();;
 		User user = TapestryHelper.getLoggedInUser(request);
 		if ("ROLE_ADMIN".equalsIgnoreCase(user.getRole()))// for central admin
 			sites = organizationManager.getAllSites();
 		else
-		{
-			sites = new ArrayList<Site>();			
-			sites.add(organizationManager.getSiteById(user.getSite()));
-		}						
+			sites.add(organizationManager.getSiteById(user.getSite()));						
 		model.addAttribute("sites", sites);
 
 		return "admin/manage_research_data";
@@ -3132,7 +3129,7 @@ public class TapestryController{
 				r.getZarit1_time_T2(), r.getZarit2_stress_T2(), r.getZarit3_angry_T2(), r.getZarit4_other_T2(), r.getZarit5_strain_T2(), r.getZarit6_health_T2(), 
 				r.getZarit7_priv_T2(), r.getZarit8_social_T2(), r.getZarit9_control_T2(), r.getZarit10_uncert_T2(), r.getZarit11_more_T2(), r.getZarit12_better_T2()});
 		}	
-		sheet = fillSheet(data, sheet, workbook);
+		sheet = TapestryHelper.fillSheet(data, sheet, workbook);
 		
 		response.setContentType("application/vnd.ms-excel");
 		response.setHeader("Content-Disposition", "attachment; filename=\"vonlunteer_result.xlsx\"");
@@ -3152,40 +3149,7 @@ public class TapestryController{
 		
 		return null;	
 	}
-	private XSSFSheet fillSheet(Map<Integer, Object[]> data, XSSFSheet sheet, XSSFWorkbook book)
-	{
-		//Iterate over data and write to sheet
-		Set<Integer> keyset = data.keySet();
-		int rownum = 0;
-		int cellnum;  
-		Row row;
-		Object [] objArr;
-		XSSFCellStyle cStyle = book.createCellStyle();		
-		cStyle.setAlignment(XSSFCellStyle.ALIGN_RIGHT);
-		
-		for (Integer key : keyset)
-		{
-			row = sheet.createRow(rownum++);           
-			objArr = data.get(key);            
-			cellnum = 0;
-			for (Object obj : objArr)
-			{
-				Cell cell = row.createCell(cellnum++);               
-				if(obj instanceof String)
-				{
-					cell.setCellValue((String)obj);
-					cell.setCellStyle(cStyle);
-				}
-				else if(obj instanceof Integer)
-					cell.setCellValue((Integer)obj);              
-			}
-		}   
-		//Adjusts the each column width to fit the contents
-		for (int c=1; c<=250; c++)
-			sheet.autoSizeColumn(c);
-		
-		return sheet;
-	}
+
 	
 	@RequestMapping(value="/download_researchData/{siteID}", method=RequestMethod.GET)
 	public String downLoadResearchDataBySite(@PathVariable("siteID") int id, HttpServletRequest request,  HttpServletResponse response)
@@ -3260,7 +3224,7 @@ public class TapestryController{
         		r.getFu21(), r.getFu22()});
         }  
         
-        sheet = fillSheet(data, sheet, workbook);
+        sheet = TapestryHelper.fillSheet(data, sheet, workbook);
        
         response.setContentType("application/vnd.ms-excel");
         response.setHeader("Content-Disposition", "attachment; filename=\"result.xlsx\"");
