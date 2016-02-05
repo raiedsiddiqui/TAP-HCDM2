@@ -63,10 +63,16 @@ public class SurveyManagerImpl implements SurveyManager {
 		return surveyResultDao.getSurveyResultByPatientAndSurveyId(patientId, surveyId);
 	}
 
+//	@Override
+//	public SurveyResult getCompletedSurveyResultByPatientAndSurveyTitle(int patientId, String surveyTitle) {
+//		return surveyResultDao.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, surveyTitle);
+//	}
 	@Override
-	public SurveyResult getCompletedSurveyResultByPatientAndSurveyTitle(int patientId, String surveyTitle) {
+	public List<SurveyResult> getCompletedSurveyResultByPatientAndSurveyTitle(int patientId, String surveyTitle)
+	{
 		return surveyResultDao.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, surveyTitle);
 	}
+	
 
 	@Override
 	public String assignSurvey(SurveyResult sr) {

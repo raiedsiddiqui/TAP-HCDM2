@@ -199,7 +199,8 @@ public interface SurveyManager {
 	 * @return a  SurveyResult object
 	 */
 	@Transactional
-	public SurveyResult getCompletedSurveyResultByPatientAndSurveyTitle(int patientId, String surveyTitle);
+//	public SurveyResult getCompletedSurveyResultByPatientAndSurveyTitle(int patientId, String surveyTitle);
+	public List<SurveyResult> getCompletedSurveyResultByPatientAndSurveyTitle(int patientId, String surveyTitle);
 	
 	/**
 	 * Uploads a survey template to the database

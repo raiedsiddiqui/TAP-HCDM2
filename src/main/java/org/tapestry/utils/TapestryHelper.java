@@ -1085,20 +1085,10 @@ public class TapestryHelper {
 			surveyTemplateList = surveyManager.getSurveyTemplatesBySite(getLoggedInUser(request).getSite());
 		//save in the session
 		if (surveyTemplateList != null && surveyTemplateList.size()>0)
-			session.setAttribute("survey_template_list", surveyTemplateList);
-		
+			session.setAttribute("survey_template_list", surveyTemplateList);		
 		return surveyTemplateList;
-	}
+	}	
 	
-	
-	
-	/**
-	 * Check if survey result exist in DB
-	 * @param surveyResults
-	 * @param surveyTemplateId
-	 * @param patientId
-	 * @return
-	 */
    	public static boolean isExistInSurveyResultList(List<SurveyResult> surveyResults, int surveyTemplateId, int patientId){
    		boolean exist = false;
    		int sId = 0;
@@ -1155,14 +1145,8 @@ public class TapestryHelper {
 			}   			
 		}   		
    		session.setAttribute("assignSurveyTo", "C");
-   	}
-   	
-   	/**
-   	 * Add new survey script
-   	 * @param surveyId
-   	 * @param allSurveyTemplates
-   	 * @param selectedSurveyTemplates
-   	 */
+   	}   	
+   
   	public static void addSurveyTemplate(String[] surveyId,List<SurveyTemplate> allSurveyTemplates, List<SurveyTemplate> selectedSurveyTemplates){
    		int surveyTemplateId;
    		for (int i = 0; i < surveyId.length; i ++)
@@ -1175,17 +1159,7 @@ public class TapestryHelper {
   	   		}
    		}
    	}
-   	/**
-   	 * 
-   	 * @param selectSurveyTemplats
-   	 * @param patientIds
-   	 * @param request
-   	 * @param model
-   	 * @param surveyManager
-   	 * @throws JAXBException
-   	 * @throws DatatypeConfigurationException
-   	 * @throws Exception
-   	 */
+   
    	public static void assignSurveysToClient(List<SurveyTemplate> selectSurveyTemplats, int[] patientIds,
    			SecurityContextHolderAwareRequestWrapper request,ModelMap model, SurveyManager surveyManager) 
    					throws JAXBException, DatatypeConfigurationException, Exception{
@@ -1236,18 +1210,7 @@ public class TapestryHelper {
 		}   		
    		session.setAttribute("assignSurveyTo", "V");   		
    	}
-   	////
-  	/**
-   	 * 
-   	 * @param selectSurveyTemplats
-   	 * @param volunteerIds
-   	 * @param request
-   	 * @param model
-   	 * @param surveyManager
-   	 * @throws JAXBException
-   	 * @throws DatatypeConfigurationException
-   	 * @throws Exception
-   	 */
+   
    	public static void assignSurveysToVolunteer(List<SurveyTemplate> selectSurveyTemplats, int[] volunteerIds,
    			SecurityContextHolderAwareRequestWrapper request,ModelMap model, SurveyManager surveyManager) 
    					throws JAXBException, DatatypeConfigurationException, Exception{
@@ -1259,13 +1222,7 @@ public class TapestryHelper {
   			System.out.println("something wrong with assingn survey to volunteer === " + e.getMessage());
   		} 
    	}
-   	////
-   	/**
-   	 * check if all surveys have been finished
-   	 * @param patientId
-   	 * @param surveyManager
-   	 * @return
-   	 */
+   
    	public static boolean completedAllSurveys(int patientId, SurveyManager surveyManager){
    		boolean completed = false;
    		
@@ -1277,11 +1234,7 @@ public class TapestryHelper {
    		
    		return completed;
    	}
-   	/**
-   	 * Remove obsererNote from notes
-   	 * @param questionText
-   	 * @return
-   	 */
+  
    	public static String removeObserverNotes(String questionText)
 	{		
 		//remove /observernotes/ from question text
@@ -1345,7 +1298,7 @@ public class TapestryHelper {
 		}
 		return(results);
 	}
-	
+	/*
 	public static ModelAndView execute(HttpServletRequest request, String documentId, TapestryPHRSurvey currentSurvey, PHRSurvey templateSurvey) throws Exception
 	{
 		ModelAndView m = new ModelAndView();
@@ -1620,7 +1573,7 @@ public class TapestryHelper {
 				surveyAnswers.add(answerObj);		
 		}
 		return surveyAnswers;
-	}
+	}*/
 	
 	// ===================== Mis =================================//
    	/**
@@ -4686,13 +4639,7 @@ public class TapestryHelper {
 	//fill in Care QoL for UBC research data dump baseline period
 	private static void setUBCCareQoLT0(List<SurveyResult> srList, CareGiverResearchData rData){
 		SurveyResult sr	= srList.get(0);
-		String xml;				
-		try{
-			xml = new String(sr.getResults(), "UTF-8");
-	   	} catch (Exception e) {
-	   		xml = "";
-	   	}		
-		List<DisplayedSurveyResult> displayedResults = ResultParser.getDisplayedSurveyResults(ResultParser.getResults(xml));		
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
 		
 		rData.setCql1_sleep_T0(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
 		rData.setCql2_inc0n_T0(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
@@ -4725,14 +4672,9 @@ public class TapestryHelper {
 	//fill in Care Qol survey for UBC research data dump for both T0 and T1 period
 	private static void setUBCCareQoLT1(List<SurveyResult> srList, CareGiverResearchData rData){
 		setUBCCareQoLT0(srList, rData);
+		
 		SurveyResult sr	= srList.get(1);
-		String xml;				
-		try{
-			xml = new String(sr.getResults(), "UTF-8");
-	   	} catch (Exception e) {
-	   		xml = "";
-	   	}		
-		List<DisplayedSurveyResult> displayedResults = ResultParser.getDisplayedSurveyResults(ResultParser.getResults(xml));		
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
 		
 		rData.setCql1_sleep_T1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
 		rData.setCql2_inc0n_T1(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
@@ -4767,13 +4709,7 @@ public class TapestryHelper {
 		setUBCCareQoLT1(srList, rData);
 		
 		SurveyResult sr	= srList.get(2);
-		String xml;				
-		try{
-			xml = new String(sr.getResults(), "UTF-8");
-	   	} catch (Exception e) {
-	   		xml = "";
-	   	}		
-		List<DisplayedSurveyResult> displayedResults = ResultParser.getDisplayedSurveyResults(ResultParser.getResults(xml));		
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
 		
 		rData.setCql1_sleep_T2(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
 		rData.setCql2_inc0n_T2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
@@ -4806,14 +4742,8 @@ public class TapestryHelper {
 	//fill in Zarit  survey for UBC research data dump on baseline period
 	private static void setUBCZaritT0(List<SurveyResult> srList, CareGiverResearchData rData)
 	{
-		SurveyResult sr = srList.get(0);
-		String xml;		
-		try{
-			xml = new String(sr.getResults(), "UTF-8");
-	   	} catch (Exception e) {
-	   		xml = "";
-	   	}
-		List<DisplayedSurveyResult> displayedResults = ResultParser.getDisplayedSurveyResults(ResultParser.getResults(xml));	
+		SurveyResult sr = srList.get(0);	
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
 		
 		rData.setZarit1_time_T0(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
 		rData.setZarit2_stress_T0(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
@@ -4835,13 +4765,7 @@ public class TapestryHelper {
 		setUBCZaritT0(srList, rData);
 		
 		SurveyResult sr = srList.get(1);
-		String xml;		
-		try{
-			xml = new String(sr.getResults(), "UTF-8");
-	   	} catch (Exception e) {
-	   		xml = "";
-	   	}
-		List<DisplayedSurveyResult> displayedResults = ResultParser.getDisplayedSurveyResults(ResultParser.getResults(xml));	
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
 		
 		rData.setZarit1_time_T1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
 		rData.setZarit2_stress_T1(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
@@ -4860,16 +4784,10 @@ public class TapestryHelper {
 	//fill in Zarit  survey for UBC research data dump on all 3 (T0/T1/T2 period
 	private static void setUBCZaritT2(List<SurveyResult> srList, CareGiverResearchData rData)
 	{
-		setUBCZaritT1(srList, rData);
+		setUBCZaritT1(srList, rData);		
 		
-		SurveyResult sr = srList.get(2);
-		String xml;		
-		try{
-			xml = new String(sr.getResults(), "UTF-8");
-	   	} catch (Exception e) {
-	   		xml = "";
-	   	}
-		List<DisplayedSurveyResult> displayedResults = ResultParser.getDisplayedSurveyResults(ResultParser.getResults(xml));	
+		SurveyResult sr = srList.get(2);	
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);		
 		
 		rData.setZarit1_time_T2(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
 		rData.setZarit2_stress_T2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
@@ -4888,15 +4806,8 @@ public class TapestryHelper {
 	private static void setUBCBackground(List<SurveyResult> srList, CareGiverResearchData rData)
 	{
 		SurveyResult sr = srList.get(0);
-		String xml;	
-		Map<String, String> mResults = new HashMap<String, String>();
-		try{
-			xml = new String(sr.getResults(), "UTF-8");
-	   	} catch (Exception e) {
-	   		xml = "";
-	   	}
-		
-		List<DisplayedSurveyResult> displayedResults = ResultParser.getDisplayedSurveyResults(ResultParser.getResults(xml));				
+		Map<String, String> mResults = new HashMap<String, String>();		
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);		
 		mResults = mapSurveyResults(displayedResults);
 		
 		rData.setCb1_ed_T0(Integer.parseInt(mResults.get("CB1")));
@@ -4966,15 +4877,9 @@ public class TapestryHelper {
 	//fill in Background Follow up survey for UBC research data dump on T1 period
 	private static void setUBCBackgroundFollowupT1(List<SurveyResult> srList, CareGiverResearchData rData)
 	{
-		SurveyResult sr = srList.get(0);	
-		String xml;
+		SurveyResult sr = srList.get(0);
 		Map<String, String> mResults = new HashMap<String, String>();
-		try{
-			xml = new String(sr.getResults(), "UTF-8");
-	   	} catch (Exception e) {
-	   		xml = "";
-	   	}
-		List<DisplayedSurveyResult> displayedResults = ResultParser.getDisplayedSurveyResults(ResultParser.getResults(xml));				
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);		
 		mResults = mapSurveyResults(displayedResults);		
 	
 		if (mResults.get("CB1") == null)
@@ -5060,15 +4965,10 @@ public class TapestryHelper {
 	private static void setUBCBackgroundFollowupT2(List<SurveyResult> srList, CareGiverResearchData rData)
 	{
 		setUBCBackgroundFollowupT1(srList, rData);
+		
 		SurveyResult sr = srList.get(1);	
-		String xml;
-		Map<String, String> mResults = new HashMap<String, String>();
-		try{
-			xml = new String(sr.getResults(), "UTF-8");
-	   	} catch (Exception e) {
-	   		xml = "";
-	   	}
-		List<DisplayedSurveyResult> displayedResults = ResultParser.getDisplayedSurveyResults(ResultParser.getResults(xml));				
+		Map<String, String> mResults = new HashMap<String, String>();		
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
 		mResults = mapSurveyResults(displayedResults);	
 		
 		if (mResults.get("CB1") == null)
@@ -5147,32 +5047,7 @@ public class TapestryHelper {
 		if (mResults.get("CB10") == null)
 			rData.setCb20_yourhealth_T2(mResults.get("CFollow14_Moment_T0"));	
 		else
-			rData.setCb20_yourhealth_T2(mResults.get("CB10"));	
-		
-	
-//		rData.setCb2_empl_T2(Integer.parseInt(mResults.get("CB1")));
-//		rData.setCb3_livewith_T2(Integer.parseInt(mResults.get("CB2")));
-//		rData.setCb4_children_T2(Integer.parseInt(mResults.get("CB3")));
-//		if (mResults.get("CB3a") != null)
-//			rData.setCb4a_T2(Integer.parseInt(mResults.get("CB3a")));
-//		rData.setCb5_partner_T2(Integer.parseInt(mResults.get("CB4")));
-//		rData.setCb13_physcare_T2(Integer.parseInt(mResults.get("CB5a")));
-//		rData.setCb14_emot_T2(Integer.parseInt(mResults.get("CB5b")));
-//		rData.setCb15_other_T2(Integer.parseInt(mResults.get("CB5c")));
-//		
-//		if (mResults.get("CB6") != null)
-//			rData.setCb16_howlong_T2(mResults.get("CB6"));
-//		else
-//			rData.setCb16_howlong_T2("");
-//		
-//		rData.setCb17_onlycg_T2(Integer.parseInt(mResults.get("CB7")));
-//		if (mResults.get("CB7b") != null)
-//			rData.setCb17a_T2(mResults.get("CB7b"));
-//		if (mResults.get("CB7c") != null)
-//			rData.setCb17b_T2(mResults.get("CB7c"));
-//		rData.setCb18_healthcon_T2(mResults.get("CB8"));
-//		rData.setCb19_cgotherppl_T2(mResults.get("CB9"));				
-//		rData.setCb20_yourhealth_T2(mResults.get("CB10"));		
+			rData.setCb20_yourhealth_T2(mResults.get("CB10"));		
 	}
 
 	public static List<CareGiverResearchData> getCareGiverResearchData(SurveyManager surveyManager,List<Volunteer> volunteers)
@@ -5199,104 +5074,51 @@ public class TapestryHelper {
 			rData.setName(vol.getFirstName() + " " + vol.getLastName());
 			
 			//Care_giver background
-			try{
-				srList = surveyManager.getCompletedSurveyResultByVolunteertAndTitle(vId, "Caregiver Background");
-				
-			}catch (Exception e) {
-				System.out.println("throws exception on Caregiver Background === volunteer id == " + vId);
-				sr = null;
-			}	
-			if (srList.size() >0)
-				setUBCBackground(srList, rData);			
-			
-			//Caregiver background Follow up			
-			try{                                                                          
-				srList = surveyManager.getCompletedSurveyResultByVolunteertAndTitle(vId, "Caregiver Follow Up");				
-			}catch (Exception e) 
-			{
-				System.out.println("throws exception on Caregiver Follow Up === volunteer id == " + vId);
-				srList = null;				
-			}
-			//since caregiver background follow has 2 version script for UBC---
-			try{                                                                          
-				srList1 = surveyManager.getCompletedSurveyResultByVolunteertAndTitle(vId, "Caregiver Followup Fixed");
-//				srList1 = surveyManager.getCompletedSurveyResultByVolunteertAndTitle(vId, "Caregiver Followup2");				
-				
-			}catch (Exception e) 
-			{
-				System.out.println("throws exception on Caregiver Followup Fixed === volunteer id == " + vId);
-				srList1 = null;				
-			}			
+			srList = surveyManager.getCompletedSurveyResultByVolunteertAndTitle(vId, "Caregiver Background");	
+			srList1 = surveyManager.getCompletedSurveyResultByVolunteertAndTitle(vId, "Caregiver Fixed");	
 			srList.addAll(srList1);
-//			try{
-//				srList1 = surveyManager.getCompletedSurveyResultByVolunteertAndTitle(vId, "Caregiver Followup1");				
-//						
-//			}catch (Exception e) 
-//			{
-//				System.out.println("throws exception on Caregiver Followup Fixed === volunteer id == " + vId);
-//				srList1 = null;				
-//			}
-//			srList.addAll(srList1);
-			if (srList != null)
-			{
-				size = srList.size();
-				switch (size) {
-					case 1: setUBCBackgroundFollowupT1(srList, rData);			
-				 			break;
-				 	case 2: setUBCBackgroundFollowupT2(srList, rData);		
-				 			break;				 
-				}				
+			if (srList.size() >0)
+				setUBCBackground(srList, rData);
+			
+			//Caregiver background Follow up	
+			srList = surveyManager.getCompletedSurveyResultByVolunteertAndTitle(vId, "Caregiver Follow Up");	
+			srList1 = surveyManager.getCompletedSurveyResultByVolunteertAndTitle(vId, "Caregiver Followup Fixed");
+			srList.addAll(srList1);
+
+			size = srList.size();
+			switch (size) {
+				case 0: break;
+				case 1: setUBCBackgroundFollowupT1(srList, rData);			
+			 			break;
+			 	case 2: setUBCBackgroundFollowupT2(srList, rData);		
+			 			break;				 
 			}			
 			//Care QoL
-			try{
-				srList = surveyManager.getCompletedSurveyResultByVolunteertAndTitle(vId, "CarerQol");
-				
-			}catch (Exception e) {
-				System.out.println("throws exception on Care QoL === volunteer id == " + vId);
-				srList = null;
-			}
-			
-			try{                                                                          
-				srList1 = surveyManager.getCompletedSurveyResultByVolunteertAndTitle(vId, "Caregiver QoL fixed");					
-			}catch (Exception e) 
-			{				
-				srList1 = null;				
-			}			
-			srList.addAll(srList1);
-			
-			if (srList != null)
-			{
-				size = srList.size();
-				switch (size) {
-					case 1: setUBCCareQoLT0(srList, rData);			
-				 			break;
-				 	case 2: setUBCCareQoLT1(srList, rData);		
-				 			break;
-				 	case 3: setUBCCareQoLT2(srList, rData);		
-				 			break;
-				}
-			}			
+			srList = surveyManager.getCompletedSurveyResultByVolunteertAndTitle(vId, "CarerQol");
+			srList1 = surveyManager.getCompletedSurveyResultByVolunteertAndTitle(vId, "Caregiver QoL fixed");						
+			srList.addAll(srList1);			
+			size = srList.size();
+			switch (size) {
+				case 0: break;
+				case 1: setUBCCareQoLT0(srList, rData);			
+						break;
+				case 2: setUBCCareQoLT1(srList, rData);		
+				 		break;
+				 case 3: setUBCCareQoLT2(srList, rData);		
+				 		break;
+			}						
 			//Zarit			
-			try{
-				srList = surveyManager.getCompletedSurveyResultByVolunteertAndTitle(vId, "Zarit");
-				
-			}catch (Exception e) {
-				System.out.println("throws exception on Zarit === volunteer id == " + vId);
-				srList = null;
-			}	
-			
-			if (srList != null)
-			{			
-				size = srList.size();
-				switch (size) {
-					case 1: setUBCZaritT0(srList, rData);			
-				 			break;
-				 	case 2: setUBCZaritT1(srList, rData);		
-				 			break;
-				 	case 3: setUBCZaritT2(srList, rData);		
-				 			break;
-				}	
-			}			
+			srList = surveyManager.getCompletedSurveyResultByVolunteertAndTitle(vId, "Zarit");					
+			size = srList.size();
+			switch (size) {
+				case 0: break;
+				case 1: setUBCZaritT0(srList, rData);			
+					break;
+				case 2: setUBCZaritT1(srList, rData);		
+					break;
+				case 3: setUBCZaritT2(srList, rData);		
+					break;
+			}							
 			researchDatas.add(rData);
 		}		
 		return researchDatas;
@@ -5356,15 +5178,10 @@ public class TapestryHelper {
 	
 	private static void setSocialLife(SurveyResult sr, ResearchData rData)
 	{		
-		String xml, observerNote;		
+		String observerNote;		
 		int size;
 		StringBuffer sb = new StringBuffer();
-		try{
-			xml = new String(sr.getResults(), "UTF-8");
-	   	} catch (Exception e) {
-	   		xml = "";
-	   	}
-		List<DisplayedSurveyResult> displayedResults = ResultParser.getDisplayedSurveyResults(ResultParser.getResults(xml));	
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
 		
 		if (!displayedResults.isEmpty())
 		{
@@ -5395,10 +5212,437 @@ public class TapestryHelper {
 		}		
 	}
 	
+	private static void setQualityOfLife(SurveyResult sr, ResearchData rData)
+	{		
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
+		
+		if (!displayedResults.isEmpty())
+		{			
+			rData.setQol1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
+			rData.setQol2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
+			rData.setQol3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+			rData.setQol4(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+			rData.setQol5(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
+			rData.setQol6(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
+		}
+	}
+	
+	private static void setGoals(SurveyResult sr, ResearchData rData)
+	{
+		String  observerNote;
+		int size;
+		String[] goalsArray;
+		StringBuffer sb = new StringBuffer();						
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);	
+		
+		if (!displayedResults.isEmpty())					
+		{
+			rData.setGoals1Matter_TO(displayedResults.get(0).getQuestionAnswer());													
+			rData.setGoals2Life_TO(trimGoalMsg(displayedResults.get(1).getQuestionAnswer()));
+			rData.setGoals3Health_TO(trimGoalMsg(displayedResults.get(2).getQuestionAnswer()));
+			rData.setGoals4List_TO(trimGoalMsg(displayedResults.get(3).getQuestionAnswer()));
+											
+			goalsArray = displayedResults.get(4).getQuestionAnswer().split("<br>");
+			size = goalsArray.length;
+			if (size == 3)
+			{
+				rData.setGoals5FirstSpecific_TO(goalsArray[0]);
+				rData.setGoals6FirstBaseline_TO(goalsArray[1]);
+				rData.setGoals7FirstTaget_TO(goalsArray[2]);
+			}				
+						
+			goalsArray = displayedResults.get(5).getQuestionAnswer().split("<br>");
+			size = goalsArray.length;
+			if (size == 3)
+			{
+				rData.setGoals5SecondSpecific_TO(goalsArray[0]);
+				rData.setGoals6SecondBaseline_TO(goalsArray[1]);
+				rData.setGoals7SecondTaget_TO(goalsArray[2]);
+			}
+			
+			goalsArray = displayedResults.get(6).getQuestionAnswer().split("<br>");
+			size = goalsArray.length;
+			if (size == 3)
+			{
+				rData.setGoals5ThirdSpecific_TO(goalsArray[0]);
+				rData.setGoals6ThirdBaseline_TO(goalsArray[1]);	
+				rData.setGoals7ThirdTaget_TO(goalsArray[2]);
+			}			
+			
+			if (displayedResults.size() == 8)
+				rData.setGoals8Priority_TO(displayedResults.get(7).getQuestionAnswer());
+			
+			for (int j=0; j<displayedResults.size(); j++)
+			{
+				observerNote = displayedResults.get(j).getObserverNotes();
+				if (!Utils.isNullOrEmpty(observerNote))
+				{
+					sb.append(displayedResults.get(j).getObserverNotes());
+					sb.append(".");			
+		   		}
+		   	}
+			rData.setGoalsDiscussion_notes_TO(sb.toString());			
+		}	
+	}
+	
+	private static void setRAPA(SurveyResult sr, ResearchData rData)
+	{	
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);	
+		
+		if (!displayedResults.isEmpty())
+		{
+			//if answer is empty, format it to 0
+			displayedResults = formatEmptyResultAnswerToInt(displayedResults);
+				
+			if (displayedResults.size() == 9)
+			{//new survey with 9 questions
+				rData.setRapa1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
+				rData.setRapa2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
+				rData.setRapa3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+				rData.setRapa4(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+				rData.setRapa5(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
+				rData.setRapa6(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
+				rData.setRapa7(Integer.parseInt(displayedResults.get(6).getQuestionAnswer()));
+				rData.setRapa8(Integer.parseInt(displayedResults.get(7).getQuestionAnswer()));
+				rData.setRapa9(Integer.parseInt(displayedResults.get(8).getQuestionAnswer()));			
+			}
+			else
+			{// old survey with 8 questions
+				rData.setRapa1(0);		
+				rData.setRapa2(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
+				rData.setRapa3(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
+				rData.setRapa4(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+				rData.setRapa5(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+				rData.setRapa6(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
+				rData.setRapa7(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
+				rData.setRapa8(Integer.parseInt(displayedResults.get(6).getQuestionAnswer()));
+				rData.setRapa9(Integer.parseInt(displayedResults.get(7).getQuestionAnswer()));									
+			}
+		}		
+	}
+	
+	private static void setAdvanceDirective(SurveyResult sr, ResearchData rData)
+	{
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
+		if (!displayedResults.isEmpty())
+		{
+			//if answer is empty, format it to 0
+			displayedResults = formatEmptyResultAnswerToInt(displayedResults);
+			
+			rData.setAd1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
+			rData.setAd2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
+			rData.setAd3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));							
+		}
+	}
+	
+	private static void setGeneralHealth(SurveyResult sr, ResearchData rData)
+	{	
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
+		if (!displayedResults.isEmpty())
+		{//if answer is empty, format it to 0
+			displayedResults = formatEmptyResultAnswerToInt(displayedResults);
+			
+			rData.setGh1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
+			rData.setGh2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
+			rData.setGh3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+			rData.setGh4(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+			rData.setGh5(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
+			rData.setGh6(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
+			rData.setGh7(Integer.parseInt(displayedResults.get(6).getQuestionAnswer()));
+			rData.setGh8(Integer.parseInt(displayedResults.get(7).getQuestionAnswer()));
+			rData.setGh9(Integer.parseInt(displayedResults.get(8).getQuestionAnswer()));	
+			rData.setGh10(Integer.parseInt(displayedResults.get(9).getQuestionAnswer()));
+			rData.setGh11(Integer.parseInt(displayedResults.get(10).getQuestionAnswer()));
+		}
+	}
+	
+	private static List<DisplayedSurveyResult> getSurveyResults(SurveyResult sr)
+	{
+		String xml;
+		try{
+			xml = new String(sr.getResults(), "UTF-8");
+	   	} catch (Exception e) {
+	   		xml = "";
+	   	}		
+		return ResultParser.getDisplayedSurveyResults(ResultParser.getResults(xml));
+	}
+	
+	private static void setMemory(SurveyResult sr, ResearchData rData)
+	{
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
+		if (!displayedResults.isEmpty())
+		{
+			int sizeOfMemory = displayedResults.size();
+			DisplayedSurveyResult result;
+			
+			result = displayedResults.get(0);
+			result = formatEmptyResultAnswerToInt(result);
+			rData.setMem1(Integer.parseInt(result.getQuestionAnswer()));		
+
+			if (sizeOfMemory == 2)
+			{
+				rData.setMem2("");
+				result = displayedResults.get(1);
+				result = formatEmptyResultAnswerToInt(result);
+				rData.setMem1(Integer.parseInt(result.getQuestionAnswer()));
+				rData.setMem4("");
+			}
+			else if (sizeOfMemory == 3)
+			{
+				if (Utils.isNumeric(displayedResults.get(1).getQuestionAnswer()))
+				{
+					rData.setMem2("");
+					result = displayedResults.get(1);
+					result = formatEmptyResultAnswerToInt(result);
+					rData.setMem1(Integer.parseInt(result.getQuestionAnswer()));
+					rData.setMem4(displayedResults.get(2).getQuestionAnswer());		
+				}
+			}
+			else
+			{
+				rData.setMem2(displayedResults.get(1).getQuestionAnswer());
+				result = displayedResults.get(2);
+				result = formatEmptyResultAnswerToInt(result);
+				rData.setMem1(Integer.parseInt(result.getQuestionAnswer()));
+				rData.setMem4(displayedResults.get(3).getQuestionAnswer());				
+			}
+		}
+	}
+	
+	private static void setMobility(SurveyResult sr, ResearchData rData)
+	{
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
+		List<Integer> aList;
+		if (!displayedResults.isEmpty())
+		{
+			//if answer is empty, format it to 0
+			displayedResults = formatEmptyResultAnswerToInt(displayedResults);							
+			String qId,answer;
+			
+			for (DisplayedSurveyResult dsr: displayedResults)
+			{
+				qId = dsr.getQuestionId();
+				answer = dsr.getQuestionAnswer();
+				
+				if (qId.equals("a2a"))
+					rData.setMob1(Integer.parseInt(answer));
+				if (qId.equals("a2b"))
+				{
+					if (answer.contains(","))
+					{							
+						aList = makeMobilityMultipleAnswerList(answer);
+						rData.setMob21(aList.get(0));
+						rData.setMob22(aList.get(1));
+						rData.setMob23(aList.get(2));
+						rData.setMob24(aList.get(3));
+						rData.setMob25(aList.get(4));
+						rData.setMob26(aList.get(5));
+					}
+					else
+						rData.setMob21(Integer.parseInt(answer));
+				}
+				
+				if (qId.equals("a3a"))
+					rData.setMob3(Integer.parseInt(answer));
+				if (qId.equals("a3b"))
+				{
+					if (answer.contains(","))
+					{								
+						aList = makeMobilityMultipleAnswerList(answer);
+						rData.setMob41(aList.get(0));
+						rData.setMob42(aList.get(1));
+						rData.setMob43(aList.get(2));
+						rData.setMob44(aList.get(3));
+						rData.setMob45(aList.get(4));
+						rData.setMob46(aList.get(5));
+					}
+					else
+						rData.setMob41(Integer.parseInt(answer));
+				}
+				
+				if (qId.equals("a4a"))
+					rData.setMob5(Integer.parseInt(answer));
+				if (qId.equals("a4b"))
+				{
+					if (answer.contains(","))
+					{								
+						aList = makeMobilityMultipleAnswerList(answer);							 
+						rData.setMob61(aList.get(0));
+						rData.setMob62(aList.get(1));
+						rData.setMob63(aList.get(2));
+						rData.setMob64(aList.get(3));
+						rData.setMob65(aList.get(4));
+						rData.setMob66(aList.get(5));
+					}
+					else
+						rData.setMob61(Integer.parseInt(answer));
+				}						
+			}
+		}	
+	}	
+	
+	private static void setNutrition(SurveyResult sr, ResearchData rData)
+	{
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
+		if (!displayedResults.isEmpty())
+		{//if answer is empty, format it to 0
+			displayedResults = formatEmptyResultAnswerToInt(displayedResults);
+			
+			rData.setNut1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
+			rData.setNut2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
+			rData.setNut3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+			rData.setNut4(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+			rData.setNut5(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
+			rData.setNut6(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
+			rData.setNut7(Integer.parseInt(displayedResults.get(6).getQuestionAnswer()));
+			rData.setNut8(Integer.parseInt(displayedResults.get(7).getQuestionAnswer()));
+			rData.setNut9(Integer.parseInt(displayedResults.get(8).getQuestionAnswer()));	
+			rData.setNut10(Integer.parseInt(displayedResults.get(9).getQuestionAnswer()));
+			rData.setNut11(Integer.parseInt(displayedResults.get(10).getQuestionAnswer()));
+			rData.setNut12(Integer.parseInt(displayedResults.get(11).getQuestionAnswer()));
+			rData.setNut13(Integer.parseInt(displayedResults.get(12).getQuestionAnswer()));
+			rData.setNut14(Integer.parseInt(displayedResults.get(13).getQuestionAnswer()));
+			rData.setNut15(Integer.parseInt(displayedResults.get(14).getQuestionAnswer()));
+			rData.setNut16(Integer.parseInt(displayedResults.get(15).getQuestionAnswer()));
+			rData.setNut17(Integer.parseInt(displayedResults.get(16).getQuestionAnswer()));
+		}
+	}
+	
+	private static void set3MonthFollowUp(SurveyResult sr, ResearchData rData)
+	{
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
+		if (!displayedResults.isEmpty())
+		{//if answer is empty, format it to 0
+			displayedResults = formatEmptyResultAnswerToInt(displayedResults);
+			int size = displayedResults.size();				
+			String questionId, answer;
+			answer = displayedResults.get(0).getQuestionAnswer();
+			rData.setFu1(Integer.parseInt(answer));
+			
+			for (int k =1; k < size; k++)
+			{
+				questionId = displayedResults.get(k).getQuestionId();
+				answer = displayedResults.get(k).getQuestionAnswer();
+										
+				if (questionId.equals("CFQ2"))
+					rData.setFu2(Integer.valueOf(answer));
+				
+				if (questionId.equals("CFQ3"))
+					rData.setFu3(answer);
+					
+				if (questionId.equals("PHR1"))
+					rData.setFu5(Integer.valueOf(answer));
+				
+				if (questionId.equals("PHR1a"))
+					rData.setFu6(Integer.valueOf(answer));
+				
+				if (questionId.equals("PHR1ao"))
+					rData.setFu7(answer);
+					
+				if (questionId.equals("PHR1b"))
+					rData.setFu8(Integer.valueOf(answer));
+				
+				if (questionId.equals("PHR1bo"))
+					rData.setFu9(answer);
+				
+				if (questionId.equals("GFU1"))
+					rData.setFu11(Integer.valueOf(answer));
+				
+				if (questionId.equals("GFU2"))
+					rData.setFu12(answer);
+				
+				if (questionId.equals("GFU3"))
+					rData.setFu13(answer);
+				
+				if (questionId.equals("GFU4"))
+					rData.setFu14(answer);
+				
+				if (questionId.equals("GFU5"))
+					rData.setFu15(Integer.valueOf(answer));
+				
+				if (questionId.equals("GFU6"))
+					rData.setFu16(answer);
+				
+				if (questionId.equals("GFU7"))
+					rData.setFu17(answer);
+				
+				if (questionId.equals("GFU8"))
+					rData.setFu18(answer);
+				
+				if (questionId.equals("GFU9"))
+					rData.setFu19(Integer.valueOf(answer));
+				
+				if (questionId.equals("GFU10"))
+					rData.setFu20(answer);
+				
+				if (questionId.equals("GFU11"))
+					rData.setFu21(answer);
+				
+				if (questionId.equals("GFU12"))
+					rData.setFu22(answer);							
+			}
+		}
+	}
+	
+	private static void setDailyLife(SurveyResult sr, ResearchData rData)
+	{
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
+		if (!displayedResults.isEmpty())
+		{						
+			int size = displayedResults.size();
+			switch (size) {
+				case 1: rData.setDla1(displayedResults.get(0).getQuestionAnswer());			
+			 			break;
+			 	case 2: rData.setDla1(displayedResults.get(0).getQuestionAnswer());
+			 			rData.setDla2(displayedResults.get(1).getQuestionAnswer());
+			 			break;
+			 	case 3: rData.setDla1(displayedResults.get(0).getQuestionAnswer());
+						rData.setDla2(displayedResults.get(1).getQuestionAnswer());
+						rData.setDla3(displayedResults.get(2).getQuestionAnswer());
+			 			break;
+			 	case 4: rData.setDla1(displayedResults.get(0).getQuestionAnswer());
+						rData.setDla2(displayedResults.get(1).getQuestionAnswer());
+						rData.setDla3(displayedResults.get(2).getQuestionAnswer());
+						rData.setDla4(displayedResults.get(3).getQuestionAnswer());
+			 			break;	
+			 	case 5: rData.setDla1(displayedResults.get(0).getQuestionAnswer());
+						rData.setDla2(displayedResults.get(1).getQuestionAnswer());
+						rData.setDla3(displayedResults.get(2).getQuestionAnswer());
+						rData.setDla4(displayedResults.get(3).getQuestionAnswer());
+						rData.setDla5(displayedResults.get(4).getQuestionAnswer());
+			 			break;	
+			 	case 6: rData.setDla1(displayedResults.get(0).getQuestionAnswer());
+						rData.setDla2(displayedResults.get(1).getQuestionAnswer());
+						rData.setDla3(displayedResults.get(2).getQuestionAnswer());
+						rData.setDla4(displayedResults.get(3).getQuestionAnswer());
+						rData.setDla5(displayedResults.get(4).getQuestionAnswer());
+						rData.setDla6(displayedResults.get(5).getQuestionAnswer());
+			 			break;
+			 	case 7: rData.setDla1(displayedResults.get(0).getQuestionAnswer());
+						rData.setDla2(displayedResults.get(1).getQuestionAnswer());
+						rData.setDla3(displayedResults.get(2).getQuestionAnswer());
+						rData.setDla4(displayedResults.get(3).getQuestionAnswer());
+						rData.setDla5(displayedResults.get(4).getQuestionAnswer());
+						rData.setDla6(displayedResults.get(5).getQuestionAnswer());
+						rData.setDla7(displayedResults.get(6).getQuestionAnswer());
+			 			break;
+			 	case 8: rData.setDla1(displayedResults.get(0).getQuestionAnswer());
+						rData.setDla2(displayedResults.get(1).getQuestionAnswer());
+						rData.setDla3(displayedResults.get(2).getQuestionAnswer());
+						rData.setDla4(displayedResults.get(3).getQuestionAnswer());
+						rData.setDla5(displayedResults.get(4).getQuestionAnswer());
+						rData.setDla6(displayedResults.get(5).getQuestionAnswer());
+						rData.setDla7(displayedResults.get(6).getQuestionAnswer());
+						rData.setDla7a(displayedResults.get(7).getQuestionAnswer());
+			 			break;
+			 }	
+		}		
+	}
 	public static List<ResearchData> getResearchDatas(PatientManager patientManager, SurveyManager surveyManager, int siteId)
 	{
 		List<Patient> patients = patientManager.getPatientsBySite(siteId);	
-		SurveyResult sr;
+		SurveyResult sr = new SurveyResult();
+		List<SurveyResult> srList = new ArrayList<SurveyResult>();
 		List<ResearchData> researchDatas = new ArrayList<ResearchData>();
 		ResearchData rData;
 		int patientId, researchId, size;
@@ -5415,573 +5659,262 @@ public class TapestryHelper {
 			strResearchId = patients.get(i).getResearchID();
 			rData.setResearchId(strResearchId);
 			//Social life
-			try{
-				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "4. Social Life");
-				setSocialLife(sr, rData);
-			}catch (Exception e) {
-				System.out.println("throws exception on Social life === patient id == " + patientId);				
-			}
-			//EQ5D
-			try{
-				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "3. Quality of Life");
-			}catch (Exception e) {
-				System.out.println("throws exception on EQ5D=== patient id == " + patientId);
-				sr = null;
-			}
-			
-			if (sr != null)
+			srList = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "4. Social Life");
+			if (srList.size()>0)
 			{
-				sb = new StringBuffer();				
-				try{
-					xml = new String(sr.getResults(), "UTF-8");
-			   	} catch (Exception e) {
-			   		xml = "";
-			   	}
-				res = ResultParser.getResults(xml);
-				displayedResults = ResultParser.getDisplayedSurveyResults(res);		
-				
-				if (!displayedResults.isEmpty())
-				{//if answer is empty, format it to 0
-					displayedResults = formatEmptyResultAnswerToInt(displayedResults);
-					
-					rData.setQol1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
-					rData.setQol2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
-					rData.setQol3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
-					rData.setQol4(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
-					rData.setQol5(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
-					rData.setQol6(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
-				}
+				sr = srList.get(0);
+				setSocialLife(sr, rData);
+			}			
+			//EQ5D			
+			srList = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "3. Quality of Life");
+			if (srList.size()>0)
+			{
+				sr = srList.get(0);
+				setQualityOfLife(sr, rData);
 			}
 			//Goals
-			try{
-				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "Goals");
-			}catch (Exception e) {
-				System.out.println("throws exception on Goals === patient id == " + patientId);
-				sr = null;
-			}
-			
-			if (sr != null)
+			srList = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "Goals");
+			if (srList.size()>0)
 			{
-				sb = new StringBuffer();				
-				try{
-					xml = new String(sr.getResults(), "UTF-8");
-			   	} catch (Exception e) {
-			   		xml = "";
-			   	}
-				res = ResultParser.getResults(xml);
-				displayedResults = ResultParser.getDisplayedSurveyResults(res);		
-																
-				if (!displayedResults.isEmpty())					
-				{
-					rData.setGoals1Matter_TO(displayedResults.get(0).getQuestionAnswer());													
-					rData.setGoals2Life_TO(trimGoalMsg(displayedResults.get(1).getQuestionAnswer()));
-					rData.setGoals3Health_TO(trimGoalMsg(displayedResults.get(2).getQuestionAnswer()));
-					rData.setGoals4List_TO(trimGoalMsg(displayedResults.get(3).getQuestionAnswer()));
-													
-					goalsArray = displayedResults.get(4).getQuestionAnswer().split("<br>");
-					size = goalsArray.length;
-					if (size == 3)
-					{
-						rData.setGoals5FirstSpecific_TO(goalsArray[0]);
-						rData.setGoals6FirstBaseline_TO(goalsArray[1]);
-						rData.setGoals7FirstTaget_TO(goalsArray[2]);
-					}				
-								
-					goalsArray = displayedResults.get(5).getQuestionAnswer().split("<br>");
-					size = goalsArray.length;
-					if (size == 3)
-					{
-						rData.setGoals5SecondSpecific_TO(goalsArray[0]);
-						rData.setGoals6SecondBaseline_TO(goalsArray[1]);
-						rData.setGoals7SecondTaget_TO(goalsArray[2]);
-					}
-					
-					goalsArray = displayedResults.get(6).getQuestionAnswer().split("<br>");
-					size = goalsArray.length;
-					if (size == 3)
-					{
-						rData.setGoals5ThirdSpecific_TO(goalsArray[0]);
-						rData.setGoals6ThirdBaseline_TO(goalsArray[1]);	
-						rData.setGoals7ThirdTaget_TO(goalsArray[2]);
-					}			
-					
-					if (displayedResults.size() == 8)
-						rData.setGoals8Priority_TO(displayedResults.get(7).getQuestionAnswer());
-					
-					for (int j=0; j<displayedResults.size(); j++)
-					{
-						observerNote = displayedResults.get(j).getObserverNotes();
-						if (!Utils.isNullOrEmpty(observerNote))
-						{
-							sb.append(displayedResults.get(j).getObserverNotes());
-							sb.append(".");			
-				   		}
-				   	}
-					rData.setGoalsDiscussion_notes_TO(sb.toString());			
-				}	
-			}	
-			//RAPA
-			try{
-				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "Physical Activity");
-			}catch (Exception e) {
-				System.out.println("throws exception on Physical Activity === patient id == " + patientId);
-				sr = null;
+				sr = srList.get(0);
+				setGoals(sr, rData);
 			}
-			
-			if (sr != null)
-			{				
-				try{
-					xml = new String(sr.getResults(), "UTF-8");
-			   	} catch (Exception e) {
-			   		xml = "";
-			   	}
-				res = ResultParser.getResults(xml);
-				displayedResults = ResultParser.getDisplayedSurveyResults(res);		
-				
-				if (!displayedResults.isEmpty())
-				{
-					//if answer is empty, format it to 0
-					displayedResults = formatEmptyResultAnswerToInt(displayedResults);
-					
-					if (displayedResults.size() == 9)
-					{//new survey with 9 questions
-						rData.setRapa1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
-						rData.setRapa2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
-						rData.setRapa3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
-						rData.setRapa4(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
-						rData.setRapa5(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
-						rData.setRapa6(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
-						rData.setRapa7(Integer.parseInt(displayedResults.get(6).getQuestionAnswer()));
-						rData.setRapa8(Integer.parseInt(displayedResults.get(7).getQuestionAnswer()));
-						rData.setRapa9(Integer.parseInt(displayedResults.get(8).getQuestionAnswer()));			
-					}
-					else
-					{// old survey with 8 questions
-						rData.setRapa1(0);		
-						rData.setRapa2(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
-						rData.setRapa3(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
-						rData.setRapa4(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
-						rData.setRapa5(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
-						rData.setRapa6(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
-						rData.setRapa7(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
-						rData.setRapa8(Integer.parseInt(displayedResults.get(6).getQuestionAnswer()));
-						rData.setRapa9(Integer.parseInt(displayedResults.get(7).getQuestionAnswer()));									
-					}
-				}
+			//RAPA
+			srList = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "Physical Activity");
+			if (srList.size()>0)
+			{
+				sr = srList.get(0);
+				setRAPA(sr, rData);
 			}
 			//Advance directive
-			try{
-				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "Advance Directives");
-			}catch (Exception e) {
-				System.out.println("throws exception on Advance Directives=== patient id == " + patientId);
-				sr = null;
-			}
-			
-			if (sr != null)
+			srList = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "Advance Directives");
+			if (srList.size()>0)
 			{
-				try{
-					xml = new String(sr.getResults(), "UTF-8");
-			   	} catch (Exception e) {
-			   		xml = "";
-			   	}
-				res = ResultParser.getResults(xml);
-				displayedResults = ResultParser.getDisplayedSurveyResults(res);	
-				
-				if (!displayedResults.isEmpty())
-				{
-					//if answer is empty, format it to 0
-					displayedResults = formatEmptyResultAnswerToInt(displayedResults);
-					
-					rData.setAd1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
-					rData.setAd2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
-					rData.setAd3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));							
-				}
-			}
-			//memory
-			try{
-				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "Memory");
-			}catch (Exception e) {
-				System.out.println("throws exception on Memory === patient id == " + patientId);
-				sr = null;
-			}
-			
-			if (sr != null)
-			{	
-				try{
-					xml = new String(sr.getResults(), "UTF-8");
-			   	} catch (Exception e) {
-			   		xml = "";
-			   	}
-				res = ResultParser.getResults(xml);
-				displayedResults = ResultParser.getDisplayedSurveyResults(res);		
-				
-				if (!displayedResults.isEmpty())
-				{
-					int sizeOfMemory = displayedResults.size();
-					DisplayedSurveyResult result;
-					
-					result = displayedResults.get(0);
-					result = formatEmptyResultAnswerToInt(result);
-					rData.setMem1(Integer.parseInt(result.getQuestionAnswer()));		
-		
-					if (sizeOfMemory == 2)
-					{
-						rData.setMem2("");
-						result = displayedResults.get(1);
-						result = formatEmptyResultAnswerToInt(result);
-						rData.setMem1(Integer.parseInt(result.getQuestionAnswer()));
-						rData.setMem4("");
-					}
-					else if (sizeOfMemory == 3)
-					{
-						if (Utils.isNumeric(displayedResults.get(1).getQuestionAnswer()))
-						{
-							rData.setMem2("");
-							result = displayedResults.get(1);
-							result = formatEmptyResultAnswerToInt(result);
-							rData.setMem1(Integer.parseInt(result.getQuestionAnswer()));
-							rData.setMem4(displayedResults.get(2).getQuestionAnswer());		
-						}
-					}
-					else
-					{
-						rData.setMem2(displayedResults.get(1).getQuestionAnswer());
-						result = displayedResults.get(2);
-						result = formatEmptyResultAnswerToInt(result);
-						rData.setMem1(Integer.parseInt(result.getQuestionAnswer()));
-						rData.setMem4(displayedResults.get(3).getQuestionAnswer());				
-					}
-				}
-			}
-			//General health
-			try{
-				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "General Health");
-			}catch (Exception e) {
-				System.out.println("throws exception on General Health === patient id == " + patientId);
-				sr = null;
-			}
-			
-			if (sr != null)
+				sr = srList.get(0);
+				setAdvanceDirective(sr, rData);
+			}			
+			//memory			
+			srList = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "Memory");
+			if (srList.size()>0)
 			{
-				try{
-					xml = new String(sr.getResults(), "UTF-8");
-			   	} catch (Exception e) {
-			   		xml = "";
-			   	}
-				res = ResultParser.getResults(xml);
-				displayedResults = ResultParser.getDisplayedSurveyResults(res);	
-				
-				if (!displayedResults.isEmpty())
-				{//if answer is empty, format it to 0
-					displayedResults = formatEmptyResultAnswerToInt(displayedResults);
-					
-					rData.setGh1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
-					rData.setGh2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
-					rData.setGh3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
-					rData.setGh4(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
-					rData.setGh5(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
-					rData.setGh6(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
-					rData.setGh7(Integer.parseInt(displayedResults.get(6).getQuestionAnswer()));
-					rData.setGh8(Integer.parseInt(displayedResults.get(7).getQuestionAnswer()));
-					rData.setGh9(Integer.parseInt(displayedResults.get(8).getQuestionAnswer()));	
-					rData.setGh10(Integer.parseInt(displayedResults.get(9).getQuestionAnswer()));
-					rData.setGh11(Integer.parseInt(displayedResults.get(10).getQuestionAnswer()));
-				}
+				sr = srList.get(0);
+				setMemory(sr, rData);
+			}
+			//General health			
+			srList = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "General Health");
+			if (srList.size()>0)
+			{
+				sr = srList.get(0);
+				setGeneralHealth(sr, rData);
 			}
 			//Mobility
-			try{
-				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "Mobility");
-			}catch (Exception e) {
-				System.out.println("throws exception on Mobility === patient id == " + patientId);
-				sr = null;
-			}
-			
-			if (sr != null)
+			srList = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "Mobility");
+			if (srList.size()>0)
 			{
-				try{
-					xml = new String(sr.getResults(), "UTF-8");
-			   	} catch (Exception e) {
-			   		xml = "";
-			   	}
-				res = ResultParser.getResults(xml);
-				displayedResults = ResultParser.getDisplayedSurveyResults(res);		
-				List<Integer> aList;
-				if (!displayedResults.isEmpty())
-				{
-					//if answer is empty, format it to 0
-					displayedResults = formatEmptyResultAnswerToInt(displayedResults);							
-					String qId,answer;
-					
-					for (DisplayedSurveyResult dsr: displayedResults)
-					{
-						qId = dsr.getQuestionId();
-						answer = dsr.getQuestionAnswer();
-						
-						if (qId.equals("a2a"))
-							rData.setMob1(Integer.parseInt(answer));
-						if (qId.equals("a2b"))
-						{
-							if (answer.contains(","))
-							{							
-								aList = makeMobilityMultipleAnswerList(answer);
-								rData.setMob21(aList.get(0));
-								rData.setMob22(aList.get(1));
-								rData.setMob23(aList.get(2));
-								rData.setMob24(aList.get(3));
-								rData.setMob25(aList.get(4));
-								rData.setMob26(aList.get(5));
-							}
-							else
-								rData.setMob21(Integer.parseInt(answer));
-						}
-						
-						if (qId.equals("a3a"))
-							rData.setMob3(Integer.parseInt(answer));
-						if (qId.equals("a3b"))
-						{
-							if (answer.contains(","))
-							{								
-								aList = makeMobilityMultipleAnswerList(answer);
-								rData.setMob41(aList.get(0));
-								rData.setMob42(aList.get(1));
-								rData.setMob43(aList.get(2));
-								rData.setMob44(aList.get(3));
-								rData.setMob45(aList.get(4));
-								rData.setMob46(aList.get(5));
-							}
-							else
-								rData.setMob41(Integer.parseInt(answer));
-						}
-						
-						if (qId.equals("a4a"))
-							rData.setMob5(Integer.parseInt(answer));
-						if (qId.equals("a4b"))
-						{
-							if (answer.contains(","))
-							{								
-								aList = makeMobilityMultipleAnswerList(answer);							 
-								rData.setMob61(aList.get(0));
-								rData.setMob62(aList.get(1));
-								rData.setMob63(aList.get(2));
-								rData.setMob64(aList.get(3));
-								rData.setMob65(aList.get(4));
-								rData.setMob66(aList.get(5));
-							}
-							else
-								rData.setMob61(Integer.parseInt(answer));
-						}						
-					}
-				}
+				sr = srList.get(0);
+				setMobility(sr, rData);
 			}
-			//Nutrition
-			try{
-				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "Nutrition");
-			}catch (Exception e) {
-				System.out.println("throws exception on Nutrition === patient id == " + patientId);
-				sr = null;
-			}
-			
-			if (sr != null)
+			//Nutrition			
+			srList = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "Nutrition");
+			if (srList.size()>0)
 			{
-				try{
-					xml = new String(sr.getResults(), "UTF-8");
-			   	} catch (Exception e) {
-			   		xml = "";
-			   	}
-				res = ResultParser.getResults(xml);
-				displayedResults = ResultParser.getDisplayedSurveyResults(res);		
-				
-				if (!displayedResults.isEmpty())
-				{//if answer is empty, format it to 0
-					displayedResults = formatEmptyResultAnswerToInt(displayedResults);
-					
-					rData.setNut1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
-					rData.setNut2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
-					rData.setNut3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
-					rData.setNut4(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
-					rData.setNut5(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
-					rData.setNut6(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
-					rData.setNut7(Integer.parseInt(displayedResults.get(6).getQuestionAnswer()));
-					rData.setNut8(Integer.parseInt(displayedResults.get(7).getQuestionAnswer()));
-					rData.setNut9(Integer.parseInt(displayedResults.get(8).getQuestionAnswer()));	
-					rData.setNut10(Integer.parseInt(displayedResults.get(9).getQuestionAnswer()));
-					rData.setNut11(Integer.parseInt(displayedResults.get(10).getQuestionAnswer()));
-					rData.setNut12(Integer.parseInt(displayedResults.get(11).getQuestionAnswer()));
-					rData.setNut13(Integer.parseInt(displayedResults.get(12).getQuestionAnswer()));
-					rData.setNut14(Integer.parseInt(displayedResults.get(13).getQuestionAnswer()));
-					rData.setNut15(Integer.parseInt(displayedResults.get(14).getQuestionAnswer()));
-					rData.setNut16(Integer.parseInt(displayedResults.get(15).getQuestionAnswer()));
-					rData.setNut17(Integer.parseInt(displayedResults.get(16).getQuestionAnswer()));
-				}
-			}
-			//3 month follow up
-			try{
-				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "3 Month Follow Up");
-			}catch (Exception e) {
-				System.out.println("throws exception on 3 Month Follow Up === patient id == " + patientId);
-				sr = null;
+				sr = srList.get(0);
+				setNutrition(sr, rData);
 			}			
-			if (sr != null)
-			{			
-				try{
-					xml = new String(sr.getResults(), "UTF-8");
-			   	} catch (Exception e) {
-			   		xml = "";
-			   	}
-				res = ResultParser.getResults(xml);
-				displayedResults = ResultParser.getDisplayedSurveyResults(res);		
-							
-				if (!displayedResults.isEmpty())
-				{//if answer is empty, format it to 0
-					displayedResults = formatEmptyResultAnswerToInt(displayedResults);
-					size = displayedResults.size();				
-					String questionId, answer;
-					answer = displayedResults.get(0).getQuestionAnswer();
-					rData.setFu1(Integer.parseInt(answer));
-					
-					for (int k =1; k < size; k++)
-					{
-						questionId = displayedResults.get(k).getQuestionId();
-						answer = displayedResults.get(k).getQuestionAnswer();
-												
-						if (questionId.equals("CFQ2"))
-							rData.setFu2(Integer.valueOf(answer));
-						
-						if (questionId.equals("CFQ3"))
-							rData.setFu3(answer);
-							
-						if (questionId.equals("PHR1"))
-							rData.setFu5(Integer.valueOf(answer));
-						
-						if (questionId.equals("PHR1a"))
-							rData.setFu6(Integer.valueOf(answer));
-						
-						if (questionId.equals("PHR1ao"))
-							rData.setFu7(answer);
-							
-						if (questionId.equals("PHR1b"))
-							rData.setFu8(Integer.valueOf(answer));
-						
-						if (questionId.equals("PHR1bo"))
-							rData.setFu9(answer);
-						
-						if (questionId.equals("GFU1"))
-							rData.setFu11(Integer.valueOf(answer));
-						
-						if (questionId.equals("GFU2"))
-							rData.setFu12(answer);
-						
-						if (questionId.equals("GFU3"))
-							rData.setFu13(answer);
-						
-						if (questionId.equals("GFU4"))
-							rData.setFu14(answer);
-						
-						if (questionId.equals("GFU5"))
-							rData.setFu15(Integer.valueOf(answer));
-						
-						if (questionId.equals("GFU6"))
-							rData.setFu16(answer);
-						
-						if (questionId.equals("GFU7"))
-							rData.setFu17(answer);
-						
-						if (questionId.equals("GFU8"))
-							rData.setFu18(answer);
-						
-						if (questionId.equals("GFU9"))
-							rData.setFu19(Integer.valueOf(answer));
-						
-						if (questionId.equals("GFU10"))
-							rData.setFu20(answer);
-						
-						if (questionId.equals("GFU11"))
-							rData.setFu21(answer);
-						
-						if (questionId.equals("GFU12"))
-							rData.setFu22(answer);							
-					}
-				}
-			}			
-			//Daily Life Activity
-			try{
-				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "1. Daily Life Activities");
-			}catch (Exception e) {
-				System.out.println("throws exception on 1. Daily Life Activities === patient id == " + patientId);
-				sr = null;
-			}			
-			if (sr != null)
+			//3 month follow up			
+			srList = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "3 Month Follow Up");
+			if (srList.size()>0)
 			{
-				sb = new StringBuffer();
-				
-				try{
-					xml = new String(sr.getResults(), "UTF-8");
-			   	} catch (Exception e) {
-			   		xml = "";
-			   	}
-				res = ResultParser.getResults(xml);
-				displayedResults = ResultParser.getDisplayedSurveyResults(res);	
-				
-				if (!displayedResults.isEmpty())
-				{						
-					size = displayedResults.size();
-					switch (size) {
-						case 1: rData.setDla1(displayedResults.get(0).getQuestionAnswer());			
-					 			break;
-					 	case 2: rData.setDla1(displayedResults.get(0).getQuestionAnswer());
-					 			rData.setDla2(displayedResults.get(1).getQuestionAnswer());
-					 			break;
-					 	case 3: rData.setDla1(displayedResults.get(0).getQuestionAnswer());
-								rData.setDla2(displayedResults.get(1).getQuestionAnswer());
-								rData.setDla3(displayedResults.get(2).getQuestionAnswer());
-					 			break;
-					 	case 4: rData.setDla1(displayedResults.get(0).getQuestionAnswer());
-								rData.setDla2(displayedResults.get(1).getQuestionAnswer());
-								rData.setDla3(displayedResults.get(2).getQuestionAnswer());
-								rData.setDla4(displayedResults.get(3).getQuestionAnswer());
-					 			break;	
-					 	case 5: rData.setDla1(displayedResults.get(0).getQuestionAnswer());
-								rData.setDla2(displayedResults.get(1).getQuestionAnswer());
-								rData.setDla3(displayedResults.get(2).getQuestionAnswer());
-								rData.setDla4(displayedResults.get(3).getQuestionAnswer());
-								rData.setDla5(displayedResults.get(4).getQuestionAnswer());
-					 			break;	
-					 	case 6: rData.setDla1(displayedResults.get(0).getQuestionAnswer());
-								rData.setDla2(displayedResults.get(1).getQuestionAnswer());
-								rData.setDla3(displayedResults.get(2).getQuestionAnswer());
-								rData.setDla4(displayedResults.get(3).getQuestionAnswer());
-								rData.setDla5(displayedResults.get(4).getQuestionAnswer());
-								rData.setDla6(displayedResults.get(5).getQuestionAnswer());
-					 			break;
-					 	case 7: rData.setDla1(displayedResults.get(0).getQuestionAnswer());
-								rData.setDla2(displayedResults.get(1).getQuestionAnswer());
-								rData.setDla3(displayedResults.get(2).getQuestionAnswer());
-								rData.setDla4(displayedResults.get(3).getQuestionAnswer());
-								rData.setDla5(displayedResults.get(4).getQuestionAnswer());
-								rData.setDla6(displayedResults.get(5).getQuestionAnswer());
-								rData.setDla7(displayedResults.get(6).getQuestionAnswer());
-					 			break;
-					 	case 8: rData.setDla1(displayedResults.get(0).getQuestionAnswer());
-								rData.setDla2(displayedResults.get(1).getQuestionAnswer());
-								rData.setDla3(displayedResults.get(2).getQuestionAnswer());
-								rData.setDla4(displayedResults.get(3).getQuestionAnswer());
-								rData.setDla5(displayedResults.get(4).getQuestionAnswer());
-								rData.setDla6(displayedResults.get(5).getQuestionAnswer());
-								rData.setDla7(displayedResults.get(6).getQuestionAnswer());
-								rData.setDla7a(displayedResults.get(7).getQuestionAnswer());
-					 			break;
-					 }	
-				}
-			}			
+				sr = srList.get(0);
+				set3MonthFollowUp(sr, rData);
+			}					
+			//Daily Life Activity			
+			srList = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "1. Daily Life Activities");
+			if (srList.size()>0)
+			{
+				sr = srList.get(0);
+				setDailyLife(sr, rData);
+			}
+					
 			researchDatas.add(rData);
 		}		
 		return researchDatas;
 	}
+	
+	private static void setUBCGoals(SurveyResult sr, UBCClientResearchData rData)
+	{
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
+		if (!displayedResults.isEmpty())
+		{
+			rData.setGoal1(displayedResults.get(0).getQuestionAnswer());
+			rData.setGoal2(displayedResults.get(1).getQuestionAnswer());
+			rData.setGoal3(displayedResults.get(2).getQuestionAnswer());
+			rData.setGoal4(displayedResults.get(3).getQuestionAnswer());
+			rData.setGoal5(displayedResults.get(4).getQuestionAnswer());
+		}		
+	}
+	
+	private static void setUBCQualityLife(SurveyResult sr, UBCClientResearchData rData)
+	{
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
+		if (!displayedResults.isEmpty())
+		{
+			rData.setqOL1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
+			rData.setqOL2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
+			rData.setqOL3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+			rData.setqOL4(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+			rData.setqOL5(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
+			//in case last quesetion has no value
+			if (Utils.isNullOrEmpty(displayedResults.get(5).getQuestionAnswer()))
+					rData.setqOL6(999);
+			else
+				rData.setqOL6(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
+		}		
+	}
+	
+	private static void setUBCDailyLife(SurveyResult sr, UBCClientResearchData rData)
+	{
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
+		if (!displayedResults.isEmpty())
+		{
+			rData.setdLA1(displayedResults.get(0).getQuestionAnswer());
+			rData.setdLA2(displayedResults.get(1).getQuestionAnswer());
+			rData.setdLA3(displayedResults.get(2).getQuestionAnswer());
+			rData.setdLA4(displayedResults.get(3).getQuestionAnswer());
+			rData.setdLA5(displayedResults.get(4).getQuestionAnswer());
+			rData.setdLA6(displayedResults.get(5).getQuestionAnswer());
+		}		
+	}
+	private static void setUBCGG(SurveyResult sr, UBCClientResearchData rData)
+	{
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
+		if (!displayedResults.isEmpty())
+		{
+			if (Utils.isNullOrEmpty(displayedResults.get(0).getQuestionAnswer()))
+				rData.setgH1(999);
+			else
+				rData.setgH1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));	
+		}		
+	}
+	private static void setUBCSocialLife(SurveyResult sr, UBCClientResearchData rData)
+	{
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
+		if (!displayedResults.isEmpty())
+		{
+			rData.setsL1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
+			rData.setsL2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
+			rData.setsL3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+			rData.setsL4(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+			rData.setsL5(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
+			rData.setsL6(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
+			rData.setsL7(Integer.parseInt(displayedResults.get(6).getQuestionAnswer()));
+			rData.setsL8(Integer.parseInt(displayedResults.get(7).getQuestionAnswer()));
+			rData.setsL9(Integer.parseInt(displayedResults.get(8).getQuestionAnswer()));
+			rData.setsL10(Integer.parseInt(displayedResults.get(9).getQuestionAnswer()));
+			if (Utils.isNullOrEmpty(displayedResults.get(10).getQuestionAnswer()))
+				rData.setsL11(999);
+			else				
+				rData.setsL11(Integer.parseInt(displayedResults.get(10).getQuestionAnswer()));
+		}		
+	}
+	private static void setUBCNutrition(SurveyResult sr, UBCClientResearchData rData)
+	{
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
+		if (!displayedResults.isEmpty())
+		{
+			rData.setNut1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
+			rData.setNut2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));				
+			//in case last question has no value 
+			if (Utils.isNullOrEmpty(displayedResults.get(2).getQuestionAnswer()))
+				rData.setNut3(999);
+			else
+				rData.setNut3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+		}		
+	}
+	private static void setUBCAdvanceDirective(SurveyResult sr, UBCClientResearchData rData)
+	{
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
+		if (!displayedResults.isEmpty())
+		{
+			rData.setaCP1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
+			rData.setaCP2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
+			rData.setaCP3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+			rData.setaCP4(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+			rData.setaCP5(displayedResults.get(4).getQuestionAnswer());
+		}		
+	}
+	private static void setUBCMemory(SurveyResult sr, UBCClientResearchData rData)
+	{
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
+		if (!displayedResults.isEmpty())
+		{
+			Map<String, String> mResults = mapSurveyResults(displayedResults);
+			
+			rData.setMem1(Integer.parseInt(mResults.get("Mem1_worse")));	
+			if (mResults.get("Mem2_explain") != null)
+				rData.setMem2(mResults.get("Mem2_explain"));
+			else
+				rData.setMem2("");
+			rData.setMem3(Integer.parseInt(mResults.get("Mem3_worry")));
+			if (mResults.get("Mem4_whywor") != null)
+				rData.setMem4(mResults.get("Mem4_whywor"));
+			else
+				rData.setMem4("");		
+		}		
+	}
+	private static void setUBCPain(SurveyResult sr, UBCClientResearchData rData)
+	{
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
+		if (!displayedResults.isEmpty())
+		{
+			if (Utils.isNullOrEmpty(displayedResults.get(0).getQuestionAnswer()))
+				rData.setPain1(999);
+			else
+				rData.setPain1(Float.parseFloat(displayedResults.get(0).getQuestionAnswer()));		
+		}		
+	}
+	private static void setUBCMobility(SurveyResult sr, UBCClientResearchData rData)
+	{
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
+		if (!displayedResults.isEmpty())
+		{
+			rData.setMob1(displayedResults.get(0).getQuestionAnswer());		
+			rData.setMob2(displayedResults.get(1).getQuestionAnswer());	
+			rData.setMob3(displayedResults.get(2).getQuestionAnswer());
+			rData.setMob4(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));		
+			rData.setMob5(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));	
+			rData.setMob6(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));	
+			rData.setMob7(displayedResults.get(6).getQuestionAnswer());
+			rData.setMob8(Integer.parseInt(displayedResults.get(7).getQuestionAnswer()));	
+			rData.setMob9(displayedResults.get(8).getQuestionAnswer());	
+		}		
+	}
+	private static void setUBCMedicationUse(SurveyResult sr, UBCClientResearchData rData)
+	{
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
+		if (!displayedResults.isEmpty())
+		{
+			rData.setmU1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
+			rData.setmU2(displayedResults.get(1).getQuestionAnswer());
+			rData.setmU3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+			rData.setmU4(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+			if (Utils.isNullOrEmpty(displayedResults.get(4).getQuestionAnswer()))
+				rData.setmU5(999);
+			else
+				rData.setmU5(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
+		}		
+	}
+	private static void setUBCLastQuestion(SurveyResult sr, UBCClientResearchData rData)
+	{
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
+		if (!displayedResults.isEmpty())
+			rData.setlQ(displayedResults.get(0).getQuestionAnswer());	
+	}
 	private static List<UBCClientResearchData> getUBCClientResearchDatas(List<Patient> patients, SurveyManager surveyManager){
 		List<UBCClientResearchData> researchDatas = new ArrayList<UBCClientResearchData>();
 		UBCClientResearchData rData;
-		SurveyResult sr;
-		int pId, size;
+		SurveyResult sr = new SurveyResult();
+		int patientId, size;
 		String xml;
 		LinkedHashMap<String, String> res;
 		List<DisplayedSurveyResult> displayedResults;
@@ -5994,320 +5927,94 @@ public class TapestryHelper {
 		for (int i = 0; i<patients.size(); i++ )
 		{			
 			p = patients.get(i);
-			pId = p.getPatientID();
+			patientId = p.getPatientID();
 			rData = new UBCClientResearchData();			
 			rData.setResearchId(p.getResearchID());			
 			
 			//Goals
-			try{
-				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(pId, "1. Goals");					
-			}catch (Exception e) {
-				System.out.println("throws exception on Goals === patient id == " + pId);
-				sr = null;
-			}
-			
-			if (sr != null)
-			{			
-				try{
-					xml = new String(sr.getResults(), "UTF-8");
-			   	} catch (Exception e) {
-			   		xml = "";
-			   	}
-				res = ResultParser.getResults(xml);
-				displayedResults = ResultParser.getDisplayedSurveyResults(res);	
-				
-				rData.setGoal1(displayedResults.get(0).getQuestionAnswer());
-				rData.setGoal2(displayedResults.get(1).getQuestionAnswer());
-				rData.setGoal3(displayedResults.get(2).getQuestionAnswer());
-				rData.setGoal4(displayedResults.get(3).getQuestionAnswer());
-				rData.setGoal5(displayedResults.get(4).getQuestionAnswer());
-			}			
-			//EQ5D
-			try{
-				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(pId, "2. Quality of Life");					
-			}catch (Exception e) {
-				System.out.println("throws exception on 2. Quality of Life === patient id == " + pId);
-				sr = null;
-			}
-			
-			if (sr != null)
+			srList = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "1. Goals");
+			if (srList.size()>0)
 			{
-				try{
-					xml = new String(sr.getResults(), "UTF-8");
-			   	} catch (Exception e) {
-			   		xml = "";
-			   	}
-				res = ResultParser.getResults(xml);
-				displayedResults = ResultParser.getDisplayedSurveyResults(res);	
-				
-				rData.setqOL1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
-				rData.setqOL2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
-				rData.setqOL3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
-				rData.setqOL4(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
-				rData.setqOL5(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
-				//in case last quesetion has no value
-				if (Utils.isNullOrEmpty(displayedResults.get(5).getQuestionAnswer()))
-						rData.setqOL6(999);
-				else
-					rData.setqOL6(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
+				sr = srList.get(0);
+				setUBCGoals(sr, rData);
+			}
+			//EQ5D
+			srList = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "2. Quality of Life");
+			if (srList.size()>0)
+			{
+				sr = srList.get(0);
+				setUBCQualityLife(sr, rData);
 			}
 			//Daily Life Activity
-			try{
-				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(pId, "3. Daily Life Activities");					
-			}catch (Exception e) {
-				System.out.println("throws exception on 3. Daily Life Activities === patient id == " + pId);
-				sr = null;
-			}
-			
-			if (sr != null)
+			srList = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "3. Daily Life Activities");
+			if (srList.size()>0)
 			{
-				try{
-					xml = new String(sr.getResults(), "UTF-8");
-			   	} catch (Exception e) {
-			   		xml = "";
-			   	}
-				res = ResultParser.getResults(xml);
-				displayedResults = ResultParser.getDisplayedSurveyResults(res);	
-				
-				rData.setdLA1(displayedResults.get(0).getQuestionAnswer());
-				rData.setdLA2(displayedResults.get(1).getQuestionAnswer());
-				rData.setdLA3(displayedResults.get(2).getQuestionAnswer());
-				rData.setdLA4(displayedResults.get(3).getQuestionAnswer());
-				rData.setdLA5(displayedResults.get(4).getQuestionAnswer());
-				rData.setdLA6(displayedResults.get(5).getQuestionAnswer());
-			}
+				sr = srList.get(0);
+				setUBCDailyLife(sr, rData);
+			}			
 			//General Health/4. Get Up & Go
-			try{
-				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(pId, "4. Get Up & Go");					
-			}catch (Exception e) {
-				System.out.println("throws exception on 4. Get Up & Go === patient id == " + pId);
-				sr = null;
-			}
-			
-			if (sr != null)
+			srList = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "4. Get Up & Go");
+			if (srList.size()>0)
 			{
-				try{
-					xml = new String(sr.getResults(), "UTF-8");
-			   	} catch (Exception e) {
-			   		xml = "";
-			   	}
-				res = ResultParser.getResults(xml);
-				displayedResults = ResultParser.getDisplayedSurveyResults(res);	
-				if (Utils.isNullOrEmpty(displayedResults.get(0).getQuestionAnswer()))
-					rData.setgH1(999);
-				else
-					rData.setgH1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));				
+				sr = srList.get(0);
+				setUBCGG(sr, rData);
 			}
 			//Social life
-			try{
-				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(pId, "5. Social Life");					
-			}catch (Exception e) {
-				System.out.println("throws exception on 5. Social Life === patient id == " + pId);
-				sr = null;
-			}
-			
-			if (sr != null)
+			srList = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "5. Social Life");
+			if (srList.size()>0)
 			{
-				try{
-					xml = new String(sr.getResults(), "UTF-8");
-			   	} catch (Exception e) {
-			   		xml = "";
-			   	}
-				res = ResultParser.getResults(xml);
-				displayedResults = ResultParser.getDisplayedSurveyResults(res);	
-				
-				rData.setsL1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
-				rData.setsL2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
-				rData.setsL3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
-				rData.setsL4(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
-				rData.setsL5(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
-				rData.setsL6(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
-				rData.setsL7(Integer.parseInt(displayedResults.get(6).getQuestionAnswer()));
-				rData.setsL8(Integer.parseInt(displayedResults.get(7).getQuestionAnswer()));
-				rData.setsL9(Integer.parseInt(displayedResults.get(8).getQuestionAnswer()));
-				rData.setsL10(Integer.parseInt(displayedResults.get(9).getQuestionAnswer()));
-				if (Utils.isNullOrEmpty(displayedResults.get(10).getQuestionAnswer()))
-					rData.setsL11(999);
-				else				
-					rData.setsL11(Integer.parseInt(displayedResults.get(10).getQuestionAnswer()));
+				sr = srList.get(0);
+				setUBCSocialLife(sr, rData);
 			}
 			//Nutrition
-			try{
-				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(pId, "6. Nutrition");					
-			}catch (Exception e) {
-				System.out.println("throws exception on 6. Nutrition === patient id == " + pId);
-				sr = null;
-			}
-			
-			if (sr != null)
+			srList = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "6. Nutrition");
+			if (srList.size()>0)
 			{
-				try{
-					xml = new String(sr.getResults(), "UTF-8");
-			   	} catch (Exception e) {
-			   		xml = "";
-			   	}
-				res = ResultParser.getResults(xml);
-				displayedResults = ResultParser.getDisplayedSurveyResults(res);	
-				
-				rData.setNut1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
-				rData.setNut2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));				
-				//in case last question has no value 
-				if (Utils.isNullOrEmpty(displayedResults.get(2).getQuestionAnswer()))
-					rData.setNut3(999);
-				else
-					rData.setNut3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+				sr = srList.get(0);
+				setUBCNutrition(sr, rData);
 			}
 			//Advance Care Planning
-			try{
-				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(pId, "7. Advance Care Planning");					
-			}catch (Exception e) {
-				System.out.println("throws exception on 7. Advance Care Planning === patient id == " + pId);
-				sr = null;
-			}
-			
-			if (sr != null)
+			srList = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "7. Advance Care Planning");
+			if (srList.size()>0)
 			{
-				try{
-					xml = new String(sr.getResults(), "UTF-8");
-			   	} catch (Exception e) {
-			   		xml = "";
-			   	}
-				res = ResultParser.getResults(xml);
-				displayedResults = ResultParser.getDisplayedSurveyResults(res);	
-				
-				rData.setaCP1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
-				rData.setaCP2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
-				rData.setaCP3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
-				rData.setaCP4(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
-				rData.setaCP5(displayedResults.get(4).getQuestionAnswer());
+				sr = srList.get(0);
+				setUBCAdvanceDirective(sr, rData);
 			}
 			//Memory
-			try{
-				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(pId, "8. Your Memory");					
-			}catch (Exception e) {
-				System.out.println("throws exception on 8. Your Memory === patient id == " + pId);
-				sr = null;
-			}
-			if (sr != null)
+			srList = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "8. Your Memory");
+			if (srList.size()>0)
 			{
-				try{
-					xml = new String(sr.getResults(), "UTF-8");
-			   	} catch (Exception e) {
-			   		xml = "";
-			   	}
-				res = ResultParser.getResults(xml);
-				displayedResults = ResultParser.getDisplayedSurveyResults(res);	
-				mResults = mapSurveyResults(displayedResults);
-				
-				rData.setMem1(Integer.parseInt(mResults.get("Mem1_worse")));	
-				if (mResults.get("Mem2_explain") != null)
-					rData.setMem2(mResults.get("Mem2_explain"));
-				else
-					rData.setMem2("");
-				rData.setMem3(Integer.parseInt(mResults.get("Mem3_worry")));
-				if (mResults.get("Mem4_whywor") != null)
-					rData.setMem4(mResults.get("Mem4_whywor"));
-				else
-					rData.setMem4("");				
-			}			
+				sr = srList.get(0);
+				setUBCMemory(sr, rData);
+			}
 			//Pain
-			try{
-				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(pId, "9. Pain");					
-			}catch (Exception e) {
-				System.out.println("throws exception on 9. Pain === patient id == " + pId);
-				sr = null;
-			}
-			
-			if (sr != null)
+			srList = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "9. Pain");
+			if (srList.size()>0)
 			{
-				try{
-					xml = new String(sr.getResults(), "UTF-8");
-			   	} catch (Exception e) {
-			   		xml = "";
-			   	}
-				res = ResultParser.getResults(xml);
-				displayedResults = ResultParser.getDisplayedSurveyResults(res);	
-				
-				if (Utils.isNullOrEmpty(displayedResults.get(0).getQuestionAnswer()))
-					rData.setPain1(999);
-				else
-					rData.setPain1(Float.parseFloat(displayedResults.get(0).getQuestionAnswer()));				
+				sr = srList.get(0);
+				setUBCPain(sr, rData);
 			}
 			//Mobility
-			try{
-				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(pId, "10. Mobility");					
-			}catch (Exception e) {
-				System.out.println("throws exception on 10. Mobility === patient id == " + pId);
-				sr = null;
-			}
-			
-			if (sr != null)
+			srList = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "10. Mobility");
+			if (srList.size()>0)
 			{
-				try{
-					xml = new String(sr.getResults(), "UTF-8");
-			   	} catch (Exception e) {
-			   		xml = "";
-			   	}
-				res = ResultParser.getResults(xml);
-				displayedResults = ResultParser.getDisplayedSurveyResults(res);	
-				
-				rData.setMob1(displayedResults.get(0).getQuestionAnswer());		
-				rData.setMob2(displayedResults.get(1).getQuestionAnswer());	
-				rData.setMob3(displayedResults.get(2).getQuestionAnswer());
-				rData.setMob4(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));		
-				rData.setMob5(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));	
-				rData.setMob6(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));	
-				rData.setMob7(displayedResults.get(6).getQuestionAnswer());
-				rData.setMob8(Integer.parseInt(displayedResults.get(7).getQuestionAnswer()));	
-				rData.setMob9(displayedResults.get(8).getQuestionAnswer());
+				sr = srList.get(0);
+				setUBCMobility(sr, rData);
 			}
 			//Medication Use
-			try{
-				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(pId, "11. Medication Use");					
-			}catch (Exception e) {
-				System.out.println("throws exception on 11. Medication Use === patient id == " + pId);
-				sr = null;
-			}
-			
-			if (sr != null)
+			srList = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "11. Medication Use");
+			if (srList.size()>0)
 			{
-				try{
-					xml = new String(sr.getResults(), "UTF-8");
-			   	} catch (Exception e) {
-			   		xml = "";
-			   	}
-				res = ResultParser.getResults(xml);
-				displayedResults = ResultParser.getDisplayedSurveyResults(res);	
-				
-				rData.setmU1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
-				rData.setmU2(displayedResults.get(1).getQuestionAnswer());
-				rData.setmU3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
-				rData.setmU4(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
-				if (Utils.isNullOrEmpty(displayedResults.get(4).getQuestionAnswer()))
-					rData.setmU5(999);
-				else
-					rData.setmU5(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
+				sr = srList.get(0);
+				setUBCMedicationUse(sr, rData);
 			}
 			//Last Question
-			try{
-				sr = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(pId, "12. Last Question");					
-			}catch (Exception e) {
-				System.out.println("throws exception on 12. Last Question === patient id == " + pId);
-				sr = null;
-			}
-			
-			if (sr != null)
+			srList = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "12. Last Question");
+			if (srList.size()>0)
 			{
-				try{
-					xml = new String(sr.getResults(), "UTF-8");
-			   	} catch (Exception e) {
-			   		xml = "";
-			   	}
-				res = ResultParser.getResults(xml);
-				displayedResults = ResultParser.getDisplayedSurveyResults(res);					
-				
-				rData.setlQ(displayedResults.get(0).getQuestionAnswer());
-			}			
+				sr = srList.get(0);
+				setUBCLastQuestion(sr, rData);
+			}
 			researchDatas.add(rData);
 		}		
 		return researchDatas;	
@@ -6346,7 +6053,7 @@ public class TapestryHelper {
         fillSheet(data, sheet, workbook);
         
         response.setContentType("application/vnd.ms-excel");
-        response.setHeader("Content-Disposition", "attachment; filename=\"result.xlsx\"");
+        response.setHeader("Content-Disposition", "attachment; filename=\"UBC_client_results.xlsx\"");
      
         try{// Write workbook to response.
             workbook.write(response.getOutputStream()); 

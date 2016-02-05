@@ -2927,10 +2927,8 @@ public class TapestryController{
    	
    	@RequestMapping(value="/modify_surveyTemplate/{surveyID}", method=RequestMethod.GET)
    	public String modifySurveyTemplate(@PathVariable("surveyID") int id, HttpServletRequest request, ModelMap model)
-	{   		
-	//	SurveyTemplate st = surveyManager.getSurveyTemplateByID(id);
-		List<SurveyTemplate> surveyTemplates = TapestryHelper.getSurveyTemplates(request, surveyManager);
-				
+	{   			
+		List<SurveyTemplate> surveyTemplates = TapestryHelper.getSurveyTemplates(request, surveyManager);				
 		for (SurveyTemplate st: surveyTemplates)
 		{
 			if (id == st.getSurveyID())
@@ -3055,7 +3053,7 @@ public class TapestryController{
    	}
 	
 	@RequestMapping(value="/download_caregiver_researchData/{siteID}", method=RequestMethod.GET)
-	public String downloadCareGiverResearchDataTest(@PathVariable("siteID") int id, HttpServletRequest request, HttpServletResponse response)
+	public String downloadCareGiverResearchData(@PathVariable("siteID") int id, HttpServletRequest request, HttpServletResponse response)
 	{
 		List<Volunteer> volunteers = volunteerManager.getVolunteersBySite(id);
 		//sort volunteer list by volunteer ID
@@ -3149,7 +3147,6 @@ public class TapestryController{
 		
 		return null;	
 	}
-
 	
 	@RequestMapping(value="/download_researchData/{siteID}", method=RequestMethod.GET)
 	public String downLoadResearchDataBySite(@PathVariable("siteID") int id, HttpServletRequest request,  HttpServletResponse response)
@@ -3227,7 +3224,7 @@ public class TapestryController{
         sheet = TapestryHelper.fillSheet(data, sheet, workbook);
        
         response.setContentType("application/vnd.ms-excel");
-        response.setHeader("Content-Disposition", "attachment; filename=\"result.xlsx\"");
+        response.setHeader("Content-Disposition", "attachment; filename=\"client_result.xlsx\"");
      
         try{// Write workbook to response.
             workbook.write(response.getOutputStream()); 
@@ -3714,8 +3711,7 @@ public class TapestryController{
 			volunteerSurveyResults = surveyManager.getVolunteerSurveyResultsByVolunteerId(surveyResult.getVolunteerID());
 			
 			userSurveys = TapestryHelper.storeVolunteerSurveyMapInSession(request, volunteerSurveyResults, volunteerSurveyTemplates);
-		}
-		
+		}		
 		SurveyTemplate surveyTemplate = surveyManager.getVolunteerSurveyTemplateByID(surveyResult.getSurveyID());
 		TapestryPHRSurvey currentSurvey = userSurveys.getSurvey(Integer.toString(id));		
 	
@@ -3723,19 +3719,17 @@ public class TapestryController{
 			SurveyFactory surveyFactory = new SurveyFactory();
 			PHRSurvey templateSurvey = surveyFactory.getSurveyTemplate(surveyTemplate);	
 			
-			redirectAction = TapestryHelper.execute(request, Integer.toString(id), currentSurvey, templateSurvey);
+	//		redirectAction = TapestryHelper.execute(request, Integer.toString(id), currentSurvey, templateSurvey);		
+			redirectAction = DoSurveyAction.executeVolunteerSurvey(request, Integer.toString(id), currentSurvey, templateSurvey);		
 		} catch (Exception e) {
 			System.out.println("Error: " + e);
 			e.printStackTrace();
-		}
-		
+		}		
 		if (redirectAction == null){ //Assuming we've completed the survey
 			System.out.println("Something bad happened");
-		}
-				
+		}				
    		if (request.isUserInRole("ROLE_USER") && redirectAction.getViewName() == "failed")
-   			redirectAction.setViewName("redirect:/");	
-   
+   			redirectAction.setViewName("redirect:/");	   
    		return redirectAction;
    	}
    	
@@ -3774,15 +3768,13 @@ public class TapestryController{
    	@RequestMapping(value="/view_volunteer_survey_results/{resultID}", method=RequestMethod.GET)
    	public String viewVolunteerSurveyResults(@PathVariable("resultID") int id, HttpServletRequest request, ModelMap model)
    	{
-   		SurveyResult r = surveyManager.getVolunteerSurveyResultByID(id); 		
-   		
+   		SurveyResult r = surveyManager.getVolunteerSurveyResultByID(id); 		   		
    		String xml;
    		try{
    			xml = new String(r.getResults(), "UTF-8");
    		} catch (Exception e) {
    			xml = "";
-   		}
-   		
+   		}   		
    		LinkedHashMap<String, String> res = ResultParser.getResults(xml);
    		List<DisplayedSurveyResult> displayedResults = ResultParser.getDisplayedSurveyResults(res);   		
    		displayedResults = TapestryHelper.getDetailedAnswerForUBCSurveys(displayedResults); 

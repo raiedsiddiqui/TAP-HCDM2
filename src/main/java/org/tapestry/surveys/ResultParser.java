@@ -76,10 +76,8 @@ public class ResultParser {
                 NodeList questionIDList = question.getElementsByTagName("QuestionId");
                 if (questionIDList.getLength() > 0){
                     Element questionID = (Element) questionIDList.item(0);
-                    strQuestionID = questionID.getTextContent().trim();
-              
-//                    if (strQuestionID.equals("surveyHash") || strQuestionID.equals("surveyId")||strQuestionID.equals("finish"))                  
-//                    	continue;
+                    strQuestionID = questionID.getTextContent().trim();              
+
                     if (strQuestionID.equals("surveyHash") ||strQuestionID.equals("finish"))                  
                     	continue;
                    
@@ -100,8 +98,7 @@ public class ResultParser {
                 		questionAnswerString += questionAnswer.getTextContent().trim();
                 		
                 		if (questionAnswer.getNextSibling() != null)
-                			questionAnswerString += ", ";
-    //            			questionAnswerString += "|";
+                			questionAnswerString += ", ";   
                 	}
                 }                    
                 sb.append(questionAnswerString);
@@ -195,8 +192,7 @@ public class ResultParser {
     				result.setQuestionText(qText);
     				result.setSurveyId(surveyId);    
     		   				
-    				resultList.add(result);
-    				
+    				resultList.add(result);    				
         		}
     		}
     	}    	

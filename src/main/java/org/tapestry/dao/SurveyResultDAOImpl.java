@@ -119,15 +119,25 @@ public class SurveyResultDAOImpl extends JdbcDaoSupport implements SurveyResultD
 	}
 	
 	@Override
-	public SurveyResult getCompletedSurveyResultByPatientAndSurveyTitle(int patientId, String surveyTitle) {
+	public List<SurveyResult> getCompletedSurveyResultByPatientAndSurveyTitle(int patientId, String surveyTitle) {
 		String sql = "SELECT survey_results.*, surveys.title, surveys.description, patients.firstname, patients.lastname FROM survey_results"
 				+ " INNER JOIN surveys ON survey_results.survey_ID = surveys.survey_ID INNER JOIN patients"
 				+ " ON survey_results.patient_ID=patients.patient_ID WHERE survey_results.patient_ID=? AND surveys.title=? "
 				+ "AND survey_results.completed=1 ORDER BY survey_results.startDate ";
-		SurveyResult result = getJdbcTemplate().queryForObject(sql, new Object[]{patientId,surveyTitle}, new SurveyResultMapper());
-		
-		return result;
+			
+		return getJdbcTemplate().query(sql, new Object[]{patientId,surveyTitle}, new SurveyResultMapper());
 	}
+	
+//	@Override
+//	public SurveyResult getCompletedSurveyResultByPatientAndSurveyTitle(int patientId, String surveyTitle) {
+//		String sql = "SELECT survey_results.*, surveys.title, surveys.description, patients.firstname, patients.lastname FROM survey_results"
+//				+ " INNER JOIN surveys ON survey_results.survey_ID = surveys.survey_ID INNER JOIN patients"
+//				+ " ON survey_results.patient_ID=patients.patient_ID WHERE survey_results.patient_ID=? AND surveys.title=? "
+//				+ "AND survey_results.completed=1 ORDER BY survey_results.startDate ";
+//		SurveyResult result = getJdbcTemplate().queryForObject(sql, new Object[]{patientId,surveyTitle}, new SurveyResultMapper());
+//		
+//		return result;
+//	}
 
 	@Override
 	public String assignSurvey(final SurveyResult sr) {						
@@ -372,8 +382,7 @@ public class SurveyResultDAOImpl extends JdbcDaoSupport implements SurveyResultD
 	}
 
 	@Override
-	public List<SurveyResult> getCompletedSurveyResultByVolunteertAndTitle(
-			int volunteerId, String title) {
+	public List<SurveyResult> getCompletedSurveyResultByVolunteertAndTitle(int volunteerId, String title) {
 		String sql = "SELECT vsr.*, vs.title, vs.description, v.firstname, v.lastname FROM volunteer_survey_results "
 				+ "AS vsr INNER JOIN volunteer_surveys AS vs ON vsr.volunteer_survey_ID = vs.survey_ID INNER JOIN volunteers "
 				+ "AS v ON vsr.volunteer_ID=v.volunteer_ID WHERE vsr.volunteer_ID=? AND vs.title=? AND vsr.completed=1 "

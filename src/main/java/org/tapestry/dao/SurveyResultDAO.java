@@ -74,7 +74,8 @@ public interface SurveyResultDAO {
 	 * @param id survey ID
 	 * @return a list of SurveyResult objects
 	 */
-	public SurveyResult getCompletedSurveyResultByPatientAndSurveyTitle(int patientId, String surveyTitle);
+//	public SurveyResult getCompletedSurveyResultByPatientAndSurveyTitle(int patientId, String surveyTitle);
+	public List<SurveyResult> getCompletedSurveyResultByPatientAndSurveyTitle(int patientId, String surveyTitle);
 	
 	/**
 	 * Uploads a survey template to the database
