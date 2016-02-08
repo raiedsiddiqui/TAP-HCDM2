@@ -1297,284 +1297,7 @@ public class TapestryHelper {
 			}
 		}
 		return(results);
-	}
-	/*
-	public static ModelAndView execute(HttpServletRequest request, String documentId, TapestryPHRSurvey currentSurvey, PHRSurvey templateSurvey) throws Exception
-	{
-		ModelAndView m = new ModelAndView();
-		final String questionId = request.getParameter("questionid");
-		String direction = request.getParameter("direction");		
-		String observerNotes = request.getParameter("observernote");	
-		
-		if (direction == null)
-			direction = "forward";
-
-		if (documentId == null)
-		{
-			m.setViewName("failed");
-			return m;
-		}
-
-		String[] answerStrs = request.getParameterValues("answer");
-		
-		String nextQuestionId = questionId;
-		//if requested survey does not exist
-		if (currentSurvey == null)
-		{
-			m.setViewName("failed");
-			return m;
-		}
-				
-		boolean saved = false;
-
-		//if starting/continuing survey, clear session
-		if (questionId == null)
-		{		
-			//if just starting/continuing(from before) the survey, direct to last question
-			String lastQuestionId;
-
-			if (currentSurvey.getQuestions().size() == 0)
-			{
-				boolean moreQuestions = addNextQuestion(null, currentSurvey, templateSurvey);
-				if (!moreQuestions)
-				{
-					m.setViewName("failed");
-					return m;
-				}
-			}
-
-			if (currentSurvey.isComplete())
-			{ //if complete show first question				
-				lastQuestionId = currentSurvey.getQuestions().get(0).getId();				
-				m.addObject("hideObservernote", true);
-			}
-			else
-			{ //if not complete show next question
-				lastQuestionId = currentSurvey.getQuestions().get(currentSurvey.getQuestions().size() - 1).getId();
-				//logic for displaying Observer Notes button
-				if (isFirstQuestionId(lastQuestionId, '0'))
-					m.addObject("hideObservernote", true);
-				else
-					m.addObject("hideObservernote", false);				
-			}		
-			m.addObject("survey", currentSurvey);
-			m.addObject("templateSurvey", templateSurvey);
-			m.addObject("questionid", lastQuestionId);
-			m.addObject("resultid", documentId);
-			
-			m.setViewName("/volunteer/ubc/show_volunteerSurvey");
-			
-			return m;
-		}//end of questionId == null;
-
-		String errMsg = null;
-
-		//if continuing survey (just submitted an answer)
-		if (questionId != null && direction.equalsIgnoreCase("forward"))
-		{				
-			if (currentSurvey.getQuestionById(questionId).getQuestionType().equals(SurveyQuestion.ANSWER_CHECK) && answerStrs == null)
-				answerStrs = new String[0];
-			
-			if (answerStrs != null && (currentSurvey.getQuestionById(questionId).getQuestionType().equals(SurveyQuestion.ANSWER_CHECK) || !answerStrs[0].equals("")))
-			{						
-				SurveyQuestion question = currentSurvey.getQuestionById(questionId);					
-				String questionText = question.getQuestionText();
-				
-				//append observernote to question text
-				if (!Utils.isNullOrEmpty(questionText))
-				{
-					String separator = "/observernote/ ";
-					StringBuffer sb = new StringBuffer();
-					sb.append(questionText);
-					sb.append(separator);
-					sb.append(observerNotes);
-					
-					questionText = sb.toString();
-					question.setQuestionText(questionText);
-				}				
-				ArrayList<SurveyAnswer> answers = convertToSurveyAnswers(answerStrs, question);		
-				
-				boolean goodAnswerFormat = true;
-				if (answers == null)
-					goodAnswerFormat = false;
-				
-				//check each answer for validation					
-				if (goodAnswerFormat && question.validateAnswers(answers))	
-				{
-					boolean moreQuestions;
-					//see if the user went back (if current question the last question in user's question profile)
-					if (!currentSurvey.getQuestions().get(currentSurvey.getQuestions().size() - 1).equals(question))
-					{
-						ArrayList<SurveyAnswer> existingAnswers = currentSurvey.getQuestionById(questionId).getAnswers();
-						//if user hit back, and then forward, and answer wasn't changed
-						if (org.apache.commons.lang.StringUtils.join(answerStrs, ", ").equals(org.apache.commons.lang.StringUtils.join(existingAnswers, ", ")) || currentSurvey.isComplete())
-							moreQuestions = true;
-						else
-						{
-							ArrayList<SurveyQuestion> tempquestions = new ArrayList<SurveyQuestion>(); //Create a temp array list to transfer answered questions
-
-							//remove all future answers								
-							//clear all questions following it
-							int currentSurveySize = currentSurvey.getQuestions().size(); //stores number of questions
-							int currentQuestionIndex = currentSurvey.getQuestions().indexOf(question); //gets the current question index
-																					
-							for (int i = currentQuestionIndex +1; i < currentSurveySize; i++)
-							{
-								tempquestions.add(currentSurvey.getQuestions().get(currentQuestionIndex +1));
-								currentSurvey.getQuestions().remove(currentQuestionIndex + 1);  //goes through quesitons list and removes each question after it
-							}							
-							//save answers modified/input by user into question
-							question.setAnswers(answers);								
-							saved = true;
-							//add new question
-							moreQuestions = addNextQuestion(questionId, currentSurvey, templateSurvey);
-
-							//check if old index and new index contain same questions in the same list
-							int sizeofcurrentquestionslist = currentSurvey.getQuestions().size(); //Size of new getQuestions aftre removing future questions
-
-							if (currentSurvey.getQuestions().get(sizeofcurrentquestionslist-1).getId().equals(tempquestions.get(0).getId()))
-							{
-								currentSurvey.getQuestions().remove(sizeofcurrentquestionslist-1);
-								for (int y=0;y<tempquestions.size();y++) 
-									currentSurvey.getQuestions().add(tempquestions.get(y));
-								moreQuestions = addNextQuestion(questionId, currentSurvey, templateSurvey);
-							}								
-								//if same then replace temp list with new list
-								//if not then add the one new item.
-						}
-						//if user didn't go back, and requesting the next question
-					}
-					else
-					{
-						question.setAnswers(answers);
-						saved = true;
-						moreQuestions = addNextQuestion(questionId, currentSurvey, templateSurvey);						
-					}
-					//finished survey
-					if (!moreQuestions)
-					{
-						if (!currentSurvey.isComplete()){							
-							SurveyAction.updateSurveyResult(currentSurvey);
-							
-							m.addObject("survey_completed", true);
-							m.addObject("survey", currentSurvey);
-							m.addObject("templateSurvey", templateSurvey);
-							m.addObject("questionid", questionId);
-							m.addObject("resultid", documentId);
-							m.addObject("message", "SURVEY FINISHED - Please click SUBMIT");
-							m.addObject("hideObservernote", false);
-							m.setViewName("/volunteer/ubc/show_volunteerSurvey");
-							return m;
-						} 
-						else {									
-							m.addObject("survey", currentSurvey);
-							m.addObject("templateSurvey", templateSurvey);
-							m.addObject("questionid", questionId);
-							m.addObject("resultid", documentId);
-							m.addObject("message", "End of Survey");
-							m.addObject("hideObservernote", false);
-							m.setViewName("/volunteer/ubc/show_volunteerSurvey");
-							return m;
-						}
-					}
-					int questionIndex = currentSurvey.getQuestionIndexbyId(questionId);
-					nextQuestionId = currentSurvey.getQuestions().get(questionIndex + 1).getId();
-				
-
-					//save to indivo
-					if (saved && questionIndex % 4 == 0 && !currentSurvey.isComplete()) 
-						SurveyAction.updateSurveyResult(currentSurvey);
-
-					//if answer fails validation
-				}// end of validation answers
-				else {						
-					m.addObject("survey", currentSurvey);
-					m.addObject("templateSurvey", templateSurvey);
-					m.addObject("questionid", questionId);
-					m.addObject("resultid", documentId);
-					
-					if (question.getRestriction() != null && question.getRestriction().getInstruction() != null)
-						m.addObject("message", question.getRestriction().getInstruction());
-					m.addObject("hideObservernote", false);
-					m.setViewName("/volunteer/ubc/show_volunteerSurvey");
-					return m;
-				}
-				//if answer not specified, and hit forward
-			}
-			else 
-				errMsg = "You must supply an answer";
-		}//end of forward action
-		else if (direction.equalsIgnoreCase("backward"))
-		{
-			int questionIndex = currentSurvey.getQuestionIndexbyId(questionId);
-			if (questionIndex > 0) 
-				nextQuestionId = currentSurvey.getQuestions().get(questionIndex - 1).getId();
-		}
-		
-		//backward to the description page(before the first qustion)
-		if ((questionId != null) && ("backward".equals(direction)) && (isFirstQuestionId(questionId, '0')))
-			m.addObject("hideObservernote", true);
-		else
-			m.addObject("hideObservernote", false);
-		
-		m.addObject("survey", currentSurvey);
-		m.addObject("templateSurvey", templateSurvey);
-		m.addObject("questionid", nextQuestionId);
-		m.addObject("resultid", documentId);
-		if (errMsg != null) m.addObject("message", errMsg);	
-
-		m.setViewName("/volunteer/ubc/show_volunteerSurvey");
-		return m;
-	}
-	
-	private static boolean isFirstQuestionId(String str, char c){
-		boolean isFirst = false;
-		int length = str.length();
-		
-		//'1' is only digital in string for backward direction, and '0' for forward direction
-		if ((str.charAt(length - 1) == c) && Character.isLetter(str.charAt(length - 2)))
-			isFirst = true;
-		
-		return isFirst;
-	}
-
-	private static boolean addNextQuestion(String currentQuestionId, TapestryPHRSurvey currentSurvey, PHRSurvey templateSurvey) throws SurveyException
-	{
-		SurveyQuestion nextQuestion;
-		if (currentQuestionId == null)
-		{
-			if (templateSurvey.getQuestions().size() == 0) return false;
-			nextQuestion = templateSurvey.getQuestions().get(0);
-		}
-		else
-		{
-			String nextQuestionId = currentSurvey.getNextQuestionId(currentQuestionId);
-			if (nextQuestionId == null) return false;		
-			
-			nextQuestion = templateSurvey.getQuestionById(nextQuestionId);
-
-		}
-		currentSurvey.getQuestions().add(nextQuestion);
-		return true;
-	}
-
-	private static ArrayList<SurveyAnswer> convertToSurveyAnswers(String[] answers, SurveyQuestion question) throws SurveyParseException
-	{
-		ArrayList<SurveyAnswer> surveyAnswers = new ArrayList<SurveyAnswer>();
-		SurveyAnswerFactory answerFactory = new SurveyAnswerFactory();
-		SurveyAnswer answerObj;
-		for (String answer : answers)
-		{
-			answerObj = answerFactory.getSurveyAnswer(question.getQuestionType(), answer);			
-			
-			if (answerObj == null) 
-				return null;				
-			else
-				surveyAnswers.add(answerObj);		
-		}
-		return surveyAnswers;
-	}*/
-	
+	}	
 	// ===================== Mis =================================//
    	/**
    	 * Add patients and volunteer info in the ModelMap
@@ -4810,68 +4533,158 @@ public class TapestryHelper {
 		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);		
 		mResults = mapSurveyResults(displayedResults);
 		
-		rData.setCb1_ed_T0(Integer.parseInt(mResults.get("CB1")));
-		if (mResults.get("CB1a") != null)
+		if (mResults.get("CB1") == null)
+			rData.setCb1_ed_T0(Integer.parseInt(mResults.get("CBack0_Edu_T0")));
+		else
+			rData.setCb1_ed_T0(Integer.parseInt(mResults.get("CB1")));
+		
+		if (mResults.get("CB1a") == null)
+		{
+			if (mResults.get("CBack1_EduSpecify_T0") != null)
+				rData.setCb1a_ed_T0(mResults.get("CBack1_EduSpecify_T0"));
+		}
+		else
 			rData.setCb1a_ed_T0(mResults.get("CB1a"));
+		
+		if (mResults.get("CB2") == null)
+			rData.setCb2_empl_T0(Integer.parseInt(mResults.get("CBack2_Employ_T0")));
 		else
-			rData.setCb1a_ed_T0("");
-			
-		rData.setCb2_empl_T0(Integer.parseInt(mResults.get("CB2")));
-		rData.setCb3_livewith_T0(Integer.parseInt(mResults.get("CB3")));
-		rData.setCb4_children_T0(Integer.parseInt(mResults.get("CB4")));
-		if(mResults.get("CB4a") != null)
+			rData.setCb2_empl_T0(Integer.parseInt(mResults.get("CB2")));
+		
+		if (mResults.get("CB3") == null)
+			rData.setCb3_livewith_T0(Integer.parseInt(mResults.get("CBack3_LiveWith_T0")));
+		else
+			rData.setCb3_livewith_T0(Integer.parseInt(mResults.get("CB3")));
+		
+		if (mResults.get("CB4") == null)
+			rData.setCb4_children_T0(Integer.parseInt(mResults.get("CBack4_Children_T0")));
+		else
+			rData.setCb4_children_T0(Integer.parseInt(mResults.get("CB4")));
+		
+		if (mResults.get("CB4a") == null)
+		{
+			if (mResults.get("CBack5_Home_T0") != null)
+				rData.setCb4a_T0(Integer.parseInt(mResults.get("CBack5_Home_T0")));
+		}
+		else
 			rData.setCb4a_T0(Integer.parseInt(mResults.get("CB4a")));
+		
+		if (mResults.get("CB5") == null)
+			rData.setCb5_partner_T0(Integer.parseInt(mResults.get("CBack6_Partner_T0")));
 		else
-			rData.setCb4a_T0(999);
-		rData.setCb5_partner_T0(Integer.parseInt(mResults.get("CB5")));
-		rData.setCb6_agegr_T0(Integer.parseInt(mResults.get("CB6")));
-		rData.setCb7_gender_T0(Integer.parseInt(mResults.get("CB7")));
-		if(mResults.get("CB7a") != null)
+			rData.setCb5_partner_T0(Integer.parseInt(mResults.get("CB5")));
+		
+		if (mResults.get("CB6") == null)
+			rData.setCb6_agegr_T0(Integer.parseInt(mResults.get("CBack7_Age_T0")));
+		else
+			rData.setCb6_agegr_T0(Integer.parseInt(mResults.get("CB6")));
+		
+		if (mResults.get("CB7") == null)
+			rData.setCb7_gender_T0(Integer.parseInt(mResults.get("CBack8_Gender_T0")));
+		else
+			rData.setCb7_gender_T0(Integer.parseInt(mResults.get("CB7")));
+		
+		if (mResults.get("CB7a") == null)
+		{
+			if (mResults.get("CBack9_GenSpecify_T0") != null)
+					rData.setCb7a_T0((mResults.get("CBack9_GenSpecify_T0")));
+		}
+		else
 			rData.setCb7a_T0((mResults.get("CB7a")));
+		
+		if (mResults.get("CB8") == null)
+			rData.setCb8_lang_T0(mResults.get("CBack10_LangHome_T0"));
 		else
-			rData.setCb7a_T0("");
-			
-		rData.setCb8_lang_T0(mResults.get("CB8"));
-		rData.setCb9_born_T0(mResults.get("CB9"));
-	
-		if(mResults.get("CB9a") != null)
-			rData.setCb9a_bornwhere((mResults.get("CB9a")));
+			rData.setCb8_lang_T0(mResults.get("CB8"));
+		
+		if (mResults.get("CB9") == null)
+			rData.setCb9_born_T0(mResults.get("CBack11_BornCan_T0"));
 		else
-			rData.setCb9a_bornwhere("");
-	
-		rData.setCb10_ethnic_T0(mResults.get("CB10"));
-			
-		if(mResults.get("CB10b") != null)
-			rData.setCb10a((mResults.get("CB10b")));
+			rData.setCb9_born_T0(mResults.get("CB9"));		
+		
+		if (mResults.get("CB10") == null)
+			rData.setCb10_ethnic_T0(mResults.get("CBack12_Ethinic_T0"));
 		else
-			rData.setCb10a("");
-			
-		rData.setCb11_relation_T0(Integer.parseInt(mResults.get("CB11")));
-		if(mResults.get("CB11b") != null)
-			rData.setCb11a_T0((mResults.get("CB11b")));
+			rData.setCb10_ethnic_T0(mResults.get("CB10"));
+		
+		if (mResults.get("CB10b") == null)
+		{
+			if (mResults.get("CBack13_EthincSpecify_T0") != null)
+				rData.setCb10a(mResults.get("CBack13_EthincSpecify_T0"));
+		}
 		else
-			rData.setCb11a_T0("");
-			
-		rData.setCb12_startcg_T0(mResults.get("CB12"));
-		rData.setCb13_physcare_T0(Integer.parseInt(mResults.get("CB13")));
-		rData.setCb14_emot_T0(Integer.parseInt(mResults.get("CB14")));
-		rData.setCb15_other_T0(Integer.parseInt(mResults.get("CB15")));
-		rData.setCb16_howlong_T0(mResults.get("CB16"));
-		rData.setCb17_onlycg_T0(Integer.parseInt(mResults.get("CB17")));
-			
-		if(mResults.get("CB17c") != null)
-			rData.setCb17a_T0((mResults.get("CB7a")));
+			rData.setCb10a(mResults.get("CB10b"));
+		
+		if (mResults.get("CB11") == null)
+			rData.setCb11_relation_T0(Integer.parseInt(mResults.get("CBack14_Relation_T0")));
 		else
-			rData.setCb17a_T0("");
-			
-		if(mResults.get("CB17d") != null)
+			rData.setCb11_relation_T0(Integer.parseInt(mResults.get("CB11")));
+		
+		if (mResults.get("CB11b") == null)
+		{
+			if (mResults.get("CBack15_RelationSpecify_T0") != null)
+				rData.setCb11_relation_T0(Integer.parseInt(mResults.get("CBack15_RelationSpecify_T0")));
+		}
+		else
+			rData.setCb11a_T0(mResults.get("CB11b"));
+		
+		if (mResults.get("CB12") == null)
+			rData.setCb12_startcg_T0(mResults.get("CBack16_Start_T0"));
+		else
+			rData.setCb12_startcg_T0(mResults.get("CB12"));
+		
+		if (mResults.get("CB13") == null)
+			rData.setCb13_physcare_T0(Integer.parseInt(mResults.get("CBack17_HoursPhy_T0")));
+		else
+			rData.setCb13_physcare_T0(Integer.parseInt(mResults.get("CB13")));
+		
+		if (mResults.get("CB14") == null)
+			rData.setCb14_emot_T0(Integer.parseInt(mResults.get("CBack18_HoursSocial_T0")));
+		else
+			rData.setCb14_emot_T0(Integer.parseInt(mResults.get("CB14")));
+		
+		if (mResults.get("CB15") == null)
+			rData.setCb15_other_T0(Integer.parseInt(mResults.get("CBack19_HoursOther_T0")));
+		else
+			rData.setCb15_other_T0(Integer.parseInt(mResults.get("CB15")));
+		
+		if (mResults.get("CB16") == null)
+			rData.setCb16_howlong_T0(mResults.get("CBack20_HowLong_T0"));
+		else
+			rData.setCb16_howlong_T0(mResults.get("CB16"));
+		
+		if (mResults.get("CB17") == null)
+			rData.setCb17_onlycg_T0(Integer.parseInt(mResults.get("CBack21_Only_T0")));
+		else
+			rData.setCb17_onlycg_T0(Integer.parseInt(mResults.get("CB17")));
+		
+		if (mResults.get("CB17c") == null)
+		{
+			if (mResults.get("CBack22_NumOtherPeople_T0") != null)
+				rData.setCb17a_T0(mResults.get("CBack22_NumOtherPeople_T0"));
+		}
+		else
+			rData.setCb17a_T0(mResults.get("CB17c"));
+		
+		if (mResults.get("CB17d") == null)
+			rData.setCb17b_T0((mResults.get("CBack23_OtherHelpers_T0")));
+		else
 			rData.setCb17b_T0((mResults.get("CB17d")));
+		
+		if (mResults.get("CB18") == null)
+			rData.setCb18_healthcon_T0(mResults.get("CBack24_MainConcern_T0"));
 		else
-			rData.setCb17b_T0("");
-			
-		rData.setCb18_healthcon_T0(mResults.get("CB18"));
-		rData.setCb19_cgotherppl_T0(mResults.get("CB19"));
-		rData.setCb20_yourhealth_T0(mResults.get("CB20"));
+			rData.setCb18_healthcon_T0(mResults.get("CB18"));
+		
+		if (mResults.get("CB19") == null)
+			rData.setCb19_cgotherppl_T0(mResults.get("CBack25_Experince_T0"));
+		else
+			rData.setCb19_cgotherppl_T0(mResults.get("CB19"));
+				
+		if (mResults.get("CB20") == null)
+			rData.setCb20_yourhealth_T0(mResults.get("CBack26_Moment_T0"));
+		else
+			rData.setCb20_yourhealth_T0(mResults.get("CB20"));
 	}
 	
 	//fill in Background Follow up survey for UBC research data dump on T1 period
@@ -5054,11 +4867,7 @@ public class TapestryHelper {
 	{		
 		List<CareGiverResearchData> researchDatas = new ArrayList<CareGiverResearchData>();
 		CareGiverResearchData rData;
-		SurveyResult sr;
 		int vId, size;
-		String xml, observerNote;
-		LinkedHashMap<String, String> res;
-		List<DisplayedSurveyResult> displayedResults;
 		List<SurveyResult> srList = new ArrayList<SurveyResult>();
 		List<SurveyResult> srList1 = new ArrayList<SurveyResult>();
 		StringBuffer sb;
@@ -5071,15 +4880,13 @@ public class TapestryHelper {
 			vId = vol.getVolunteerId();
 			rData = new CareGiverResearchData();			
 			rData.setVolunteerId(vId);
-			rData.setName(vol.getFirstName() + " " + vol.getLastName());
-			
+			rData.setName(vol.getFirstName() + " " + vol.getLastName());			
 			//Care_giver background
 			srList = surveyManager.getCompletedSurveyResultByVolunteertAndTitle(vId, "Caregiver Background");	
 			srList1 = surveyManager.getCompletedSurveyResultByVolunteertAndTitle(vId, "Caregiver Fixed");	
 			srList.addAll(srList1);
 			if (srList.size() >0)
-				setUBCBackground(srList, rData);
-			
+				setUBCBackground(srList, rData);			
 			//Caregiver background Follow up	
 			srList = surveyManager.getCompletedSurveyResultByVolunteertAndTitle(vId, "Caregiver Follow Up");	
 			srList1 = surveyManager.getCompletedSurveyResultByVolunteertAndTitle(vId, "Caregiver Followup Fixed");
@@ -5287,7 +5094,7 @@ public class TapestryHelper {
 	
 	private static void setRAPA(SurveyResult sr, ResearchData rData)
 	{	
-		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);	
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);		
 		
 		if (!displayedResults.isEmpty())
 		{
@@ -5511,6 +5318,13 @@ public class TapestryHelper {
 	private static void set3MonthFollowUp(SurveyResult sr, ResearchData rData)
 	{
 		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
+		Map<String, String> mResults = mapSurveyResults(displayedResults);
+	//	rData.setDla1(mResults.get("TV1"));
+		
+		
+		
+		
+		
 		if (!displayedResults.isEmpty())
 		{//if answer is empty, format it to 0
 			displayedResults = formatEmptyResultAnswerToInt(displayedResults);
@@ -5582,61 +5396,20 @@ public class TapestryHelper {
 					rData.setFu22(answer);							
 			}
 		}
-	}
-	
+	}	
 	private static void setDailyLife(SurveyResult sr, ResearchData rData)
-	{
+	{		
 		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
-		if (!displayedResults.isEmpty())
-		{						
-			int size = displayedResults.size();
-			switch (size) {
-				case 1: rData.setDla1(displayedResults.get(0).getQuestionAnswer());			
-			 			break;
-			 	case 2: rData.setDla1(displayedResults.get(0).getQuestionAnswer());
-			 			rData.setDla2(displayedResults.get(1).getQuestionAnswer());
-			 			break;
-			 	case 3: rData.setDla1(displayedResults.get(0).getQuestionAnswer());
-						rData.setDla2(displayedResults.get(1).getQuestionAnswer());
-						rData.setDla3(displayedResults.get(2).getQuestionAnswer());
-			 			break;
-			 	case 4: rData.setDla1(displayedResults.get(0).getQuestionAnswer());
-						rData.setDla2(displayedResults.get(1).getQuestionAnswer());
-						rData.setDla3(displayedResults.get(2).getQuestionAnswer());
-						rData.setDla4(displayedResults.get(3).getQuestionAnswer());
-			 			break;	
-			 	case 5: rData.setDla1(displayedResults.get(0).getQuestionAnswer());
-						rData.setDla2(displayedResults.get(1).getQuestionAnswer());
-						rData.setDla3(displayedResults.get(2).getQuestionAnswer());
-						rData.setDla4(displayedResults.get(3).getQuestionAnswer());
-						rData.setDla5(displayedResults.get(4).getQuestionAnswer());
-			 			break;	
-			 	case 6: rData.setDla1(displayedResults.get(0).getQuestionAnswer());
-						rData.setDla2(displayedResults.get(1).getQuestionAnswer());
-						rData.setDla3(displayedResults.get(2).getQuestionAnswer());
-						rData.setDla4(displayedResults.get(3).getQuestionAnswer());
-						rData.setDla5(displayedResults.get(4).getQuestionAnswer());
-						rData.setDla6(displayedResults.get(5).getQuestionAnswer());
-			 			break;
-			 	case 7: rData.setDla1(displayedResults.get(0).getQuestionAnswer());
-						rData.setDla2(displayedResults.get(1).getQuestionAnswer());
-						rData.setDla3(displayedResults.get(2).getQuestionAnswer());
-						rData.setDla4(displayedResults.get(3).getQuestionAnswer());
-						rData.setDla5(displayedResults.get(4).getQuestionAnswer());
-						rData.setDla6(displayedResults.get(5).getQuestionAnswer());
-						rData.setDla7(displayedResults.get(6).getQuestionAnswer());
-			 			break;
-			 	case 8: rData.setDla1(displayedResults.get(0).getQuestionAnswer());
-						rData.setDla2(displayedResults.get(1).getQuestionAnswer());
-						rData.setDla3(displayedResults.get(2).getQuestionAnswer());
-						rData.setDla4(displayedResults.get(3).getQuestionAnswer());
-						rData.setDla5(displayedResults.get(4).getQuestionAnswer());
-						rData.setDla6(displayedResults.get(5).getQuestionAnswer());
-						rData.setDla7(displayedResults.get(6).getQuestionAnswer());
-						rData.setDla7a(displayedResults.get(7).getQuestionAnswer());
-			 			break;
-			 }	
-		}		
+		Map<String, String> mResults = mapSurveyResults(displayedResults);
+		
+		rData.setDla1(mResults.get("TV1"));
+		rData.setDla2(mResults.get("TV2"));
+		rData.setDla3(mResults.get("TV3"));
+		rData.setDla4(mResults.get("TV4"));
+		rData.setDla5(mResults.get("TV5"));
+		rData.setDla6(mResults.get("TV6"));
+		rData.setDla7(mResults.get("TV7"));
+		rData.setDla7a(mResults.get("TV7a"));
 	}
 	public static List<ResearchData> getResearchDatas(PatientManager patientManager, SurveyManager surveyManager, int siteId)
 	{
@@ -5645,19 +5418,13 @@ public class TapestryHelper {
 		List<SurveyResult> srList = new ArrayList<SurveyResult>();
 		List<ResearchData> researchDatas = new ArrayList<ResearchData>();
 		ResearchData rData;
-		int patientId, researchId, size;
-		String xml, observerNote, strResearchId;
-		LinkedHashMap<String, String> res;
-		List<DisplayedSurveyResult> displayedResults;
-		StringBuffer sb;
-		String[] goalsArray;
+		int patientId;
 			
 		for (int i = 0; i < patients.size(); i++)
-		{
+		{			
 			rData = new ResearchData();
-			patientId = patients.get(i).getPatientID();
-			strResearchId = patients.get(i).getResearchID();
-			rData.setResearchId(strResearchId);
+			patientId = patients.get(i).getPatientID();		
+			rData.setResearchId(patients.get(i).getResearchID());
 			//Social life
 			srList = surveyManager.getCompletedSurveyResultByPatientAndSurveyTitle(patientId, "4. Social Life");
 			if (srList.size()>0)
@@ -5734,13 +5501,11 @@ public class TapestryHelper {
 			{
 				sr = srList.get(0);
 				setDailyLife(sr, rData);
-			}
-					
+			}					
 			researchDatas.add(rData);
 		}		
 		return researchDatas;
-	}
-	
+	}	
 	private static void setUBCGoals(SurveyResult sr, UBCClientResearchData rData)
 	{
 		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
@@ -5752,8 +5517,7 @@ public class TapestryHelper {
 			rData.setGoal4(displayedResults.get(3).getQuestionAnswer());
 			rData.setGoal5(displayedResults.get(4).getQuestionAnswer());
 		}		
-	}
-	
+	}	
 	private static void setUBCQualityLife(SurveyResult sr, UBCClientResearchData rData)
 	{
 		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
@@ -5770,8 +5534,7 @@ public class TapestryHelper {
 			else
 				rData.setqOL6(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
 		}		
-	}
-	
+	}	
 	private static void setUBCDailyLife(SurveyResult sr, UBCClientResearchData rData)
 	{
 		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
@@ -5914,15 +5677,9 @@ public class TapestryHelper {
 		List<UBCClientResearchData> researchDatas = new ArrayList<UBCClientResearchData>();
 		UBCClientResearchData rData;
 		SurveyResult sr = new SurveyResult();
-		int patientId, size;
-		String xml;
-		LinkedHashMap<String, String> res;
-		List<DisplayedSurveyResult> displayedResults;
+		int patientId;
 		List<SurveyResult> srList = new ArrayList<SurveyResult>();
-		StringBuffer sb;
-		Patient p;
-		
-		Map<String, String> mResults = new HashMap<String, String>();
+		Patient p;	
 		
 		for (int i = 0; i<patients.size(); i++ )
 		{			
@@ -6211,8 +5968,6 @@ public class TapestryHelper {
 			e.printStackTrace();			
 		}				
 	}
-	
-	
 	public static void buildPDFReport(Map report, HttpServletResponse response, String displayName)
 	{				
 		String orignalFileName= displayName +"_report.pdf";
@@ -6452,7 +6207,6 @@ public class TapestryHelper {
 			cell.setNoWrap(false);		
 			table.addCell(cell);	                  
 			document.add(table);
-			///
 			
 	   		Iterator iterator = tMap.entrySet().iterator();
 	   		while (iterator.hasNext()) {
@@ -6493,8 +6247,6 @@ public class TapestryHelper {
 			e.printStackTrace();			
 		}	
 	}
-	
-	
 
 	public static void generateClientReportForUBC(int patientId, SurveyManager surveyManager, 
 			HttpServletResponse response, String name, boolean hasObservernotes)
@@ -6792,8 +6544,7 @@ public class TapestryHelper {
 	private static String replaceString(String strSource, String strBeReplaced, String placeHolder)
 	{		
 		if (strSource.indexOf(strBeReplaced) != (-1))
-			strSource = strSource.replaceAll(strBeReplaced, placeHolder); 
-				
+			strSource = strSource.replaceAll(strBeReplaced, placeHolder); 				
 		return strSource;
 	}
 	
@@ -6802,13 +6553,11 @@ public class TapestryHelper {
 		if (goalsMsg.contains("-------<br>"))
 			goalsMsg = replaceString(goalsMsg, "-------<br>", ",");
 		if (goalsMsg.contains("<br>"))
-			goalsMsg = replaceString(goalsMsg, "<br>", ",");
-		
+			goalsMsg = replaceString(goalsMsg, "<br>", ",");		
 		return goalsMsg;
 	}
 	
-	public void readProperties() throws Exception{		
-	      
+	public void readProperties() throws Exception{			      
 		Properties props = new Properties();
 		try{
 			props.load(TapestryHelper.class.getClassLoader().getResourceAsStream("tapestry.properties"));
@@ -6845,21 +6594,18 @@ public class TapestryHelper {
 		return value;
 	}	
 	
-	public static void setProperties(String file, String key, String value) throws Exception{
-		
+	public static void setProperties(String file, String key, String value) throws Exception{		
 		Properties props = new Properties();		
 		String dir = "webapp/WEB-INF/classes/" + file;	
 		String dir1 ="/var/lib/tomcat7/webapps/tapestry/" + file;
 		try{
 			props.setProperty(key, value);		
-			props.store(new FileOutputStream(dir1), "it works!");
-	
+			props.store(new FileOutputStream(dir1), "it works!");	
 			
 		}catch(IOException e)
 		{
 			e.printStackTrace();
-		}
-	
+		}	
 	}
 	
 	public static List<Patient> getPatientsByPartialName(List<Patient> patients, String partialName)
@@ -6871,8 +6617,7 @@ public class TapestryHelper {
 			p = patients.get(i);
 			if (p.getFirstName().contains(partialName)||p.getLastName().contains(partialName))
 				pList.add(p);			
-		}
-		
+		}		
 		return pList;
 	}
 	
@@ -6922,8 +6667,7 @@ public class TapestryHelper {
 		DisplayedSurveyResult sr;
 		for (int i = 0; i< displayedResults.size(); i++)
 		{
-			sr = displayedResults.get(i);
-			
+			sr = displayedResults.get(i);			
 			qId = sr.getQuestionId();			
 			answer = sr.getQuestionAnswer();	
 			
@@ -6947,8 +6691,7 @@ public class TapestryHelper {
 					{
 						System.out.println("===========Has problem to read " + propertyFile + " file============");
 					}
-				}
-				
+				}				
 				if (!Utils.isNullOrEmpty(sb.toString()))
 					sr.setQuestionAnswer(sb.toString());
 			}
@@ -6986,8 +6729,7 @@ public class TapestryHelper {
 		Font wbLargeFont = new Font(Font.FontFamily.HELVETICA  , 20, Font.BOLD);
 		wbLargeFont.setColor(BaseColor.WHITE);
 		Font wMediumFont = new Font(Font.FontFamily.HELVETICA , 16, Font.BOLD);
-		wMediumFont.setColor(BaseColor.WHITE);
-	
+		wMediumFont.setColor(BaseColor.WHITE);	
 		
 		PdfPTable table = new PdfPTable(3);
 		table.setWidthPercentage(110);
@@ -7077,8 +6819,7 @@ public class TapestryHelper {
 		document.newPage();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
-			
+			e.printStackTrace();			
 		}	
 	}
 	
@@ -7089,10 +6830,8 @@ public class TapestryHelper {
 		if (type == "V")//volunteer
 			available = aManager.hasAppointmentByVolunteer(id, dTime);
 		else
-			available = aManager.hasAppointmentByPatient(id, dTime);
-		
-		return available;
-		
+			available = aManager.hasAppointmentByPatient(id, dTime);		
+		return available;		
 	}
 	
 	public static String getValuesFromCheckboxList(String[] strArray)
@@ -7109,5 +6848,4 @@ public class TapestryHelper {
 		else
 			return "999";	
 	}
-
 }
