@@ -4587,7 +4587,7 @@ public class TapestryHelper {
 		if (mResults.get("CB7a") == null)
 		{
 			if (mResults.get("CBack9_GenSpecify_T0") != null)
-					rData.setCb7a_T0((mResults.get("CBack9_GenSpecify_T0")));
+				rData.setCb7a_T0((mResults.get("CBack9_GenSpecify_T0")));
 		}
 		else
 			rData.setCb7a_T0((mResults.get("CB7a")));
@@ -4623,7 +4623,7 @@ public class TapestryHelper {
 		if (mResults.get("CB11b") == null)
 		{
 			if (mResults.get("CBack15_RelationSpecify_T0") != null)
-				rData.setCb11_relation_T0(Integer.parseInt(mResults.get("CBack15_RelationSpecify_T0")));
+				rData.setCb11a_T0(mResults.get("CBack15_RelationSpecify_T0"));
 		}
 		else
 			rData.setCb11a_T0(mResults.get("CB11b"));
