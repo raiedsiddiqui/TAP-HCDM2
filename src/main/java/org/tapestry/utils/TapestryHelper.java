@@ -269,8 +269,7 @@ public class TapestryHelper {
 			} catch (Exception e) {
 				System.out.println("something wrong when calling myoscar server...getClientList");			
 				e.printStackTrace();
-			}
-			
+			}			
 			session.setAttribute("allPatientWithFullInfos", patients);
 		}		
 		return patients;
@@ -4364,32 +4363,35 @@ public class TapestryHelper {
 		SurveyResult sr	= srList.get(0);
 		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
 		
-		rData.setCql1_sleep_T0(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
-		rData.setCql2_inc0n_T0(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
-		rData.setCql3_appre_T0(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
-		rData.setCql4_phystr_T0(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
-		rData.setCql5_confin_T0(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
-		rData.setCql6_time_T0(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
-		rData.setCql7_famad_T0(Integer.parseInt(displayedResults.get(6).getQuestionAnswer()));
-		rData.setCql8_persolan_T0(Integer.parseInt(displayedResults.get(7).getQuestionAnswer()));
-		rData.setCql9_demtime_T0(Integer.parseInt(displayedResults.get(8).getQuestionAnswer()));
-		rData.setCql10_emad_T0(Integer.parseInt(displayedResults.get(9).getQuestionAnswer()));
-		rData.setCql11_handcare_T0(Integer.parseInt(displayedResults.get(10).getQuestionAnswer()));
-		rData.setCql12_behupset_T0(Integer.parseInt(displayedResults.get(11).getQuestionAnswer()));
-		rData.setCql13_change_T0(Integer.parseInt(displayedResults.get(12).getQuestionAnswer()));
-		rData.setCql14_hapcare_T0(Integer.parseInt(displayedResults.get(13).getQuestionAnswer()));
-		rData.setCql15_workad_T0(Integer.parseInt(displayedResults.get(14).getQuestionAnswer()));
-		rData.setCql16_comover_T0(Integer.parseInt(displayedResults.get(15).getQuestionAnswer()));
-		rData.setCql17_finstrain_T0(Integer.parseInt(displayedResults.get(16).getQuestionAnswer()));
-		rData.setCql18_import_T0(Integer.parseInt(displayedResults.get(17).getQuestionAnswer()));
-		rData.setCql19_fulfil_T0(Integer.parseInt(displayedResults.get(18).getQuestionAnswer()));
-		rData.setCql20_relprob_T0(Integer.parseInt(displayedResults.get(19).getQuestionAnswer()));
-		rData.setCql21_menh_T0(Integer.parseInt(displayedResults.get(20).getQuestionAnswer()));
-		rData.setCql22_ownday_T0(Integer.parseInt(displayedResults.get(21).getQuestionAnswer()));
-		rData.setCql23_finpro_T0(Integer.parseInt(displayedResults.get(22).getQuestionAnswer()));
-		rData.setCql24_support_T0(Integer.parseInt(displayedResults.get(23).getQuestionAnswer()));
-		rData.setCql25_physhel_T0(Integer.parseInt(displayedResults.get(24).getQuestionAnswer()));
-		rData.setCql26_happy_T0(Integer.parseInt(displayedResults.get(25).getQuestionAnswer()));			
+		if (!displayedResults.isEmpty())
+		{
+			rData.setCql1_sleep_T0(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
+			rData.setCql2_inc0n_T0(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
+			rData.setCql3_appre_T0(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+			rData.setCql4_phystr_T0(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+			rData.setCql5_confin_T0(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
+			rData.setCql6_time_T0(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
+			rData.setCql7_famad_T0(Integer.parseInt(displayedResults.get(6).getQuestionAnswer()));
+			rData.setCql8_persolan_T0(Integer.parseInt(displayedResults.get(7).getQuestionAnswer()));
+			rData.setCql9_demtime_T0(Integer.parseInt(displayedResults.get(8).getQuestionAnswer()));
+			rData.setCql10_emad_T0(Integer.parseInt(displayedResults.get(9).getQuestionAnswer()));
+			rData.setCql11_handcare_T0(Integer.parseInt(displayedResults.get(10).getQuestionAnswer()));
+			rData.setCql12_behupset_T0(Integer.parseInt(displayedResults.get(11).getQuestionAnswer()));
+			rData.setCql13_change_T0(Integer.parseInt(displayedResults.get(12).getQuestionAnswer()));
+			rData.setCql14_hapcare_T0(Integer.parseInt(displayedResults.get(13).getQuestionAnswer()));
+			rData.setCql15_workad_T0(Integer.parseInt(displayedResults.get(14).getQuestionAnswer()));
+			rData.setCql16_comover_T0(Integer.parseInt(displayedResults.get(15).getQuestionAnswer()));
+			rData.setCql17_finstrain_T0(Integer.parseInt(displayedResults.get(16).getQuestionAnswer()));
+			rData.setCql18_import_T0(Integer.parseInt(displayedResults.get(17).getQuestionAnswer()));
+			rData.setCql19_fulfil_T0(Integer.parseInt(displayedResults.get(18).getQuestionAnswer()));
+			rData.setCql20_relprob_T0(Integer.parseInt(displayedResults.get(19).getQuestionAnswer()));
+			rData.setCql21_menh_T0(Integer.parseInt(displayedResults.get(20).getQuestionAnswer()));
+			rData.setCql22_ownday_T0(Integer.parseInt(displayedResults.get(21).getQuestionAnswer()));
+			rData.setCql23_finpro_T0(Integer.parseInt(displayedResults.get(22).getQuestionAnswer()));
+			rData.setCql24_support_T0(Integer.parseInt(displayedResults.get(23).getQuestionAnswer()));
+			rData.setCql25_physhel_T0(Integer.parseInt(displayedResults.get(24).getQuestionAnswer()));
+			rData.setCql26_happy_T0(Integer.parseInt(displayedResults.get(25).getQuestionAnswer()));		
+		}
 	}
 	
 	//fill in Care Qol survey for UBC research data dump for both T0 and T1 period
@@ -4398,33 +4400,35 @@ public class TapestryHelper {
 		
 		SurveyResult sr	= srList.get(1);
 		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
-		
-		rData.setCql1_sleep_T1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
-		rData.setCql2_inc0n_T1(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
-		rData.setCql3_appre_T1(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
-		rData.setCql4_phystr_T1(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
-		rData.setCql5_confin_T1(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
-		rData.setCql6_time_T1(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
-		rData.setCql7_famad_T1(Integer.parseInt(displayedResults.get(6).getQuestionAnswer()));
-		rData.setCql8_persolan_T1(Integer.parseInt(displayedResults.get(7).getQuestionAnswer()));
-		rData.setCql9_demtime_T1(Integer.parseInt(displayedResults.get(8).getQuestionAnswer()));
-		rData.setCql10_emad_T1(Integer.parseInt(displayedResults.get(9).getQuestionAnswer()));
-		rData.setCql11_handcare_T1(Integer.parseInt(displayedResults.get(10).getQuestionAnswer()));
-		rData.setCql12_behupset_T1(Integer.parseInt(displayedResults.get(11).getQuestionAnswer()));
-		rData.setCql13_change_T1(Integer.parseInt(displayedResults.get(12).getQuestionAnswer()));
-		rData.setCql14_hapcare_T1(Integer.parseInt(displayedResults.get(13).getQuestionAnswer()));
-		rData.setCql15_workad_T1(Integer.parseInt(displayedResults.get(14).getQuestionAnswer()));
-		rData.setCql16_comover_T1(Integer.parseInt(displayedResults.get(15).getQuestionAnswer()));
-		rData.setCql17_finstrain_T1(Integer.parseInt(displayedResults.get(16).getQuestionAnswer()));
-		rData.setCql18_import_T1(Integer.parseInt(displayedResults.get(17).getQuestionAnswer()));
-		rData.setCql19_fulfil_T1(Integer.parseInt(displayedResults.get(18).getQuestionAnswer()));
-		rData.setCql20_relprob_T1(Integer.parseInt(displayedResults.get(19).getQuestionAnswer()));
-		rData.setCql21_menh_T1(Integer.parseInt(displayedResults.get(20).getQuestionAnswer()));
-		rData.setCql22_ownday_T1(Integer.parseInt(displayedResults.get(21).getQuestionAnswer()));
-		rData.setCql23_finpro_T1(Integer.parseInt(displayedResults.get(22).getQuestionAnswer()));
-		rData.setCql24_support_T1(Integer.parseInt(displayedResults.get(23).getQuestionAnswer()));
-		rData.setCql25_physhel_T1(Integer.parseInt(displayedResults.get(24).getQuestionAnswer()));
-		rData.setCql26_happy_T1(Integer.parseInt(displayedResults.get(25).getQuestionAnswer()));	
+		if (!displayedResults.isEmpty())
+		{
+			rData.setCql1_sleep_T1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
+			rData.setCql2_inc0n_T1(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
+			rData.setCql3_appre_T1(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+			rData.setCql4_phystr_T1(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+			rData.setCql5_confin_T1(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
+			rData.setCql6_time_T1(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
+			rData.setCql7_famad_T1(Integer.parseInt(displayedResults.get(6).getQuestionAnswer()));
+			rData.setCql8_persolan_T1(Integer.parseInt(displayedResults.get(7).getQuestionAnswer()));
+			rData.setCql9_demtime_T1(Integer.parseInt(displayedResults.get(8).getQuestionAnswer()));
+			rData.setCql10_emad_T1(Integer.parseInt(displayedResults.get(9).getQuestionAnswer()));
+			rData.setCql11_handcare_T1(Integer.parseInt(displayedResults.get(10).getQuestionAnswer()));
+			rData.setCql12_behupset_T1(Integer.parseInt(displayedResults.get(11).getQuestionAnswer()));
+			rData.setCql13_change_T1(Integer.parseInt(displayedResults.get(12).getQuestionAnswer()));
+			rData.setCql14_hapcare_T1(Integer.parseInt(displayedResults.get(13).getQuestionAnswer()));
+			rData.setCql15_workad_T1(Integer.parseInt(displayedResults.get(14).getQuestionAnswer()));
+			rData.setCql16_comover_T1(Integer.parseInt(displayedResults.get(15).getQuestionAnswer()));
+			rData.setCql17_finstrain_T1(Integer.parseInt(displayedResults.get(16).getQuestionAnswer()));
+			rData.setCql18_import_T1(Integer.parseInt(displayedResults.get(17).getQuestionAnswer()));
+			rData.setCql19_fulfil_T1(Integer.parseInt(displayedResults.get(18).getQuestionAnswer()));
+			rData.setCql20_relprob_T1(Integer.parseInt(displayedResults.get(19).getQuestionAnswer()));
+			rData.setCql21_menh_T1(Integer.parseInt(displayedResults.get(20).getQuestionAnswer()));
+			rData.setCql22_ownday_T1(Integer.parseInt(displayedResults.get(21).getQuestionAnswer()));
+			rData.setCql23_finpro_T1(Integer.parseInt(displayedResults.get(22).getQuestionAnswer()));
+			rData.setCql24_support_T1(Integer.parseInt(displayedResults.get(23).getQuestionAnswer()));
+			rData.setCql25_physhel_T1(Integer.parseInt(displayedResults.get(24).getQuestionAnswer()));
+			rData.setCql26_happy_T1(Integer.parseInt(displayedResults.get(25).getQuestionAnswer()));	
+		}
 	}
 	
 	//fill in Care Qol survey for UBC research data dump all 3(T0/T1/T2) period
@@ -4433,33 +4437,35 @@ public class TapestryHelper {
 		
 		SurveyResult sr	= srList.get(2);
 		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
-		
-		rData.setCql1_sleep_T2(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
-		rData.setCql2_inc0n_T2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
-		rData.setCql3_appre_T2(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
-		rData.setCql4_phystr_T2(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
-		rData.setCql5_confin_T2(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
-		rData.setCql6_time_T2(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
-		rData.setCql7_famad_T2(Integer.parseInt(displayedResults.get(6).getQuestionAnswer()));
-		rData.setCql8_persolan_T2(Integer.parseInt(displayedResults.get(7).getQuestionAnswer()));
-		rData.setCql9_demtime_T2(Integer.parseInt(displayedResults.get(8).getQuestionAnswer()));
-		rData.setCql10_emad_T2(Integer.parseInt(displayedResults.get(9).getQuestionAnswer()));
-		rData.setCql11_handcare_T2(Integer.parseInt(displayedResults.get(10).getQuestionAnswer()));
-		rData.setCql12_behupset_T2(Integer.parseInt(displayedResults.get(11).getQuestionAnswer()));
-		rData.setCql13_change_T2(Integer.parseInt(displayedResults.get(12).getQuestionAnswer()));
-		rData.setCql14_hapcare_T2(Integer.parseInt(displayedResults.get(13).getQuestionAnswer()));
-		rData.setCql15_workad_T2(Integer.parseInt(displayedResults.get(14).getQuestionAnswer()));
-		rData.setCql16_comover_T2(Integer.parseInt(displayedResults.get(15).getQuestionAnswer()));
-		rData.setCql17_finstrain_T2(Integer.parseInt(displayedResults.get(16).getQuestionAnswer()));
-		rData.setCql18_import_T2(Integer.parseInt(displayedResults.get(17).getQuestionAnswer()));
-		rData.setCql19_fulfil_T2(Integer.parseInt(displayedResults.get(18).getQuestionAnswer()));
-		rData.setCql20_relprob_T2(Integer.parseInt(displayedResults.get(19).getQuestionAnswer()));
-		rData.setCql21_menh_T2(Integer.parseInt(displayedResults.get(20).getQuestionAnswer()));
-		rData.setCql22_ownday_T2(Integer.parseInt(displayedResults.get(21).getQuestionAnswer()));
-		rData.setCql23_finpro_T2(Integer.parseInt(displayedResults.get(22).getQuestionAnswer()));
-		rData.setCql24_support_T2(Integer.parseInt(displayedResults.get(23).getQuestionAnswer()));
-		rData.setCql25_physhel_T2(Integer.parseInt(displayedResults.get(24).getQuestionAnswer()));
-		rData.setCql26_happy_T2(Integer.parseInt(displayedResults.get(25).getQuestionAnswer()));	
+		if (!displayedResults.isEmpty())
+		{		
+			rData.setCql1_sleep_T2(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
+			rData.setCql2_inc0n_T2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
+			rData.setCql3_appre_T2(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+			rData.setCql4_phystr_T2(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+			rData.setCql5_confin_T2(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
+			rData.setCql6_time_T2(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
+			rData.setCql7_famad_T2(Integer.parseInt(displayedResults.get(6).getQuestionAnswer()));
+			rData.setCql8_persolan_T2(Integer.parseInt(displayedResults.get(7).getQuestionAnswer()));
+			rData.setCql9_demtime_T2(Integer.parseInt(displayedResults.get(8).getQuestionAnswer()));
+			rData.setCql10_emad_T2(Integer.parseInt(displayedResults.get(9).getQuestionAnswer()));
+			rData.setCql11_handcare_T2(Integer.parseInt(displayedResults.get(10).getQuestionAnswer()));
+			rData.setCql12_behupset_T2(Integer.parseInt(displayedResults.get(11).getQuestionAnswer()));
+			rData.setCql13_change_T2(Integer.parseInt(displayedResults.get(12).getQuestionAnswer()));
+			rData.setCql14_hapcare_T2(Integer.parseInt(displayedResults.get(13).getQuestionAnswer()));
+			rData.setCql15_workad_T2(Integer.parseInt(displayedResults.get(14).getQuestionAnswer()));
+			rData.setCql16_comover_T2(Integer.parseInt(displayedResults.get(15).getQuestionAnswer()));
+			rData.setCql17_finstrain_T2(Integer.parseInt(displayedResults.get(16).getQuestionAnswer()));
+			rData.setCql18_import_T2(Integer.parseInt(displayedResults.get(17).getQuestionAnswer()));
+			rData.setCql19_fulfil_T2(Integer.parseInt(displayedResults.get(18).getQuestionAnswer()));
+			rData.setCql20_relprob_T2(Integer.parseInt(displayedResults.get(19).getQuestionAnswer()));
+			rData.setCql21_menh_T2(Integer.parseInt(displayedResults.get(20).getQuestionAnswer()));
+			rData.setCql22_ownday_T2(Integer.parseInt(displayedResults.get(21).getQuestionAnswer()));
+			rData.setCql23_finpro_T2(Integer.parseInt(displayedResults.get(22).getQuestionAnswer()));
+			rData.setCql24_support_T2(Integer.parseInt(displayedResults.get(23).getQuestionAnswer()));
+			rData.setCql25_physhel_T2(Integer.parseInt(displayedResults.get(24).getQuestionAnswer()));
+			rData.setCql26_happy_T2(Integer.parseInt(displayedResults.get(25).getQuestionAnswer()));	
+		}
 	}
 	
 	//fill in Zarit  survey for UBC research data dump on baseline period
@@ -4467,19 +4473,21 @@ public class TapestryHelper {
 	{
 		SurveyResult sr = srList.get(0);	
 		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
-		
-		rData.setZarit1_time_T0(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
-		rData.setZarit2_stress_T0(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
-		rData.setZarit3_angry_T0(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
-		rData.setZarit4_other_T0(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
-		rData.setZarit5_strain_T0(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
-		rData.setZarit6_health_T0(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
-		rData.setZarit7_priv_T0(Integer.parseInt(displayedResults.get(6).getQuestionAnswer()));				
-		rData.setZarit8_social_T0(Integer.parseInt(displayedResults.get(7).getQuestionAnswer()));
-		rData.setZarit9_control_T0(Integer.parseInt(displayedResults.get(8).getQuestionAnswer()));
-		rData.setZarit10_uncert_T0(Integer.parseInt(displayedResults.get(9).getQuestionAnswer()));
-		rData.setZarit11_more_T0(Integer.parseInt(displayedResults.get(10).getQuestionAnswer()));		
-		rData.setZarit12_better_T0(Integer.parseInt(displayedResults.get(11).getQuestionAnswer()));
+		if (!displayedResults.isEmpty())
+		{
+			rData.setZarit1_time_T0(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
+			rData.setZarit2_stress_T0(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
+			rData.setZarit3_angry_T0(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+			rData.setZarit4_other_T0(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+			rData.setZarit5_strain_T0(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
+			rData.setZarit6_health_T0(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
+			rData.setZarit7_priv_T0(Integer.parseInt(displayedResults.get(6).getQuestionAnswer()));				
+			rData.setZarit8_social_T0(Integer.parseInt(displayedResults.get(7).getQuestionAnswer()));
+			rData.setZarit9_control_T0(Integer.parseInt(displayedResults.get(8).getQuestionAnswer()));
+			rData.setZarit10_uncert_T0(Integer.parseInt(displayedResults.get(9).getQuestionAnswer()));
+			rData.setZarit11_more_T0(Integer.parseInt(displayedResults.get(10).getQuestionAnswer()));		
+			rData.setZarit12_better_T0(Integer.parseInt(displayedResults.get(11).getQuestionAnswer()));
+		}
 	}
 	
 	//fill in Zarit  survey for UBC research data dump on both baseline and T1 period
@@ -4489,19 +4497,21 @@ public class TapestryHelper {
 		
 		SurveyResult sr = srList.get(1);
 		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
-		
-		rData.setZarit1_time_T1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
-		rData.setZarit2_stress_T1(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
-		rData.setZarit3_angry_T1(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
-		rData.setZarit4_other_T1(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
-		rData.setZarit5_strain_T1(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
-		rData.setZarit6_health_T1(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
-		rData.setZarit7_priv_T1(Integer.parseInt(displayedResults.get(6).getQuestionAnswer()));				
-		rData.setZarit8_social_T1(Integer.parseInt(displayedResults.get(7).getQuestionAnswer()));
-		rData.setZarit9_control_T1(Integer.parseInt(displayedResults.get(8).getQuestionAnswer()));
-		rData.setZarit10_uncert_T1(Integer.parseInt(displayedResults.get(9).getQuestionAnswer()));
-		rData.setZarit11_more_T1(Integer.parseInt(displayedResults.get(10).getQuestionAnswer()));		
-		rData.setZarit12_better_T1(Integer.parseInt(displayedResults.get(11).getQuestionAnswer()));
+		if (!displayedResults.isEmpty())
+		{
+			rData.setZarit1_time_T1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
+			rData.setZarit2_stress_T1(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
+			rData.setZarit3_angry_T1(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+			rData.setZarit4_other_T1(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+			rData.setZarit5_strain_T1(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
+			rData.setZarit6_health_T1(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
+			rData.setZarit7_priv_T1(Integer.parseInt(displayedResults.get(6).getQuestionAnswer()));				
+			rData.setZarit8_social_T1(Integer.parseInt(displayedResults.get(7).getQuestionAnswer()));
+			rData.setZarit9_control_T1(Integer.parseInt(displayedResults.get(8).getQuestionAnswer()));
+			rData.setZarit10_uncert_T1(Integer.parseInt(displayedResults.get(9).getQuestionAnswer()));
+			rData.setZarit11_more_T1(Integer.parseInt(displayedResults.get(10).getQuestionAnswer()));		
+			rData.setZarit12_better_T1(Integer.parseInt(displayedResults.get(11).getQuestionAnswer()));
+		}
 	}
 	
 	//fill in Zarit  survey for UBC research data dump on all 3 (T0/T1/T2 period
@@ -4512,179 +4522,184 @@ public class TapestryHelper {
 		SurveyResult sr = srList.get(2);	
 		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);		
 		
-		rData.setZarit1_time_T2(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
-		rData.setZarit2_stress_T2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
-		rData.setZarit3_angry_T2(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
-		rData.setZarit4_other_T2(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
-		rData.setZarit5_strain_T2(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
-		rData.setZarit6_health_T2(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
-		rData.setZarit7_priv_T2(Integer.parseInt(displayedResults.get(6).getQuestionAnswer()));				
-		rData.setZarit8_social_T2(Integer.parseInt(displayedResults.get(7).getQuestionAnswer()));
-		rData.setZarit9_control_T2(Integer.parseInt(displayedResults.get(8).getQuestionAnswer()));
-		rData.setZarit10_uncert_T2(Integer.parseInt(displayedResults.get(9).getQuestionAnswer()));
-		rData.setZarit11_more_T2(Integer.parseInt(displayedResults.get(10).getQuestionAnswer()));		
-		rData.setZarit12_better_T2(Integer.parseInt(displayedResults.get(11).getQuestionAnswer()));
+		if (!displayedResults.isEmpty())
+		{
+			rData.setZarit1_time_T2(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
+			rData.setZarit2_stress_T2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
+			rData.setZarit3_angry_T2(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));
+			rData.setZarit4_other_T2(Integer.parseInt(displayedResults.get(3).getQuestionAnswer()));
+			rData.setZarit5_strain_T2(Integer.parseInt(displayedResults.get(4).getQuestionAnswer()));
+			rData.setZarit6_health_T2(Integer.parseInt(displayedResults.get(5).getQuestionAnswer()));
+			rData.setZarit7_priv_T2(Integer.parseInt(displayedResults.get(6).getQuestionAnswer()));				
+			rData.setZarit8_social_T2(Integer.parseInt(displayedResults.get(7).getQuestionAnswer()));
+			rData.setZarit9_control_T2(Integer.parseInt(displayedResults.get(8).getQuestionAnswer()));
+			rData.setZarit10_uncert_T2(Integer.parseInt(displayedResults.get(9).getQuestionAnswer()));
+			rData.setZarit11_more_T2(Integer.parseInt(displayedResults.get(10).getQuestionAnswer()));		
+			rData.setZarit12_better_T2(Integer.parseInt(displayedResults.get(11).getQuestionAnswer()));
+		}
 	}
 	//fill in Background survey for UBC reasearch data dump
 	private static void setUBCBackground(List<SurveyResult> srList, CareGiverResearchData rData)
 	{
 		SurveyResult sr = srList.get(0);
 		Map<String, String> mResults = new HashMap<String, String>();		
-		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);		
-		mResults = mapSurveyResults(displayedResults);
-		
-		if (mResults.get("CB1") == null)
-			rData.setCb1_ed_T0(Integer.parseInt(mResults.get("CBack0_Edu_T0")));
-		else
-			rData.setCb1_ed_T0(Integer.parseInt(mResults.get("CB1")));
-		
-		if (mResults.get("CB1a") == null)
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);	
+		if (!displayedResults.isEmpty())
 		{
-			if (mResults.get("CBack1_EduSpecify_T0") != null)
-				rData.setCb1a_ed_T0(mResults.get("CBack1_EduSpecify_T0"));
+			mResults = mapSurveyResults(displayedResults);			
+			if (mResults.get("CB1") == null)
+				rData.setCb1_ed_T0(Integer.parseInt(mResults.get("CBack0_Edu_T0")));
+			else
+				rData.setCb1_ed_T0(Integer.parseInt(mResults.get("CB1")));
+			
+			if (mResults.get("CB1a") == null)
+			{
+				if (mResults.get("CBack1_EduSpecify_T0") != null)
+					rData.setCb1a_ed_T0(mResults.get("CBack1_EduSpecify_T0"));
+			}
+			else
+				rData.setCb1a_ed_T0(mResults.get("CB1a"));
+			
+			if (mResults.get("CB2") == null)
+				rData.setCb2_empl_T0(Integer.parseInt(mResults.get("CBack2_Employ_T0")));
+			else
+				rData.setCb2_empl_T0(Integer.parseInt(mResults.get("CB2")));
+			
+			if (mResults.get("CB3") == null)
+				rData.setCb3_livewith_T0(Integer.parseInt(mResults.get("CBack3_LiveWith_T0")));
+			else
+				rData.setCb3_livewith_T0(Integer.parseInt(mResults.get("CB3")));
+			
+			if (mResults.get("CB4") == null)
+				rData.setCb4_children_T0(Integer.parseInt(mResults.get("CBack4_Children_T0")));
+			else
+				rData.setCb4_children_T0(Integer.parseInt(mResults.get("CB4")));
+			
+			if (mResults.get("CB4a") == null)
+			{
+				if (mResults.get("CBack5_Home_T0") != null)
+					rData.setCb4a_T0(Integer.parseInt(mResults.get("CBack5_Home_T0")));
+			}
+			else
+				rData.setCb4a_T0(Integer.parseInt(mResults.get("CB4a")));
+			
+			if (mResults.get("CB5") == null)
+				rData.setCb5_partner_T0(Integer.parseInt(mResults.get("CBack6_Partner_T0")));
+			else
+				rData.setCb5_partner_T0(Integer.parseInt(mResults.get("CB5")));
+			
+			if (mResults.get("CB6") == null)
+				rData.setCb6_agegr_T0(Integer.parseInt(mResults.get("CBack7_Age_T0")));
+			else
+				rData.setCb6_agegr_T0(Integer.parseInt(mResults.get("CB6")));
+			
+			if (mResults.get("CB7") == null)
+				rData.setCb7_gender_T0(Integer.parseInt(mResults.get("CBack8_Gender_T0")));
+			else
+				rData.setCb7_gender_T0(Integer.parseInt(mResults.get("CB7")));
+			
+			if (mResults.get("CB7a") == null)
+			{
+				if (mResults.get("CBack9_GenSpecify_T0") != null)
+					rData.setCb7a_T0((mResults.get("CBack9_GenSpecify_T0")));
+			}
+			else
+				rData.setCb7a_T0((mResults.get("CB7a")));
+			
+			if (mResults.get("CB8") == null)
+				rData.setCb8_lang_T0(mResults.get("CBack10_LangHome_T0"));
+			else
+				rData.setCb8_lang_T0(mResults.get("CB8"));
+			
+			if (mResults.get("CB9") == null)
+				rData.setCb9_born_T0(mResults.get("CBack11_BornCan_T0"));
+			else
+				rData.setCb9_born_T0(mResults.get("CB9"));		
+			
+			if (mResults.get("CB10") == null)
+				rData.setCb10_ethnic_T0(mResults.get("CBack12_Ethinic_T0"));
+			else
+				rData.setCb10_ethnic_T0(mResults.get("CB10"));
+			
+			if (mResults.get("CB10b") == null)
+			{
+				if (mResults.get("CBack13_EthincSpecify_T0") != null)
+					rData.setCb10a(mResults.get("CBack13_EthincSpecify_T0"));
+			}
+			else
+				rData.setCb10a(mResults.get("CB10b"));
+			
+			if (mResults.get("CB11") == null)
+				rData.setCb11_relation_T0(Integer.parseInt(mResults.get("CBack14_Relation_T0")));
+			else
+				rData.setCb11_relation_T0(Integer.parseInt(mResults.get("CB11")));
+			
+			if (mResults.get("CB11b") == null)
+			{
+				if (mResults.get("CBack15_RelationSpecify_T0") != null)
+					rData.setCb11a_T0(mResults.get("CBack15_RelationSpecify_T0"));
+			}
+			else
+				rData.setCb11a_T0(mResults.get("CB11b"));
+			
+			if (mResults.get("CB12") == null)
+				rData.setCb12_startcg_T0(mResults.get("CBack16_Start_T0"));
+			else
+				rData.setCb12_startcg_T0(mResults.get("CB12"));
+			
+			if (mResults.get("CB13") == null)
+				rData.setCb13_physcare_T0(Integer.parseInt(mResults.get("CBack17_HoursPhy_T0")));
+			else
+				rData.setCb13_physcare_T0(Integer.parseInt(mResults.get("CB13")));
+			
+			if (mResults.get("CB14") == null)
+				rData.setCb14_emot_T0(Integer.parseInt(mResults.get("CBack18_HoursSocial_T0")));
+			else
+				rData.setCb14_emot_T0(Integer.parseInt(mResults.get("CB14")));
+			
+			if (mResults.get("CB15") == null)
+				rData.setCb15_other_T0(Integer.parseInt(mResults.get("CBack19_HoursOther_T0")));
+			else
+				rData.setCb15_other_T0(Integer.parseInt(mResults.get("CB15")));
+			
+			if (mResults.get("CB16") == null)
+				rData.setCb16_howlong_T0(mResults.get("CBack20_HowLong_T0"));
+			else
+				rData.setCb16_howlong_T0(mResults.get("CB16"));
+			
+			if (mResults.get("CB17") == null)
+				rData.setCb17_onlycg_T0(Integer.parseInt(mResults.get("CBack21_Only_T0")));
+			else
+				rData.setCb17_onlycg_T0(Integer.parseInt(mResults.get("CB17")));
+			
+			if (mResults.get("CB17c") == null)
+			{
+				if (mResults.get("CBack22_NumOtherPeople_T0") != null)
+					rData.setCb17a_T0(mResults.get("CBack22_NumOtherPeople_T0"));
+			}
+			else
+				rData.setCb17a_T0(mResults.get("CB17c"));
+			
+			if (mResults.get("CB17d") == null)
+				rData.setCb17b_T0((mResults.get("CBack23_OtherHelpers_T0")));
+			else
+				rData.setCb17b_T0((mResults.get("CB17d")));
+			
+			if (mResults.get("CB18") == null)
+				rData.setCb18_healthcon_T0(mResults.get("CBack24_MainConcern_T0"));
+			else
+				rData.setCb18_healthcon_T0(mResults.get("CB18"));
+			
+			if (mResults.get("CB19") == null)
+				rData.setCb19_cgotherppl_T0(mResults.get("CBack25_Experince_T0"));
+			else
+				rData.setCb19_cgotherppl_T0(mResults.get("CB19"));
+					
+			if (mResults.get("CB21") == null)
+				rData.setCb20_yourhealth_T0(mResults.get("CBack26_Moment_T0"));
+			else
+				rData.setCb20_yourhealth_T0(mResults.get("CB21"));
 		}
-		else
-			rData.setCb1a_ed_T0(mResults.get("CB1a"));
-		
-		if (mResults.get("CB2") == null)
-			rData.setCb2_empl_T0(Integer.parseInt(mResults.get("CBack2_Employ_T0")));
-		else
-			rData.setCb2_empl_T0(Integer.parseInt(mResults.get("CB2")));
-		
-		if (mResults.get("CB3") == null)
-			rData.setCb3_livewith_T0(Integer.parseInt(mResults.get("CBack3_LiveWith_T0")));
-		else
-			rData.setCb3_livewith_T0(Integer.parseInt(mResults.get("CB3")));
-		
-		if (mResults.get("CB4") == null)
-			rData.setCb4_children_T0(Integer.parseInt(mResults.get("CBack4_Children_T0")));
-		else
-			rData.setCb4_children_T0(Integer.parseInt(mResults.get("CB4")));
-		
-		if (mResults.get("CB4a") == null)
-		{
-			if (mResults.get("CBack5_Home_T0") != null)
-				rData.setCb4a_T0(Integer.parseInt(mResults.get("CBack5_Home_T0")));
-		}
-		else
-			rData.setCb4a_T0(Integer.parseInt(mResults.get("CB4a")));
-		
-		if (mResults.get("CB5") == null)
-			rData.setCb5_partner_T0(Integer.parseInt(mResults.get("CBack6_Partner_T0")));
-		else
-			rData.setCb5_partner_T0(Integer.parseInt(mResults.get("CB5")));
-		
-		if (mResults.get("CB6") == null)
-			rData.setCb6_agegr_T0(Integer.parseInt(mResults.get("CBack7_Age_T0")));
-		else
-			rData.setCb6_agegr_T0(Integer.parseInt(mResults.get("CB6")));
-		
-		if (mResults.get("CB7") == null)
-			rData.setCb7_gender_T0(Integer.parseInt(mResults.get("CBack8_Gender_T0")));
-		else
-			rData.setCb7_gender_T0(Integer.parseInt(mResults.get("CB7")));
-		
-		if (mResults.get("CB7a") == null)
-		{
-			if (mResults.get("CBack9_GenSpecify_T0") != null)
-				rData.setCb7a_T0((mResults.get("CBack9_GenSpecify_T0")));
-		}
-		else
-			rData.setCb7a_T0((mResults.get("CB7a")));
-		
-		if (mResults.get("CB8") == null)
-			rData.setCb8_lang_T0(mResults.get("CBack10_LangHome_T0"));
-		else
-			rData.setCb8_lang_T0(mResults.get("CB8"));
-		
-		if (mResults.get("CB9") == null)
-			rData.setCb9_born_T0(mResults.get("CBack11_BornCan_T0"));
-		else
-			rData.setCb9_born_T0(mResults.get("CB9"));		
-		
-		if (mResults.get("CB10") == null)
-			rData.setCb10_ethnic_T0(mResults.get("CBack12_Ethinic_T0"));
-		else
-			rData.setCb10_ethnic_T0(mResults.get("CB10"));
-		
-		if (mResults.get("CB10b") == null)
-		{
-			if (mResults.get("CBack13_EthincSpecify_T0") != null)
-				rData.setCb10a(mResults.get("CBack13_EthincSpecify_T0"));
-		}
-		else
-			rData.setCb10a(mResults.get("CB10b"));
-		
-		if (mResults.get("CB11") == null)
-			rData.setCb11_relation_T0(Integer.parseInt(mResults.get("CBack14_Relation_T0")));
-		else
-			rData.setCb11_relation_T0(Integer.parseInt(mResults.get("CB11")));
-		
-		if (mResults.get("CB11b") == null)
-		{
-			if (mResults.get("CBack15_RelationSpecify_T0") != null)
-				rData.setCb11a_T0(mResults.get("CBack15_RelationSpecify_T0"));
-		}
-		else
-			rData.setCb11a_T0(mResults.get("CB11b"));
-		
-		if (mResults.get("CB12") == null)
-			rData.setCb12_startcg_T0(mResults.get("CBack16_Start_T0"));
-		else
-			rData.setCb12_startcg_T0(mResults.get("CB12"));
-		
-		if (mResults.get("CB13") == null)
-			rData.setCb13_physcare_T0(Integer.parseInt(mResults.get("CBack17_HoursPhy_T0")));
-		else
-			rData.setCb13_physcare_T0(Integer.parseInt(mResults.get("CB13")));
-		
-		if (mResults.get("CB14") == null)
-			rData.setCb14_emot_T0(Integer.parseInt(mResults.get("CBack18_HoursSocial_T0")));
-		else
-			rData.setCb14_emot_T0(Integer.parseInt(mResults.get("CB14")));
-		
-		if (mResults.get("CB15") == null)
-			rData.setCb15_other_T0(Integer.parseInt(mResults.get("CBack19_HoursOther_T0")));
-		else
-			rData.setCb15_other_T0(Integer.parseInt(mResults.get("CB15")));
-		
-		if (mResults.get("CB16") == null)
-			rData.setCb16_howlong_T0(mResults.get("CBack20_HowLong_T0"));
-		else
-			rData.setCb16_howlong_T0(mResults.get("CB16"));
-		
-		if (mResults.get("CB17") == null)
-			rData.setCb17_onlycg_T0(Integer.parseInt(mResults.get("CBack21_Only_T0")));
-		else
-			rData.setCb17_onlycg_T0(Integer.parseInt(mResults.get("CB17")));
-		
-		if (mResults.get("CB17c") == null)
-		{
-			if (mResults.get("CBack22_NumOtherPeople_T0") != null)
-				rData.setCb17a_T0(mResults.get("CBack22_NumOtherPeople_T0"));
-		}
-		else
-			rData.setCb17a_T0(mResults.get("CB17c"));
-		
-		if (mResults.get("CB17d") == null)
-			rData.setCb17b_T0((mResults.get("CBack23_OtherHelpers_T0")));
-		else
-			rData.setCb17b_T0((mResults.get("CB17d")));
-		
-		if (mResults.get("CB18") == null)
-			rData.setCb18_healthcon_T0(mResults.get("CBack24_MainConcern_T0"));
-		else
-			rData.setCb18_healthcon_T0(mResults.get("CB18"));
-		
-		if (mResults.get("CB19") == null)
-			rData.setCb19_cgotherppl_T0(mResults.get("CBack25_Experince_T0"));
-		else
-			rData.setCb19_cgotherppl_T0(mResults.get("CB19"));
-				
-		if (mResults.get("CB20") == null)
-			rData.setCb20_yourhealth_T0(mResults.get("CBack26_Moment_T0"));
-		else
-			rData.setCb20_yourhealth_T0(mResults.get("CB20"));
 	}
 	
 	//fill in Background Follow up survey for UBC research data dump on T1 period
@@ -4692,88 +4707,91 @@ public class TapestryHelper {
 	{
 		SurveyResult sr = srList.get(0);
 		Map<String, String> mResults = new HashMap<String, String>();
-		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);		
-		mResults = mapSurveyResults(displayedResults);		
-	
-		if (mResults.get("CB1") == null)
-			rData.setCb2_empl_T1(Integer.parseInt(mResults.get("CFolllow0_EmployentStat_T0")));
-		else
-			rData.setCb2_empl_T1(Integer.parseInt(mResults.get("CB1")));
-		
-		if (mResults.get("CB2") == null)
-			rData.setCb3_livewith_T1(Integer.parseInt(mResults.get("CFollow1_LiveWith_T0")));
-		else
-			rData.setCb3_livewith_T1(Integer.parseInt(mResults.get("CB2")));
-		
-		if (mResults.get("CB3") == null)
-			rData.setCb4_children_T1(Integer.parseInt(mResults.get("CFollow2_Children_T0")));
-		else
-			rData.setCb4_children_T1(Integer.parseInt(mResults.get("CB3")));
-		
-		if (mResults.get("CB3a") != null)
-			rData.setCb4a_T1(Integer.parseInt(mResults.get("CB3a")));
-		else if (mResults.get("CFollow3_Home_T0") != null)
-			rData.setCb4a_T1(Integer.parseInt(mResults.get("CFollow3_Home_T0")));
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
+		if (!displayedResults.isEmpty())
+		{
+			mResults = mapSurveyResults(displayedResults);
+			if (mResults.get("CB1") == null)
+				rData.setCb2_empl_T1(Integer.parseInt(mResults.get("CFolllow0_EmployentStat_T0")));
+			else
+				rData.setCb2_empl_T1(Integer.parseInt(mResults.get("CB1")));
 			
-		if (mResults.get("CB4") == null)
-			rData.setCb5_partner_T1(Integer.parseInt(mResults.get("CFollow4_Partner_T0")));
-		else
-			rData.setCb5_partner_T1(Integer.parseInt(mResults.get("CB4")));
-		
-		if (mResults.get("CB5a") == null)
-			rData.setCb13_physcare_T1(Integer.parseInt(mResults.get("CFollow5_HoursPhy_T0")));
-		else
-			rData.setCb13_physcare_T1(Integer.parseInt(mResults.get("CB5a")));
-		
-		if (mResults.get("CB5b") == null)
-			rData.setCb14_emot_T1(Integer.parseInt(mResults.get("CFollow5_HoursSocial_T0")));
-		else
-			rData.setCb14_emot_T1(Integer.parseInt(mResults.get("CB5b")));
-		
-		if (mResults.get("CB5c") == null)			
-			rData.setCb15_other_T1(Integer.parseInt(mResults.get("CFollow6_HoursOther_T0")));
-		else
-			rData.setCb15_other_T1(Integer.parseInt(mResults.get("CB5c")));
-		
-		if (mResults.get("CB6") != null)
-			rData.setCb16_howlong_T1(mResults.get("CB6"));
-		else if (mResults.get("CFollow7_HowLong_T0") != null)
-			rData.setCb16_howlong_T1(mResults.get("CFollow7_HowLong_T0"));
-		else
-			rData.setCb16_howlong_T1("");
-		
-		if (mResults.get("CB7") != null)
-			rData.setCb17_onlycg_T1(Integer.parseInt(mResults.get("CB7")));
-		else if (mResults.get("CFollow9_Only_T0") != null)
-			rData.setCb17_onlycg_T1(Integer.parseInt(mResults.get("CFollow9_Only_T0")));
-		
-		
-		if (mResults.get("CB7b") != null)
-			rData.setCb17a_T1(mResults.get("CB7b"));
-		else if (mResults.get("CFollow10_NumOtherPeople_T0") != null)
-			rData.setCb17a_T1(mResults.get("CFollow10_NumOtherPeople_T0"));
-		
-		if (mResults.get("CB7c") != null)
-			rData.setCb17b_T1(mResults.get("CB7c"));
-		else if (mResults.get("CFollow11_OtherHelpers_T0") != null)
-			rData.setCb17b_T1(mResults.get("CFollow11_OtherHelpers_T0"));
-		
-		if (mResults.get("CB8") == null)
-			rData.setCb18_healthcon_T1(mResults.get("CFollow12_MainConcern_T0"));
-		else
-			rData.setCb18_healthcon_T1(mResults.get("CB8"));
-		
-		if (mResults.get("CB9") == null)
-			rData.setCb19_cgotherppl_T1(mResults.get("CFollow13_Experince_T0"));				
-		else
-			rData.setCb19_cgotherppl_T1(mResults.get("CB9"));			
-		
-		if (mResults.get("CB10") == null)
-			rData.setCb20_yourhealth_T1(mResults.get("CFollow14_Moment_T0"));	
-		else
-			rData.setCb20_yourhealth_T1(mResults.get("CB10"));		
-	}
-	
+			if (mResults.get("CB2") == null)
+				rData.setCb3_livewith_T1(Integer.parseInt(mResults.get("CFollow1_LiveWith_T0")));
+			else
+				rData.setCb3_livewith_T1(Integer.parseInt(mResults.get("CB2")));
+			
+			if (mResults.get("CB3") == null)
+				rData.setCb4_children_T1(Integer.parseInt(mResults.get("CFollow2_Children_T0")));
+			else
+				rData.setCb4_children_T1(Integer.parseInt(mResults.get("CB3")));
+			
+			if (mResults.get("CB3a") != null)
+				rData.setCb4a_T1(Integer.parseInt(mResults.get("CB3a")));
+			else if (mResults.get("CFollow3_Home_T0") != null)
+				rData.setCb4a_T1(Integer.parseInt(mResults.get("CFollow3_Home_T0")));
+				
+			if (mResults.get("CB4") == null)
+				rData.setCb5_partner_T1(Integer.parseInt(mResults.get("CFollow4_Partner_T0")));
+			else
+				rData.setCb5_partner_T1(Integer.parseInt(mResults.get("CB4")));
+			
+			if (mResults.get("CB5a") == null)
+				rData.setCb13_physcare_T1(Integer.parseInt(mResults.get("CFollow5_HoursPhy_T0")));
+			else
+				rData.setCb13_physcare_T1(Integer.parseInt(mResults.get("CB5a")));
+			
+			if (mResults.get("CB5b") == null)
+				rData.setCb14_emot_T1(Integer.parseInt(mResults.get("CFollow5_HoursSocial_T0")));
+			else
+				rData.setCb14_emot_T1(Integer.parseInt(mResults.get("CB5b")));
+			
+			if (mResults.get("CB5c") == null)			
+				rData.setCb15_other_T1(Integer.parseInt(mResults.get("CFollow6_HoursOther_T0")));
+			else
+				rData.setCb15_other_T1(Integer.parseInt(mResults.get("CB5c")));
+			
+			if (mResults.get("CB6") != null)
+				rData.setCb16_howlong_T1(mResults.get("CB6"));
+			else if (mResults.get("CFollow7_HowLong_T0") != null)
+				rData.setCb16_howlong_T1(mResults.get("CFollow7_HowLong_T0"));
+			
+			if (mResults.get("CB6a") == null)
+				rData.setCb12_startcg_T1(mResults.get("CFollow8_Only_T0"));
+			else
+				rData.setCb12_startcg_T1(mResults.get("CB6a"));				
+			
+			if (mResults.get("CB7") != null)
+				rData.setCb17_onlycg_T1(Integer.parseInt(mResults.get("CB7")));
+			else if (mResults.get("CFollow9_Only_T0") != null)
+				rData.setCb17_onlycg_T1(Integer.parseInt(mResults.get("CFollow9_Only_T0")));			
+			
+			if (mResults.get("CB7b") != null)
+				rData.setCb17a_T1(mResults.get("CB7b"));
+			else if (mResults.get("CFollow10_NumOtherPeople_T0") != null)
+				rData.setCb17a_T1(mResults.get("CFollow10_NumOtherPeople_T0"));
+			
+			if (mResults.get("CB7c") != null)
+				rData.setCb17b_T1(mResults.get("CB7c"));
+			else if (mResults.get("CFollow11_OtherHelpers_T0") != null)
+				rData.setCb17b_T1(mResults.get("CFollow11_OtherHelpers_T0"));
+			
+			if (mResults.get("CB8") == null)
+				rData.setCb18_healthcon_T1(mResults.get("CFollow12_MainConcern_T0"));
+			else
+				rData.setCb18_healthcon_T1(mResults.get("CB8"));
+			
+			if (mResults.get("CB9") == null)
+				rData.setCb19_cgotherppl_T1(mResults.get("CFollow13_Experince_T0"));				
+			else
+				rData.setCb19_cgotherppl_T1(mResults.get("CB9"));			
+			
+			if (mResults.get("CB10") == null)
+				rData.setCb20_yourhealth_T1(mResults.get("CFollow14_Moment_T0"));	
+			else
+				rData.setCb20_yourhealth_T1(mResults.get("CB10"));				
+		}
+	}	
 	//fill in Background Fowllow up  survey for UBC research data dump on T1/T2 period
 	private static void setUBCBackgroundFollowupT2(List<SurveyResult> srList, CareGiverResearchData rData)
 	{
@@ -4782,85 +4800,90 @@ public class TapestryHelper {
 		SurveyResult sr = srList.get(1);	
 		Map<String, String> mResults = new HashMap<String, String>();		
 		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
-		mResults = mapSurveyResults(displayedResults);	
-		
-		if (mResults.get("CB1") == null)
-			rData.setCb2_empl_T2(Integer.parseInt(mResults.get("CFolllow0_EmployentStat_T0")));
-		else
-			rData.setCb2_empl_T2(Integer.parseInt(mResults.get("CB1")));
-		
-		if (mResults.get("CB2") == null)
-			rData.setCb3_livewith_T2(Integer.parseInt(mResults.get("CFollow1_LiveWith_T0")));
-		else
-			rData.setCb3_livewith_T2(Integer.parseInt(mResults.get("CB2")));
-		
-		if (mResults.get("CB3") == null)
-			rData.setCb4_children_T2(Integer.parseInt(mResults.get("CFollow2_Children_T0")));
-		else
-			rData.setCb4_children_T2(Integer.parseInt(mResults.get("CB3")));
-		
-		if (mResults.get("CB3a") != null)
-			rData.setCb4a_T2(Integer.parseInt(mResults.get("CB3a")));
-		else if (mResults.get("CFollow3_Home_T0") != null)
-			rData.setCb4a_T2(Integer.parseInt(mResults.get("CFollow3_Home_T0")));
+		if (!displayedResults.isEmpty())
+		{
+			mResults = mapSurveyResults(displayedResults);	
 			
-		if (mResults.get("CB4") == null)
-			rData.setCb5_partner_T2(Integer.parseInt(mResults.get("CFollow4_Partner_T0")));
-		else
-			rData.setCb5_partner_T2(Integer.parseInt(mResults.get("CB4")));
-		
-		if (mResults.get("CB5a") == null)
-			rData.setCb13_physcare_T2(Integer.parseInt(mResults.get("CFollow5_HoursPhy_T0")));
-		else
-			rData.setCb13_physcare_T2(Integer.parseInt(mResults.get("CB5a")));
-		
-		if (mResults.get("CB5b") == null)
-			rData.setCb14_emot_T2(Integer.parseInt(mResults.get("CFollow5_HoursSocial_T0")));
-		else
-			rData.setCb14_emot_T2(Integer.parseInt(mResults.get("CB5b")));
-		
-		if (mResults.get("CB5c") == null)			
-			rData.setCb15_other_T2(Integer.parseInt(mResults.get("CFollow6_HoursOther_T0")));
-		else
-			rData.setCb15_other_T2(Integer.parseInt(mResults.get("CB5c")));
-		
-		if (mResults.get("CB6") != null)
-			rData.setCb16_howlong_T2(mResults.get("CB6"));
-		else if (mResults.get("CFollow7_HowLong_T0") != null)
-			rData.setCb16_howlong_T2(mResults.get("CFollow7_HowLong_T0"));
-		else
-			rData.setCb16_howlong_T2("");
-		
-		if (mResults.get("CB7") != null)
-			rData.setCb17_onlycg_T2(Integer.parseInt(mResults.get("CB7")));
-		else if (mResults.get("CFollow9_Only_T0") != null)
-			rData.setCb17_onlycg_T2(Integer.parseInt(mResults.get("CFollow9_Only_T0")));
-		
-		
-		if (mResults.get("CB7b") != null)
-			rData.setCb17a_T2(mResults.get("CB7b"));
-		else if (mResults.get("CFollow10_NumOtherPeople_T0") != null)
-			rData.setCb17a_T2(mResults.get("CFollow10_NumOtherPeople_T0"));
-		
-		if (mResults.get("CB7c") != null)
-			rData.setCb17b_T2(mResults.get("CB7c"));
-		else if (mResults.get("CFollow11_OtherHelpers_T0") != null)
-			rData.setCb17b_T2(mResults.get("CFollow11_OtherHelpers_T0"));
-		
-		if (mResults.get("CB8") == null)
-			rData.setCb18_healthcon_T2(mResults.get("CFollow12_MainConcern_T0"));
-		else
-			rData.setCb18_healthcon_T2(mResults.get("CB8"));
-		
-		if (mResults.get("CB9") == null)
-			rData.setCb19_cgotherppl_T2(mResults.get("CFollow13_Experince_T0"));				
-		else
-			rData.setCb19_cgotherppl_T2(mResults.get("CB9"));			
-		
-		if (mResults.get("CB10") == null)
-			rData.setCb20_yourhealth_T2(mResults.get("CFollow14_Moment_T0"));	
-		else
-			rData.setCb20_yourhealth_T2(mResults.get("CB10"));		
+			if (mResults.get("CB1") == null)
+				rData.setCb2_empl_T2(Integer.parseInt(mResults.get("CFolllow0_EmployentStat_T0")));
+			else
+				rData.setCb2_empl_T2(Integer.parseInt(mResults.get("CB1")));
+			
+			if (mResults.get("CB2") == null)
+				rData.setCb3_livewith_T2(Integer.parseInt(mResults.get("CFollow1_LiveWith_T0")));
+			else
+				rData.setCb3_livewith_T2(Integer.parseInt(mResults.get("CB2")));
+			
+			if (mResults.get("CB3") == null)
+				rData.setCb4_children_T2(Integer.parseInt(mResults.get("CFollow2_Children_T0")));
+			else
+				rData.setCb4_children_T2(Integer.parseInt(mResults.get("CB3")));
+			
+			if (mResults.get("CB3a") != null)
+				rData.setCb4a_T2(Integer.parseInt(mResults.get("CB3a")));
+			else if (mResults.get("CFollow3_Home_T0") != null)
+				rData.setCb4a_T2(Integer.parseInt(mResults.get("CFollow3_Home_T0")));
+				
+			if (mResults.get("CB4") == null)
+				rData.setCb5_partner_T2(Integer.parseInt(mResults.get("CFollow4_Partner_T0")));
+			else
+				rData.setCb5_partner_T2(Integer.parseInt(mResults.get("CB4")));
+			
+			if (mResults.get("CB5a") == null)
+				rData.setCb13_physcare_T2(Integer.parseInt(mResults.get("CFollow5_HoursPhy_T0")));
+			else
+				rData.setCb13_physcare_T2(Integer.parseInt(mResults.get("CB5a")));
+			
+			if (mResults.get("CB5b") == null)
+				rData.setCb14_emot_T2(Integer.parseInt(mResults.get("CFollow5_HoursSocial_T0")));
+			else
+				rData.setCb14_emot_T2(Integer.parseInt(mResults.get("CB5b")));
+			
+			if (mResults.get("CB5c") == null)			
+				rData.setCb15_other_T2(Integer.parseInt(mResults.get("CFollow6_HoursOther_T0")));
+			else
+				rData.setCb15_other_T2(Integer.parseInt(mResults.get("CB5c")));
+			
+			if (mResults.get("CB6") != null)
+				rData.setCb16_howlong_T2(mResults.get("CB6"));
+			else if (mResults.get("CFollow7_HowLong_T0") != null)
+				rData.setCb16_howlong_T2(mResults.get("CFollow7_HowLong_T0"));
+						
+			if (mResults.get("CB6a") == null)
+				rData.setCb12_startcg_T2(mResults.get("CFollow8_Only_T0"));
+			else
+				rData.setCb12_startcg_T2(mResults.get("CB6a"));				
+						
+			if (mResults.get("CB7") != null)
+				rData.setCb17_onlycg_T2(Integer.parseInt(mResults.get("CB7")));
+			else if (mResults.get("CFollow9_Only_T0") != null)
+				rData.setCb17_onlycg_T2(Integer.parseInt(mResults.get("CFollow9_Only_T0")));		
+			
+			if (mResults.get("CB7b") != null)
+				rData.setCb17a_T2(mResults.get("CB7b"));
+			else if (mResults.get("CFollow10_NumOtherPeople_T0") != null)
+				rData.setCb17a_T2(mResults.get("CFollow10_NumOtherPeople_T0"));
+			
+			if (mResults.get("CB7c") != null)
+				rData.setCb17b_T2(mResults.get("CB7c"));
+			else if (mResults.get("CFollow11_OtherHelpers_T0") != null)
+				rData.setCb17b_T2(mResults.get("CFollow11_OtherHelpers_T0"));
+			
+			if (mResults.get("CB8") == null)
+				rData.setCb18_healthcon_T2(mResults.get("CFollow12_MainConcern_T0"));
+			else
+				rData.setCb18_healthcon_T2(mResults.get("CB8"));
+			
+			if (mResults.get("CB9") == null)
+				rData.setCb19_cgotherppl_T2(mResults.get("CFollow13_Experince_T0"));				
+			else
+				rData.setCb19_cgotherppl_T2(mResults.get("CB9"));			
+			
+			if (mResults.get("CB10") == null)
+				rData.setCb20_yourhealth_T2(mResults.get("CFollow14_Moment_T0"));	
+			else
+				rData.setCb20_yourhealth_T2(mResults.get("CB10"));		
+		}
 	}
 
 	public static List<CareGiverResearchData> getCareGiverResearchData(SurveyManager surveyManager,List<Volunteer> volunteers)
@@ -4932,8 +4955,7 @@ public class TapestryHelper {
 	}
 	
 	private static Map<String, String> mapSurveyResults(List<DisplayedSurveyResult>  results)
-	{
-		//set questionId as key, and answer as value in the map
+	{		//set questionId as key, and answer as value in the map
 		Map<String, String> mResults = new HashMap<String, String>();
 		for (int i=0; i<results.size(); i++)
 		{
@@ -4943,8 +4965,7 @@ public class TapestryHelper {
 	}	
 	
 	public static XSSFSheet fillSheet(Map<Integer, Object[]> data, XSSFSheet sheet, XSSFWorkbook book)
-	{
-		//Iterate over data and write to sheet
+	{		//Iterate over data and write to sheet
 		Set<Integer> keyset = data.keySet();
 		int rownum = 0;
 		int cellnum;  
@@ -5094,13 +5115,10 @@ public class TapestryHelper {
 	
 	private static void setRAPA(SurveyResult sr, ResearchData rData)
 	{	
-		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);		
-		
+		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);				
 		if (!displayedResults.isEmpty())
-		{
-			//if answer is empty, format it to 0
-			displayedResults = formatEmptyResultAnswerToInt(displayedResults);
-				
+		{			//if answer is empty, format it to 0
+			displayedResults = formatEmptyResultAnswerToInt(displayedResults);				
 			if (displayedResults.size() == 9)
 			{//new survey with 9 questions
 				rData.setRapa1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
@@ -5132,10 +5150,8 @@ public class TapestryHelper {
 	{
 		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
 		if (!displayedResults.isEmpty())
-		{
-			//if answer is empty, format it to 0
-			displayedResults = formatEmptyResultAnswerToInt(displayedResults);
-			
+		{			//if answer is empty, format it to 0
+			displayedResults = formatEmptyResultAnswerToInt(displayedResults);			
 			rData.setAd1(Integer.parseInt(displayedResults.get(0).getQuestionAnswer()));
 			rData.setAd2(Integer.parseInt(displayedResults.get(1).getQuestionAnswer()));
 			rData.setAd3(Integer.parseInt(displayedResults.get(2).getQuestionAnswer()));							
@@ -5179,47 +5195,22 @@ public class TapestryHelper {
 		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
 		if (!displayedResults.isEmpty())
 		{
-			int sizeOfMemory = displayedResults.size();
-			DisplayedSurveyResult result;
+			Map<String, String> mResults = mapSurveyResults(displayedResults);
 			
-			result = displayedResults.get(0);
-			result = formatEmptyResultAnswerToInt(result);
-			rData.setMem1(Integer.parseInt(result.getQuestionAnswer()));		
-
-			if (sizeOfMemory == 2)
-			{
-				rData.setMem2("");
-				result = displayedResults.get(1);
-				result = formatEmptyResultAnswerToInt(result);
-				rData.setMem1(Integer.parseInt(result.getQuestionAnswer()));
-				rData.setMem4("");
-			}
-			else if (sizeOfMemory == 3)
-			{
-				if (Utils.isNumeric(displayedResults.get(1).getQuestionAnswer()))
-				{
-					rData.setMem2("");
-					result = displayedResults.get(1);
-					result = formatEmptyResultAnswerToInt(result);
-					rData.setMem1(Integer.parseInt(result.getQuestionAnswer()));
-					rData.setMem4(displayedResults.get(2).getQuestionAnswer());		
-				}
-			}
-			else
-			{
-				rData.setMem2(displayedResults.get(1).getQuestionAnswer());
-				result = displayedResults.get(2);
-				result = formatEmptyResultAnswerToInt(result);
-				rData.setMem1(Integer.parseInt(result.getQuestionAnswer()));
-				rData.setMem4(displayedResults.get(3).getQuestionAnswer());				
-			}
-		}
+			rData.setMem1(Integer.parseInt(mResults.get("YM1")));	
+			if (mResults.get("YM1a") != null)
+				rData.setMem2(mResults.get("YM1a"));
+			rData.setMem3(Integer.parseInt(mResults.get("YM2")));
+			if (mResults.get("YM2a") != null)
+				rData.setMem4(mResults.get("YM2a"));
+		}	
 	}
 	
 	private static void setMobility(SurveyResult sr, ResearchData rData)
 	{
 		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
 		List<Integer> aList;
+		
 		if (!displayedResults.isEmpty())
 		{
 			//if answer is empty, format it to 0
@@ -5318,98 +5309,63 @@ public class TapestryHelper {
 	private static void set3MonthFollowUp(SurveyResult sr, ResearchData rData)
 	{
 		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
-		Map<String, String> mResults = mapSurveyResults(displayedResults);
-	//	rData.setDla1(mResults.get("TV1"));
-		
-		
-		
-		
 		
 		if (!displayedResults.isEmpty())
-		{//if answer is empty, format it to 0
-			displayedResults = formatEmptyResultAnswerToInt(displayedResults);
-			int size = displayedResults.size();				
-			String questionId, answer;
-			answer = displayedResults.get(0).getQuestionAnswer();
-			rData.setFu1(Integer.parseInt(answer));
+		{
+			Map<String, String> mResults = mapSurveyResults(displayedResults);
+	
+			if (mResults.get("CFQ1") != null)
+			 rData.setFu1(Integer.parseInt(mResults.get("CFQ1")));
 			
-			for (int k =1; k < size; k++)
-			{
-				questionId = displayedResults.get(k).getQuestionId();
-				answer = displayedResults.get(k).getQuestionAnswer();
-										
-				if (questionId.equals("CFQ2"))
-					rData.setFu2(Integer.valueOf(answer));
-				
-				if (questionId.equals("CFQ3"))
-					rData.setFu3(answer);
-					
-				if (questionId.equals("PHR1"))
-					rData.setFu5(Integer.valueOf(answer));
-				
-				if (questionId.equals("PHR1a"))
-					rData.setFu6(Integer.valueOf(answer));
-				
-				if (questionId.equals("PHR1ao"))
-					rData.setFu7(answer);
-					
-				if (questionId.equals("PHR1b"))
-					rData.setFu8(Integer.valueOf(answer));
-				
-				if (questionId.equals("PHR1bo"))
-					rData.setFu9(answer);
-				
-				if (questionId.equals("GFU1"))
-					rData.setFu11(Integer.valueOf(answer));
-				
-				if (questionId.equals("GFU2"))
-					rData.setFu12(answer);
-				
-				if (questionId.equals("GFU3"))
-					rData.setFu13(answer);
-				
-				if (questionId.equals("GFU4"))
-					rData.setFu14(answer);
-				
-				if (questionId.equals("GFU5"))
-					rData.setFu15(Integer.valueOf(answer));
-				
-				if (questionId.equals("GFU6"))
-					rData.setFu16(answer);
-				
-				if (questionId.equals("GFU7"))
-					rData.setFu17(answer);
-				
-				if (questionId.equals("GFU8"))
-					rData.setFu18(answer);
-				
-				if (questionId.equals("GFU9"))
-					rData.setFu19(Integer.valueOf(answer));
-				
-				if (questionId.equals("GFU10"))
-					rData.setFu20(answer);
-				
-				if (questionId.equals("GFU11"))
-					rData.setFu21(answer);
-				
-				if (questionId.equals("GFU12"))
-					rData.setFu22(answer);							
-			}
+			if (mResults.get("CFQ2") != null)			
+				rData.setFu2(Integer.valueOf(mResults.get("CFQ2")));
+			rData.setFu3(mResults.get("CFQ3"));
+			
+			if (mResults.get("PHR1") != null)
+				rData.setFu5(Integer.valueOf(mResults.get("PHR1")));
+			
+			if (mResults.get("PHR1a") != null)
+				rData.setFu6(Integer.valueOf(mResults.get("PHR1a")));
+			rData.setFu7(mResults.get("PHR1ao"));
+			
+			if (mResults.get("PHR1b") != null)
+				rData.setFu8(Integer.valueOf(mResults.get("PHR1b")));
+			rData.setFu9(mResults.get("PHR1bo"));
+			
+			if (mResults.get("GFU1") != null)
+				rData.setFu11(Integer.valueOf(mResults.get("GFU1")));
+			rData.setFu12(mResults.get("GFU2"));
+			rData.setFu13(mResults.get("GFU3"));
+			rData.setFu14(mResults.get("GFU4"));
+			
+			if (mResults.get("GFU5") != null)
+				rData.setFu15(Integer.valueOf(mResults.get("GFU5")));
+			rData.setFu16(mResults.get("GFU6"));
+			rData.setFu17(mResults.get("GFU7"));
+			rData.setFu18(mResults.get("GFU8"));
+			
+			if (mResults.get("GFU9") != null)
+				rData.setFu19(Integer.valueOf(mResults.get("GFU9")));
+			rData.setFu20(mResults.get("GFU10"));
+			rData.setFu21(mResults.get("GFU11"));
+			rData.setFu22(mResults.get("GFU12"));
 		}
 	}	
 	private static void setDailyLife(SurveyResult sr, ResearchData rData)
 	{		
 		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
-		Map<String, String> mResults = mapSurveyResults(displayedResults);
-		
-		rData.setDla1(mResults.get("TV1"));
-		rData.setDla2(mResults.get("TV2"));
-		rData.setDla3(mResults.get("TV3"));
-		rData.setDla4(mResults.get("TV4"));
-		rData.setDla5(mResults.get("TV5"));
-		rData.setDla6(mResults.get("TV6"));
-		rData.setDla7(mResults.get("TV7"));
-		rData.setDla7a(mResults.get("TV7a"));
+		if (!displayedResults.isEmpty())
+		{
+			Map<String, String> mResults = mapSurveyResults(displayedResults);			
+			rData.setDla1(mResults.get("TV1"));
+			rData.setDla2(mResults.get("TV2"));
+			rData.setDla3(mResults.get("TV3"));
+			rData.setDla4(mResults.get("TV4"));
+			rData.setDla5(mResults.get("TV5"));
+			rData.setDla6(mResults.get("TV6"));
+			rData.setDla7(mResults.get("TV7"));
+			rData.setDla7a(mResults.get("TV7a"));
+		}		
 	}
 	public static List<ResearchData> getResearchDatas(PatientManager patientManager, SurveyManager surveyManager, int siteId)
 	{
@@ -5805,13 +5761,11 @@ public class TapestryHelper {
         		r.getNut3(), r.getaCP1(), r.getaCP2(), r.getaCP3(), r.getaCP4(), r.getaCP5(), r.getMem1(), r.getMem2(), r.getMem3(), 
         		r.getMem4() ,r.getPain1(), r.getMob1(), r.getMob2(), r.getMob3(), r.getMob4(), r.getMob5(), r.getMob6(), r.getMob7(),
         		r.getMob8(), r.getMob9() ,r.getmU1(), r.getmU2(),r.getmU3(), r.getmU4(), r.getmU5(), r.getlQ()});
-        }     
-        
+        } 
         fillSheet(data, sheet, workbook);
         
         response.setContentType("application/vnd.ms-excel");
-        response.setHeader("Content-Disposition", "attachment; filename=\"UBC_client_results.xlsx\"");
-     
+        response.setHeader("Content-Disposition", "attachment; filename=\"UBC_client_results.xlsx\"");     
         try{// Write workbook to response.
             workbook.write(response.getOutputStream()); 
             response.getOutputStream().close();
@@ -5868,7 +5822,7 @@ public class TapestryHelper {
 		}		
 		return sites;
 	}
-	
+	//============================== Report ===================================
 	public static void generateVolunteerSurveyReport(int volunteerId, SurveyManager surveyManager, 
 			HttpServletResponse response, String name )
 	{	
@@ -5898,6 +5852,7 @@ public class TapestryHelper {
 	   			xml = "";
 	   		}
 			mSurvey = ResultParser.getResults(xml);
+				
 			qList = new ArrayList<String>();
 			qList = TapestryHelper.getQuestionList(mSurvey);
 	   		questionTextList = new ArrayList<String>();	   		
@@ -6523,9 +6478,19 @@ public class TapestryHelper {
 			document.close();
 		} catch (Exception e) {
 			e.printStackTrace();			
-		}	
-		
+		}			
 	}
+	
+	public static LinkedHashMap<String, String> getSurveyResultMap(SurveyResult sr){
+		String xml;
+		try{
+   			xml = new String(sr.getResults(), "UTF-8");
+   		} catch (Exception e) {
+   			xml = "";
+   		}   		
+   		return ResultParser.getResults(xml);
+	}	
+	
 	public static String removeString(String strSource, String strBeRemoved){		
 		int index = strSource.indexOf(strBeRemoved);
 		if (index != (-1))

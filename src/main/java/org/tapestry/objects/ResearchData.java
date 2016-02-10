@@ -22,8 +22,7 @@ public class ResearchData {
 	private String dSS9_timesnotliving_TO;
 	private String dSS10_timesphone_TO;
 	private String dSS11_timesclubs_TO;
-	private String dSS_notes_TO;
-	
+	private String dSS_notes_TO;	
 	//survey goals
 	private String goals1Matter_TO;
 	private String goals2Life_TO;
@@ -39,8 +38,7 @@ public class ResearchData {
 	private String goals6ThirdBaseline_TO;
 	private String goals7ThirdTaget_TO;
 	private String goals8Priority_TO;
-	private String goalsDiscussion_notes_TO;
-	
+	private String goalsDiscussion_notes_TO;	
 	//survey daily life active
 	private String dla1;	
 	private String dla2;
