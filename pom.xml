@@ -239,7 +239,7 @@
 			<version>0.3</version>
 		</dependency>
 		
-		<!-- MyOscar -->
+		<!-- MyOscar -->		
 		<dependency>
 			<groupId>org.oscarehr</groupId>
 			<artifactId>myoscar_client_utils</artifactId>			

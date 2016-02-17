@@ -276,8 +276,13 @@ public class TapestryHelper {
 	}
 
 	public static Patient getPatientWithFullInfos(Patient p){		
+		System.out.println("hillll");
+		
 		try{			
-			String userName = p.getUserName();			//username in MyOscar			
+			String userName = p.getUserName();	
+			System.out.println("usrname="+ userName);
+			
+			//username in MyOscar			
 			if (!Utils.isNullOrEmpty(userName))
 			{
 				PersonTransfer3 person = ClientManager.getClientByUsername(userName);				
@@ -2613,10 +2618,10 @@ public class TapestryHelper {
 			ReportHeader event = new ReportHeader();
 			event.setHeader(imageHeader);
 			writer.setPageEvent(event);			
-			/////////////////////////////////
+			
 			document.open(); 
-			//set main part of report
-			buildMainPartReportPDF(report, response, document);
+			//set main part of report	
+			buildMainPartReportPDF(report, document);
 			//set volunteer information
 			buildVolunteerPartReportPDF(report, document);
 			
@@ -2628,7 +2633,7 @@ public class TapestryHelper {
 		
 	}
 	
-	private static void buildMainPartReportPDF (Report report, HttpServletResponse response, Document document)
+	private static void buildMainPartReportPDF (Report report, Document document)
 	{
 		String patientName = report.getPatient().getFirstName() + " " + report.getPatient().getLastName();
 		try{
@@ -4273,11 +4278,11 @@ public class TapestryHelper {
 	/**
 	 * Send message to client's account in MyOscar(PHR)
 	 */
-	public static void sendMessageToMyOscar()
+	public static void sendMessageToMyOscar(String msg)
 	{
 		//send message to MyOscar test
 		try{
-			Long lll = ClientManager.sentMessageToPatientInMyOscar(new Long(15231), "Message From Tapestry", "Hello");			
+			Long lll = ClientManager.sentMessageToPatientInMyOscar(new Long(15231), "Message From Tapestry", msg);			
 			
 		} catch (Exception e){
 			System.out.println("something wrong with myoscar server");
@@ -4899,7 +4904,7 @@ public class TapestryHelper {
 		
 		for (int i = 0; i<volunteers.size(); i++ )
 		{
-			vol = volunteers.get(i);
+			vol = volunteers.get(i);		
 			vId = vol.getVolunteerId();
 			rData = new CareGiverResearchData();			
 			rData.setVolunteerId(vId);
@@ -4989,12 +4994,14 @@ public class TapestryHelper {
 					cell.setCellStyle(cStyle);
 				}
 				else if(obj instanceof Integer)
-				{
+				{					
 					if ((Integer)obj == 0 )
 						cell.setCellValue(999);
+					else if ((Integer)obj == 888)
+						cell.setCellValue(0);
 					else
 						cell.setCellValue((Integer)obj);    
-				}
+				}				
 			}
 		}   
 		//Adjusts the each column width to fit the contents
@@ -5210,6 +5217,7 @@ public class TapestryHelper {
 	{
 		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
 		List<Integer> aList;
+		List<String> sList;
 		
 		if (!displayedResults.isEmpty())
 		{
@@ -5227,17 +5235,42 @@ public class TapestryHelper {
 				if (qId.equals("a2b"))
 				{
 					if (answer.contains(","))
-					{							
-						aList = makeMobilityMultipleAnswerList(answer);
-						rData.setMob21(aList.get(0));
-						rData.setMob22(aList.get(1));
-						rData.setMob23(aList.get(2));
-						rData.setMob24(aList.get(3));
-						rData.setMob25(aList.get(4));
-						rData.setMob26(aList.get(5));
+					{		
+						sList = new ArrayList<String>(Arrays.asList(answer.split(",")));		
+						for (int j=0; j< sList.size(); j++)
+						{							
+							switch (Integer.valueOf(sList.get(j).trim()))
+							{
+								case 1: rData.setMob21(1);
+										break;
+								case 2: rData.setMob22(1);
+										break;
+								case 3: rData.setMob23(1);
+										break;
+								case 4: rData.setMob24(1);
+										break;
+								case 5: rData.setMob25(1);
+										break;
+								case 6: rData.setMob26(1);
+										break;
+							}
+						}
 					}
 					else
 						rData.setMob21(Integer.parseInt(answer));
+					
+					if (rData.getMob21() == 0)
+						rData.setMob21(888);
+					if (rData.getMob22() == 0)
+						rData.setMob22(888);
+					if (rData.getMob23() == 0)
+						rData.setMob23(888);
+					if (rData.getMob24() == 0)
+						rData.setMob24(888);
+					if (rData.getMob25() == 0)
+						rData.setMob25(888);
+					if (rData.getMob26() == 0)
+						rData.setMob26(888);
 				}
 				
 				if (qId.equals("a3a"))
@@ -5245,17 +5278,43 @@ public class TapestryHelper {
 				if (qId.equals("a3b"))
 				{
 					if (answer.contains(","))
-					{								
-						aList = makeMobilityMultipleAnswerList(answer);
-						rData.setMob41(aList.get(0));
-						rData.setMob42(aList.get(1));
-						rData.setMob43(aList.get(2));
-						rData.setMob44(aList.get(3));
-						rData.setMob45(aList.get(4));
-						rData.setMob46(aList.get(5));
+					{		
+						sList = new ArrayList<String>(Arrays.asList(answer.split(",")));		
+						for (int j=0; j< sList.size(); j++)
+						{							
+							switch (Integer.valueOf(sList.get(j).trim()))
+							{
+								case 1: rData.setMob41(1);
+										break;
+								case 2: rData.setMob42(1);
+										break;
+								case 3: rData.setMob43(1);
+										break;
+								case 4: rData.setMob44(1);
+										break;
+								case 5: rData.setMob45(1);
+										break;
+								case 6: rData.setMob46(1);
+										break;
+							}
+						}
+						
 					}
 					else
 						rData.setMob41(Integer.parseInt(answer));
+					
+					if (rData.getMob41() == 0)
+						rData.setMob41(888);
+					if (rData.getMob42() == 0)
+						rData.setMob42(888);
+					if (rData.getMob43() == 0)
+						rData.setMob43(888);
+					if (rData.getMob44() == 0)
+						rData.setMob44(888);
+					if (rData.getMob45() == 0)
+						rData.setMob45(888);
+					if (rData.getMob46() == 0)
+						rData.setMob46(888);
 				}
 				
 				if (qId.equals("a4a"))
@@ -5263,17 +5322,42 @@ public class TapestryHelper {
 				if (qId.equals("a4b"))
 				{
 					if (answer.contains(","))
-					{								
-						aList = makeMobilityMultipleAnswerList(answer);							 
-						rData.setMob61(aList.get(0));
-						rData.setMob62(aList.get(1));
-						rData.setMob63(aList.get(2));
-						rData.setMob64(aList.get(3));
-						rData.setMob65(aList.get(4));
-						rData.setMob66(aList.get(5));
+					{		
+						sList = new ArrayList<String>(Arrays.asList(answer.split(",")));		
+						for (int j=0; j< sList.size(); j++)
+						{							
+							switch (Integer.valueOf(sList.get(j).trim()))
+							{
+								case 1: rData.setMob61(1);
+										break;
+								case 2: rData.setMob62(1);
+										break;
+								case 3: rData.setMob63(1);
+										break;
+								case 4: rData.setMob64(1);
+										break;
+								case 5: rData.setMob65(1);
+										break;
+								case 6: rData.setMob66(1);
+										break;
+							}
+						}
 					}
 					else
 						rData.setMob61(Integer.parseInt(answer));
+					
+					if (rData.getMob61() == 0)
+						rData.setMob61(888);
+					if (rData.getMob62() == 0)
+						rData.setMob62(888);
+					if (rData.getMob63() == 0)
+						rData.setMob63(888);
+					if (rData.getMob64() == 0)
+						rData.setMob64(888);
+					if (rData.getMob65() == 0)
+						rData.setMob65(888);
+					if (rData.getMob66() == 0)
+						rData.setMob66(888);
 				}						
 			}
 		}	
@@ -5376,7 +5460,7 @@ public class TapestryHelper {
 		ResearchData rData;
 		int patientId;
 			
-		for (int i = 0; i < patients.size(); i++)
+		for (int i = 0; i < patients.size(); i++)		
 		{			
 			rData = new ResearchData();
 			patientId = patients.get(i).getPatientID();		

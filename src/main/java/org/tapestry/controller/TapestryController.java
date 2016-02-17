@@ -1204,6 +1204,17 @@ public class TapestryController{
 	{
 		Patient patient = patientManager.getPatientByID(id);
 		model.addAttribute("patient", patient);
+		///////////////////////////////
+//		patient = TapestryHelper.getPatientWithFullInfos(patient);
+//		
+//		System.out.println("patient bod="  + patient.getBod());
+//		System.out.println("patient name="+ patient.getFirstName());
+//		
+//		TapestryHelper.sendMessageToMyOscar("Today is Feb 17");
+		
+		
+		
+		////////////////////////////////////////
 
 		String volunteer1Name = volunteerManager.getVolunteerById(patient.getVolunteer()).getDisplayName();
 		String volunteer2Name = volunteerManager.getVolunteerById(patient.getPartner()).getDisplayName();
@@ -1322,7 +1333,6 @@ public class TapestryController{
 		ScoresInReport scores = new ScoresInReport();
 		
 		HttpSession session = request.getSession();
-//		List<Patient> patients = new ArrayList<Patient>();
 		report.setPatient(patient);
 		
 		// Key Observations
@@ -1639,7 +1649,6 @@ public class TapestryController{
 		String keyObservation = appointmentManager.getKeyObservationByAppointmentId(appointmentId);
 		appointment.setKeyObservation(keyObservation);
 		report.setAppointment(appointment);
-
 		//Survey---  
 		List<SurveyResult> surveyResultList = surveyManager.getCompletedSurveysByPatientID(id);
 			
@@ -1704,8 +1713,7 @@ public class TapestryController{
 					
 			if (title.equalsIgnoreCase(pcTitle) && (pcSurvey.getResultID()==0)) //patient centeredness Survey
 				pcSurvey = survey;
-		}
-		
+		}		
 		String xml;
 		List<String> qList = new ArrayList<String>();
    		List<String> questionTextList = new ArrayList<String>();
@@ -1720,9 +1728,7 @@ public class TapestryController{
 		LinkedHashMap<String, String> mSocialLifeSurvey = ResultParser.getResults(xml);
 		qList = new ArrayList<String>();   		
    		//get answer list
-		qList = TapestryHelper.getQuestionList(mSocialLifeSurvey);
-			
-		
+		qList = TapestryHelper.getQuestionList(mSocialLifeSurvey);		
 			
 		//summary tools for social supports
 		int socialSupportSize = qList.size();
@@ -1754,23 +1760,20 @@ public class TapestryController{
 			scores.setNutritionScreen(nutritionScore);			
 			//high nutrition risk alert			
 			lAlert = AlertManager.getNutritionAlerts(nutritionScore, lAlert, qList);
-		}
-		
+		}		
 		//RAPA 
 		try{
    			xml = new String(rAPASurvey.getResults(), "UTF-8");
    		} catch (Exception e) {
    			xml = "";
-   		}
-   		
+   		}   		
    		LinkedHashMap<String, String> mRAPASurvey = ResultParser.getResults(xml);
    		qList = new ArrayList<String>();   		
    		//get answer list
 		qList = TapestryHelper.getQuestionList(mRAPASurvey);  		
 
 		int rAPAScore = CalculationManager.getAScoreForRAPA(qList);
-		int sFPAScore = CalculationManager.getSFScoreForRAPA(qList);
-				
+		int sFPAScore = CalculationManager.getSFScoreForRAPA(qList);				
 		String aerobicMsg = CalculationManager.getAerobicMsg(rAPAScore);
 				
 		scores.setpAAerobic(rAPAScore);
@@ -1888,19 +1891,16 @@ public class TapestryController{
 		Appointment appointment = appointmentManager.getAppointmentById(appointmentId);
 		Report report = new Report();		
 		ScoresInReport scores = new ScoresInReport();	
-		Patient patient = patientManager.getPatientByID(id);		
-//		int site = patientManager.getSiteByPatientId(id);
+		Patient patient = patientManager.getPatientByID(id);	
 		//call web service to get patient info from myoscar
-//		HttpSession session = request.getSession();
-//		List<Patient> patients = new ArrayList<Patient>();		
+
 		report.setPatient(patient);		
 		//Key Observations
 		String keyObservation = appointmentManager.getKeyObservationByAppointmentId(appointmentId);
 		appointment.setKeyObservation(keyObservation);
 		report.setAppointment(appointment);
 		//Survey---  
-		List<SurveyResult> surveyResultList = surveyManager.getCompletedSurveysByPatientID(id);
-	
+		List<SurveyResult> surveyResultList = surveyManager.getCompletedSurveysByPatientID(id);	
 		SurveyResult dailyLifeActivitySurvey = new SurveyResult();	
 		SurveyResult nutritionSurvey = new SurveyResult();
 		SurveyResult rAPASurvey = new SurveyResult();
@@ -1952,8 +1952,7 @@ public class TapestryController{
    			xml = new String(memorySurvey.getResults(), "UTF-8");
    		} catch (Exception e) {
    			xml = "";
-   		}
-   		
+   		}   		
    		LinkedHashMap<String, String> mMemorySurvey = ResultParser.getResults(xml);
    		qList = new ArrayList<String>();
    		questionTextList = new ArrayList<String>();
@@ -1989,7 +1988,6 @@ public class TapestryController{
    	   	displayQuestionTextList = new ArrayList<String>();
    	   	qList = new ArrayList<String>();
    	   	LinkedHashMap<String, String> mCarePlanSurvey = ResultParser.getResults(xml);
-
    	   	questionTextList = new ArrayList<String>();
    	   	questionTextList = ResultParser.getSurveyQuestions(xml);   	   		
    	   		
@@ -1998,14 +1996,12 @@ public class TapestryController{
    	   	{
    	   		for (int i = 1; i <= 3; i++)
    	   			displayQuestionTextList.add(TapestryHelper.removeObserverNotes(questionTextList.get(i)));	   	   		
-	   	   	displayQuestionTextList = TapestryHelper.removeRedundantFromQuestionText(displayQuestionTextList, "of 3");	
-	   	   		
+	   	   	displayQuestionTextList = TapestryHelper.removeRedundantFromQuestionText(displayQuestionTextList, "of 3");		   	   		
 	   	   	//get answer list   	   	  	   	
 	   	   	qList = TapestryHelper.getQuestionList(mCarePlanSurvey);	   	   		
 	   	   	sMap = TapestryHelper.getSurveyContentMapForMemorySurvey(displayQuestionTextList, qList);	   	   			   	   		
 	   	   	report.setCaringPlan(sMap);
-   	   	}      
-   	   	
+   	   	}    	   	
    		//Daily Life Activities---Tapestry Questions
    		try{
    			xml = new String(dailyLifeActivitySurvey.getResults(), "UTF-8");
@@ -2015,8 +2011,7 @@ public class TapestryController{
    		
    		LinkedHashMap<String, String> mDailyLifeActivitySurvey = ResultParser.getResults(xml);
    		questionTextList = new ArrayList<String>();
-   		questionTextList = ResultParser.getSurveyQuestions(xml);   
-   	   		
+   		questionTextList = ResultParser.getSurveyQuestions(xml);      	   		
    		qList = new ArrayList<String>();
    		qList = TapestryHelper.getQuestionList(mDailyLifeActivitySurvey);
    		   	   		
@@ -2059,8 +2054,7 @@ public class TapestryController{
    			xml = new String(generalHealthySurvey.getResults(), "UTF-8");
    		} catch (Exception e) {
    			xml = "";
-   		}
-		
+   		}		
 		LinkedHashMap<String, String> mGeneralHealthySurvey = ResultParser.getResults(xml);
 		qList = new ArrayList<String>();   		
    		//get answer list
@@ -3049,7 +3043,7 @@ public class TapestryController{
 		//first sheet with care giver background_T0
 		List<CareGiverResearchData> results1 = TapestryHelper.getCareGiverResearchData(surveyManager, volunteers);
 		data.put(1, new Object[]{"Vol ID", "vol_name", "CB1_ed_T0", "CB1a_T0", "CB2_empl_T0", "CB3_livewith_T0", "CB4_children_T0", "CB4a_T0", "CB5_partner_T0",
-				"CB6_anger_T0", "CB7_gender_T0", "CB7a_T0", "CB8_lang_T0", "CB9_born_T0", "CB9a_bornwhere_T0", "CB10_ethnic_T0", "CB10a_T0",
+				"CB6_agegr_T0", "CB7_gender_T0", "CB7a_T0", "CB8_lang_T0", "CB9_born_T0", "CB9a_bornwhere_T0", "CB10_ethnic_T0", "CB10a_T0",
 				"CB11_relation_T0", "CB11a_T0", "CB12_startcg_T0", "CB13_physcare_T0", "CB14_emot_T0", "CB15_other_T0", "CB16_howlong_T0", "CB17_onlycg_T0", 
 				"CB17a_T0", "CB17b_T0", "CB18_healthcon_T0", "CB19_cgotherppl_T0", "CB20_yourhealth_T0", "CQL1_sleep_T0", "CQL2_incon_T0",  "CQL3_appre_T0", 
 				"CQL4_phystr_T0",  "CQL5_confin_T0", "CQL6_time_T0", "CQL7_famad_T0", "CQL8_persolan_T0", "CQL9_demtime_T0",  "CQL10_emad_T0", "CQL11_handcare_T0",  

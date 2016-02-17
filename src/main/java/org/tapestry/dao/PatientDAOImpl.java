@@ -345,8 +345,18 @@ public class PatientDAOImpl extends NamedParameterJdbcDaoSupport implements Pati
 		String sql = "UPDATE patients SET tap_username=?, tap_password=? WHERE patient_ID=? ";
 		ShaPasswordEncoder enc = new ShaPasswordEncoder();		
 		String tapPassword = enc.encodePassword("tap_client", null);
-		getJdbcTemplate().update(sql, username, tapPassword, patientId);
+		getJdbcTemplate().update(sql, username, tapPassword, patientId);		
+	}
+
+	@Override
+	public List<Patient> getAllPatientsBySite(int siteId) {
+		String sql = "SELECT p.*, v1.firstname AS v1_firstname, v1.lastname AS v1_lastname, "
+				+ "v2.firstname AS v2_firstname, v2.lastname AS v2_lastname, v1.organization, c.clinic_name FROM patients "
+				+ "AS p INNER JOIN volunteers AS v1 ON p.volunteer=v1.volunteer_ID INNER JOIN "
+				+ "volunteers AS v2 ON p.volunteer2=v2.volunteer_ID INNER JOIN clinics AS c ON p.clinic=c.clinic_ID "
+				+ "WHERE c.site_ID =? ORDER BY LENGTH (research_ID), research_ID";
 		
+		return getJdbcTemplate().query(sql, new Object[]{siteId}, new PatientMapper());
 	}
 
 }

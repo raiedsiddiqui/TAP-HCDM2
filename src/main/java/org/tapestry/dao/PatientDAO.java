@@ -53,6 +53,13 @@ public interface PatientDAO {
      * @return all patients belong to  same site(siteId)
      */
     public List<Patient> getPatientsBySite(int siteId);
+    
+    /**
+     * 
+     * @param siteId
+     * @return all patient even those are disabled
+     */
+    public List<Patient> getAllPatientsBySite(int siteId);
 	
     /**
      * 
