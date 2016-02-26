@@ -2599,6 +2599,7 @@ public class TapestryHelper {
 			document.setMarginMirroring(true);
 			response.setHeader("Content-Disposition", "outline;filename=\"" +orignalFileName+ "\"");
 			PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());		
+			
 			//////////////////////////////////
 			//set multiple images as header
 			List<Image> imageHeader = new ArrayList<Image>();      	
@@ -5213,6 +5214,60 @@ public class TapestryHelper {
 		}	
 	}
 	
+	private static void  setMob2(int val, ResearchData rData){
+		switch (val)
+		{
+			case 1: rData.setMob21(1);
+					break;
+			case 2: rData.setMob22(1);
+					break;
+			case 3: rData.setMob23(1);
+					break;
+			case 4: rData.setMob24(1);
+					break;
+			case 5: rData.setMob25(1);
+					break;
+			case 6: rData.setMob26(1);
+					break;
+		}
+	}
+	
+	private static void setMob4(int val, ResearchData rData){
+		switch (val)
+		{
+			case 1: rData.setMob41(1);
+					break;
+			case 2: rData.setMob42(1);
+					break;
+			case 3: rData.setMob43(1);
+					break;
+			case 4: rData.setMob44(1);
+					break;
+			case 5: rData.setMob45(1);
+					break;
+			case 6: rData.setMob46(1);
+					break;
+		}
+	}
+	
+	private static void setMob6(int val, ResearchData rData){
+		switch (val)
+		{
+			case 1: rData.setMob61(1);
+					break;
+			case 2: rData.setMob62(1);
+					break;
+			case 3: rData.setMob63(1);
+					break;
+			case 4: rData.setMob64(1);
+					break;
+			case 5: rData.setMob65(1);
+					break;
+			case 6: rData.setMob66(1);
+					break;
+		}
+	}
+	
 	private static void setMobility(SurveyResult sr, ResearchData rData)
 	{
 		List<DisplayedSurveyResult> displayedResults = getSurveyResults(sr);
@@ -5238,26 +5293,12 @@ public class TapestryHelper {
 					{		
 						sList = new ArrayList<String>(Arrays.asList(answer.split(",")));		
 						for (int j=0; j< sList.size(); j++)
-						{							
-							switch (Integer.valueOf(sList.get(j).trim()))
-							{
-								case 1: rData.setMob21(1);
-										break;
-								case 2: rData.setMob22(1);
-										break;
-								case 3: rData.setMob23(1);
-										break;
-								case 4: rData.setMob24(1);
-										break;
-								case 5: rData.setMob25(1);
-										break;
-								case 6: rData.setMob26(1);
-										break;
-							}
+						{			
+							setMob2(Integer.valueOf(sList.get(j).trim()), rData);
 						}
 					}
 					else
-						rData.setMob21(Integer.parseInt(answer));
+						setMob2(Integer.parseInt(answer), rData);
 					
 					if (rData.getMob21() == 0)
 						rData.setMob21(888);
@@ -5282,26 +5323,11 @@ public class TapestryHelper {
 						sList = new ArrayList<String>(Arrays.asList(answer.split(",")));		
 						for (int j=0; j< sList.size(); j++)
 						{							
-							switch (Integer.valueOf(sList.get(j).trim()))
-							{
-								case 1: rData.setMob41(1);
-										break;
-								case 2: rData.setMob42(1);
-										break;
-								case 3: rData.setMob43(1);
-										break;
-								case 4: rData.setMob44(1);
-										break;
-								case 5: rData.setMob45(1);
-										break;
-								case 6: rData.setMob46(1);
-										break;
-							}
-						}
-						
+							setMob4(Integer.valueOf(sList.get(j).trim()), rData);
+						}						
 					}
 					else
-						rData.setMob41(Integer.parseInt(answer));
+						setMob4(Integer.parseInt(answer), rData);
 					
 					if (rData.getMob41() == 0)
 						rData.setMob41(888);
@@ -5325,26 +5351,12 @@ public class TapestryHelper {
 					{		
 						sList = new ArrayList<String>(Arrays.asList(answer.split(",")));		
 						for (int j=0; j< sList.size(); j++)
-						{							
-							switch (Integer.valueOf(sList.get(j).trim()))
-							{
-								case 1: rData.setMob61(1);
-										break;
-								case 2: rData.setMob62(1);
-										break;
-								case 3: rData.setMob63(1);
-										break;
-								case 4: rData.setMob64(1);
-										break;
-								case 5: rData.setMob65(1);
-										break;
-								case 6: rData.setMob66(1);
-										break;
-							}
+						{	
+							setMob6(Integer.valueOf(sList.get(j).trim()), rData);
 						}
 					}
 					else
-						rData.setMob61(Integer.parseInt(answer));
+						setMob6(Integer.parseInt(answer), rData);
 					
 					if (rData.getMob61() == 0)
 						rData.setMob61(888);
