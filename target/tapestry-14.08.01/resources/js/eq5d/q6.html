@@ -1,0 +1,73 @@
+<link rel="stylesheet" type="text/css" href="../resources/css/eq5d/normalize.css"><link rel="stylesheet" type="text/css" href="../resources/css/eq5d/webflow.css"><link rel="stylesheet" type="text/css" href="../resources/css/eq5d/survey1234.webflow.css">
+<script src="../resources/js/eq5d/surveySave.js"></script><!-- scale -->
+<link rel="stylesheet" type="text/css" href="../resources/css/eq5d/jquery-ui.css">
+<script src="../resources/js/eq5d/jquery-1.10.2.js"></script>
+<script src="../resources/js/eq5d/jquery-ui.js"></script>
+<script src="../resources/js/eq5d/jquery-ui-slider-pips.js"></script>
+<link rel="stylesheet" type="text/css" href="../resources/css/eq5d/jquery-ui-slider-pips.css">
+
+
+<div class="row">
+	<div class="col-md-8">
+		<ul style="text-align:left;float:left;font-size:12px">
+			<li> We would like to know how good or bad your health is TODAY</li>
+			<li> This scale is numbered from 0 to 100. </li>
+			<li> 100 means that best health you can imagine. 0 means the worst health you can imagine </li>
+			<li> Please tap on the scale to indicate how your health is TODAY </li>
+		</ul>
+	</div>
+	<div class="col-md-4">
+		<p style=font-size:20px>The&nbsp;best health&nbsp;<br>you can imagine</p>
+	</div></div><div class="row">
+	<div class="col-md-6">
+		<p class="healthtoday">YOUR<br>HEALTH<br>TODAY<br><span id="score"> &nbsp;</span></p>
+	</div>
+	<div class="col-md-6">
+		<div id="awesome2" onchange="populate();updateanswerval();"></div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-8"></div>
+	<div class="col-md-4">
+		<p style=font-size:20px>The worst health<br>you can imagine</p>
+	</div>
+</div>
+
+
+<script type="text/javascript" language="JavaScript">
+$(function populate() {
+// first we need a slider to work with
+var $slider2 = $("#awesome2").slider({ max: 100 , orientation: "vertical", slide: function( event, ui ) {
+               $("#score").html( ui.value );
+               $("#answer").val(ui.value);
+			}});
+ 
+// and then we can apply pips to it!
+$slider2.slider("pips", { rest: "label" }).slider("float")  });
+
+$(function updateanswerval() {
+	$(".ui-slider-label").click(function(){
+		$("#answer").val($("#score").text());
+	});
+});
+</script>
+
+<script type="text/javascript" language="JavaScript">
+$(document).ready(function(){
+	document.getElementById('surveynext').style.color="white"
+	document.getElementById('surveynext').style.width="100%"
+	document.getElementById('surveynext').style.backgroundColor="black"
+	document.getElementById('surveynext').style.height="50px"
+	document.getElementById('surveynext').style.fontSize="30px"
+	document.getElementById('surveyback').style.color="white"
+	document.getElementById('surveyback').style.width="100%"
+	document.getElementById('surveyback').style.backgroundColor="black"
+	document.getElementById('surveyback').style.height="50px"
+	document.getElementById('surveyback').style.fontSize="30px"
+	document.getElementById('observernote').style.display="none"
+	document.getElementById('answer').style.display="none"
+	document.getElementById('answer-buttons').style.bottom="auto"
+	// document.getElementsByClassName('ui-slider-label').style.fontSize="15px"
+	document.getElementById('eq5dcopyright').innerHTML="&#169; 2010 EuroQol GroupEQ-5D &#8482"
+});
+</script>

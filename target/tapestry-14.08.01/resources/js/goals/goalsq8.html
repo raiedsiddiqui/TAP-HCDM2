@@ -1,0 +1,22 @@
+<script type="text/javascript" language="JavaScript">
+function show() {
+	var goal1 = JSON.parse(localStorage["selectedgoal1a"]); //localStorage.getItem('text');
+	var goal2 = JSON.parse(localStorage["selectedgoal2a"]); //localStorage.getItem('text');
+	var goal3 = JSON.parse(localStorage["selectedgoal3a"]); //localStorage.getItem('text');
+	document.getElementById('labellastgoal1').textContent=goal1;
+	document.getElementById('labellastgoal2').textContent=goal2;
+	document.getElementById('labellastgoal3').textContent=goal3;
+}
+
+$(document).ready(function(){
+	// document.getElementById('answer').style.display="none";
+	//document.getElementById('observernote').style.display="none";
+	show();
+	
+	$(window).unload(function() {
+		localStorage.clear();
+	});
+});
+
+
+</script>

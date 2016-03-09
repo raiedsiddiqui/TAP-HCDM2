@@ -601,13 +601,26 @@ public class TapestryController{
 			newPassword = request.getParameter("newPassword");
 			String confirmPassword = request.getParameter("confirmPassword");
 			if (!newPassword.equals(confirmPassword)){
-				return "redirect:/profile?error=confirm";
+				return "redirect:/volunteer/?error=confirm";
 			}
 			if (!userManager.userHasPassword(userID, currentPassword)){
-				return "redirect:/profile?error=current";
+				return "redirect:/volunteer/?error=current";
 			}
-			target = "redirect:/profile?success=true";
+			target = "redirect:/volunteer/?success=true";
 		} 
+		if (request.isUserInRole("ROLE_CLIENT"))
+		{
+			String currentPassword = request.getParameter("currentPassword");
+			newPassword = request.getParameter("newPassword");
+			String confirmPassword = request.getParameter("confirmPassword");
+			if (!newPassword.equals(confirmPassword)){
+				return "redirect:/cprofile?error=confirm";
+			}
+			if (!userManager.userHasPassword(userID, currentPassword)){
+				return "redirect:/cprofile?error=current";
+			}
+			target = "redirect:/cprofile?success=true";
+		}
 		else 
 		{			
 			newPassword = request.getParameter("newPassword");
@@ -967,7 +980,7 @@ public class TapestryController{
 		Volunteer v1 = volunteerManager.getVolunteerById(vId1);
 		Volunteer v2 = volunteerManager.getVolunteerById(vId2);
 		
-		if (TapestryHelper.isMatchVolunteer(v1, v2)){
+		//if (TapestryHelper.isMatchVolunteer(v1, v2)){
 			Patient p = new Patient();
 			p.setPatientID(patientID);
 			p.setFirstName(request.getParameter("firstname"));
@@ -1002,9 +1015,9 @@ public class TapestryController{
 			sb.append(" ");
 			sb.append(p.getLastName());
 			userManager.addUserLog(sb.toString(), loggedInUser);
-		}
-		else
-			model.addAttribute("misMatchedVolunteer",true);		
+		// }
+		// else
+		// 	model.addAttribute("misMatchedVolunteer",true);		
 		
 		HttpSession session = request.getSession();
 		if (session.getAttribute("unread_messages") != null)		

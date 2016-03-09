@@ -475,7 +475,31 @@ public class VolunteerController {
 
 		return "/admin/modify_volunteer";
 	}
-	
+		@RequestMapping(value="/tipps", method=RequestMethod.GET)
+	public String tipps(@RequestParam(value="error", required=false) String errorsPresent, 
+			@RequestParam(value="success", required=false) String success, SecurityContextHolderAwareRequestWrapper request, 
+			ModelMap model)
+	{	
+		User loggedInUser = TapestryHelper.getLoggedInUser(request, userManager);
+		model.addAttribute("loggedInUserId", loggedInUser.getUserID());
+		TapestryHelper.setUnreadMessage(request, model, messageManager);
+		
+		if (errorsPresent != null)
+			model.addAttribute("errors", errorsPresent);
+		if(success != null)
+			model.addAttribute("success", true);
+//		List<Picture> pics = pictureManager.getPicturesForUser(loggedInUser.getUserID());
+//		model.addAttribute("pictures", pics);
+		
+		
+				
+		//add log
+		StringBuffer sb = new StringBuffer();
+		sb.append(loggedInUser.getName());
+		sb.append(" is viewing Resource Section ");		
+		userManager.addUserLog(sb.toString(), loggedInUser);
+		return "/client/tipps";
+	}
 	@RequestMapping(value="/update_volunteer/{volunteerId}", method=RequestMethod.POST)
 	public String updateVolunteer(SecurityContextHolderAwareRequestWrapper request, 
 			@PathVariable("volunteerId") int id, ModelMap model)
@@ -552,7 +576,7 @@ public class VolunteerController {
 		{			
 			String experienceLeve = request.getParameter("experience_level");
 			
-			if ("Beginer".equals(experienceLeve))
+			if ("Beginner".equals(experienceLeve))
 				volunteer.setExperienceLevel("B");	
 			else if ("Intermediate".equals(experienceLeve))
 				volunteer.setExperienceLevel("I");	
@@ -688,8 +712,8 @@ public class VolunteerController {
 		model.addAttribute("loggedInUserId", loggedInUser.getUserID());
 		TapestryHelper.setUnreadMessage(request, model, messageManager);
 	
-		Volunteer volunteer = volunteerManager.getVolunteerById(TapestryHelper.getLoggedInVolunteerId(request));
-		TapestryHelper.showVolunteerAvailability(volunteer, request, model);
+		//Volunteer volunteer = volunteerManager.getVolunteerById(TapestryHelper.getLoggedInVolunteerId(request));
+		//TapestryHelper.showVolunteerAvailability(volunteer, request, model);
 		
 		if (errorsPresent != null)
 			model.addAttribute("errors", errorsPresent);
@@ -701,6 +725,30 @@ public class VolunteerController {
 //		List<Picture> pics = pictureManager.getPicturesForUser(loggedInUser.getUserID());
 //		model.addAttribute("pictures", pics);
 		return "/volunteer/profile";
+	}
+
+	@RequestMapping(value="/cprofile", method=RequestMethod.GET)
+	public String viewcProfile(@RequestParam(value="error", required=false) String errorsPresent, 
+			@RequestParam(value="success", required=false) String success, @RequestParam(value="availability", required=false) 
+			String a, SecurityContextHolderAwareRequestWrapper request, ModelMap model)
+	{	
+		User loggedInUser = TapestryHelper.getLoggedInUser(request, userManager);
+		model.addAttribute("loggedInUserId", loggedInUser.getUserID());
+		TapestryHelper.setUnreadMessage(request, model, messageManager);
+	
+//		Volunteer volunteer = volunteerManager.getVolunteerById(TapestryHelper.getLoggedInVolunteerId(request));
+//		TapestryHelper.showVolunteerAvailability(volunteer, request, model);
+//		
+		if (errorsPresent != null)
+			model.addAttribute("errors", errorsPresent);
+		if(success != null)
+			model.addAttribute("success", true);
+		if (a != null)
+			model.addAttribute("availability", true);
+		
+//		List<Picture> pics = pictureManager.getPicturesForUser(loggedInUser.getUserID());
+//		model.addAttribute("pictures", pics);
+		return "/client/cprofile";
 	}
 	
 	@RequestMapping(value="/updateVolunteerAvailability/{volunteerId}", method=RequestMethod.POST)
@@ -2437,8 +2485,8 @@ public class VolunteerController {
    		if (count == completedSurveys.size())
    			completed = true;
 		
-		if (!Utils.isNullOrEmpty(visitAlert))		
-		{
+		//if (!Utils.isNullOrEmpty(visitAlert))		
+		//{
 			//set visit alert as comments in DB
 			appointmentManager.completeAppointment(id, visitAlert);
 			//add logs				
@@ -2481,7 +2529,7 @@ public class VolunteerController {
 					}
 				}
 			}			
-		}
+		//}
 		return "redirect:/";
 	}
 	

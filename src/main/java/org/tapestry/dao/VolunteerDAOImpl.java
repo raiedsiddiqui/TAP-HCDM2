@@ -289,7 +289,7 @@ public class VolunteerDAOImpl extends JdbcDaoSupport implements VolunteerDAO {
 			if (level.equals("E"))
 				vol.setExperienceLevel("Experienced");
 			else if (level.equals("B"))
-				vol.setExperienceLevel("Beginer");
+				vol.setExperienceLevel("Beginner");
 			else if (level.equals("I"))
 				vol.setExperienceLevel("Intermediate");
 			

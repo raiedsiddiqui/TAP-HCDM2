@@ -7,7 +7,7 @@ import optparse
 import glob
 
 ##### EDIT THESE VALUES IF NECESSARY
-WEBAPP_DIR = "/var/lib/tomcat7/webapps/"
+WEBAPP_DIR = "/usr/local/Cellar/tomcat7/7.0.62/libexec/webapps/"
 
 ##### DO NOT EDIT THESE VALUES
 DEPENDENCIES = ["maven2", "tomcat7", "openjdk-7-jdk", "mysql-server"]
@@ -52,7 +52,7 @@ def deploy(option, opt, value, parser):
     print("Deploying WAR file...")
     os.chdir("target")
     f = glob.glob("*.war")[0]
-    subprocess.call(["sudo", "cp", f, WEBAPP_DIR + "tapestry.war"])
+    subprocess.call(["sudo", "cp", f, WEBAPP_DIR + "HCDM.war"])
 
 def initial_install(option, opt, value, parser):
     """Convenience function, runs all of the above plus some helpful prompts"""
@@ -69,10 +69,10 @@ parser.add_option("-d", "--deploy", action="callback", callback=deploy, help="co
 parser.add_option("-c", "--check", action="callback", callback=check_dependencies, help="checks to see if the necessary dependencies are installed and installs them if necessary")
 parser.add_option("--install", action="callback", callback=initial_install, help="Calls all of the above, also prompts to edit config file")
 
-print(" ________    ___      _____   _____ ")
-print("|__    __|  /   \    |     | |     |")
-print("   |  |    /  _  \   |   __| |   __|")
-print("   |  |   /  / \  \  |  |    |  |   ")
-print("   |__|  /__/   \__\ |__|    |__|   ")
-print("====================================")
+print("  _______       _____    _    _  _____ _____  __  __ ")
+print(" |__   __|/\   |  __ \  | |  | |/ ____|  __ \|  \/  |")
+print("    | |  /  \  | |__) | | |__| | |    | |  | | \  / |")
+print("    | | / /\ \ |  ___/  |  __  | |    | |  | | |\/| |")
+print("    | |/ ____ \| |      | |  | | |____| |__| | |  | |")
+print("    |_/_/    \_\_|      |_|  |_|\_____|_____/|_|  |_|")
 (options, args) = parser.parse_args()

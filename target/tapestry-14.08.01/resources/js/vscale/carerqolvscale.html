@@ -1,0 +1,33 @@
+</br>
+<div id="awesome2" style="width:90%   display: block; margin-left: auto; margin-right: auto;" onchange="populate()"></div>
+<link rel="stylesheet" type="text/css" href="../resources/css/eq5d/normalize.css">
+<link rel="stylesheet" type="text/css" href="../resources/css/eq5d/webflow.css">
+<script src="../resources/js/eq5d/surveySave.js"></script>
+<!-- scale -->
+<link rel="stylesheet" type="text/css" href="../resources/css/eq5d/jquery-ui.css">
+<script src="../resources/js/eq5d/jquery-1.10.2.js"></script>
+<script src="../resources/js/eq5d/jquery-ui.js"></script>
+<script src="../resources/js/eq5d/jquery-ui-slider-pips.js"></script>
+<link rel="stylesheet" type="text/css" href="../resources/css/eq5d/jquery-ui-slider-pips.css">
+<script type="text/javascript" language="JavaScript">
+var names = ["0<br>Completely Unhappy", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10<br>Completely Happy"];
+$(function populate() {
+// first we need a slider to work with
+var $slider2 = $("#awesome2").slider({ max: names.length-1 , slide: function( event, ui ) {
+                $( "#score" ).html( ui.value);
+                $("#answer").html(ui.value);
+            }});
+// and then we can apply pips to it!
+$slider2.slider("pips", { rest: "label"}).slider("float")  });
+</script>
+<script type="text/javascript" language="JavaScript">
+$(document).ready(function(){
+
+document.getElementById('observernote').style.display="none"
+document.getElementById('answer').style.display="none"
+document.getElementById('answer-buttons').style.bottom="auto"
+document.getElementsByClassName('ui-slider-label').style.fontSize="15px"
+document.getElementById('qtext').style.height="800px"
+//document.getElementById('eq5dcopyright').innerHTML="&#169; 2010 EuroQol GroupEQ-5D &#8482"
+});
+</script>

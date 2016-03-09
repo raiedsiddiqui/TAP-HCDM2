@@ -3,8 +3,8 @@ CREATE DATABASE IF NOT EXISTS survey_app;
 USE survey_app;
 */
 
-CREATE DATABASE IF NOT EXISTS tapestry_db;
-USE tapestry_db;
+CREATE DATABASE IF NOT EXISTS taphcdm_db;
+USE taphcdm_db;
 
 
 CREATE TABLE IF NOT EXISTS users (
